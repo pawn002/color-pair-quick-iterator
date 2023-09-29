@@ -4,6 +4,7 @@
   align-items: stretch;
 
   section {
-    border: grey 2px solid;
+    border: grey 2px dashed;
+    box-sizing: border-box;
   }
 }

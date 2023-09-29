@@ -1,1 +1,41 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Imports */
+@import url("@fontsource/atkinson-hyperlegible/400.css");
+@import url("@fontsource/atkinson-hyperlegible/400-italic.css");
+@import url("@fontsource/atkinson-hyperlegible/700.css");
+@import url("@fontsource/atkinson-hyperlegible/700-italic.css");
+@import url("@fontsource-variable/source-code-pro/wght-italic.css");
+
+/* Vars */
+:root {
+  --headerFont: "Atkinson Hyperlegible", sans-serif;
+  --bodyFont: "Atkinson Hyperlegible", sans-serif;
+  --monoFont: "Source Code Pro Variable", sans-serif;
+
+  --minTextSize: 13px;
+  --minBodyTextSize: 16px;
+  --largeTextBoldSize: 19px;
+  --largeTextRegularSize: 24px;
+}
+
+h1 {
+  font-family: var(--headerFont);
+  font-size: 21px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+h2 {
+  font-family: var(--headerFont);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+p {
+  font-family: var(--bodyFont);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+}
