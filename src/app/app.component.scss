@@ -1,0 +1,9 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  section {
+    border: grey 2px solid;
+  }
+}
