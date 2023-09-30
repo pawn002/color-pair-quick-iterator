@@ -1,0 +1,11 @@
+.comp-container {
+  box-sizing: border-box;
+  display: flex;
+  // gives input more room on left and right ends to be hit more successfully
+  padding: 0 calc(var(--minHitDimensionAAA) / 2);
+
+  input {
+    flex-grow: 1;
+    min-height: var(--minHitDimensionAAA);
+  }
+}
