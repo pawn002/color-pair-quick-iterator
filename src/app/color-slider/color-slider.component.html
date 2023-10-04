@@ -1,3 +1,4 @@
 <div class="comp-container">
-  <input type="range" name="color-slider" id="color-slider-0" />
+  <input type="range" [name]="name" [id]="id" (input)="handleSliding()" />
+  <!-- <input type="range" [name]="name" [id]="id" (change)="handleSliding()" /> -->
 </div>

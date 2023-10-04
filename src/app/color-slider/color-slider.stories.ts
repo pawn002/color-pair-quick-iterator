@@ -8,7 +8,6 @@ const meta: Meta<ColorSliderComponent> = {
   tags: ['autodocs'],
   render: (args: ColorSliderComponent) => ({
     props: {
-      color: null,
       ...args,
     },
   }),
@@ -24,5 +23,13 @@ type Story = StoryObj<ColorSliderComponent>;
 
 // More on writing stories with args: https://storybook.js.org/docs/angular/writing-stories/args
 export const Typical: Story = {
-  args: {},
+  args: {
+    color: 'coral',
+  },
+};
+
+export const NoHueColor: Story = {
+  args: {
+    color: 'white',
+  },
 };
