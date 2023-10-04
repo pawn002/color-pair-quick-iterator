@@ -28,8 +28,24 @@ export const Typical: Story = {
   },
 };
 
+export const RgbRed: Story = {
+  args: {
+    color: 'red',
+  },
+};
+export const RgbGreen: Story = {
+  args: {
+    color: 'green',
+  },
+};
+export const RgbBlue: Story = {
+  args: {
+    color: 'blue',
+  },
+};
+
 export const NoHueColor: Story = {
   args: {
-    color: 'white',
+    color: 'gray',
   },
 };

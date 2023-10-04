@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import Color from 'colorjs.io';
 import { ColorConstructor } from 'colorjs.io/types/src/color';
 
-export class MinMaxLightObject {
-  originalCoords: [number, number, number] | null = null;
-  lightMin: number | null = null;
-  lightMax: number | null = null;
+export interface MinMaxLightObject {
+  originalCoords: [number, number, number];
+  lightMin: number;
+  lightMax: number;
 }
+
+export type ColorVariant = [number, number, number];
 
 @Injectable({
   providedIn: 'root',
@@ -23,70 +25,131 @@ export class ColorUtilService {
     return parsedColor;
   }
 
-  // TODO: keep working on this method
-  getMinMaxLight(color: string) {
-    let returnedObject: MinMaxLightObject | null = null;
+  isInSrgbGamut(oklchColorCoord: [number, number, number]): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      try {
+        const colorObject = new Color('oklch', oklchColorCoord);
+        const variantInGamut = colorObject.inGamut('srgb');
+
+        resolve(variantInGamut);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  createVariants(color: string): Array<ColorVariant> | null {
+    let variantCollection: Array<ColorVariant> | null = null;
 
     const parsedColor = this.parseColor(color);
 
     if (parsedColor) {
-      returnedObject = {
-        originalCoords: null,
-        lightMin: null,
-        lightMax: null,
-      };
-
       const oklchColor = Color.to(parsedColor, 'oklch');
-
       const lchCooords = oklchColor.coords;
       const colorChroma = lchCooords[1];
       const colorHue = lchCooords[2];
 
       // 1) create enough steps of lightness
-      const lightnessSteps = 100;
+      const lightnessSteps = 1000;
       const lightMax = 1;
       const lightMin = 0;
       const lightInterval = (lightMax - lightMin) / lightnessSteps;
 
       // 2) create all variants of color using constant chroma and hue.
-      type colorVariant = [number, number, number];
-      const variantCollection: Array<colorVariant> = [];
+      variantCollection = [];
 
-      // 2a) this actually creates 101 variants as initial variant has to start at zero.
+      // 2a) this actually creates `lightnessSteps + 1` variants as initial variant has to start at zero.
       for (let i = 0; i <= lightnessSteps; i++) {
         const variantTargetLight = i * lightInterval;
-        const variant: colorVariant = [
+        const variant: ColorVariant = [
           variantTargetLight,
           colorChroma,
           colorHue,
         ];
 
-        // 3) validate what is in gamut for srgb
-        const colorObject = new Color('oklch', variant);
-        const variantInGamut = colorObject.inGamut('srgb');
+        variantCollection.push(variant);
+      }
+    } else {
+      console.error(`unable to parse color`);
+    }
 
-        if (variantInGamut) {
-          variantCollection.push(variant);
+    return variantCollection;
+  }
+
+  filterOutOfGamutVariants(
+    variants: Array<ColorVariant> | null
+  ): Promise<Array<ColorVariant>> {
+    return new Promise(async (resolve, reject) => {
+      if (!variants) {
+        reject(`no variants`);
+      } else {
+        let filteringComplete: boolean = false;
+
+        const filtered = [];
+
+        for (let i = 0; i < variants.length; i++) {
+          const curVariant = variants[i];
+
+          if (await this.isInSrgbGamut(curVariant)) {
+            filtered.push(curVariant);
+          }
+
+          if (i === variants.length - 1) filteringComplete = true;
+        }
+
+        if (filteringComplete) {
+          resolve(filtered);
+        } else {
+          reject(`error`);
         }
       }
+    });
+  }
 
-      // 4) collect min and max light values for color
+  async getMinMaxLight(color: string): Promise<MinMaxLightObject | null> {
+    let returnedObject: MinMaxLightObject | null = null;
+
+    const initVariantCollection = this.createVariants(color);
+
+    const variantCollection = await this.filterOutOfGamutVariants(
+      initVariantCollection
+    );
+
+    const parsedColor = this.parseColor(color);
+
+    if (parsedColor && variantCollection.length) {
+      const oklchColor = Color.to(parsedColor, 'oklch');
+
+      const lchCooords = oklchColor.coords;
+
       const oklchLightCoordIndex = 0;
       const firstArrayItemIndex = 0;
       const lastArrayItemIndex = variantCollection.length - 1;
+
       const minLight =
         variantCollection[firstArrayItemIndex][oklchLightCoordIndex];
       const maxLight =
         variantCollection[lastArrayItemIndex][oklchLightCoordIndex];
 
-      returnedObject.originalCoords = lchCooords;
-      returnedObject.lightMin = minLight;
-      returnedObject.lightMax = maxLight;
+      returnedObject = {
+        originalCoords: lchCooords,
+        lightMin: minLight,
+        lightMax: maxLight,
+      };
     } else {
-      console.error(`unable to parse color`);
-    }
+      if (!parsedColor) {
+        console.error(`unable to parse color`);
+      } else {
+        const oklchColor = Color.to(parsedColor, 'oklch');
 
-    console.log(returnedObject);
+        const lchCooords = oklchColor.coords;
+        returnedObject = {
+          originalCoords: lchCooords,
+          lightMin: lchCooords[0],
+          lightMax: lchCooords[0],
+        };
+      }
+    }
 
     return returnedObject;
   }
