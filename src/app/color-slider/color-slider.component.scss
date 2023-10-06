@@ -12,12 +12,15 @@
 
 .dev-overlay {
   position: absolute;
+  display: flex;
+  gap: 1rem;
   bottom: 0;
   right: 0;
 
   .light-variant-chip {
-    width: 44px;
-    height: 44px;
+    border-radius: 100%;
+    width: 15px;
+    height: 15px;
     border: 15px solid black;
   }
 }
