@@ -46,8 +46,7 @@ export class ColorUtilService {
       srgbColor = targetColorAsRgbColor.toString({ format: 'hex' });
     }
 
-    console.log(srgbColor);
-    return null;
+    return srgbColor;
   }
 
   isInSrgbGamut(oklchColorCoord: [number, number, number]): Promise<boolean> {

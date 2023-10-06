@@ -9,3 +9,15 @@
     min-height: var(--minHitDimensionAAA);
   }
 }
+
+.dev-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+
+  .light-variant-chip {
+    width: 44px;
+    height: 44px;
+    border: 15px solid black;
+  }
+}

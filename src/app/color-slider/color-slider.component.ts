@@ -20,6 +20,8 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   @Input() name: 'string' | 'color-slider' = 'color-slider';
   @Output() colorVariant = new EventEmitter<string | null>();
 
+  devColorVariant: string | null = null;
+
   slideInterval: number | null = 0.001;
   slideMin: number | null = null;
   slideMax: number | null = null;
@@ -52,6 +54,8 @@ export class ColorSliderComponent implements OnInit, OnChanges {
           this.color,
           lightValue
         );
+
+        this.devColorVariant = lightnessVariant;
 
         this.colorVariant.emit(lightnessVariant);
       } else {
