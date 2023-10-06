@@ -25,6 +25,31 @@ export class ColorUtilService {
     return parsedColor;
   }
 
+  createSrgbColor(color: string, lightness: number): string | null {
+    let srgbColor: string | null = null;
+
+    const parsedColor = this.parseColor(color);
+
+    if (parsedColor) {
+      const oklchColor = new Color('srgb', parsedColor.coords).to('oklch');
+      const originalChroma = oklchColor.coords[1];
+      const originalHue = oklchColor.coords[2];
+
+      const targetColor = new Color('oklch', [
+        lightness,
+        originalChroma,
+        originalHue,
+      ]);
+
+      const targetColorAsRgbColor = targetColor.to('srgb');
+
+      srgbColor = targetColorAsRgbColor.toString({ format: 'hex' });
+    }
+
+    console.log(srgbColor);
+    return null;
+  }
+
   isInSrgbGamut(oklchColorCoord: [number, number, number]): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       try {

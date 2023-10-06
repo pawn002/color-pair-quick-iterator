@@ -3,6 +3,8 @@ import {
   Input,
   OnChanges,
   OnInit,
+  Output,
+  EventEmitter,
   SimpleChanges,
 } from '@angular/core';
 import { ColorUtilService } from '../color-util.service';
@@ -16,6 +18,7 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   @Input() color: string | null = null;
   @Input() id: string | 'slider-0' = 'slider-0';
   @Input() name: 'string' | 'color-slider' = 'color-slider';
+  @Output() colorVariant = new EventEmitter<string | null>();
 
   slideInterval: number | null = 0.001;
   slideMin: number | null = null;
@@ -36,14 +39,24 @@ export class ColorSliderComponent implements OnInit, OnChanges {
     }
   }
 
-  // TODO: continue work on this. . .
-  handleSliding(event: InputEvent) {
+  handleSliding(event: Event) {
     console.log(`slide modding ${this.color}`);
 
     const inputElem = event.target as HTMLInputElement;
 
     if (inputElem) {
-      console.log(inputElem.value);
+      const lightValue = parseFloat(inputElem.value);
+
+      if (this.color) {
+        const lightnessVariant = this.cus.createSrgbColor(
+          this.color,
+          lightValue
+        );
+
+        this.colorVariant.emit(lightnessVariant);
+      } else {
+        console.error(`no color specified`);
+      }
     }
   }
 
