@@ -27,14 +27,23 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   slideMax: number | null = null;
   value: number | null = null;
 
+  sendNullLightVariant() {
+    // Good UX to just send the input color?
+    this.colorVariant.emit(this.color);
+    this.devColorVariant = this.color;
+  }
+
   async getAndSetLightnessRange(color: string) {
     const rangeObject = await this.cus.getMinMaxLight(color);
 
     if (rangeObject) {
+      this.sendNullLightVariant();
+
       this.slideMin = rangeObject.lightMin;
       this.slideMax = rangeObject.lightMax;
 
       const initialSlideValue = rangeObject.originalCoords[0];
+
       this.value = initialSlideValue;
     } else {
       console.error(`no range object for slider`);
@@ -69,7 +78,6 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     console.log(`
       slide onInit. . .
-      ${this.color}
     `);
   }
 
