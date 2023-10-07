@@ -20,6 +20,7 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   @Input() name: 'string' | 'color-slider' = 'color-slider';
   @Output() colorVariant = new EventEmitter<string | null>();
 
+  debug: boolean = true;
   devColorVariant: string | null = null;
 
   slideInterval: number | null = 0.001;
@@ -27,22 +28,26 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   slideMax: number | null = null;
   value: number | null = null;
 
-  sendNullLightVariant() {
+  sendInitialLightVariant() {
     // Good UX to just send the input color?
     this.colorVariant.emit(this.color);
-    this.devColorVariant = this.color;
+
+    if (this.debug) {
+      this.devColorVariant = this.color;
+    }
   }
 
   async getAndSetLightnessRange(color: string) {
     const rangeObject = await this.cus.getMinMaxLight(color);
 
     if (rangeObject) {
-      this.sendNullLightVariant();
+      this.sendInitialLightVariant();
 
       this.slideMin = rangeObject.lightMin;
       this.slideMax = rangeObject.lightMax;
 
-      const initialSlideValue = rangeObject.originalCoords[0];
+      const lightnessValue = 0;
+      const initialSlideValue = rangeObject.originalCoords[lightnessValue];
 
       this.value = initialSlideValue;
     } else {
@@ -51,8 +56,6 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   }
 
   handleSliding(event: Event) {
-    console.log(`slide modding ${this.color}`);
-
     const inputElem = event.target as HTMLInputElement;
 
     if (inputElem) {
@@ -64,7 +67,11 @@ export class ColorSliderComponent implements OnInit, OnChanges {
           lightValue
         );
 
-        this.devColorVariant = lightnessVariant;
+        if (this.debug) {
+          console.log(`slide modding ${this.color} to ${lightnessVariant}`);
+
+          this.devColorVariant = lightnessVariant;
+        }
 
         this.colorVariant.emit(lightnessVariant);
       } else {
@@ -75,20 +82,9 @@ export class ColorSliderComponent implements OnInit, OnChanges {
 
   constructor(private cus: ColorUtilService) {}
 
-  ngOnInit(): void {
-    console.log(`
-      slide onInit. . .
-    `);
-  }
+  ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(`
-      slide onChanges. . .
-      ${this.color}
-    `);
-
-    console.log(changes);
-
     if (this.color) {
       this.getAndSetLightnessRange(this.color);
     } else {
