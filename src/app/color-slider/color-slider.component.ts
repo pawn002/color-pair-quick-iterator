@@ -20,7 +20,7 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   @Input() name: 'string' | 'color-slider' = 'color-slider';
   @Output() colorVariant = new EventEmitter<string | null>();
 
-  debug: boolean = true;
+  debug: boolean = false;
   devColorVariant: string | null = null;
 
   slideInterval: number | null = 0.001;
