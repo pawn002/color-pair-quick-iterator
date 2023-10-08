@@ -1,1 +1,9 @@
-<p>color-picker works!</p>
+<div class="comp-container">
+  <input type="color" [name]="inputName" [id]="inputId" />
+
+  <div
+    class="color-preview"
+    [style.borderColor]="comparedColor"
+    [style.backgroundColor]="color"
+  ></div>
+</div>
