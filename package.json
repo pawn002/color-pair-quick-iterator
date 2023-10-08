@@ -22,6 +22,7 @@
     "@angular/router": "^16.2.0",
     "@fontsource-variable/source-code-pro": "^5.0.9",
     "@fontsource/atkinson-hyperlegible": "^5.0.12",
+    "colorjs.io": "^0.4.5",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"

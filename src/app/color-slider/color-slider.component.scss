@@ -1,0 +1,41 @@
+.comp-container {
+  box-sizing: border-box;
+  display: flex;
+  // gives input more room on left and right ends to be hit more successfully
+  padding: 0 calc(var(--minHitDimensionAAA) / 2);
+  align-items: center;
+
+  input {
+    flex-grow: 1;
+    min-height: var(--minHitDimensionAAA);
+  }
+
+  .special-case {
+    flex-grow: 1;
+    min-height: var(--minHitDimensionAAA);
+
+    font-family: var(--bodyFont);
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 400;
+  }
+}
+
+.dev-overlay {
+  position: absolute;
+  display: none;
+  gap: 1rem;
+  bottom: 0;
+  right: 0;
+
+  &.active {
+    display: flex;
+  }
+
+  .light-variant-chip {
+    border-radius: 100%;
+    width: 15px;
+    height: 15px;
+    border: 15px solid black;
+  }
+}

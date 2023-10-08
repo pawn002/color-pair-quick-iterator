@@ -3,10 +3,12 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { ColorSliderComponent } from './color-slider/color-slider.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ColorSliderComponent
   ],
   imports: [
     BrowserModule,
