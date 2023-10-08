@@ -7,7 +7,7 @@ import {
   EventEmitter,
   SimpleChanges,
 } from '@angular/core';
-import { ColorUtilService } from '../color-util.service';
+import { ColorUtilService } from '../services/color-util.service';
 
 @Component({
   selector: 'app-color-slider',
