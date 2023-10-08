@@ -6,10 +6,14 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import {
+  ColorMetricsService,
+  ContrastType,
+} from '../services/color-metrics.service';
 
 export class ContrastObject {
   score: number | null = null;
-  type: 'apca' | 'bpca' | null = null;
+  type: ContrastType | null = null;
 }
 
 @Component({
@@ -20,13 +24,25 @@ export class ContrastObject {
 export class ColorContrastComponent implements OnChanges {
   @Input() colorOne: string | null = null;
   @Input() colorTwo: string | null = null;
-  @Input() contrastType: 'apca' | 'bpca' | null = null;
+  @Input() contrastType: ContrastType | null = null;
 
   @Output() contrast = new EventEmitter<ContrastObject>();
 
-  constructor() {}
+  contrastScore: number | null = null;
+
+  constructor(private cms: ColorMetricsService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
+    // console.log(changes);
+
+    if (this.colorOne && this.colorTwo && this.contrastType) {
+      const score = this.cms.getContrast(
+        this.colorOne,
+        this.colorTwo,
+        this.contrastType
+      );
+    } else {
+      console.error('contrast comp has incomplete bindings');
+    }
   }
 }
