@@ -1,0 +1,14 @@
+<div class="comp-container">
+  <input
+    type="color"
+    [id]="inputId"
+    [name]="inputName"
+    (input)="handleInputEvent($event)"
+  />
+
+  <div
+    class="color-preview"
+    [style.borderColor]="comparedColor"
+    [style.backgroundColor]="color"
+  ></div>
+</div>
