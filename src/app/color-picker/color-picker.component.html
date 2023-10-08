@@ -1,5 +1,10 @@
 <div class="comp-container">
-  <input type="color" [name]="inputName" [id]="inputId" />
+  <input
+    type="color"
+    [name]="inputName"
+    [id]="inputId"
+    (input)="handleInputEvent($event)"
+  />
 
   <div
     class="color-preview"

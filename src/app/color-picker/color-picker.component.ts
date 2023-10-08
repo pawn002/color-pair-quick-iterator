@@ -12,4 +12,19 @@ export class ColorPickerComponent {
   @Output() selectedColor = new EventEmitter<string>();
 
   color: string | null = null;
+
+  handleInputEvent(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+
+    const selectedColor = inputElement.value;
+
+    // update color
+    this.color = selectedColor;
+
+    // reset compared color
+    this.comparedColor = 'transparent';
+
+    // send out color for use in other comps
+    this.selectedColor.emit(selectedColor);
+  }
 }
