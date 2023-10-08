@@ -11,8 +11,6 @@ import {
   fontLookupAPCA,
 } from 'apca-w3';
 
-import { colorParsley, colorToHex, colorToRGB } from 'colorparsley'; // optional string parsing
-
 export type ContrastType = 'apca' | 'bpca';
 @Injectable({
   providedIn: 'root',
@@ -44,6 +42,20 @@ export class ColorMetricsService {
 
     score = contrast;
     return score;
+  }
+
+  transformAPCAToWCAG(apcaScore: number): number {
+    let wcag: number = NaN;
+
+    const apcaThreshold = {
+      60: 3,
+      75: 4.5,
+      90: 7,
+    };
+
+    // TODO: create interpolators to map apca to wcag scoring.
+
+    return wcag;
   }
 
   constructor() {}
