@@ -11,6 +11,8 @@ import {
   fontLookupAPCA,
 } from 'apca-w3';
 
+import { interpolate, scaleLinear } from 'd3';
+
 export type ContrastType = 'apca' | 'bpca';
 @Injectable({
   providedIn: 'root',
@@ -24,12 +26,18 @@ export class ColorMetricsService {
     console.log(colorOne, colorTwo, contrastType);
     let score: number | null = null;
 
-    if (contrastType === 'apca') {
-      const contrast = this.calcApcaContrast(colorOne, colorTwo);
+    const contrast = this.calcApcaContrast(colorOne, colorTwo);
 
-      const roundedContrast = contrast?.toFixed(0);
+    if (contrastType === 'apca' && contrast) {
+      const roundedContrast = contrast.toFixed(0);
 
-      score = roundedContrast ? parseInt(roundedContrast) : score;
+      score = parseInt(roundedContrast);
+    }
+
+    if (contrastType === 'bpca' && contrast) {
+      const wcagStyleScore = this.transformAPCAToWCAG(contrast);
+
+      score = wcagStyleScore;
     }
 
     return score;
@@ -41,6 +49,7 @@ export class ColorMetricsService {
     const contrast = calcAPCA(colorOne, colorTwo);
 
     score = contrast;
+
     return score;
   }
 
@@ -53,7 +62,17 @@ export class ColorMetricsService {
       90: 7,
     };
 
-    // TODO: create interpolators to map apca to wcag scoring.
+    const apcaRange = {
+      test: scaleLinear([0, 3, 4.5, 7, 21]).domain([0, 60, 75, 90, 108]),
+    };
+
+    const absoluteApca: number = Math.abs(apcaScore);
+
+    const wcagStyleScore = apcaRange.test(absoluteApca);
+
+    const roundedWcag = parseFloat(wcagStyleScore.toFixed(1));
+
+    wcag = roundedWcag;
 
     return wcag;
   }

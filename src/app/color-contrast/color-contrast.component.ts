@@ -43,8 +43,6 @@ export class ColorContrastComponent implements OnChanges {
       );
 
       this.contrastScore = score;
-
-      console.log(`score ${score}`);
     } else {
       console.error('contrast comp has incomplete bindings');
     }
