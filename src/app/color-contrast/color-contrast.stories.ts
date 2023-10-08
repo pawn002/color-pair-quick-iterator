@@ -31,15 +31,24 @@ type Story = StoryObj<ColorContrastComponent>;
 // More on writing stories with args: https://storybook.js.org/docs/angular/writing-stories/args
 export const Typical: Story = {
   args: {
-    colorOne: 'black',
-    colorTwo: 'white',
-    contrastType: 'bpca',
+    colorOne: null,
+    colorTwo: null,
+    contrastType: null,
   },
 };
-export const LightOnDark: Story = {
+
+export const APCA: Story = {
   args: {
     colorOne: 'white',
     colorTwo: 'black',
     contrastType: 'apca',
+  },
+};
+
+export const WCAGEnhanced: Story = {
+  args: {
+    colorOne: 'white',
+    colorTwo: 'black',
+    contrastType: 'bpca',
   },
 };
