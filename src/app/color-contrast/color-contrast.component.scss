@@ -1,0 +1,14 @@
+.comp-container {
+  border: black solid 2px;
+  padding: 0.5rem;
+
+  .score-container {
+    display: flex;
+    justify-content: center;
+
+    .score {
+      font-style: italic;
+      font-weight: 700;
+    }
+  }
+}

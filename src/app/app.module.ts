@@ -5,12 +5,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ColorSliderComponent } from './color-slider/color-slider.component';
 import { ColorPickerComponent } from './color-picker/color-picker.component';
+import { ColorContrastComponent } from './color-contrast/color-contrast.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ColorSliderComponent,
-    ColorPickerComponent
+    ColorPickerComponent,
+    ColorContrastComponent
   ],
   imports: [
     BrowserModule,
