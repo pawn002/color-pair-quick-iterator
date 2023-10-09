@@ -52,3 +52,11 @@ export const WCAGEnhanced: Story = {
     contrastType: 'bpca',
   },
 };
+
+export const WCAGEnhancedEdgeCase: Story = {
+  args: {
+    colorOne: '#928f8f',
+    colorTwo: 'white',
+    contrastType: 'bpca',
+  },
+};
