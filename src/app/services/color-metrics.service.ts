@@ -22,7 +22,7 @@ export class ColorMetricsService {
   ): number | null {
     let score: number | null = null;
 
-    const contrast = this.calcApcaContrast(colorOne, colorTwo);
+    const contrast = this.calcRawApcaContrast(colorOne, colorTwo);
 
     if (contrast) {
       if (contrastType === 'apca') {
@@ -43,7 +43,7 @@ export class ColorMetricsService {
     return score;
   }
 
-  calcApcaContrast(colorOne: string, colorTwo: string): number | null {
+  calcRawApcaContrast(colorOne: string, colorTwo: string): number | null {
     let score: number | null = null;
 
     score = calcAPCA(colorOne, colorTwo);
@@ -64,11 +64,19 @@ export class ColorMetricsService {
       Math.floor(apcaScore)
     );
 
-    const wcagStyleScore = scaleApcaToWcag(absoluteApca);
+    if (this.apcaToWcagLookup[absoluteApca]) {
+      // use memoized value if present
+      wcag = this.apcaToWcagLookup[absoluteApca];
+    } else {
+      const wcagStyleScore = scaleApcaToWcag(absoluteApca);
 
-    const roundedWcag = parseFloat(wcagStyleScore.toFixed(1));
+      const roundedWcag = parseFloat(wcagStyleScore.toFixed(1));
 
-    wcag = roundedWcag;
+      // memoize score for later access
+      this.apcaToWcagLookup[absoluteApca] = roundedWcag;
+
+      wcag = roundedWcag;
+    }
 
     return wcag;
   }
