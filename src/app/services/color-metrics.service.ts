@@ -23,7 +23,6 @@ export class ColorMetricsService {
     colorTwo: string,
     contrastType: ContrastType
   ): number | null {
-    console.log(colorOne, colorTwo, contrastType);
     let score: number | null = null;
 
     const contrast = this.calcApcaContrast(colorOne, colorTwo);
@@ -56,19 +55,17 @@ export class ColorMetricsService {
   transformAPCAToWCAG(apcaScore: number): number {
     let wcag: number = NaN;
 
-    const apcaThreshold = {
-      60: 3,
-      75: 4.5,
-      90: 7,
-    };
+    // [Source for numbers](https://github.com/Myndex/bridge-pca#additional-notes)
+    const scaleApcaToWcag = scaleLinear([0, 3, 4.5, 7, 21]).domain([
+      0, 60, 75, 90, 108,
+    ]);
 
-    const apcaRange = {
-      test: scaleLinear([0, 3, 4.5, 7, 21]).domain([0, 60, 75, 90, 108]),
-    };
+    const absoluteApca: number = Math.abs(
+      // Rounding down APCA raw score to ensure no false passes going from APCA to WCAG Style.
+      Math.floor(apcaScore)
+    );
 
-    const absoluteApca: number = Math.abs(apcaScore);
-
-    const wcagStyleScore = apcaRange.test(absoluteApca);
+    const wcagStyleScore = scaleApcaToWcag(absoluteApca);
 
     const roundedWcag = parseFloat(wcagStyleScore.toFixed(1));
 
