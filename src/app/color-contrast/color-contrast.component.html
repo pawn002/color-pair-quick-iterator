@@ -1,6 +1,10 @@
 <div class="comp-container">
   <div class="score-container">
-    <div class="score">
+    <label class="sr-only" for="contrast-score"
+      >Contrast Score for Selected Colors</label
+    >
+
+    <div id="contrast-score" class="score">
       {{ contrastScore ? contrastScore || contrastScore === 0 : "null" }}
     </div>
   </div>

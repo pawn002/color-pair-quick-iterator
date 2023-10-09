@@ -20,7 +20,7 @@
     // TODO: what do custom input text need to be? <p>?
     div {
       font-family: var(--monoFont);
-      font-size: 16px;
+      font-size: var(--minBodyTextSize);
       font-style: italic;
       font-weight: 400;
     }
