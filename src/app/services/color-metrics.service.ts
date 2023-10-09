@@ -1,23 +1,20 @@
 import { Injectable } from '@angular/core';
 
-import {
-  APCAcontrast,
-  reverseAPCA,
-  sRGBtoY,
-  displayP3toY,
-  adobeRGBtoY,
-  alphaBlend,
-  calcAPCA,
-  fontLookupAPCA,
-} from 'apca-w3';
+import { calcAPCA } from 'apca-w3';
 
-import { interpolate, scaleLinear } from 'd3';
+import { scaleLinear } from 'd3';
+
+export interface NumberKeyLookup {
+  [key: number]: number;
+}
 
 export type ContrastType = 'apca' | 'bpca';
 @Injectable({
   providedIn: 'root',
 })
 export class ColorMetricsService {
+  apcaToWcagLookup: NumberKeyLookup = {};
+
   getContrast(
     colorOne: string,
     colorTwo: string,
@@ -27,16 +24,20 @@ export class ColorMetricsService {
 
     const contrast = this.calcApcaContrast(colorOne, colorTwo);
 
-    if (contrastType === 'apca' && contrast) {
-      const roundedContrast = contrast.toFixed(0);
+    if (contrast) {
+      if (contrastType === 'apca') {
+        const roundedContrast = contrast.toFixed(0);
 
-      score = parseInt(roundedContrast);
-    }
+        score = parseInt(roundedContrast);
+      }
 
-    if (contrastType === 'bpca' && contrast) {
-      const wcagStyleScore = this.transformAPCAToWCAG(contrast);
+      if (contrastType === 'bpca') {
+        const wcagStyleScore = this.transformAPCAToWCAG(contrast);
 
-      score = wcagStyleScore;
+        score = wcagStyleScore;
+      }
+    } else {
+      console.error(`Raw APCA contrast was not calculable`);
     }
 
     return score;
@@ -45,9 +46,7 @@ export class ColorMetricsService {
   calcApcaContrast(colorOne: string, colorTwo: string): number | null {
     let score: number | null = null;
 
-    const contrast = calcAPCA(colorOne, colorTwo);
-
-    score = contrast;
+    score = calcAPCA(colorOne, colorTwo);
 
     return score;
   }
