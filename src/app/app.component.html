@@ -3,6 +3,35 @@
     <h1>Perceptual Contrast</h1>
 
     <h2>Main Color Controls</h2>
+    <div class="slide-group">
+      <app-color-picker
+        [inputId]="'cp-0'"
+        [inputName]="'Foreground Color'"
+        [comparedColor]="colorPickerOneComparedColor"
+        (selectedColor)="handleColorInputInput('One', $event)"
+      ></app-color-picker>
+      <app-color-slider
+        [id]="'slider-0'"
+        [name]="'Foreground Slider'"
+        [color]="colorPickerOneSelectedColor"
+        (colorVariant)="handleSliderInputInput('One', $event)"
+      ></app-color-slider>
+    </div>
+
+    <div class="slide-group">
+      <app-color-picker
+        [inputId]="'cp-1'"
+        [inputName]="'Background Color'"
+        [comparedColor]="colorPickerTwoComparedColor"
+        (selectedColor)="handleColorInputInput('Two', $event)"
+      ></app-color-picker>
+      <app-color-slider
+        [id]="'slider-1'"
+        [name]="'Backgroundground Slider'"
+        [color]="colorPickerTwoSelectedColor"
+        (colorVariant)="handleSliderInputInput('Two', $event)"
+      ></app-color-slider>
+    </div>
   </section>
 
   <section class="options">

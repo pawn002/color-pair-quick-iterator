@@ -8,7 +8,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class ColorPickerComponent {
   @Input() inputId: string = 'fg-color';
   @Input() inputName: string = 'foreground color';
-  @Input() comparedColor: string | 'transparent' = 'transparent';
+  @Input() comparedColor: string | null = null;
   @Output() selectedColor = new EventEmitter<string>();
 
   color: string | null = null;

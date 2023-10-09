@@ -17,7 +17,7 @@ import { ColorUtilService } from '../services/color-util.service';
 export class ColorSliderComponent implements OnInit, OnChanges {
   @Input() color: string | null = null;
   @Input() id: string | 'slider-0' = 'slider-0';
-  @Input() name: 'string' | 'color-slider' = 'color-slider';
+  @Input() name: string | 'color-slider' = 'color-slider';
   @Output() colorVariant = new EventEmitter<string | null>();
 
   debug: boolean = false;
