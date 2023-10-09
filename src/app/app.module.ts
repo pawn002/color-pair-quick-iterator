@@ -6,13 +6,15 @@ import { AppComponent } from './app.component';
 import { ColorSliderComponent } from './color-slider/color-slider.component';
 import { ColorPickerComponent } from './color-picker/color-picker.component';
 import { ColorContrastComponent } from './color-contrast/color-contrast.component';
+import { CopyToClipboardButtonComponent } from './copy-to-clipboard-button/copy-to-clipboard-button.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ColorSliderComponent,
     ColorPickerComponent,
-    ColorContrastComponent
+    ColorContrastComponent,
+    CopyToClipboardButtonComponent
   ],
   imports: [
     BrowserModule,
