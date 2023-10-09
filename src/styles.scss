@@ -22,6 +22,10 @@
   --minHitDimensionAA: 22px;
 }
 
+body {
+  margin: 0;
+}
+
 h1 {
   font-family: var(--headerFont);
   font-size: 21px;

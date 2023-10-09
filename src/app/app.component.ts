@@ -23,8 +23,6 @@ export class AppComponent {
   }
 
   handleSliderInputInput(inputNumber: 'One' | 'Two', event: string | null) {
-    console.log(inputNumber, event);
-
     if (inputNumber === 'One') {
       this.colorPickerOneComparedColor = event;
     }

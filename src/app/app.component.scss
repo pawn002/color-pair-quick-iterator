@@ -8,6 +8,16 @@
     box-sizing: border-box;
   }
 
+  .title-and-score {
+    display: flex;
+    gap: 1rem;
+
+    h1 {
+      margin: 0;
+      width: min-content;
+    }
+  }
+
   .slide-group {
     display: flex;
   }

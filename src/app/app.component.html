@@ -1,6 +1,13 @@
 <div class="app-container">
   <section class="title-and-sliders">
-    <h1>Perceptual Contrast</h1>
+    <div class="title-and-score">
+      <h1>Perceptual Contrast</h1>
+      <app-color-contrast
+        [colorOne]="colorPickerOneComparedColor"
+        [colorTwo]="colorPickerTwoComparedColor"
+        [contrastType]="'apca'"
+      ></app-color-contrast>
+    </div>
 
     <h2>Main Color Controls</h2>
     <div class="slide-group">

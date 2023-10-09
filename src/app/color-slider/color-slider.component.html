@@ -10,9 +10,7 @@
     [value]="value"
     (input)="handleSliding($event)"
   />
-  <div *ngIf="slideMin === slideMax" class="special-case">
-    Color has no lightness variants.
-  </div>
+  <div *ngIf="slideMin === slideMax" class="special-case">!</div>
 </div>
 
 <div class="dev-overlay" [ngClass]="{ active: debug }">
