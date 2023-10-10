@@ -16,9 +16,17 @@
       margin: 0;
       width: min-content;
     }
+
+    app-color-contrast {
+      flex-grow: 1;
+    }
   }
 
   .slide-group {
     display: flex;
+
+    app-color-slider {
+      flex-grow: 1;
+    }
   }
 }

@@ -23,6 +23,9 @@
         [color]="colorPickerOneSelectedColor"
         (colorVariant)="handleSliderInputInput('One', $event)"
       ></app-color-slider>
+      <app-copy-to-clipboard-button
+        [color]="colorPickerOneComparedColor"
+      ></app-copy-to-clipboard-button>
     </div>
 
     <div class="slide-group">
@@ -38,6 +41,9 @@
         [color]="colorPickerTwoSelectedColor"
         (colorVariant)="handleSliderInputInput('Two', $event)"
       ></app-color-slider>
+      <app-copy-to-clipboard-button
+        [color]="colorPickerTwoComparedColor"
+      ></app-copy-to-clipboard-button>
     </div>
   </section>
 
