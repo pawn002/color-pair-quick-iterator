@@ -5,9 +5,11 @@
       <app-color-contrast
         [colorOne]="colorPickerOneComparedColor"
         [colorTwo]="colorPickerTwoComparedColor"
-        [contrastType]="'apca'"
+        [contrastType]="contrastType"
       ></app-color-contrast>
     </div>
+
+    <hr />
 
     <h2 class="sr-only">Main Color Controls</h2>
     <div class="slide-group">
@@ -54,6 +56,7 @@
     <div class="checkbox-group">
       <label for="option-omit-hex">Omit # from Copy</label>
       <input
+        disabled
         type="checkbox"
         name="Omit # from Hex Code Toggle"
         id="option-omit-hex"
@@ -65,6 +68,7 @@
         type="checkbox"
         name="Contrast Score Type Toggle"
         id="option-score-toggle"
+        (change)="toggleContrastType($event)"
       />
     </div>
     <div class="checkbox-group">
