@@ -3,11 +3,18 @@
   display: inline-block;
 
   button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: transparent 2px solid;
+    background-color: white;
     padding: 0.25rem;
     min-width: var(--minHitDimensionAAA);
     min-height: var(--minHitDimensionAAA);
 
     .svg-container {
+      width: 22px;
+      height: auto;
       svg {
         display: block;
       }
