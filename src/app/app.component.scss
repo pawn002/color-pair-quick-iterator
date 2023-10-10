@@ -2,19 +2,22 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  padding: 0.3rem;
 
   section {
-    border: grey 2px dashed;
-    box-sizing: border-box;
+    margin: 0.5rem 0;
+    // border: grey 2px dashed;
+    // box-sizing: border-box;
   }
 
   .title-and-score {
     display: flex;
     gap: 1rem;
+    margin-bottom: 0.4rem;
 
     h1 {
-      margin: 0;
       width: min-content;
+      text-align: right;
     }
 
     app-color-contrast {
@@ -24,9 +27,31 @@
 
   .slide-group {
     display: flex;
+    margin-bottom: 0.4rem;
 
     app-color-slider {
       flex-grow: 1;
+    }
+  }
+
+  h2 {
+    text-align: center;
+  }
+
+  .checkbox-group {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    align-items: center;
+
+    label {
+      font-size: var(minTextSize);
+      font-family: var(--bodyFont);
+    }
+    input {
+      margin: 11px;
+      min-width: var(--minHitDimensionAA);
+      min-height: var(--minHitDimensionAA);
     }
   }
 }

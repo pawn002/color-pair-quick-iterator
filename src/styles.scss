@@ -26,6 +26,16 @@ body {
   margin: 0;
 }
 
+hr {
+  width: 90%;
+}
+
+h1,
+h2 {
+  margin: 0;
+  line-height: 1.05em;
+}
+
 h1 {
   font-family: var(--headerFont);
   font-size: 21px;
@@ -45,6 +55,10 @@ p {
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
+}
+
+sup {
+  font-size: var(--minTextSize) !important;
 }
 
 .sr-only:not(:focus):not(:active) {

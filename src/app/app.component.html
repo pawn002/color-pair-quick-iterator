@@ -1,7 +1,7 @@
 <div class="app-container">
   <section class="title-and-sliders">
     <div class="title-and-score">
-      <h1>Perceptual Contrast</h1>
+      <h1>Perceptual Contrast<sup>a</sup></h1>
       <app-color-contrast
         [colorOne]="colorPickerOneComparedColor"
         [colorTwo]="colorPickerTwoComparedColor"
@@ -47,16 +47,57 @@
     </div>
   </section>
 
+  <hr />
+
   <section class="options">
     <h2>Options</h2>
+    <div class="checkbox-group">
+      <label for="option-omit-hex">Omit # from Copy</label>
+      <input
+        type="checkbox"
+        name="Omit # from Hex Code Toggle"
+        id="option-omit-hex"
+      />
+    </div>
+    <div class="checkbox-group">
+      <label for="option-score-toggle">Use WCAG 2.x value</label>
+      <input
+        type="checkbox"
+        name="Contrast Score Type Toggle"
+        id="option-score-toggle"
+      />
+    </div>
+    <div class="checkbox-group">
+      <label for="option-const-chroma">Constant Chroma<sup>b</sup></label>
+      <input
+        checked
+        disabled
+        type="checkbox"
+        name="Constant Chroma Toggle"
+        id="option-const-chroma"
+      />
+    </div>
   </section>
+
+  <hr />
 
   <section class="Notes">
     <h2>Notes</h2>
 
     <p>
+      <sup>a</sup>
       For more information on the value used for Perceptual Contrast, refer to
-      Why APCA?
+      Myndex article
+      <a href="https://git.apcacontrast.com/documentation/WhyAPCA.html"
+        >Why APCA?</a
+      >
+    </p>
+    <p>
+      <sup>b</sup>
+      Color slider varies light and dark restricting possible tints and shades
+      to the same chroma and hue of the inputted color. Support for switching
+      this off and using constant saturation instead is
+      <a href="http://">planned for later</a>.
     </p>
   </section>
 </div>
