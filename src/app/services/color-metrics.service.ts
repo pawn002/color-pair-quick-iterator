@@ -24,7 +24,7 @@ export class ColorMetricsService {
 
     const contrast = this.calcRawApcaContrast(colorOne, colorTwo);
 
-    if (contrast) {
+    if (contrast || contrast === 0) {
       if (contrastType === 'apca') {
         const roundedContrast = contrast.toFixed(0);
 
