@@ -10,6 +10,7 @@
 /* Vars */
 :root {
   --background-color: #fef9ea;
+  --min-body-text-black: #424242;
 
   --headerFont: "Atkinson Hyperlegible", sans-serif;
   --bodyFont: "Atkinson Hyperlegible", sans-serif;
@@ -57,6 +58,8 @@ p {
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
+  max-width: 40ch;
+  line-height: 1.5em;
 }
 
 sup {

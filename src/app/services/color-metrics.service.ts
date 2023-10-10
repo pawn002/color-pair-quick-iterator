@@ -55,13 +55,17 @@ export class ColorMetricsService {
     let wcag: number = NaN;
 
     // [Source for numbers](https://github.com/Myndex/bridge-pca#additional-notes)
-    const scaleApcaToWcag = scaleLinear([0, 3, 4.5, 7, 21]).domain([
-      0, 60, 75, 90, 108,
-    ]);
+    const scaleApcaToWcag = scaleLinear(
+      // WCAG-ish Range
+      [1, 3, 4.5, 7, 21]
+    ).domain(
+      // APCA Absolute Range
+      [0, 60, 75, 90, 108]
+    );
 
     const absoluteApca: number = Math.abs(
-      // Rounding down APCA raw score to ensure no false passes going from APCA to WCAG Style.
-      Math.floor(apcaScore)
+      // Subtracting one from APCA raw score to ensure no false passes going from APCA to WCAG Style.
+      apcaScore - 1
     );
 
     if (this.apcaToWcagLookup[absoluteApca]) {
@@ -70,7 +74,11 @@ export class ColorMetricsService {
     } else {
       const wcagStyleScore = scaleApcaToWcag(absoluteApca);
 
-      const roundedWcag = parseFloat(wcagStyleScore.toFixed(1));
+      let roundedWcag = parseFloat(wcagStyleScore.toFixed(1));
+
+      if (roundedWcag > 21) {
+        roundedWcag = 21;
+      }
 
       // memoize score for later access
       this.apcaToWcagLookup[absoluteApca] = roundedWcag;

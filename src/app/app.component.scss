@@ -11,7 +11,7 @@
   .title-and-score {
     display: flex;
     gap: 1rem;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.8rem;
 
     h1 {
       width: min-content;
@@ -36,24 +36,33 @@
     text-align: center;
   }
 
-  .checkbox-group {
+  .options {
     display: flex;
-    flex-direction: row-reverse;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
 
-    label {
-      font-size: var(minTextSize);
-      font-family: var(--bodyFont);
-    }
-    input {
-      margin: 11px;
-      min-width: var(--minHitDimensionAA);
-      min-height: var(--minHitDimensionAA);
+    .checkbox-group {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+      align-items: center;
+      flex-grow: 1;
+
+      label {
+        font-size: var(--minTextSize);
+        font-family: var(--bodyFont);
+        color: var(--min-body-text-black);
+      }
+      input {
+        margin: 11px;
+        min-width: var(--minHitDimensionAA);
+        min-height: var(--minHitDimensionAA);
+      }
     }
   }
 
   p {
-    margin: 0 11px;
+    margin: 0 11px 1.15em 0;
   }
 }

@@ -4,6 +4,7 @@
   // gives input more room on left and right ends to be hit more successfully
   padding: 0 calc(var(--minHitDimensionAAA) / 2);
   align-items: center;
+  background-color: white;
 
   input {
     flex-grow: 1;
