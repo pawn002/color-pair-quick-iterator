@@ -1,0 +1,16 @@
+.comp-container {
+  position: relative;
+  display: inline-block;
+
+  button {
+    padding: 0.25rem;
+    min-width: var(--minHitDimensionAAA);
+    min-height: var(--minHitDimensionAAA);
+
+    .svg-container {
+      svg {
+        display: block;
+      }
+    }
+  }
+}
