@@ -1,5 +1,5 @@
 .comp-container {
-  border: black solid 2px;
+  border: black solid 3px;
   padding: 0.5rem;
 
   .score-container {
@@ -7,7 +7,7 @@
     justify-content: center;
 
     .score {
-      font-style: italic;
+      // font-style: italic;
       font-weight: 700;
     }
   }

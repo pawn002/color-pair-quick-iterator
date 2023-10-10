@@ -9,6 +9,8 @@
 
 /* Vars */
 :root {
+  --background-color: #fef9ea;
+
   --headerFont: "Atkinson Hyperlegible", sans-serif;
   --bodyFont: "Atkinson Hyperlegible", sans-serif;
   --monoFont: "Source Code Pro Variable", sans-serif;
@@ -24,6 +26,16 @@
 
 body {
   margin: 0;
+}
+
+hr {
+  width: 90%;
+}
+
+h1,
+h2 {
+  margin: 0;
+  line-height: 0.85em;
 }
 
 h1 {
@@ -45,6 +57,10 @@ p {
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
+}
+
+sup {
+  font-size: var(--minTextSize) !important;
 }
 
 .sr-only:not(:focus):not(:active) {
