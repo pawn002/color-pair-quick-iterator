@@ -1,14 +1,11 @@
 .app-container {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
   padding: 0.3rem;
   background-color: var(--background-color);
 
   section {
     margin: 0.5rem 0;
-    // border: grey 2px dashed;
-    // box-sizing: border-box;
   }
 
   .title-and-score {
