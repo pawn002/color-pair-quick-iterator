@@ -9,8 +9,10 @@
 
 /* Vars */
 :root {
-  --background-color: #fef9ea;
+  // --background-color: #fef9ea;
+  --background-color: #e6e2d5;
   --min-body-text-black: #424242;
+  // --min-body-text-black: #424242;
 
   --headerFont: "Atkinson Hyperlegible", sans-serif;
   --bodyFont: "Atkinson Hyperlegible", sans-serif;
@@ -37,6 +39,10 @@ h1,
 h2 {
   margin: 0;
   line-height: 0.85em;
+
+  sup {
+    margin-left: 0.25ch;
+  }
 }
 
 h1 {
@@ -60,6 +66,10 @@ p {
   font-weight: 400;
   max-width: 40ch;
   line-height: 1.5em;
+
+  sup {
+    margin-right: 0.5ch;
+  }
 }
 
 sup {

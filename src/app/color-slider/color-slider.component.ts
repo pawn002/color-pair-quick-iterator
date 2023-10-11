@@ -15,9 +15,9 @@ import { ColorUtilService } from '../services/color-util.service';
   styleUrls: ['./color-slider.component.scss'],
 })
 export class ColorSliderComponent implements OnInit, OnChanges {
-  @Input() color: string | null = null;
   @Input() id: string | 'slider-0' = 'slider-0';
   @Input() name: string | 'color-slider' = 'color-slider';
+  @Input() color: string | null = null;
   @Output() colorVariant = new EventEmitter<string | null>();
 
   debug: boolean = false;
@@ -49,6 +49,8 @@ export class ColorSliderComponent implements OnInit, OnChanges {
 
       const lightnessValue = 0;
       const initialSlideValue = rangeObject.originalCoords[lightnessValue];
+
+      console.log(initialSlideValue);
 
       this.value = initialSlideValue;
     } else {
