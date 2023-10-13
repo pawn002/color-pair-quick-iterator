@@ -1,7 +1,7 @@
 .app-container {
   display: flex;
   flex-direction: column;
-  padding: 0.3rem;
+  padding: var(--fluidPadding);
   background-color: var(--background-color);
 
   section {

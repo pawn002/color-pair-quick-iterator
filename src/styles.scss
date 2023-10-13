@@ -25,6 +25,8 @@
 
   --minHitDimensionAAA: 44px;
   --minHitDimensionAA: 22px;
+
+  --fluidPadding: clamp(0.313rem, 4.5vw + -0.25rem, 2rem);
 }
 
 body {
