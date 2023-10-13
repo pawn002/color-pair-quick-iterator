@@ -73,21 +73,12 @@ export class AppComponent {
       background: oldPairing.foreground,
     };
 
-    const colorpickerOne = document.getElementById('cp-0') as HTMLInputElement;
-    const colorpickerTwo = document.getElementById('cp-1') as HTMLInputElement;
+    if (newPairing.foreground && newPairing.background) {
+      this.colorPickerOneSelectedColor = newPairing.foreground;
 
-    if (colorpickerOne && colorpickerTwo) {
-      if (newPairing.foreground && newPairing.background) {
-        colorpickerOne.value = newPairing.foreground;
-        this.colorPickerOneSelectedColor = newPairing.foreground;
-
-        colorpickerTwo.value = newPairing.background;
-        this.colorPickerTwoSelectedColor = newPairing.background;
-      } else {
-        console.error('swapping colors went badly. . .');
-      }
+      this.colorPickerTwoSelectedColor = newPairing.background;
     } else {
-      console.error('one or more color pickers null');
+      console.error('swapping colors went badly. . .');
     }
   }
 }

@@ -26,9 +26,6 @@ export class ColorPickerComponent implements OnChanges {
     // update color
     this.color = inputColor;
 
-    // reset compared color
-    this.comparedColor = 'transparent';
-
     // send out color for use in other comps
     this.selectedColor.emit(inputColor);
   }
@@ -37,6 +34,9 @@ export class ColorPickerComponent implements OnChanges {
     const inputElement = event.target as HTMLInputElement;
 
     const selectedColor = inputElement.value;
+
+    // reset compared color
+    this.comparedColor = 'transparent';
 
     this.handleColorChange(selectedColor);
   }
