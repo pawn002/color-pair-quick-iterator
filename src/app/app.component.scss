@@ -42,9 +42,26 @@
     justify-content: flex-start;
 
     button {
+      background-color: white;
+      border: transparent 2px solid;
+      box-sizing: border-box;
+      position: relative;
+      display: flex;
+      // justify-content: center;
+      align-items: center;
       margin: 11px;
+
       min-width: var(--minHitDimensionAA);
       min-height: var(--minHitDimensionAA);
+
+      svg {
+        transform: rotateZ(90deg);
+
+        height: auto;
+        width: 22px;
+
+        display: inline-block;
+      }
     }
   }
 
