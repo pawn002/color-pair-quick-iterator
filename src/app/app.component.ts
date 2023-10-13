@@ -15,15 +15,6 @@ export class AppComponent {
 
   contrastType: ContrastType = 'apca';
 
-  toggleContrastType(event: Event) {
-    const inputElement = event.target as HTMLInputElement;
-    const checked = inputElement.checked;
-
-    console.log(`toggling contrast type ${inputElement.checked}`);
-
-    this.contrastType = checked ? 'bpca' : 'apca';
-  }
-
   handleColorInputInput(inputNumber: 'One' | 'Two', event: string) {
     if (inputNumber === 'One') {
       this.colorPickerOneSelectedColor = event;
@@ -41,6 +32,53 @@ export class AppComponent {
 
     if (inputNumber === 'Two') {
       this.colorPickerTwoComparedColor = event;
+    }
+  }
+
+  toggleContrastType(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    const checked = inputElement.checked;
+
+    this.contrastType = checked ? 'bpca' : 'apca';
+  }
+
+  swapColors() {
+    const getColor = (type: 'fg' | 'bg'): string | null => {
+      let color: string | null = null;
+
+      switch (type) {
+        case 'fg':
+          color = this.colorPickerOneSelectedColor;
+
+          break;
+        case 'bg':
+          color = this.colorPickerTwoSelectedColor;
+
+          break;
+
+        default:
+          break;
+      }
+
+      return color;
+    };
+
+    const oldPairing = {
+      foreground: getColor('fg'),
+      background: getColor('bg'),
+    };
+
+    const newPairing = {
+      foreground: oldPairing.background,
+      background: oldPairing.foreground,
+    };
+
+    if (newPairing.foreground && newPairing.background) {
+      this.colorPickerOneSelectedColor = newPairing.foreground;
+
+      this.colorPickerTwoSelectedColor = newPairing.background;
+    } else {
+      console.error('swapping colors went badly. . .');
     }
   }
 }

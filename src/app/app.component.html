@@ -16,6 +16,7 @@
         [inputName]="'Foreground Color'"
         [comparedColor]="colorPickerOneComparedColor"
         (selectedColor)="handleColorInputInput('One', $event)"
+        [deltaColor]="colorPickerOneSelectedColor"
       ></app-color-picker>
       <app-color-slider
         [id]="'slider-0'"
@@ -33,6 +34,7 @@
         [inputId]="'cp-1'"
         [inputName]="'Background Color'"
         [comparedColor]="colorPickerTwoComparedColor"
+        [deltaColor]="colorPickerTwoSelectedColor"
         (selectedColor)="handleColorInputInput('Two', $event)"
       ></app-color-picker>
       <app-color-slider
@@ -47,20 +49,43 @@
     </div>
   </section>
 
+  <section class="quick-actions">
+    <button
+      [disabled]="!colorPickerOneSelectedColor || !colorPickerTwoSelectedColor"
+      (click)="swapColors()"
+    >
+      <span class="sr-only">Swap Selected Colors</span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 32 32"
+        x="0px"
+        y="0px"
+      >
+        <defs>
+          <style>
+            .cls-1 {
+              fill: none;
+            }
+          </style>
+        </defs>
+        <g>
+          <path
+            d="M6.29,8.71a1,1,0,0,1,0-1.42l4-4a1,1,0,1,1,1.42,1.42L9.41,7H19a7,7,0,0,1,7,7,1,1,0,0,1-2,0,5,5,0,0,0-5-5H9.41l2.3,2.29a1,1,0,0,1,0,1.42,1,1,0,0,1-1.42,0ZM21.71,19.29a1,1,0,0,0-1.42,1.42L22.59,23H13a5,5,0,0,1-5-5,1,1,0,0,0-2,0,7,7,0,0,0,7,7h9.59l-2.3,2.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0l4-4a1,1,0,0,0,0-1.42Z"
+          />
+          <rect class="cls-1" width="32" height="32" />
+        </g>
+      </svg>
+    </button>
+    <button disabled>Re</button>
+    <button disabled>Ch</button>
+    <button disabled>Sa</button>
+  </section>
+
   <hr />
 
   <section class="options">
     <h2>Options</h2>
     <div class="options">
-      <div class="checkbox-group">
-        <label for="option-omit-hex">Omit # from Copy</label>
-        <input
-          disabled
-          type="checkbox"
-          name="Omit # from Hex Code Toggle"
-          id="option-omit-hex"
-        />
-      </div>
       <div class="checkbox-group">
         <label for="option-score-toggle">Use WCAG 2.x value</label>
         <input
@@ -68,6 +93,15 @@
           name="Contrast Score Type Toggle"
           id="option-score-toggle"
           (change)="toggleContrastType($event)"
+        />
+      </div>
+      <div class="checkbox-group">
+        <label for="option-omit-hex">Omit # from Copy</label>
+        <input
+          disabled
+          type="checkbox"
+          name="Omit # from Hex Code Toggle"
+          id="option-omit-hex"
         />
       </div>
       <div class="checkbox-group">
