@@ -16,6 +16,7 @@
         [inputName]="'Foreground Color'"
         [comparedColor]="colorPickerOneComparedColor"
         (selectedColor)="handleColorInputInput('One', $event)"
+        [deltaColor]="colorPickerOneSelectedColor"
       ></app-color-picker>
       <app-color-slider
         [id]="'slider-0'"
@@ -33,6 +34,7 @@
         [inputId]="'cp-1'"
         [inputName]="'Background Color'"
         [comparedColor]="colorPickerTwoComparedColor"
+        [deltaColor]="colorPickerTwoSelectedColor"
         (selectedColor)="handleColorInputInput('Two', $event)"
       ></app-color-picker>
       <app-color-slider
@@ -45,6 +47,18 @@
         [color]="colorPickerTwoComparedColor"
       ></app-copy-to-clipboard-button>
     </div>
+  </section>
+
+  <section class="quick-actions">
+    <button
+      [disabled]="!colorPickerOneSelectedColor || !colorPickerTwoSelectedColor"
+      (click)="swapColors()"
+    >
+      Sw
+    </button>
+    <button disabled>Re</button>
+    <button disabled>Ch</button>
+    <button disabled>Sa</button>
   </section>
 
   <hr />
