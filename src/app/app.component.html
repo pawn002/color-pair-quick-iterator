@@ -53,21 +53,21 @@
     <h2>Options</h2>
     <div class="options">
       <div class="checkbox-group">
-        <label for="option-omit-hex">Omit # from Copy</label>
-        <input
-          disabled
-          type="checkbox"
-          name="Omit # from Hex Code Toggle"
-          id="option-omit-hex"
-        />
-      </div>
-      <div class="checkbox-group">
         <label for="option-score-toggle">Use WCAG 2.x value</label>
         <input
           type="checkbox"
           name="Contrast Score Type Toggle"
           id="option-score-toggle"
           (change)="toggleContrastType($event)"
+        />
+      </div>
+      <div class="checkbox-group">
+        <label for="option-omit-hex">Omit # from Copy</label>
+        <input
+          disabled
+          type="checkbox"
+          name="Omit # from Hex Code Toggle"
+          id="option-omit-hex"
         />
       </div>
       <div class="checkbox-group">
