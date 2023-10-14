@@ -1,10 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-alert',
   templateUrl: './alert.component.html',
-  styleUrls: ['./alert.component.scss']
+  styleUrls: ['./alert.component.scss'],
 })
 export class AlertComponent {
+  @Input() showAlert: boolean = false;
+  @Input() alertMessage: string | null = null;
 
+  hideAlert() {
+    this.showAlert = false;
+  }
 }

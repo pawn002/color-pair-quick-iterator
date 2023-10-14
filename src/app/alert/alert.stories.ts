@@ -11,7 +11,14 @@ const meta: Meta<AlertComponent> = {
       ...args,
     },
   }),
-  argTypes: {},
+  argTypes: {
+    showAlert: {
+      control: { type: 'boolean' },
+    },
+    alertMessage: {
+      control: { type: 'text' },
+    },
+  },
 };
 
 export default meta;
@@ -20,4 +27,11 @@ type Story = StoryObj<AlertComponent>;
 // More on writing stories with args: https://storybook.js.org/docs/angular/writing-stories/args
 export const Typical: Story = {
   args: {},
+};
+
+export const ColorCopied: Story = {
+  args: {
+    showAlert: true,
+    alertMessage: 'Color One Variant, #ffe1df, copied to clipboard.',
+  },
 };
