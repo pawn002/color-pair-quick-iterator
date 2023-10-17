@@ -41,9 +41,23 @@ export class ColorPickerComponent implements OnChanges {
     this.handleColorChange(selectedColor);
   }
 
+  updateInputValue(color: string) {
+    const targetInput = document.getElementById(
+      this.inputId
+    ) as HTMLInputElement;
+
+    if (targetInput) {
+      targetInput.value = color;
+    } else {
+      console.error(`something went wrong in color picker comp.`);
+    }
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (this.deltaColor) {
       this.handleColorChange(this.deltaColor);
+
+      this.updateInputValue(this.deltaColor);
     }
   }
 }
