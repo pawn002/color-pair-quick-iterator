@@ -12,6 +12,10 @@
     min-width: var(--minHitDimensionAAA);
     min-height: var(--minHitDimensionAAA);
 
+    &:hover {
+      background-color: #dfdfdf;
+    }
+
     .svg-container {
       width: 22px;
       height: auto;

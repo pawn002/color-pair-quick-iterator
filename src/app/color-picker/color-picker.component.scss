@@ -7,10 +7,15 @@
     width: 45px;
     height: 45px;
     box-sizing: border-box;
+
+    &:hover,
+    &:focus {
+      box-shadow: 0 0 4px 0 black;
+    }
   }
 
   .color-preview {
-    border-radius: 5px;
+    border-radius: 5px 0 0 5px;
     position: absolute;
     top: 0;
     left: 0;
