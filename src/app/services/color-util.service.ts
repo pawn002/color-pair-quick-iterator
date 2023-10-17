@@ -185,10 +185,10 @@ export class ColorUtilService {
     // ref: oklch.com
     const targetChroma = 0.11;
 
-    const colorOneLight = random(0.25, 0.95, true);
-    const colorOneHue = random(0, 360, true);
-    const colorTwoLight = random(0.25, 0.95, true);
-    const colorTwoHue = random(0, 360, true);
+    const colorOneLight = random(0.25, 0.7, true);
+    const colorOneHue = random(0, 180);
+    const colorTwoLight = random(0.25, 0.7, true);
+    const colorTwoHue = random(181, 360);
 
     const colorOne = new Color('oklch', [
       colorOneLight,
