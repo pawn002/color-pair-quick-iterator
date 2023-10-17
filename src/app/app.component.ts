@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ContrastType } from './services/color-metrics.service';
+import { CopyToClipboardEvent } from './copy-to-clipboard-button/copy-to-clipboard-button.component';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,9 @@ export class AppComponent {
   colorPickerTwoComparedColor: string | null = null;
 
   contrastType: ContrastType = 'apca';
+
+  showAlert: boolean = false;
+  currentAlertMessage: string | null = null;
 
   handleColorInputInput(inputNumber: 'One' | 'Two', event: string) {
     if (inputNumber === 'One') {
@@ -32,6 +36,14 @@ export class AppComponent {
 
     if (inputNumber === 'Two') {
       this.colorPickerTwoComparedColor = event;
+    }
+  }
+
+  handleCopyEvent(event: CopyToClipboardEvent) {
+    if (event.copied) {
+      this.alertUser(`${event.color} copied to clipboard.`);
+    } else {
+      console.error(`color copy error.`);
     }
   }
 
@@ -77,8 +89,25 @@ export class AppComponent {
       this.colorPickerOneSelectedColor = newPairing.foreground;
 
       this.colorPickerTwoSelectedColor = newPairing.background;
+
+      this.alertUser('Swapped Color One and Two.');
     } else {
       console.error('swapping colors went badly. . .');
+    }
+  }
+
+  alertUser(message: string) {
+    this.showAlert = true;
+
+    this.currentAlertMessage = message;
+  }
+
+  alertClosed(event: boolean) {
+    if (event) {
+      this.showAlert = false;
+      this.currentAlertMessage = null;
+    } else {
+      console.error(`alert did something unexpected`);
     }
   }
 }

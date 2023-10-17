@@ -26,6 +26,7 @@
       ></app-color-slider>
       <app-copy-to-clipboard-button
         [color]="colorPickerOneComparedColor"
+        (copyEvent)="handleCopyEvent($event)"
       ></app-copy-to-clipboard-button>
     </div>
 
@@ -45,6 +46,7 @@
       ></app-color-slider>
       <app-copy-to-clipboard-button
         [color]="colorPickerTwoComparedColor"
+        (copyEvent)="handleCopyEvent($event)"
       ></app-copy-to-clipboard-button>
     </div>
   </section>
@@ -138,4 +140,12 @@
       >.
     </p>
   </section>
+
+  <div class="alert">
+    <app-alert
+      [showAlert]="showAlert"
+      [alertMessage]="currentAlertMessage"
+      (alertClosed)="alertClosed($event)"
+    ></app-alert>
+  </div>
 </div>
