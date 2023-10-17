@@ -1,13 +1,19 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  AfterViewChecked,
+} from '@angular/core';
 import { ContrastType } from './services/color-metrics.service';
 import { CopyToClipboardEvent } from './copy-to-clipboard-button/copy-to-clipboard-button.component';
+import { ColorUtilService } from './services/color-util.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit, AfterViewInit {
   colorPickerOneSelectedColor: string | null = null;
   colorPickerOneComparedColor: string | null = null;
 
@@ -109,5 +115,28 @@ export class AppComponent {
     } else {
       console.error(`alert did something unexpected`);
     }
+  }
+
+  setRandomColorPair(initialAppColors?: boolean) {
+    setTimeout(() => {
+      const randomColorPair = this.cus.getRandomColorPair();
+
+      this.colorPickerOneSelectedColor = randomColorPair[0];
+      this.colorPickerTwoSelectedColor = randomColorPair[1];
+
+      if (!initialAppColors) {
+        this.alertUser(
+          `Random color pair generated: ${randomColorPair[0]}, and ${randomColorPair[1]}`
+        );
+      }
+    }, 0);
+  }
+
+  constructor(private cus: ColorUtilService) {}
+
+  ngOnInit(): void {}
+
+  ngAfterViewInit(): void {
+    this.setRandomColorPair(true);
   }
 }

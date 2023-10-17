@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import Color from 'colorjs.io';
 import { ColorConstructor } from 'colorjs.io/types/src/color';
+import { random } from 'lodash';
 
 export interface MinMaxLightObject {
   originalCoords: [number, number, number];
@@ -176,6 +177,38 @@ export class ColorUtilService {
     }
 
     return returnedObject;
+  }
+
+  getRandomColorPair(): [string, string] {
+    let pair: [string, string] = ['black', 'white'];
+
+    // ref: oklch.com
+    const targetChroma = 0.11;
+
+    const colorOneLight = random(0.25, 0.95, true);
+    const colorOneHue = random(0, 360, true);
+    const colorTwoLight = random(0.25, 0.95, true);
+    const colorTwoHue = random(0, 360, true);
+
+    const colorOne = new Color('oklch', [
+      colorOneLight,
+      targetChroma,
+      colorOneHue,
+    ])
+      .to('srgb')
+      .toString({ format: 'hex' });
+
+    const colorTwo = new Color('oklch', [
+      colorTwoLight,
+      targetChroma,
+      colorTwoHue,
+    ])
+      .to('srgb')
+      .toString({ format: 'hex' });
+
+    pair = [colorOne, colorTwo];
+
+    return pair;
   }
 
   constructor() {}

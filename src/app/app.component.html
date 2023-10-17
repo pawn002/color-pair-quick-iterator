@@ -58,6 +58,7 @@
     >
       <span class="sr-only">Swap Selected Colors</span>
       <svg
+        aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 32 32"
         x="0px"
@@ -78,9 +79,22 @@
         </g>
       </svg>
     </button>
-    <button disabled>Re</button>
-    <button disabled>Ch</button>
-    <button disabled>Sa</button>
+    <button (click)="setRandomColorPair()">
+      <span class="sr-only">Create Random Color Pair</span
+      ><span aria-hidden="true">Ra</span>
+    </button>
+    <button disabled>
+      <span class="sr-only">Reset Color Sliders</span
+      ><span aria-hidden="true">Re</span>
+    </button>
+    <button disabled>
+      <span class="sr-only">Harmonize Color Pair To Same Chroma</span
+      ><span aria-hidden="true">Ch</span>
+    </button>
+    <button disabled>
+      <span class="sr-only">Harmonize Color Pair To Same Saturation</span
+      ><span aria-hidden="true">Sa</span>
+    </button>
   </section>
 
   <hr />
