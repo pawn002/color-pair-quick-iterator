@@ -45,7 +45,6 @@
               "outputHashing": "all"
             },
             "development": {
-              "baseHref": "https://pawn002.github.io/color-pair-quick-iterator/",
               "buildOptimizer": false,
               "optimization": false,
               "vendorChunk": true,
