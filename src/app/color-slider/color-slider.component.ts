@@ -47,8 +47,8 @@ export class ColorSliderComponent implements OnInit, OnChanges {
       this.slideMin = rangeObject.lightMin;
       this.slideMax = rangeObject.lightMax;
 
-      const lightnessValue = 0;
-      const initialSlideValue = rangeObject.originalCoords[lightnessValue];
+      const lightnessIndex = 0;
+      const initialSlideValue = rangeObject.originalCoords[lightnessIndex];
 
       this.value = initialSlideValue;
     } else {

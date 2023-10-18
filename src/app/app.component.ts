@@ -139,11 +139,17 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.colorPickerTwoSelectedColor,
       ]);
 
-      if (matchedColors.success && matchedColors.colors) {
+      if (
+        matchedColors.success &&
+        matchedColors.colors &&
+        matchedColors.chroma
+      ) {
         this.colorPickerOneSelectedColor = matchedColors.colors[0];
         this.colorPickerTwoSelectedColor = matchedColors.colors[1];
 
-        this.alertUser(`Chroma matched colors.`);
+        this.alertUser(
+          `Chroma matched colors to ${matchedColors.chroma.toFixed(2)}`
+        );
       } else {
         this.alertUser('Unable to chroma match colors');
       }
