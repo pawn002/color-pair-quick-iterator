@@ -1,7 +1,16 @@
 import { Injectable } from '@angular/core';
 import Color from 'colorjs.io';
+import { to } from 'colorjs.io/fn';
 import { ColorConstructor } from 'colorjs.io/types/src/color';
 import { random } from 'lodash';
+
+export type ColorPair = [string, string];
+
+export class ChromaMatchObject {
+  success: boolean = false;
+  colors: ColorPair | null = null;
+  chroma: number | null = null;
+}
 
 export interface MinMaxLightObject {
   originalCoords: [number, number, number];
@@ -179,8 +188,8 @@ export class ColorUtilService {
     return returnedObject;
   }
 
-  getRandomColorPair(): [string, string] {
-    let pair: [string, string] = ['black', 'white'];
+  getRandomColorPair(): ColorPair {
+    let pair: ColorPair = ['black', 'white'];
 
     // ref: oklch.com
     const targetChroma = 0.11;
@@ -207,6 +216,67 @@ export class ColorUtilService {
       .toString({ format: 'hex' });
 
     pair = [colorOne, colorTwo];
+
+    return pair;
+  }
+
+  async matchChromas(colorpair: ColorPair): Promise<ChromaMatchObject> {
+    let pair: ChromaMatchObject = {
+      success: false,
+      colors: null,
+      chroma: null,
+    };
+
+    const colorOneParsed = this.parseColor(colorpair[0]);
+    const colorTwoParsed = this.parseColor(colorpair[1]);
+
+    if (colorOneParsed && colorTwoParsed) {
+      const colorOneOklch = new Color('srgb', colorOneParsed.coords).to(
+        'oklch'
+      );
+      const colorOneChroma = colorOneOklch.coords[1];
+
+      const colorTwoOklch = new Color('srgb', colorTwoParsed.coords).to(
+        'oklch'
+      );
+      const colorTwoChroma = colorTwoOklch.coords[1];
+
+      const colorOneCandCoords = [
+        colorOneOklch.coords[0],
+        colorTwoChroma,
+        colorOneOklch.coords[2],
+      ] as [number, number, number];
+      const colorTwoCandCoords = [
+        colorTwoOklch.coords[0],
+        colorOneChroma,
+        colorTwoOklch.coords[2],
+      ] as [number, number, number];
+
+      const colorOneCandInGamut = await this.isInSrgbGamut(colorOneCandCoords);
+      const colorTwoCandInGamut = await this.isInSrgbGamut(colorTwoCandCoords);
+
+      if (colorOneCandInGamut) {
+        pair.success = true;
+        pair.colors = [
+          new Color('oklch', colorOneCandCoords)
+            .to('srgb')
+            .toString({ format: 'hex' }),
+          colorpair[1],
+        ];
+        pair.chroma = colorOneCandCoords[1];
+      } else if (colorTwoCandInGamut) {
+        pair.success = true;
+        pair.colors = [
+          colorpair[0],
+          new Color('oklch', colorTwoCandCoords)
+            .to('srgb')
+            .toString({ format: 'hex' }),
+        ];
+        pair.chroma = colorTwoCandCoords[1];
+      }
+    } else {
+      console.error("color parsing didn't work out. ");
+    }
 
     return pair;
   }
