@@ -132,6 +132,24 @@ export class AppComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
+  async matchChromas() {
+    if (this.colorPickerOneSelectedColor && this.colorPickerTwoSelectedColor) {
+      const matchedColors = await this.cus.matchChromas([
+        this.colorPickerOneSelectedColor,
+        this.colorPickerTwoSelectedColor,
+      ]);
+
+      if (matchedColors.success && matchedColors.colors) {
+        this.colorPickerOneSelectedColor = matchedColors.colors[0];
+        this.colorPickerTwoSelectedColor = matchedColors.colors[1];
+
+        this.alertUser(`Chroma matched colors.`);
+      } else {
+        this.alertUser('Unable to chroma match colors');
+      }
+    }
+  }
+
   constructor(private cus: ColorUtilService) {}
 
   ngOnInit(): void {}
