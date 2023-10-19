@@ -12,9 +12,12 @@ const meta: Meta<MetadataComponent> = {
     },
   }),
   argTypes: {
-    // color: {
-    //   control: 'color',
-    // },
+    colorOne: {
+      control: 'color',
+    },
+    colorTwo: {
+      control: 'color',
+    },
   },
 };
 
@@ -23,13 +26,12 @@ type Story = StoryObj<MetadataComponent>;
 
 // More on writing stories with args: https://storybook.js.org/docs/angular/writing-stories/args
 export const Typical: Story = {
-  args: {
-    color: null,
-  },
+  args: {},
 };
 
 export const SomethingToCopy: Story = {
   args: {
-    color: 'red',
+    colorOne: 'red',
+    colorTwo: 'white',
   },
 };
