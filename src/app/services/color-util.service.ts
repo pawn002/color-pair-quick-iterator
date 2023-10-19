@@ -281,5 +281,25 @@ export class ColorUtilService {
     return pair;
   }
 
+  calcDeltaE(colorOne: string, colorTwo: string): number | null {
+    let delta: number | null = null;
+
+    const colorOneParsed = this.parseColor(colorOne);
+    const colorTwoParsed = this.parseColor(colorTwo);
+
+    if (colorOneParsed && colorTwoParsed) {
+      const colorOneObj = new Color('srgb', colorOneParsed.coords);
+      const colorTwoObj = new Color('srgb', colorTwoParsed.coords);
+
+      const rawDelta = colorOneObj.deltaE2000(colorTwoObj);
+
+      const fixedDelta = rawDelta.toFixed(2);
+
+      delta = parseFloat(fixedDelta);
+    }
+
+    return delta;
+  }
+
   constructor() {}
 }

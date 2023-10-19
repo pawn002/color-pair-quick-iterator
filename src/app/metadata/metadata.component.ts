@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
+import { ColorUtilService } from '../services/color-util.service';
 
 export class DifferencesDataObj {
   deltaE: number | null = null;
@@ -37,7 +38,14 @@ export class MetadataComponent implements OnChanges {
     hue: null,
   };
 
-  constructor() {}
+  constructor(private cus: ColorUtilService) {}
 
-  ngOnChanges() {}
+  ngOnChanges() {
+    if (this.colorOne && this.colorTwo) {
+      this.differences.deltaE = this.cus.calcDeltaE(
+        this.colorOne,
+        this.colorTwo
+      );
+    }
+  }
 }
