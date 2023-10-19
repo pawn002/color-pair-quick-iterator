@@ -1,0 +1,27 @@
+.comp-container {
+  position: relative;
+  border: black 2px solid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  h3 {
+    text-align: center;
+  }
+  table {
+    margin-bottom: 1rem;
+    // max-width: 30ch;
+    // flex-grow: 1;
+  }
+
+  tr {
+    :nth-child(2) {
+      font-family: var(--monoFont);
+      text-align: right;
+    }
+
+    td {
+      padding: 0.25em 1ch;
+    }
+  }
+}
