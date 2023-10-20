@@ -1,16 +1,10 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { ColorUtilService } from '../services/color-util.service';
+import { ColorUtilService, ColorMetaObj } from '../services/color-util.service';
 
 export class DifferencesDataObj {
   deltaE: number | null = null;
 }
 
-export class ColorMetadataObj {
-  saturation: number | null = null;
-  lightness: number | null = null;
-  chroma: number | null = null;
-  hue: number | null = null;
-}
 @Component({
   selector: 'app-metadata',
   templateUrl: './metadata.component.html',
@@ -24,19 +18,9 @@ export class MetadataComponent implements OnChanges {
     deltaE: null,
   };
 
-  colorOneMeta: ColorMetadataObj = {
-    saturation: null,
-    lightness: null,
-    chroma: null,
-    hue: null,
-  };
+  colorOneMeta: ColorMetaObj | null = null;
 
-  colorOneTwo: ColorMetadataObj = {
-    saturation: null,
-    lightness: null,
-    chroma: null,
-    hue: null,
-  };
+  colorTwoMeta: ColorMetaObj | null = null;
 
   constructor(private cus: ColorUtilService) {}
 
@@ -46,6 +30,12 @@ export class MetadataComponent implements OnChanges {
         this.colorOne,
         this.colorTwo
       );
+
+      if (this.cus.getColorMeta(this.colorOne)) {
+        this.colorOneMeta = this.cus.getColorMeta(this.colorOne);
+
+        this.colorTwoMeta = this.cus.getColorMeta(this.colorTwo);
+      }
     }
   }
 }

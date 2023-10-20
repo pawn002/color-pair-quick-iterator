@@ -20,6 +20,13 @@ export interface MinMaxLightObject {
 
 export type ColorVariant = [number, number, number];
 
+export interface ColorMetaObj {
+  lightness: number | string;
+  chroma: number | string;
+  hue: number | string;
+  saturation: number | string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -299,6 +306,27 @@ export class ColorUtilService {
     }
 
     return delta;
+  }
+
+  getColorMeta(color: string): ColorMetaObj | null {
+    let meta: ColorMetaObj | null = null;
+
+    const parsedColor = this.parseColor(color);
+
+    if (parsedColor) {
+      const lchColor = new Color('srgb', parsedColor.coords).to('oklch');
+
+      meta = {
+        lightness: lchColor.coords[0].toFixed(2),
+        chroma: lchColor.coords[1].toFixed(2),
+        hue: lchColor.coords[2].toFixed(2),
+        saturation: ((lchColor.coords[1] / lchColor.coords[0]) * 100).toFixed(
+          2
+        ),
+      };
+    }
+
+    return meta;
   }
 
   constructor() {}
