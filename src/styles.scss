@@ -39,7 +39,8 @@ hr {
 }
 
 h1,
-h2 {
+h2,
+h3 {
   margin: 0;
   line-height: 0.85em;
 
@@ -62,6 +63,32 @@ h2 {
   font-weight: 700;
 }
 
+h3 {
+  font-family: var(--headerFont);
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+th {
+  font-family: var(--headerFont);
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+td {
+  font-family: var(--bodyFont);
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  max-width: 40ch;
+  line-height: 1.5em;
+
+  sup {
+    margin-right: 0.5ch;
+  }
+}
 p {
   font-family: var(--bodyFont);
   font-size: 16px;

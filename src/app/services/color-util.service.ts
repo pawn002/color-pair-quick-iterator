@@ -20,6 +20,13 @@ export interface MinMaxLightObject {
 
 export type ColorVariant = [number, number, number];
 
+export interface ColorMetaObj {
+  lightness: number | string;
+  chroma: number | string;
+  hue: number | string;
+  saturation: number | string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -279,6 +286,47 @@ export class ColorUtilService {
     }
 
     return pair;
+  }
+
+  calcDeltaE(colorOne: string, colorTwo: string): number | null {
+    let delta: number | null = null;
+
+    const colorOneParsed = this.parseColor(colorOne);
+    const colorTwoParsed = this.parseColor(colorTwo);
+
+    if (colorOneParsed && colorTwoParsed) {
+      const colorOneObj = new Color('srgb', colorOneParsed.coords);
+      const colorTwoObj = new Color('srgb', colorTwoParsed.coords);
+
+      const rawDelta = colorOneObj.deltaE2000(colorTwoObj);
+
+      const fixedDelta = rawDelta.toFixed(2);
+
+      delta = parseFloat(fixedDelta);
+    }
+
+    return delta;
+  }
+
+  getColorMeta(color: string): ColorMetaObj | null {
+    let meta: ColorMetaObj | null = null;
+
+    const parsedColor = this.parseColor(color);
+
+    if (parsedColor) {
+      const lchColor = new Color('srgb', parsedColor.coords).to('oklch');
+
+      meta = {
+        lightness: lchColor.coords[0].toFixed(2),
+        chroma: lchColor.coords[1].toFixed(2),
+        hue: lchColor.coords[2].toFixed(2),
+        saturation: ((lchColor.coords[1] / lchColor.coords[0]) * 100).toFixed(
+          2
+        ),
+      };
+    }
+
+    return meta;
   }
 
   constructor() {}
