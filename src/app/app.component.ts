@@ -118,18 +118,18 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   setRandomColorPair(initialAppColors?: boolean) {
-    setTimeout(() => {
-      const randomColorPair = this.cus.getRandomColorPair();
+    // setTimeout(() => {
+    const randomColorPair = this.cus.getRandomColorPair();
 
-      this.colorPickerOneSelectedColor = randomColorPair[0];
-      this.colorPickerTwoSelectedColor = randomColorPair[1];
+    this.colorPickerOneSelectedColor = randomColorPair[0];
+    this.colorPickerTwoSelectedColor = randomColorPair[1];
 
-      if (!initialAppColors) {
-        this.alertUser(
-          `Random color pair generated: ${randomColorPair[0]}, and ${randomColorPair[1]}`
-        );
-      }
-    }, 0);
+    if (!initialAppColors) {
+      this.alertUser(
+        `Random color pair generated: ${randomColorPair[0]}, and ${randomColorPair[1]}`
+      );
+    }
+    // }, 0);
   }
 
   async matchChromas() {
@@ -161,6 +161,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    this.setRandomColorPair(true);
+    // this.setRandomColorPair(true);
   }
 }
