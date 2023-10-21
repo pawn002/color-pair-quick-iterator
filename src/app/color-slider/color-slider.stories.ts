@@ -34,6 +34,14 @@ export const RgbRed: Story = {
     debug: true,
   },
 };
+
+export const RgbRedChromaPlus: Story = {
+  args: {
+    color: 'red',
+    mode: 'chromaPlus',
+    debug: true,
+  },
+};
 export const RgbGreen: Story = {
   args: {
     color: 'green',

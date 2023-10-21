@@ -7,7 +7,10 @@ import {
   EventEmitter,
   SimpleChanges,
 } from '@angular/core';
-import { ColorUtilService } from '../services/color-util.service';
+import {
+  ColorUtilService,
+  MinMaxLightObject,
+} from '../services/color-util.service';
 
 @Component({
   selector: 'app-color-slider',
@@ -18,6 +21,8 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   @Input() id: string | 'slider-0' = 'slider-0';
   @Input() name: string | 'color-slider' = 'color-slider';
   @Input() color: string | null = null;
+  @Input() mode: 'chroma' | 'chromaPlus' = 'chroma';
+
   @Output() colorVariant = new EventEmitter<string | null>();
   @Input() debug: boolean = false;
 
@@ -39,7 +44,25 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   }
 
   async getAndSetLightnessRange(color: string) {
-    const rangeObject = await this.cus.getMinMaxLight(color);
+    let rangeObject: MinMaxLightObject | null = null;
+
+    if (this.mode === 'chroma') {
+      rangeObject = await this.cus.getMinMaxLight(color);
+    }
+
+    if (this.mode === 'chromaPlus') {
+      const oklchColor = this.cus.getOklchColor(color);
+
+      if (oklchColor) {
+        rangeObject = {
+          lightMax: 1,
+          lightMin: 0,
+          originalCoords: oklchColor.coords,
+        };
+      } else {
+        console.error(`unable to create oklch color`);
+      }
+    }
 
     if (rangeObject) {
       this.sendInitialLightVariant();

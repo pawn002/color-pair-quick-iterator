@@ -22,6 +22,7 @@
         [id]="'slider-0'"
         [name]="'Foreground Slider'"
         [color]="colorPickerOneSelectedColor"
+        [mode]="'chromaPlus'"
         (colorVariant)="handleSliderInputInput('One', $event)"
       ></app-color-slider>
       <app-copy-to-clipboard-button
@@ -42,6 +43,7 @@
         [id]="'slider-1'"
         [name]="'Backgroundground Slider'"
         [color]="colorPickerTwoSelectedColor"
+        [mode]="'chromaPlus'"
         (colorVariant)="handleSliderInputInput('Two', $event)"
       ></app-color-slider>
       <app-copy-to-clipboard-button

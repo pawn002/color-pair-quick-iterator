@@ -42,6 +42,20 @@ export class ColorUtilService {
     return parsedColor;
   }
 
+  getOklchColor(color: string): Color | null {
+    let returnedColor: Color | null = null;
+
+    const parsedColor = this.parseColor(color);
+
+    if (parsedColor) {
+      const srgbColor = new Color('srgb', parsedColor.coords);
+
+      returnedColor = srgbColor.to('oklch');
+    }
+
+    return returnedColor;
+  }
+
   createSrgbColor(color: string, lightness: number): string | null {
     let srgbColor: string | null = null;
 
@@ -58,9 +72,13 @@ export class ColorUtilService {
         originalHue,
       ]);
 
+      targetColor.toGamut({ space: 'srgb' });
+
       const targetColorAsRgbColor = targetColor.to('srgb');
 
-      srgbColor = targetColorAsRgbColor.toString({ format: 'hex' });
+      srgbColor = targetColorAsRgbColor.toString({
+        format: 'hex',
+      });
     }
 
     return srgbColor;
