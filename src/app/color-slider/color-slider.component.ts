@@ -112,7 +112,7 @@ export class ColorSliderComponent implements OnInit, OnChanges {
     if (this.color) {
       this.getAndSetLightnessRange(this.color);
     } else {
-      console.error(`no color specified to comp`);
+      console.warn(`no color specified`);
     }
   }
 }
