@@ -72,9 +72,13 @@ export class ColorUtilService {
         originalHue,
       ]);
 
-      targetColor.toGamut({ space: 'srgb' });
+      const inSrgbGamutColor = targetColor.toGamut({
+        space: 'srgb',
+        // Default of 'lch.c' does not work because we are working in 'oklch' instead.
+        method: 'oklch.c',
+      });
 
-      const targetColorAsRgbColor = targetColor.to('srgb');
+      const targetColorAsRgbColor = inSrgbGamutColor.to('srgb');
 
       srgbColor = targetColorAsRgbColor.toString({
         format: 'hex',

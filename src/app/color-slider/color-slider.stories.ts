@@ -15,6 +15,10 @@ const meta: Meta<ColorSliderComponent> = {
     color: {
       control: 'color',
     },
+    mode: {
+      control: 'select',
+      options: ['chroma', 'chromaPlus'],
+    },
   },
 };
 
