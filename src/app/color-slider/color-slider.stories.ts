@@ -31,6 +31,7 @@ export const Typical: Story = {
 export const RgbRed: Story = {
   args: {
     color: 'red',
+    debug: true,
   },
 };
 export const RgbGreen: Story = {
