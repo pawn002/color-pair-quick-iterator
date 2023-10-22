@@ -58,7 +58,13 @@ export class ColorUtilService {
         originalHue,
       ]);
 
-      console.warn(`OKLCH color in SRGB gamut: ${targetColor.inGamut('srgb')}`);
+      const inSrgbGamut = targetColor.inGamut('srgb');
+
+      if (!inSrgbGamut) {
+        console.warn(
+          `OKLCH color in SRGB gamut: ${targetColor.inGamut('srgb')}`
+        );
+      }
 
       const tColorInSrgbGamut = targetColor.toGamut({
         space: 'srgb',
