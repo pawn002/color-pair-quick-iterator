@@ -50,7 +50,7 @@ export class ColorSliderComponent implements OnInit, OnChanges {
       this.slideMin = 0;
       this.slideMax = 1;
 
-      if (options) {
+      if (options?.constantChroma) {
         this.slideMin = rangeObject.lightMin;
 
         this.slideMax = rangeObject.lightMax;
@@ -96,7 +96,8 @@ export class ColorSliderComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.color) {
-      this.getAndSetLightnessRange(this.color, { constantChroma: true });
+      // this.getAndSetLightnessRange(this.color, { constantChroma: true });
+      this.getAndSetLightnessRange(this.color);
     } else {
       console.error(`no color specified to comp`);
     }
