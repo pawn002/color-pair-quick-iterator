@@ -18,6 +18,7 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   @Input() id: string | 'slider-0' = 'slider-0';
   @Input() name: string | 'color-slider' = 'color-slider';
   @Input() color: string | null = null;
+  @Input() constantChroma: boolean = false;
   @Output() colorVariant = new EventEmitter<string | null>();
 
   debug: boolean = false;
@@ -96,8 +97,9 @@ export class ColorSliderComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.color) {
-      // this.getAndSetLightnessRange(this.color, { constantChroma: true });
-      this.getAndSetLightnessRange(this.color);
+      this.getAndSetLightnessRange(this.color, {
+        constantChroma: this.constantChroma,
+      });
     } else {
       console.error(`no color specified to comp`);
     }
