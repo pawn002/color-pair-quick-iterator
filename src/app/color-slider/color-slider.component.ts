@@ -38,14 +38,23 @@ export class ColorSliderComponent implements OnInit, OnChanges {
     }
   }
 
-  async getAndSetLightnessRange(color: string) {
+  async getAndSetLightnessRange(
+    color: string,
+    options?: { constantChroma: boolean }
+  ) {
     const rangeObject = await this.cus.getMinMaxLight(color);
 
     if (rangeObject) {
       this.sendInitialLightVariant();
 
-      this.slideMin = rangeObject.lightMin;
-      this.slideMax = rangeObject.lightMax;
+      this.slideMin = 0;
+      this.slideMax = 1;
+
+      if (options) {
+        this.slideMin = rangeObject.lightMin;
+
+        this.slideMax = rangeObject.lightMax;
+      }
 
       const lightnessIndex = 0;
       const initialSlideValue = rangeObject.originalCoords[lightnessIndex];
@@ -87,7 +96,7 @@ export class ColorSliderComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.color) {
-      this.getAndSetLightnessRange(this.color);
+      this.getAndSetLightnessRange(this.color, { constantChroma: true });
     } else {
       console.error(`no color specified to comp`);
     }
