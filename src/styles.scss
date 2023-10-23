@@ -11,8 +11,8 @@
 :root {
   // --background-color: #fef9ea;
   --background-color: #e6e2d5;
-  --min-body-text-black: #424242;
   // --min-body-text-black: #424242;
+  --min-body-text-black: #4b483e;
 
   --headerFont: "Atkinson Hyperlegible", sans-serif;
   --bodyFont: "Atkinson Hyperlegible", sans-serif;
@@ -58,12 +58,14 @@ h1 {
 
 h2 {
   font-family: var(--headerFont);
+  color: var(--min-body-text-black);
   font-size: 19px;
   font-style: normal;
   font-weight: 700;
 }
 
 h3 {
+  color: var(--min-body-text-black);
   font-family: var(--headerFont);
   font-size: var(--minBodyTextSize);
   font-style: normal;
