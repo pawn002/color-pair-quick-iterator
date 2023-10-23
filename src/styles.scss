@@ -58,28 +58,28 @@ h1 {
 
 h2 {
   font-family: var(--headerFont);
-  font-size: 16px;
+  font-size: 19px;
   font-style: normal;
   font-weight: 700;
 }
 
 h3 {
   font-family: var(--headerFont);
-  font-size: 13px;
+  font-size: var(--minBodyTextSize);
   font-style: normal;
   font-weight: 700;
 }
 
 th {
   font-family: var(--headerFont);
-  font-size: 13px;
+  font-size: var(--minBodyTextSize);
   font-style: normal;
   font-weight: 700;
 }
 
 td {
   font-family: var(--bodyFont);
-  font-size: 13px;
+  font-size: var(--minBodyTextSize);
   font-style: normal;
   font-weight: 400;
   max-width: 40ch;
@@ -89,6 +89,7 @@ td {
     margin-right: 0.5ch;
   }
 }
+
 p {
   font-family: var(--bodyFont);
   font-size: 16px;
@@ -103,6 +104,8 @@ p {
 }
 
 sup {
+  color: var(--min-body-text-black) !important;
+  font-weight: 400 !important;
   font-size: var(--minTextSize) !important;
 }
 

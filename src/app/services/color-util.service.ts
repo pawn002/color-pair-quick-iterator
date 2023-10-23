@@ -58,7 +58,20 @@ export class ColorUtilService {
         originalHue,
       ]);
 
-      const targetColorAsRgbColor = targetColor.to('srgb');
+      // const inSrgbGamut = targetColor.inGamut('srgb');
+
+      // if (!inSrgbGamut) {
+      //   console.warn(
+      //     `OKLCH color in SRGB gamut: ${targetColor.inGamut('srgb')}`
+      //   );
+      // }
+
+      const tColorInSrgbGamut = targetColor.toGamut({
+        space: 'srgb',
+        method: 'oklch.c',
+      });
+
+      const targetColorAsRgbColor = tColorInSrgbGamut.to('srgb');
 
       srgbColor = targetColorAsRgbColor.toString({ format: 'hex' });
     }

@@ -22,6 +22,7 @@
         [id]="'slider-0'"
         [name]="'Foreground Slider'"
         [color]="colorPickerOneSelectedColor"
+        [constantChroma]="constantChroma"
         (colorVariant)="handleSliderInputInput('One', $event)"
       ></app-color-slider>
       <app-copy-to-clipboard-button
@@ -42,6 +43,7 @@
         [id]="'slider-1'"
         [name]="'Backgroundground Slider'"
         [color]="colorPickerTwoSelectedColor"
+        [constantChroma]="constantChroma"
         (colorVariant)="handleSliderInputInput('Two', $event)"
       ></app-color-slider>
       <app-copy-to-clipboard-button
@@ -99,6 +101,17 @@
 
   <hr />
 
+  <section class="metadata">
+    <h2>Color Metadata</h2>
+
+    <app-metadata
+      [colorOne]="colorPickerOneComparedColor"
+      [colorTwo]="colorPickerTwoComparedColor"
+    ></app-metadata>
+  </section>
+
+  <hr />
+
   <section class="options">
     <h2>Options</h2>
     <div class="options">
@@ -123,25 +136,13 @@
       <div class="checkbox-group">
         <label for="option-const-chroma">Constant Chroma<sup>b</sup></label>
         <input
-          checked
-          disabled
           type="checkbox"
           name="Constant Chroma Toggle"
           id="option-const-chroma"
+          (change)="toggleConstantChroma($event)"
         />
       </div>
     </div>
-  </section>
-
-  <hr />
-
-  <section class="metadata">
-    <h2>Color Metadata</h2>
-
-    <app-metadata
-      [colorOne]="colorPickerOneComparedColor"
-      [colorTwo]="colorPickerTwoComparedColor"
-    ></app-metadata>
   </section>
 
   <hr />
@@ -157,12 +158,12 @@
       >
     </p>
     <p>
-      <sup>b</sup>Color slider varies light and dark restricting possible tints
-      and shades to the same chroma and hue of the inputted color. Support for
-      switching this off and using constant saturation instead is
-      <a href="https://github.com/pawn002/color-pair-quick-iterator/issues/27"
-        >planned for later</a
-      >.
+      <sup>b</sup>Constant Chroma forces color slider to limit light and dark
+      variation of colors to tints and shades that have the same chroma and hue
+      of the inputted color. WARNING: By default, color sliders does not
+      restrict light and dark allowing the creation of colors outside of the
+      SRGB gamut—these colors are then mapped to a reasonably close SRGB colors
+      by sacrificing chroma which changes the objective identity of the color.
     </p>
   </section>
 

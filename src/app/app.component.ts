@@ -22,6 +22,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   contrastType: ContrastType = 'apca';
 
+  constantChroma: boolean = false;
+
   showAlert: boolean = false;
   currentAlertMessage: string | null = null;
 
@@ -58,6 +60,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     const checked = inputElement.checked;
 
     this.contrastType = checked ? 'bpca' : 'apca';
+  }
+
+  toggleConstantChroma(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    const checked = inputElement.checked;
+
+    this.constantChroma = checked ? true : false;
   }
 
   swapColors() {
