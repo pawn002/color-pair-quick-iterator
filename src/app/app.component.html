@@ -101,6 +101,17 @@
 
   <hr />
 
+  <section class="metadata">
+    <h2>Color Metadata</h2>
+
+    <app-metadata
+      [colorOne]="colorPickerOneComparedColor"
+      [colorTwo]="colorPickerTwoComparedColor"
+    ></app-metadata>
+  </section>
+
+  <hr />
+
   <section class="options">
     <h2>Options</h2>
     <div class="options">
@@ -132,17 +143,6 @@
         />
       </div>
     </div>
-  </section>
-
-  <hr />
-
-  <section class="metadata">
-    <h2>Color Metadata</h2>
-
-    <app-metadata
-      [colorOne]="colorPickerOneComparedColor"
-      [colorTwo]="colorPickerTwoComparedColor"
-    ></app-metadata>
   </section>
 
   <hr />

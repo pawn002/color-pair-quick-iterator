@@ -1,26 +1,5 @@
 <div class="comp-container">
   <div>
-    <h3>Differences</h3>
-    <table>
-      <caption class="sr-only">
-        Differences between Color One and Color Two.
-      </caption>
-      <thead class="sr-only">
-        <tr>
-          <th>Measurement</th>
-          <th>Value</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Delta E</td>
-          <td>{{ differences.deltaE }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div>
     <h3>Color One</h3>
     <table>
       <caption class="sr-only">
@@ -81,6 +60,27 @@
         <tr>
           <td>Hue</td>
           <td>{{ colorTwoMeta?.hue }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div>
+    <h3>Differences</h3>
+    <table>
+      <caption class="sr-only">
+        Differences between Color One and Color Two.
+      </caption>
+      <thead class="sr-only">
+        <tr>
+          <th>Measurement</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Delta E</td>
+          <td>{{ differences.deltaE }}</td>
         </tr>
       </tbody>
     </table>
