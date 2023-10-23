@@ -101,7 +101,7 @@ export class ColorSliderComponent implements OnInit, OnChanges {
         constantChroma: this.constantChroma,
       });
     } else {
-      console.error(`no color specified to comp`);
+      console.warn(`no color specified to comp`);
     }
   }
 }
