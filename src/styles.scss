@@ -103,6 +103,8 @@ p {
 }
 
 sup {
+  color: var(--min-body-text-black) !important;
+  font-weight: 400 !important;
   font-size: var(--minTextSize) !important;
 }
 
