@@ -48,7 +48,7 @@ export class ColorUtilService {
     const parsedColor = this.parseColor(color);
 
     if (parsedColor) {
-      const oklchColor = new Color('srgb', parsedColor.coords).to('oklch');
+      const oklchColor = Color.to(parsedColor, 'oklch');
       const originalChroma = oklchColor.coords[1];
       const originalHue = oklchColor.coords[2];
 
@@ -330,7 +330,7 @@ export class ColorUtilService {
     const parsedColor = this.parseColor(color);
 
     if (parsedColor) {
-      const lchColor = new Color('srgb', parsedColor.coords).to('oklch');
+      const lchColor = Color.to(parsedColor, 'oklch');
 
       meta = {
         lightness: lchColor.coords[0].toFixed(2),
