@@ -9,6 +9,10 @@ import {
 } from '@angular/core';
 import { ColorUtilService } from '../services/color-util.service';
 
+export interface ResetObject {
+  reset: true;
+}
+
 @Component({
   selector: 'app-color-slider',
   templateUrl: './color-slider.component.html',
@@ -19,6 +23,7 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   @Input() name: string | 'color-slider' = 'color-slider';
   @Input() color: string | null = null;
   @Input() constantChroma: boolean = false;
+  @Input() resetSlider: ResetObject | null = null;
   @Output() colorVariant = new EventEmitter<string | null>();
 
   debug: boolean = false;
@@ -28,7 +33,12 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   slideInterval: number | null = 0.005;
   slideMin: number | null = null;
   slideMax: number | null = null;
+  initValue: number | null = null;
   value: number | null = null;
+
+  getInitValue() {
+    return this.initValue;
+  }
 
   sendInitialLightVariant() {
     // Good UX to just send the input color?
@@ -59,6 +69,8 @@ export class ColorSliderComponent implements OnInit, OnChanges {
 
       const lightnessIndex = 0;
       const initialSlideValue = rangeObject.originalCoords[lightnessIndex];
+
+      this.initValue = initialSlideValue;
 
       this.value = initialSlideValue;
     } else {
@@ -91,6 +103,17 @@ export class ColorSliderComponent implements OnInit, OnChanges {
     }
   }
 
+  reset() {
+    // TODO: Isn't there an angular way to do this?
+    const element = document.getElementById(this.id) as HTMLInputElement;
+
+    if (this.initValue) {
+      element.value = this.initValue.toString();
+    } else {
+      console.error(`trouble resetting slider`);
+    }
+  }
+
   constructor(private cus: ColorUtilService) {}
 
   ngOnInit(): void {}
@@ -102,6 +125,10 @@ export class ColorSliderComponent implements OnInit, OnChanges {
       });
     } else {
       console.warn(`no color specified to comp`);
+    }
+
+    if (this.resetSlider) {
+      this.reset();
     }
   }
 }
