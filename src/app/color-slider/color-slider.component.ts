@@ -104,6 +104,7 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   }
 
   reset() {
+    // TODO: Isn't there an angular way to do this?
     const element = document.getElementById(this.id) as HTMLInputElement;
 
     if (this.initValue) {
