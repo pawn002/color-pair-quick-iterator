@@ -24,6 +24,7 @@
         [color]="colorPickerOneSelectedColor"
         [constantChroma]="constantChroma"
         (colorVariant)="handleSliderInputInput('One', $event)"
+        [resetSlider]="resetSlider"
       ></app-color-slider>
       <app-copy-to-clipboard-button
         [color]="colorPickerOneComparedColor"
@@ -45,6 +46,7 @@
         [color]="colorPickerTwoSelectedColor"
         [constantChroma]="constantChroma"
         (colorVariant)="handleSliderInputInput('Two', $event)"
+        [resetSlider]="resetSlider"
       ></app-color-slider>
       <app-copy-to-clipboard-button
         [color]="colorPickerTwoComparedColor"
@@ -85,7 +87,7 @@
       <span class="sr-only">Create Random Color Pair</span
       ><span aria-hidden="true">Ra</span>
     </button>
-    <button disabled>
+    <button (click)="resetSliders()">
       <span class="sr-only">Reset Color Sliders</span
       ><span aria-hidden="true">Re</span>
     </button>

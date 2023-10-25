@@ -5,8 +5,9 @@ import {
   AfterViewChecked,
 } from '@angular/core';
 import { ContrastType } from './services/color-metrics.service';
-import { CopyToClipboardEvent } from './copy-to-clipboard-button/copy-to-clipboard-button.component';
 import { ColorUtilService } from './services/color-util.service';
+import { CopyToClipboardEvent } from './copy-to-clipboard-button/copy-to-clipboard-button.component';
+import { ResetObject } from './color-slider/color-slider.component';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   colorPickerTwoComparedColor: string | null = null;
 
   contrastType: ContrastType = 'apca';
+
+  resetSlider: ResetObject | null = null;
 
   constantChroma: boolean = false;
 
@@ -111,21 +114,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
-  alertUser(message: string) {
-    this.showAlert = true;
-
-    this.currentAlertMessage = message;
-  }
-
-  alertClosed(event: boolean) {
-    if (event) {
-      this.showAlert = false;
-      this.currentAlertMessage = null;
-    } else {
-      console.error(`alert did something unexpected`);
-    }
-  }
-
   setRandomColorPair(initialAppColors?: boolean) {
     setTimeout(() => {
       const randomColorPair = this.cus.getRandomColorPair();
@@ -139,6 +127,12 @@ export class AppComponent implements OnInit, AfterViewInit {
         );
       }
     }, 0);
+  }
+
+  resetSliders() {
+    this.resetSlider = { reset: true };
+
+    this.alertUser('Color Sliders reset to initial states.');
   }
 
   async matchChromas() {
@@ -162,6 +156,21 @@ export class AppComponent implements OnInit, AfterViewInit {
       } else {
         this.alertUser('Unable to chroma match colors');
       }
+    }
+  }
+
+  alertUser(message: string) {
+    this.showAlert = true;
+
+    this.currentAlertMessage = message;
+  }
+
+  alertClosed(event: boolean) {
+    if (event) {
+      this.showAlert = false;
+      this.currentAlertMessage = null;
+    } else {
+      console.error(`alert did something unexpected`);
     }
   }
 
