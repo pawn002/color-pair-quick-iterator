@@ -22,10 +22,13 @@
         [id]="'slider-0'"
         [name]="'Foreground Slider'"
         [color]="colorPickerOneSelectedColor"
+        [constantChroma]="constantChroma"
         (colorVariant)="handleSliderInputInput('One', $event)"
+        [resetSlider]="resetSlider"
       ></app-color-slider>
       <app-copy-to-clipboard-button
         [color]="colorPickerOneComparedColor"
+        (copyEvent)="handleCopyEvent($event)"
       ></app-copy-to-clipboard-button>
     </div>
 
@@ -41,10 +44,13 @@
         [id]="'slider-1'"
         [name]="'Backgroundground Slider'"
         [color]="colorPickerTwoSelectedColor"
+        [constantChroma]="constantChroma"
         (colorVariant)="handleSliderInputInput('Two', $event)"
+        [resetSlider]="resetSlider"
       ></app-color-slider>
       <app-copy-to-clipboard-button
         [color]="colorPickerTwoComparedColor"
+        (copyEvent)="handleCopyEvent($event)"
       ></app-copy-to-clipboard-button>
     </div>
   </section>
@@ -56,6 +62,7 @@
     >
       <span class="sr-only">Swap Selected Colors</span>
       <svg
+        aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 32 32"
         x="0px"
@@ -76,9 +83,33 @@
         </g>
       </svg>
     </button>
-    <button disabled>Re</button>
-    <button disabled>Ch</button>
-    <button disabled>Sa</button>
+    <button (click)="setRandomColorPair()">
+      <span class="sr-only">Create Random Color Pair</span
+      ><span aria-hidden="true">Ra</span>
+    </button>
+    <button (click)="resetSliders()">
+      <span class="sr-only">Reset Color Sliders</span
+      ><span aria-hidden="true">Re</span>
+    </button>
+    <button (click)="matchChromas()">
+      <span class="sr-only">Harmonize Color Pair To Same Chroma</span
+      ><span aria-hidden="true">Ch</span>
+    </button>
+    <button disabled>
+      <span class="sr-only">Harmonize Color Pair To Same Saturation</span
+      ><span aria-hidden="true">Sa</span>
+    </button>
+  </section>
+
+  <hr />
+
+  <section class="metadata">
+    <h2>Color Metadata</h2>
+
+    <app-metadata
+      [colorOne]="colorPickerOneComparedColor"
+      [colorTwo]="colorPickerTwoComparedColor"
+    ></app-metadata>
   </section>
 
   <hr />
@@ -107,11 +138,10 @@
       <div class="checkbox-group">
         <label for="option-const-chroma">Constant Chroma<sup>b</sup></label>
         <input
-          checked
-          disabled
           type="checkbox"
           name="Constant Chroma Toggle"
           id="option-const-chroma"
+          (change)="toggleConstantChroma($event)"
         />
       </div>
     </div>
@@ -130,12 +160,20 @@
       >
     </p>
     <p>
-      <sup>b</sup>Color slider varies light and dark restricting possible tints
-      and shades to the same chroma and hue of the inputted color. Support for
-      switching this off and using constant saturation instead is
-      <a href="https://github.com/pawn002/color-pair-quick-iterator/issues/27"
-        >planned for later</a
-      >.
+      <sup>b</sup>Constant Chroma forces color slider to limit light and dark
+      variation of colors to tints and shades that have the same chroma and hue
+      of the inputted color. WARNING: By default, color sliders does not
+      restrict light and dark allowing the creation of colors outside of the
+      SRGB gamut—these colors are then mapped to a reasonably close SRGB colors
+      by sacrificing chroma which changes the objective identity of the color.
     </p>
   </section>
+
+  <div class="alert">
+    <app-alert
+      [showAlert]="showAlert"
+      [alertMessage]="currentAlertMessage"
+      (alertClosed)="alertClosed($event)"
+    ></app-alert>
+  </div>
 </div>

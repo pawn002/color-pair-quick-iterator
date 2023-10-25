@@ -9,6 +9,10 @@ import {
 } from '@angular/core';
 import { ColorUtilService } from '../services/color-util.service';
 
+export interface ResetObject {
+  reset: true;
+}
+
 @Component({
   selector: 'app-color-slider',
   templateUrl: './color-slider.component.html',
@@ -18,6 +22,8 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   @Input() id: string | 'slider-0' = 'slider-0';
   @Input() name: string | 'color-slider' = 'color-slider';
   @Input() color: string | null = null;
+  @Input() constantChroma: boolean = false;
+  @Input() resetSlider: ResetObject | null = null;
   @Output() colorVariant = new EventEmitter<string | null>();
 
   debug: boolean = false;
@@ -27,7 +33,12 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   slideInterval: number | null = 0.005;
   slideMin: number | null = null;
   slideMax: number | null = null;
+  initValue: number | null = null;
   value: number | null = null;
+
+  getInitValue() {
+    return this.initValue;
+  }
 
   sendInitialLightVariant() {
     // Good UX to just send the input color?
@@ -38,17 +49,28 @@ export class ColorSliderComponent implements OnInit, OnChanges {
     }
   }
 
-  async getAndSetLightnessRange(color: string) {
+  async getAndSetLightnessRange(
+    color: string,
+    options?: { constantChroma: boolean }
+  ) {
     const rangeObject = await this.cus.getMinMaxLight(color);
 
     if (rangeObject) {
       this.sendInitialLightVariant();
 
-      this.slideMin = rangeObject.lightMin;
-      this.slideMax = rangeObject.lightMax;
+      this.slideMin = 0;
+      this.slideMax = 1;
 
-      const lightnessValue = 0;
-      const initialSlideValue = rangeObject.originalCoords[lightnessValue];
+      if (options?.constantChroma) {
+        this.slideMin = rangeObject.lightMin;
+
+        this.slideMax = rangeObject.lightMax;
+      }
+
+      const lightnessIndex = 0;
+      const initialSlideValue = rangeObject.originalCoords[lightnessIndex];
+
+      this.initValue = initialSlideValue;
 
       this.value = initialSlideValue;
     } else {
@@ -81,15 +103,32 @@ export class ColorSliderComponent implements OnInit, OnChanges {
     }
   }
 
+  reset() {
+    // TODO: Isn't there an angular way to do this?
+    const element = document.getElementById(this.id) as HTMLInputElement;
+
+    if (this.initValue) {
+      element.value = this.initValue.toString();
+    } else {
+      console.error(`trouble resetting slider`);
+    }
+  }
+
   constructor(private cus: ColorUtilService) {}
 
   ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.color) {
-      this.getAndSetLightnessRange(this.color);
+      this.getAndSetLightnessRange(this.color, {
+        constantChroma: this.constantChroma,
+      });
     } else {
-      console.error(`no color specified to comp`);
+      console.warn(`no color specified to comp`);
+    }
+
+    if (this.resetSlider) {
+      this.reset();
     }
   }
 }

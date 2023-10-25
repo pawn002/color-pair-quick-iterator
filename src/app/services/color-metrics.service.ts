@@ -82,10 +82,7 @@ export class ColorMetricsService {
       [0, 60, 75, 90, 108]
     );
 
-    const absoluteApca: number = Math.abs(
-      // Subtracting one from APCA raw score to ensure no false passes going from APCA to WCAG Style.
-      apcaScore - 1
-    );
+    const absoluteApca: number = Math.abs(apcaScore);
 
     if (this.apcaToWcagLookup[absoluteApca]) {
       // use memoized value if present

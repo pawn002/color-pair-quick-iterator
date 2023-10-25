@@ -1,0 +1,88 @@
+<div class="comp-container">
+  <div>
+    <h3>Color One</h3>
+    <table>
+      <caption class="sr-only">
+        Color One Metadata
+      </caption>
+      <thead class="sr-only">
+        <tr>
+          <th>Measurement</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Saturation</td>
+          <td>{{ colorOneMeta?.saturation }}</td>
+        </tr>
+        <tr>
+          <td>Lightness</td>
+          <td>{{ colorOneMeta?.lightness }}</td>
+        </tr>
+        <tr>
+          <td>Chroma</td>
+          <td>{{ colorOneMeta?.chroma }}</td>
+        </tr>
+        <tr>
+          <td>Hue</td>
+          <td>{{ colorOneMeta?.hue }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div>
+    <h3>Color Two</h3>
+    <table>
+      <caption class="sr-only">
+        Color One Metadata
+      </caption>
+      <thead class="sr-only">
+        <tr>
+          <th>Measurement</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Saturation</td>
+          <td>{{ colorTwoMeta?.saturation }}</td>
+        </tr>
+        <tr>
+          <td>Lightness</td>
+          <td>{{ colorTwoMeta?.lightness }}</td>
+        </tr>
+        <tr>
+          <td>Chroma</td>
+          <td>{{ colorTwoMeta?.chroma }}</td>
+        </tr>
+        <tr>
+          <td>Hue</td>
+          <td>{{ colorTwoMeta?.hue }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div>
+    <h3>Differences</h3>
+    <table>
+      <caption class="sr-only">
+        Differences between Color One and Color Two.
+      </caption>
+      <thead class="sr-only">
+        <tr>
+          <th>Measurement</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Delta E</td>
+          <td>{{ differences.deltaE }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

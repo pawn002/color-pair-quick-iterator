@@ -1,12 +1,20 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  AfterViewChecked,
+} from '@angular/core';
 import { ContrastType } from './services/color-metrics.service';
+import { ColorUtilService } from './services/color-util.service';
+import { CopyToClipboardEvent } from './copy-to-clipboard-button/copy-to-clipboard-button.component';
+import { ResetObject } from './color-slider/color-slider.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit, AfterViewInit {
   colorPickerOneSelectedColor: string | null = null;
   colorPickerOneComparedColor: string | null = null;
 
@@ -14,6 +22,13 @@ export class AppComponent {
   colorPickerTwoComparedColor: string | null = null;
 
   contrastType: ContrastType = 'apca';
+
+  resetSlider: ResetObject | null = null;
+
+  constantChroma: boolean = false;
+
+  showAlert: boolean = false;
+  currentAlertMessage: string | null = null;
 
   handleColorInputInput(inputNumber: 'One' | 'Two', event: string) {
     if (inputNumber === 'One') {
@@ -35,11 +50,26 @@ export class AppComponent {
     }
   }
 
+  handleCopyEvent(event: CopyToClipboardEvent) {
+    if (event.copied) {
+      this.alertUser(`${event.color} copied to clipboard.`);
+    } else {
+      console.error(`color copy error.`);
+    }
+  }
+
   toggleContrastType(event: Event) {
     const inputElement = event.target as HTMLInputElement;
     const checked = inputElement.checked;
 
     this.contrastType = checked ? 'bpca' : 'apca';
+  }
+
+  toggleConstantChroma(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    const checked = inputElement.checked;
+
+    this.constantChroma = checked ? true : false;
   }
 
   swapColors() {
@@ -77,8 +107,78 @@ export class AppComponent {
       this.colorPickerOneSelectedColor = newPairing.foreground;
 
       this.colorPickerTwoSelectedColor = newPairing.background;
+
+      this.alertUser('Swapped Color One and Two.');
     } else {
       console.error('swapping colors went badly. . .');
     }
+  }
+
+  setRandomColorPair(initialAppColors?: boolean) {
+    setTimeout(() => {
+      const randomColorPair = this.cus.getRandomColorPair();
+
+      this.colorPickerOneSelectedColor = randomColorPair[0];
+      this.colorPickerTwoSelectedColor = randomColorPair[1];
+
+      if (!initialAppColors) {
+        this.alertUser(
+          `Random color pair generated: ${randomColorPair[0]}, and ${randomColorPair[1]}`
+        );
+      }
+    }, 0);
+  }
+
+  resetSliders() {
+    this.resetSlider = { reset: true };
+
+    this.alertUser('Color Sliders reset to initial states.');
+  }
+
+  async matchChromas() {
+    if (this.colorPickerOneSelectedColor && this.colorPickerTwoSelectedColor) {
+      const matchedColors = await this.cus.matchChromas([
+        this.colorPickerOneSelectedColor,
+        this.colorPickerTwoSelectedColor,
+      ]);
+
+      if (
+        matchedColors.success &&
+        matchedColors.colors &&
+        matchedColors.chroma
+      ) {
+        this.colorPickerOneSelectedColor = matchedColors.colors[0];
+        this.colorPickerTwoSelectedColor = matchedColors.colors[1];
+
+        this.alertUser(
+          `Chroma matched colors to ${matchedColors.chroma.toFixed(2)}`
+        );
+      } else {
+        this.alertUser('Unable to chroma match colors');
+      }
+    }
+  }
+
+  alertUser(message: string) {
+    this.showAlert = true;
+
+    this.currentAlertMessage = message;
+  }
+
+  alertClosed(event: boolean) {
+    if (event) {
+      this.showAlert = false;
+      this.currentAlertMessage = null;
+    } else {
+      console.error(`alert did something unexpected`);
+    }
+  }
+
+  constructor(private cus: ColorUtilService) {}
+
+  ngOnInit(): void {}
+
+  ngAfterViewInit(): void {
+    this.setRandomColorPair(true);
   }
 }

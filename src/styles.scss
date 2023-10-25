@@ -11,8 +11,8 @@
 :root {
   // --background-color: #fef9ea;
   --background-color: #e6e2d5;
-  --min-body-text-black: #424242;
   // --min-body-text-black: #424242;
+  --min-body-text-black: #4b483e;
 
   --headerFont: "Atkinson Hyperlegible", sans-serif;
   --bodyFont: "Atkinson Hyperlegible", sans-serif;
@@ -39,7 +39,8 @@ hr {
 }
 
 h1,
-h2 {
+h2,
+h3 {
   margin: 0;
   line-height: 0.85em;
 
@@ -57,9 +58,38 @@ h1 {
 
 h2 {
   font-family: var(--headerFont);
-  font-size: 16px;
+  color: var(--min-body-text-black);
+  font-size: 18px;
   font-style: normal;
   font-weight: 700;
+}
+
+h3 {
+  color: var(--min-body-text-black);
+  font-family: var(--headerFont);
+  font-size: var(--minBodyTextSize);
+  font-style: normal;
+  font-weight: 700;
+}
+
+th {
+  font-family: var(--headerFont);
+  font-size: var(--minBodyTextSize);
+  font-style: normal;
+  font-weight: 700;
+}
+
+td {
+  font-family: var(--bodyFont);
+  font-size: var(--minBodyTextSize);
+  font-style: normal;
+  font-weight: 400;
+  max-width: 40ch;
+  line-height: 1.5em;
+
+  sup {
+    margin-right: 0.5ch;
+  }
 }
 
 p {
@@ -76,6 +106,8 @@ p {
 }
 
 sup {
+  color: var(--min-body-text-black) !important;
+  font-weight: 400 !important;
   font-size: var(--minTextSize) !important;
 }
 

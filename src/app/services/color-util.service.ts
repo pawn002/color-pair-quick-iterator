@@ -1,6 +1,16 @@
 import { Injectable } from '@angular/core';
 import Color from 'colorjs.io';
+import { to } from 'colorjs.io/fn';
 import { ColorConstructor } from 'colorjs.io/types/src/color';
+import { random } from 'lodash';
+
+export type ColorPair = [string, string];
+
+export class ChromaMatchObject {
+  success: boolean = false;
+  colors: ColorPair | null = null;
+  chroma: number | null = null;
+}
 
 export interface MinMaxLightObject {
   originalCoords: [number, number, number];
@@ -9,6 +19,13 @@ export interface MinMaxLightObject {
 }
 
 export type ColorVariant = [number, number, number];
+
+export interface ColorMetaObj {
+  lightness: number | string;
+  chroma: number | string;
+  hue: number | string;
+  saturation: number | string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +48,7 @@ export class ColorUtilService {
     const parsedColor = this.parseColor(color);
 
     if (parsedColor) {
-      const oklchColor = new Color('srgb', parsedColor.coords).to('oklch');
+      const oklchColor = Color.to(parsedColor, 'oklch');
       const originalChroma = oklchColor.coords[1];
       const originalHue = oklchColor.coords[2];
 
@@ -41,7 +58,20 @@ export class ColorUtilService {
         originalHue,
       ]);
 
-      const targetColorAsRgbColor = targetColor.to('srgb');
+      // const inSrgbGamut = targetColor.inGamut('srgb');
+
+      // if (!inSrgbGamut) {
+      //   console.warn(
+      //     `OKLCH color in SRGB gamut: ${targetColor.inGamut('srgb')}`
+      //   );
+      // }
+
+      const tColorInSrgbGamut = targetColor.toGamut({
+        space: 'srgb',
+        method: 'oklch.c',
+      });
+
+      const targetColorAsRgbColor = tColorInSrgbGamut.to('srgb');
 
       srgbColor = targetColorAsRgbColor.toString({ format: 'hex' });
     }
@@ -176,6 +206,143 @@ export class ColorUtilService {
     }
 
     return returnedObject;
+  }
+
+  getRandomColorPair(): ColorPair {
+    let pair: ColorPair = ['black', 'white'];
+
+    // ref: oklch.com
+    const targetChroma = random(0, 0.4, true);
+    // const targetChroma = 0.11;
+
+    const colorOneLight = random(0.25, 0.95, true);
+    const colorOneHue = random(0, 360);
+    const colorTwoLight = random(0.25, 0.95, true);
+    const colorTwoHue = random(0, 360);
+
+    const colorOne = new Color('oklch', [
+      colorOneLight,
+      targetChroma,
+      colorOneHue,
+    ])
+      .toGamut({ space: 'srgb', method: 'oklch.c' })
+      .to('srgb')
+      .toString({ format: 'hex' });
+
+    const colorTwo = new Color('oklch', [
+      colorTwoLight,
+      targetChroma,
+      colorTwoHue,
+    ])
+      .toGamut({ space: 'srgb', method: 'oklch.c' })
+      .to('srgb')
+      .toString({ format: 'hex' });
+
+    pair = [colorOne, colorTwo];
+
+    return pair;
+  }
+
+  async matchChromas(colorpair: ColorPair): Promise<ChromaMatchObject> {
+    let pair: ChromaMatchObject = {
+      success: false,
+      colors: null,
+      chroma: null,
+    };
+
+    const colorOneParsed = this.parseColor(colorpair[0]);
+    const colorTwoParsed = this.parseColor(colorpair[1]);
+
+    if (colorOneParsed && colorTwoParsed) {
+      const colorOneOklch = new Color('srgb', colorOneParsed.coords).to(
+        'oklch'
+      );
+      const colorOneChroma = colorOneOklch.coords[1];
+
+      const colorTwoOklch = new Color('srgb', colorTwoParsed.coords).to(
+        'oklch'
+      );
+      const colorTwoChroma = colorTwoOklch.coords[1];
+
+      const colorOneCandCoords = [
+        colorOneOklch.coords[0],
+        colorTwoChroma,
+        colorOneOklch.coords[2],
+      ] as [number, number, number];
+      const colorTwoCandCoords = [
+        colorTwoOklch.coords[0],
+        colorOneChroma,
+        colorTwoOklch.coords[2],
+      ] as [number, number, number];
+
+      const colorOneCandInGamut = await this.isInSrgbGamut(colorOneCandCoords);
+      const colorTwoCandInGamut = await this.isInSrgbGamut(colorTwoCandCoords);
+
+      if (colorOneCandInGamut) {
+        pair.success = true;
+        pair.colors = [
+          new Color('oklch', colorOneCandCoords)
+            .to('srgb')
+            .toString({ format: 'hex' }),
+          colorpair[1],
+        ];
+        pair.chroma = colorOneCandCoords[1];
+      } else if (colorTwoCandInGamut) {
+        pair.success = true;
+        pair.colors = [
+          colorpair[0],
+          new Color('oklch', colorTwoCandCoords)
+            .to('srgb')
+            .toString({ format: 'hex' }),
+        ];
+        pair.chroma = colorTwoCandCoords[1];
+      }
+    } else {
+      console.error("color parsing didn't work out. ");
+    }
+
+    return pair;
+  }
+
+  calcDeltaE(colorOne: string, colorTwo: string): number | null {
+    let delta: number | null = null;
+
+    const colorOneParsed = this.parseColor(colorOne);
+    const colorTwoParsed = this.parseColor(colorTwo);
+
+    if (colorOneParsed && colorTwoParsed) {
+      const colorOneObj = new Color('srgb', colorOneParsed.coords);
+      const colorTwoObj = new Color('srgb', colorTwoParsed.coords);
+
+      const rawDelta = colorOneObj.deltaE2000(colorTwoObj);
+
+      const fixedDelta = rawDelta.toFixed(2);
+
+      delta = parseFloat(fixedDelta);
+    }
+
+    return delta;
+  }
+
+  getColorMeta(color: string): ColorMetaObj | null {
+    let meta: ColorMetaObj | null = null;
+
+    const parsedColor = this.parseColor(color);
+
+    if (parsedColor) {
+      const lchColor = Color.to(parsedColor, 'oklch');
+
+      meta = {
+        lightness: lchColor.coords[0].toFixed(2),
+        chroma: lchColor.coords[1].toFixed(2),
+        hue: lchColor.coords[2].toFixed(2),
+        saturation: ((lchColor.coords[1] / lchColor.coords[0]) * 100).toFixed(
+          2
+        ),
+      };
+    }
+
+    return meta;
   }
 
   constructor() {}
