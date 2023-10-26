@@ -120,7 +120,7 @@ export class ColorMetricsService {
 
     const absoluteApca: number = Math.abs(
       // Subtracting one from APCA raw score to ensure no false passes going from APCA to WCAG Style.
-      apcaScore - 1
+      apcaScore
     );
 
     if (this.apcaToWcagLookupAlt[absoluteApca]) {
@@ -143,6 +143,10 @@ export class ColorMetricsService {
 
     return wcag;
   }
+
+  // TODO: create modified version of [Bridge-PCA algo](https://github.com/Myndex/bridge-pca/blob/master/src/bridge-pca.js)
+  // Likely need a new service. . .
+  calcRawBpcaContrast(colorOne: string, colorTwo: string) {}
 
   constructor(private cus: ColorUtilService) {}
 }
