@@ -24,7 +24,7 @@ export class CopyToClipboardButtonComponent {
           color: this.color,
         });
 
-        console.log(this.color, 'copied to clipboard');
+        // console.log(this.color, 'copied to clipboard');
       } catch (err) {
         this.copyEvent.emit({
           copied: false,

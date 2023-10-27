@@ -31,7 +31,7 @@ export interface ColorMetaObj {
   providedIn: 'root',
 })
 export class ColorUtilService {
-  parseColor(color: string) {
+  parseColor(color: string): ColorConstructor | null {
     let parsedColor: ColorConstructor | null = null;
 
     try {
@@ -40,6 +40,26 @@ export class ColorUtilService {
       console.error(error);
     }
     return parsedColor;
+  }
+
+  getRgb255Array(color: string) {
+    const colorObj = this.parseColor(color);
+
+    let array255: [number, number, number] | null = null;
+
+    if (colorObj) {
+      const colorCoordsDecimal = colorObj.coords;
+
+      array255 = [
+        Math.round(colorCoordsDecimal[0] * 255),
+        Math.round(colorCoordsDecimal[1] * 255),
+        Math.round(colorCoordsDecimal[2] * 255),
+      ];
+    } else {
+      console.error(`unable to parse: ${color}`);
+    }
+
+    return array255;
   }
 
   createSrgbColor(color: string, lightness: number): string | null {
