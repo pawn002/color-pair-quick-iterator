@@ -298,24 +298,56 @@ export class ColorUtilService {
       const colorOneCandInGamut = await this.isInSrgbGamut(colorOneCandCoords);
       const colorTwoCandInGamut = await this.isInSrgbGamut(colorTwoCandCoords);
 
-      if (colorOneCandInGamut) {
+      if (colorOneCandInGamut && !colorTwoCandInGamut) {
         pair.success = true;
+
         pair.colors = [
           new Color('oklch', colorOneCandCoords)
             .to('srgb')
             .toString({ format: 'hex' }),
           colorpair[1],
         ];
+
         pair.chroma = colorOneCandCoords[1];
-      } else if (colorTwoCandInGamut) {
+      }
+
+      if (!colorOneCandInGamut && colorTwoCandInGamut) {
         pair.success = true;
+
         pair.colors = [
           colorpair[0],
           new Color('oklch', colorTwoCandCoords)
             .to('srgb')
             .toString({ format: 'hex' }),
         ];
+
         pair.chroma = colorTwoCandCoords[1];
+      }
+
+      if (colorOneCandInGamut && colorTwoCandInGamut) {
+        if (colorOneCandCoords[1] > colorTwoCandCoords[1]) {
+          pair.success = true;
+
+          pair.colors = [
+            new Color('oklch', colorOneCandCoords)
+              .to('srgb')
+              .toString({ format: 'hex' }),
+            colorpair[1],
+          ];
+
+          pair.chroma = colorTwoCandCoords[0];
+        } else {
+          pair.success = true;
+
+          pair.colors = [
+            colorpair[0],
+            new Color('oklch', colorTwoCandCoords)
+              .to('srgb')
+              .toString({ format: 'hex' }),
+          ];
+
+          pair.chroma = colorTwoCandCoords[1];
+        }
       }
     } else {
       console.error("color parsing didn't work out. ");
