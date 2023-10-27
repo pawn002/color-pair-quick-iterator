@@ -335,7 +335,7 @@ export class ColorUtilService {
             colorpair[1],
           ];
 
-          pair.chroma = colorTwoCandCoords[0];
+          pair.chroma = colorTwoCandCoords[1];
         } else {
           pair.success = true;
 
