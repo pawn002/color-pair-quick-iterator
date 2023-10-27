@@ -376,6 +376,26 @@ export class ColorUtilService {
     return delta;
   }
 
+  calcWcag2(colorOne: string, colorTwo: string): number | null {
+    let wcag21: number | null = null;
+
+    const colorOneParsed = this.parseColor(colorOne);
+    const colorTwoParsed = this.parseColor(colorTwo);
+
+    if (colorOneParsed && colorTwoParsed) {
+      const colorOneObj = new Color('srgb', colorOneParsed.coords);
+      const colorTwoObj = new Color('srgb', colorTwoParsed.coords);
+
+      const rawWcag21 = colorOneObj.contrast(colorTwoObj, 'WCAG21');
+
+      const fixedDelta = rawWcag21.toFixed(1);
+
+      wcag21 = parseFloat(fixedDelta);
+    }
+
+    return wcag21;
+  }
+
   getColorMeta(color: string): ColorMetaObj | null {
     let meta: ColorMetaObj | null = null;
 
