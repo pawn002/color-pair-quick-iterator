@@ -1,5 +1,67 @@
 <div class="comp-container">
   <div>
+    <h3>Differences</h3>
+    <table>
+      <caption class="sr-only">
+        Differences between Color One and Color Two.
+      </caption>
+      <thead class="sr-only">
+        <tr>
+          <th>Measurement</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Delta E</td>
+          <td>{{ differences.deltaE }}</td>
+        </tr>
+        <tr>
+          <td>APCA</td>
+          <td>{{ differences.apca }}</td>
+        </tr>
+        <tr>
+          <td>WCAG 2 Compatible</td>
+          <td>{{ differences.wcag2New }}</td>
+        </tr>
+        <tr>
+          <td>WCAG 2</td>
+          <td>{{ differences.wcag2Old }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div>
+    <h3>Successes and Minimums</h3>
+    <table>
+      <caption class="sr-only">
+        Various pass, fails or minimum dimensions related to visual elements.
+      </caption>
+      <thead class="sr-only">
+        <tr>
+          <th>Criteria</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Text</td>
+          <td>{{ successes.text }}</td>
+        </tr>
+        <tr>
+          <td>Large Text</td>
+          <td>{{ successes.largeText }}</td>
+        </tr>
+        <tr>
+          <td>Min. Dimension<sup>c</sup></td>
+          <td>{{ successes.objectMinDimension }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div>
     <h3>Color One</h3>
     <table>
       <caption class="sr-only">
@@ -60,39 +122,6 @@
         <tr>
           <td>Hue</td>
           <td>{{ colorTwoMeta?.hue }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div>
-    <h3>Differences</h3>
-    <table>
-      <caption class="sr-only">
-        Differences between Color One and Color Two.
-      </caption>
-      <thead class="sr-only">
-        <tr>
-          <th>Measurement</th>
-          <th>Value</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Delta E</td>
-          <td>{{ differences.deltaE }}</td>
-        </tr>
-        <tr>
-          <td>APCA</td>
-          <td>{{ differences.apca }}</td>
-        </tr>
-        <tr>
-          <td>WCAG 2 Compatible</td>
-          <td>{{ differences.wcag2New }}</td>
-        </tr>
-        <tr>
-          <td>WCAG 2</td>
-          <td>{{ differences.wcag2Old }}</td>
         </tr>
       </tbody>
     </table>

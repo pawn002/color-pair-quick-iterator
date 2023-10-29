@@ -6,7 +6,12 @@ export class DifferencesDataObj {
   deltaE: number | null = null;
   wcag2Old: number | null = null;
   wcag2New: number | null = null;
-  apca: number | null = null;
+  apca: number = NaN;
+}
+export class SuccessesObj {
+  text: 'pass' | 'fail' | null = null;
+  largeText: 'pass' | 'fail' | null = null;
+  objectMinDimension: number | string = NaN;
 }
 
 @Component({
@@ -22,19 +27,32 @@ export class MetadataComponent implements OnChanges {
     deltaE: null,
     wcag2Old: null,
     wcag2New: null,
-    apca: null,
+    apca: NaN,
+  };
+
+  successes: SuccessesObj = {
+    text: null,
+    largeText: null,
+    objectMinDimension: NaN,
   };
 
   colorOneMeta: ColorMetaObj | null = null;
 
   colorTwoMeta: ColorMetaObj | null = null;
 
-  constructor(
-    private cus: ColorUtilService,
-    private cms: ColorMetricsService
-  ) {}
+  getColorMeta() {
+    if (this.colorOne && this.colorTwo) {
+      if (this.cus.getColorMeta(this.colorOne)) {
+        this.colorOneMeta = this.cus.getColorMeta(this.colorOne);
 
-  ngOnChanges() {
+        this.colorTwoMeta = this.cus.getColorMeta(this.colorTwo);
+      }
+    } else {
+      console.warn(`failed to get color meta`);
+    }
+  }
+
+  getColorDifference() {
     if (this.colorOne && this.colorTwo) {
       this.differences.deltaE = this.cus.calcDeltaE(
         this.colorOne,
@@ -56,13 +74,75 @@ export class MetadataComponent implements OnChanges {
         this.colorOne,
         this.colorTwo,
         'apca'
+      ) as number;
+    } else {
+      console.warn(`failed to get color differences`);
+    }
+  }
+
+  getTextPassFail(): string {
+    let verdict: string = '';
+
+    if (this.differences.wcag2New) {
+      verdict = this.differences.wcag2New >= 4.5 ? 'pass' : 'fail';
+    }
+
+    return verdict;
+  }
+
+  getLargeTextPassFail(): string {
+    let verdict: string = '';
+
+    if (this.differences.wcag2New) {
+      verdict = this.differences.wcag2New >= 3 ? 'pass' : 'fail';
+    }
+
+    return verdict;
+  }
+
+  getObjectMinDimension(): number {
+    let size: number = NaN;
+
+    if (this.differences.apca) {
+      size = this.cus.getMinObjectDimension(this.differences.apca) as number;
+    }
+
+    return size;
+  }
+
+  getSuccesses() {
+    if (this.differences.wcag2New) {
+      this.successes.text = this.differences.wcag2New >= 4.5 ? 'pass' : 'fail';
+
+      this.successes.largeText =
+        this.differences.wcag2New >= 3 ? 'pass' : 'fail';
+
+      const minDimension = this.cus.getMinObjectDimension(
+        this.differences.apca
       );
 
-      if (this.cus.getColorMeta(this.colorOne)) {
-        this.colorOneMeta = this.cus.getColorMeta(this.colorOne);
-
-        this.colorTwoMeta = this.cus.getColorMeta(this.colorTwo);
-      }
+      this.successes.objectMinDimension = Number.isNaN(minDimension)
+        ? 'invisible'
+        : minDimension;
     }
+  }
+
+  constructor(
+    private cus: ColorUtilService,
+    private cms: ColorMetricsService
+  ) {}
+
+  ngOnChanges() {
+    this.getColorMeta();
+
+    this.getColorDifference();
+
+    this.getSuccesses();
+
+    // if (this.colorOne && this.colorTwo) {
+    //   if (this.differences.apca) {
+    //     console.log(this.cus.getMinObjectDimension(this.differences.apca));
+    //   }
+    // }
   }
 }
