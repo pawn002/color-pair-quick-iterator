@@ -1,5 +1,34 @@
 <div class="comp-container">
   <div>
+    <h3>Successes and Minimums</h3>
+    <table>
+      <caption class="sr-only">
+        Various pass, fails or minimum dimensions related to visual elements.
+      </caption>
+      <thead class="sr-only">
+        <tr>
+          <th>Criteria</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Text</td>
+          <td>{{ successes.text }}</td>
+        </tr>
+        <tr>
+          <td>Large Text</td>
+          <td>{{ successes.largeText }}</td>
+        </tr>
+        <tr>
+          <td>Min. Dimension<sup>c</sup></td>
+          <td>{{ successes.objectMinDimension }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div>
     <h3>Differences</h3>
     <table>
       <caption class="sr-only">
@@ -27,35 +56,6 @@
         <tr>
           <td>WCAG 2</td>
           <td>{{ differences.wcag2Old }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div>
-    <h3>Successes and Minimums</h3>
-    <table>
-      <caption class="sr-only">
-        Various pass, fails or minimum dimensions related to visual elements.
-      </caption>
-      <thead class="sr-only">
-        <tr>
-          <th>Criteria</th>
-          <th>Value</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Text</td>
-          <td>{{ successes.text }}</td>
-        </tr>
-        <tr>
-          <td>Large Text</td>
-          <td>{{ successes.largeText }}</td>
-        </tr>
-        <tr>
-          <td>Min. Dimension<sup>c</sup></td>
-          <td>{{ successes.objectMinDimension }}</td>
         </tr>
       </tbody>
     </table>
