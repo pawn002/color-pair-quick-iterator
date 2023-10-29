@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import Color from 'colorjs.io';
 import { to } from 'colorjs.io/fn';
 import { ColorConstructor } from 'colorjs.io/types/src/color';
+import { scaleLinear } from 'd3';
 import { random } from 'lodash';
 
 export type ColorPair = [string, string];
@@ -415,6 +416,34 @@ export class ColorUtilService {
     }
 
     return meta;
+  }
+
+  getMinObjectDimension(apca: number): number {
+    let dimension: number = NaN;
+
+    const absApca = Math.abs(apca);
+
+    const pixels = [1, 1.5, 2, 3, 4, 6, 8, 10, 15];
+    const apcaScores = [90, 75, 60, 50, 45, 30, 25, 20, 15];
+    const minLookup = scaleLinear(pixels).domain(apcaScores);
+
+    const initSize = minLookup(absApca).toFixed(2);
+
+    dimension = parseFloat(initSize);
+
+    if (dimension > 15) {
+      dimension = 15;
+    }
+
+    if (absApca >= 100) {
+      dimension = 0.25;
+    }
+
+    if (absApca < 15) {
+      dimension = NaN;
+    }
+
+    return dimension;
   }
 
   constructor() {}
