@@ -68,6 +68,7 @@ h2 {
 }
 
 h3 {
+  line-height: unset;
   color: var(--min-body-text-black);
   font-family: var(--headerFont);
   font-size: var(--minBodyTextSize);
