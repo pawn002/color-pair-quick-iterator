@@ -80,50 +80,33 @@ export class MetadataComponent implements OnChanges {
     }
   }
 
-  getTextPassFail(): string {
-    let verdict: string = '';
-
-    if (this.differences.wcag2New) {
-      verdict = this.differences.wcag2New >= 4.5 ? 'pass' : 'fail';
-    }
-
-    return verdict;
-  }
-
-  getLargeTextPassFail(): string {
-    let verdict: string = '';
-
-    if (this.differences.wcag2New) {
-      verdict = this.differences.wcag2New >= 3 ? 'pass' : 'fail';
-    }
-
-    return verdict;
-  }
-
-  getObjectMinDimension(): number {
-    let size: number = NaN;
-
-    if (this.differences.apca) {
-      size = this.cus.getMinObjectDimension(this.differences.apca) as number;
-    }
-
-    return size;
-  }
-
   getSuccesses() {
-    if (this.differences.wcag2New) {
-      this.successes.text = this.differences.wcag2New >= 4.5 ? 'pass' : 'fail';
+    if (this.colorOne && this.colorTwo) {
+      const wcagNew = this.cms.getContrast(
+        this.colorOne,
+        this.colorTwo,
+        'bpca'
+      ) as number;
 
-      this.successes.largeText =
-        this.differences.wcag2New >= 3 ? 'pass' : 'fail';
+      const apcaScore = this.cms.getContrast(
+        this.colorOne,
+        this.colorTwo,
+        'apca'
+      ) as number;
 
-      const minDimension = this.cus.getMinObjectDimension(
-        this.differences.apca
-      );
+      if (wcagNew >= 0 && Math.abs(apcaScore) >= 0) {
+        this.successes.text = wcagNew >= 4.5 ? 'pass' : 'fail';
 
-      this.successes.objectMinDimension = Number.isNaN(minDimension)
-        ? 'invisible'
-        : minDimension;
+        this.successes.largeText = wcagNew >= 3 ? 'pass' : 'fail';
+
+        const minDimension = this.cus.getMinObjectDimension(apcaScore);
+
+        this.successes.objectMinDimension = Number.isNaN(minDimension)
+          ? 'invisible'
+          : minDimension;
+      } else {
+        console.warn(`trouble getting scores`);
+      }
     }
   }
 
