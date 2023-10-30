@@ -233,8 +233,7 @@ export class ColorUtilService {
     let pair: ColorPair = ['black', 'white'];
 
     // ref: oklch.com
-    const targetChroma = random(0, 0.4, true);
-    // const targetChroma = 0.11;
+    const targetChroma = 0.11;
 
     const colorOneLight = random(0.25, 0.95, true);
     const colorOneHue = random(0, 360);
