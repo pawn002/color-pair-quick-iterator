@@ -2,16 +2,16 @@
   position: relative;
   display: inline-block;
 
+  &:hover {
+    box-shadow: 0 4px 0 0 #8c897e;
+  }
+
   input {
     // NOTE: 2(15px) + 15px = 45px
     width: 45px;
     height: 45px;
     box-sizing: border-box;
     border-radius: 5px 0 0 5px;
-
-    &:hover {
-      box-shadow: 4px 4px 0 0 #8c897e;
-    }
 
     &:focus {
       box-shadow: 4px 4px 0 0 black, -4px -4px 0 0 black, -4px 4px 0 0 black,
