@@ -9,9 +9,13 @@
     box-sizing: border-box;
     border-radius: 5px 0 0 5px;
 
-    &:hover,
+    &:hover {
+      box-shadow: 4px 4px 0 0 #8c897e;
+    }
+
     &:focus {
-      box-shadow: 0 0 4px 0 black;
+      box-shadow: 4px 4px 0 0 black, -4px -4px 0 0 black, -4px 4px 0 0 black,
+        4px -4px 0 0 black;
     }
   }
 
