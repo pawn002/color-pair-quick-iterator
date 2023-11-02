@@ -56,8 +56,12 @@
       min-width: var(--minHitDimensionAA);
       min-height: var(--minHitDimensionAA);
 
+      // &:hover {
+      //   background-color: #c6c3b8;
+      // }
+
       &:hover {
-        background-color: #c6c3b8;
+        box-shadow: 4px 4px 0 0 #8c897e;
       }
 
       svg {
@@ -86,14 +90,19 @@
       flex-grow: 1;
 
       label {
-        font-size: var(--minTextSize);
+        font-size: var(--minBodyTextSize);
         font-family: var(--bodyFont);
         color: var(--min-body-text-black);
       }
+
       input {
         margin: 11px;
         min-width: var(--minHitDimensionAA);
         min-height: var(--minHitDimensionAA);
+
+        &:hover {
+          box-shadow: 4px 4px 0 0 #8c897e;
+        }
       }
     }
   }

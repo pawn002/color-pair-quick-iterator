@@ -13,8 +13,12 @@
     min-width: var(--minHitDimensionAAA);
     min-height: var(--minHitDimensionAAA);
 
+    // &:hover {
+    //   background-color: #dfdfdf;
+    // }
+
     &:hover {
-      background-color: #dfdfdf;
+      box-shadow: 4px 4px 0 0 #8c897e;
     }
 
     .svg-container {

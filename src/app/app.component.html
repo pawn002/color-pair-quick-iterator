@@ -95,10 +95,6 @@
       <span class="sr-only">Harmonize Color Pair To Same Chroma</span
       ><span aria-hidden="true">Ch</span>
     </button>
-    <button disabled>
-      <span class="sr-only">Harmonize Color Pair To Same Saturation</span
-      ><span aria-hidden="true">Sa</span>
-    </button>
   </section>
 
   <hr />
@@ -118,7 +114,7 @@
     <h2>Options</h2>
     <div class="options">
       <div class="checkbox-group">
-        <label for="option-score-toggle">Use WCAG 2.x value</label>
+        <label for="option-score-toggle">Display WCAG 2 value </label>
         <input
           type="checkbox"
           name="Contrast Score Type Toggle"
@@ -126,7 +122,7 @@
           (change)="toggleContrastType($event)"
         />
       </div>
-      <div class="checkbox-group">
+      <!-- <div class="checkbox-group">
         <label for="option-omit-hex">Omit # from Copy</label>
         <input
           disabled
@@ -134,9 +130,9 @@
           name="Omit # from Hex Code Toggle"
           id="option-omit-hex"
         />
-      </div>
+      </div> -->
       <div class="checkbox-group">
-        <label for="option-const-chroma">Constant Chroma<sup>b</sup></label>
+        <label for="option-const-chroma">Constant chroma<sup>b</sup></label>
         <input
           type="checkbox"
           name="Constant Chroma Toggle"
@@ -162,15 +158,13 @@
     <p>
       <sup>b</sup>Constant Chroma forces color slider to limit light and dark
       variation of colors to tints and shades that have the same chroma and hue
-      of the inputted color. WARNING: By default, color sliders does not
-      restrict light and dark allowing the creation of colors outside of the
-      SRGB gamut—these colors are then mapped to a reasonably close SRGB colors
-      by sacrificing chroma which changes the objective identity of the color.
+      of the inputted color maintaining the objective identity of your input
+      color.
     </p>
     <p>
-      <sup>c</sup>Minimum Dimension is the smallest dimension of your non-text
-      visual element that needs to be percievable. <code>invisible</code> is a
-      value that occurs when there is not enough contrast to be seen at all.
+      <sup>c</sup>Object shows two different values. A number in pixels that the
+      current contrast level supports, and 'invisible' when the current contrast
+      level is too low to support <strong>any</strong> object.
     </p>
   </section>
 
@@ -185,7 +179,7 @@
       <a
         href="https://github.com/pawn002/color-pair-quick-iterator/issues/new/choose"
       >
-        bug reports and feature feature requests for this app</a
+        bug reports and feature requests for this app</a
       >
       to help improve its Accessibility.
     </p>

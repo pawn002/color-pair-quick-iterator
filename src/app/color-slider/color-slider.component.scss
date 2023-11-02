@@ -11,6 +11,10 @@
     min-height: var(--minHitDimensionAAA);
     width: 100%;
     margin: 0;
+
+    &:hover {
+      box-shadow: 4px 4px 0 0 #8c897e;
+    }
   }
 
   .special-case {
