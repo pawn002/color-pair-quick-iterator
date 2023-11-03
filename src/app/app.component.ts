@@ -8,6 +8,7 @@ import { ContrastType } from './services/color-metrics.service';
 import { ColorUtilService } from './services/color-util.service';
 import { CopyToClipboardEvent } from './copy-to-clipboard-button/copy-to-clipboard-button.component';
 import { ResetObject } from './color-slider/color-slider.component';
+import { AlertMessagObj } from './alert/alert.component';
 
 @Component({
   selector: 'app-root',
@@ -27,8 +28,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   constantChroma: boolean = false;
 
-  showAlert: boolean = false;
-  currentAlertMessage: string | null = null;
+  currentAlertMessage: AlertMessagObj | null = null;
 
   handleColorInputInput(inputNumber: 'One' | 'Two', event: string) {
     if (inputNumber === 'One') {
@@ -52,7 +52,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   handleCopyEvent(event: CopyToClipboardEvent) {
     if (event.copied) {
-      this.alertUser(`${event.color} copied to clipboard.`);
+      this.alertUser({ message: `${event.color} copied to clipboard.` });
     } else {
       console.error(`color copy error.`);
     }
@@ -108,7 +108,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
       this.colorPickerTwoSelectedColor = newPairing.background;
 
-      this.alertUser('Swapped Color One and Two.');
+      this.alertUser({ message: 'Swapped Color One and Two.' });
     } else {
       console.error('swapping colors went badly. . .');
     }
@@ -122,9 +122,9 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.colorPickerTwoSelectedColor = randomColorPair[1];
 
       if (!initialAppColors) {
-        this.alertUser(
-          `Random color pair generated: ${randomColorPair[0]}, and ${randomColorPair[1]}`
-        );
+        this.alertUser({
+          message: `Random color pair generated: ${randomColorPair[0]}, and ${randomColorPair[1]}`,
+        });
       }
     }, 0);
   }
@@ -132,7 +132,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   resetSliders() {
     this.resetSlider = { reset: true };
 
-    this.alertUser('Color Sliders reset to initial states.');
+    this.alertUser({ message: 'Color Sliders reset to initial states.' });
   }
 
   async matchChromas() {
@@ -150,28 +150,19 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.colorPickerOneSelectedColor = matchedColors.colors[0];
         this.colorPickerTwoSelectedColor = matchedColors.colors[1];
 
-        this.alertUser(
-          `Chroma matched colors to ${matchedColors.chroma.toFixed(2)}`
-        );
+        this.alertUser({
+          message: `Chroma matched colors to ${matchedColors.chroma.toFixed(
+            2
+          )}`,
+        });
       } else {
-        this.alertUser('Unable to chroma match colors');
+        this.alertUser({ message: 'Unable to chroma match colors' });
       }
     }
   }
 
-  alertUser(message: string) {
-    this.showAlert = true;
-
+  alertUser(message: AlertMessagObj) {
     this.currentAlertMessage = message;
-  }
-
-  alertClosed(event: boolean) {
-    if (event) {
-      this.showAlert = false;
-      this.currentAlertMessage = null;
-    } else {
-      console.error(`alert did something unexpected`);
-    }
   }
 
   constructor(private cus: ColorUtilService) {}

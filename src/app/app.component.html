@@ -1,7 +1,9 @@
 <div class="app-container">
   <section class="title-and-sliders">
     <div class="title-and-score">
-      <h1>Perceptual Contrast<sup>a</sup></h1>
+      <h1>
+        Perceptual Contrast<sup><span class="sr-only">Superscript</span> a</sup>
+      </h1>
       <app-color-contrast
         [colorOne]="colorPickerOneComparedColor"
         [colorTwo]="colorPickerTwoComparedColor"
@@ -114,7 +116,13 @@
     <h2>Options</h2>
     <div class="options">
       <div class="checkbox-group">
-        <label for="option-score-toggle">Display WCAG 2 value </label>
+        <label for="option-score-toggle"
+          >Display WCAG 2 compatible value<span class="sr-only"
+            >; this affects a visual element not percievable to screenreaders
+            for good UX—same value is obtainable on Color Metadata section under
+            Differences.</span
+          >
+        </label>
         <input
           type="checkbox"
           name="Contrast Score Type Toggle"
@@ -132,7 +140,11 @@
         />
       </div> -->
       <div class="checkbox-group">
-        <label for="option-const-chroma">Constant chroma<sup>b</sup></label>
+        <label for="option-const-chroma"
+          >Constant chroma<sup
+            ><span class="sr-only">Superscript</span> b</sup
+          ></label
+        >
         <input
           type="checkbox"
           name="Constant Chroma Toggle"
@@ -186,10 +198,6 @@
   </section>
 
   <div class="alert">
-    <app-alert
-      [showAlert]="showAlert"
-      [alertMessage]="currentAlertMessage"
-      (alertClosed)="alertClosed($event)"
-    ></app-alert>
+    <app-alert [alertMessage]="currentAlertMessage"></app-alert>
   </div>
 </div>
