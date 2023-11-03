@@ -33,6 +33,11 @@
       }
     }
 
+    .msg-id {
+      color: #717171;
+      font-size: var(--minTextSize);
+    }
+
     &:empty {
       display: none;
       opacity: 0;

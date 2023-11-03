@@ -7,7 +7,7 @@ import {
   SimpleChanges,
   OnInit,
 } from '@angular/core';
-import { random } from 'lodash';
+import { random, sample, times } from 'lodash';
 
 export interface AlertMessagObj {
   message: string;
@@ -24,16 +24,34 @@ export class AlertComponent implements OnInit, OnChanges {
 
   showAlert: boolean = false;
 
+  uniqId: string = '';
+
+  timeout: number = NaN;
+
+  generateRandomString(length: number) {
+    return times(length, () => random(35).toString(36)).join('');
+  }
+
   hideAlert() {
     this.showAlert = false;
+
+    this.uniqId = '';
 
     this.alertClosed.emit(true);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(`new obj!`);
+    this.uniqId = this.generateRandomString(12);
 
     this.showAlert = true;
+
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
+
+    this.timeout = setTimeout(() => {
+      this.showAlert = false;
+    }, 5000) as unknown as number;
   }
 
   ngOnInit(): void {
