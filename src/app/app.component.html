@@ -186,10 +186,6 @@
   </section>
 
   <div class="alert">
-    <app-alert
-      [showAlert]="showAlert"
-      [alertMessage]="currentAlertMessage"
-      (alertClosed)="alertClosed($event)"
-    ></app-alert>
+    <app-alert [alertMessage]="currentAlertMessage"></app-alert>
   </div>
 </div>

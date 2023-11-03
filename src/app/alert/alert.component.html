@@ -1,7 +1,7 @@
 <div class="comp-container" role="alert">
   <div class="alert-content">
     <ng-container *ngIf="showAlert">
-      <p [innerText]="alertMessage"></p>
+      <p [innerText]="alertMessage?.message"></p>
       <button (click)="hideAlert()"><span>Dismiss</span></button>
     </ng-container>
   </div>
