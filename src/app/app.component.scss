@@ -52,6 +52,7 @@
       margin: 11px;
       border-radius: 5px;
       font-style: italic;
+      // color: var(--min-body-text-black);
 
       min-width: var(--minHitDimensionAA);
       min-height: var(--minHitDimensionAA);
@@ -81,6 +82,10 @@
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+
+    h2 {
+      margin-bottom: 0;
+    }
 
     p {
       // text-align: center;
