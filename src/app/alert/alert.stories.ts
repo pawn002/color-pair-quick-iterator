@@ -11,14 +11,7 @@ const meta: Meta<AlertComponent> = {
       ...args,
     },
   }),
-  argTypes: {
-    showAlert: {
-      control: { type: 'boolean' },
-    },
-    alertMessage: {
-      control: { type: 'text' },
-    },
-  },
+  argTypes: {},
 };
 
 export default meta;
@@ -31,7 +24,8 @@ export const Typical: Story = {
 
 export const ColorCopied: Story = {
   args: {
-    showAlert: true,
-    alertMessage: 'Color One Variant, #ffe1df, copied to clipboard.',
+    alertMessage: {
+      message: 'Color One Variant, #ffe1df, copied to clipboard.',
+    },
   },
 };
