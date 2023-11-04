@@ -82,6 +82,11 @@
     align-items: center;
     flex-wrap: wrap;
 
+    p {
+      // text-align: center;
+      // width: 100%;
+    }
+
     .checkbox-group {
       display: flex;
       flex-direction: row-reverse;

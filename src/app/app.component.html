@@ -1,9 +1,7 @@
 <div class="app-container">
   <section class="title-and-sliders">
     <div class="title-and-score">
-      <h1>
-        Perceptual Contrast<sup><span class="sr-only">Superscript</span> a</sup>
-      </h1>
+      <h1>Perceptual Contrast</h1>
       <app-color-contrast
         [colorOne]="colorPickerOneComparedColor"
         [colorTwo]="colorPickerTwoComparedColor"
@@ -130,21 +128,9 @@
           (change)="toggleContrastType($event)"
         />
       </div>
-      <!-- <div class="checkbox-group">
-        <label for="option-omit-hex">Omit # from Copy</label>
-        <input
-          disabled
-          type="checkbox"
-          name="Omit # from Hex Code Toggle"
-          id="option-omit-hex"
-        />
-      </div> -->
+
       <div class="checkbox-group">
-        <label for="option-const-chroma"
-          >Constant chroma<sup
-            ><span class="sr-only">Superscript</span> b</sup
-          ></label
-        >
+        <label for="option-const-chroma">Constant chroma</label>
         <input
           type="checkbox"
           name="Constant Chroma Toggle"
@@ -160,27 +146,35 @@
   <section class="notes">
     <h2>Notes</h2>
 
-    <p>
-      <sup>a</sup>For more information on the value used for Perceptual
-      Contrast, refer to Myndex article
+    <p id="notes-perceptual-contrast">
+      <span class="visual-header"> Perceptual Contrast:</span> Score that better
+      gauges contrast than WCAG 2 in the creation of inclusive visual designs.
+      For more information on the value used for Perceptual Contrast, refer to
+      Myndex article
       <a href="https://git.apcacontrast.com/documentation/WhyAPCA.html"
         >Why APCA?</a
       >
     </p>
-    <p>
-      <sup>b</sup>Constant Chroma forces color slider to limit light and dark
-      variation of colors to tints and shades that have the same chroma and hue
-      of the inputted color maintaining the objective identity of your input
-      color.
+    <p id="notes-constant-chroma">
+      <span class="visual-header">Constant Chroma:</span>
+      Option that forces the color sliders to limit light and dark variation of
+      colors to tints and shades that have the same chroma and hue of the
+      inputted color maintaining the objective identity of your input color.
     </p>
-    <p>
-      <sup>c</sup>Object shows two different values. A number in pixels that the
-      current contrast level supports, and 'invisible' when the current contrast
-      level is too low to support <strong>any</strong> object.
+    <p id="notes-object">
+      <span class="visual-header">Object:</span> A readout that shows two
+      different values, a number in pixels that the current contrast level
+      supports, and 'invisible' when the current contrast level is too low to
+      support <strong>any</strong> object.
     </p>
-    <p>
-      <sup>d</sup>WCAG 2 scores are including for reference only—do not use this
-      score for judging Accessible Contrast.
+    <p id="notes-wcag2-compat">
+      <span class="visual-header">WCAG 2 Compatible:</span> A score compatible
+      with use for WCAG 2.x success criteria. This score meets or exceeds WCAG 2
+      scores to better include those with atypical vision.
+    </p>
+    <p id="notes-wcag2">
+      <span class="visual-header">WCAG 2:</span> Scores that are included for
+      reference only—do not use this score for judging Accessible Contrast.
     </p>
   </section>
 
