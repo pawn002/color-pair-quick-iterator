@@ -5,9 +5,10 @@
   .score-container {
     display: flex;
     justify-content: center;
+    align-items: center;
 
     .score {
-      // font-style: italic;
+      // background-color: red;
       font-weight: 600;
       font-family: var(--monoFont);
     }
