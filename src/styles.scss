@@ -20,13 +20,14 @@
   --bodyFont: "Atkinson Hyperlegible", sans-serif;
   --monoFont: "Source Code Pro Variable", sans-serif;
 
-  --minTextSize: 13px;
-  --minBodyTextSize: 16px;
-  --largeTextBoldSize: 19px;
-  --largeTextRegularSize: 24px;
+  // Assuming 1rem = 16px. . .
+  --minTextSize: 0.8125rem;
+  --minBodyTextSize: 1rem;
+  --largeTextBoldSize: 1.1875rem;
+  --largeTextRegularSize: 1.1875rem;
 
-  --minHitDimensionAAA: 44px;
-  --minHitDimensionAA: 22px;
+  --minHitDimensionAAA: 2.75rem;
+  --minHitDimensionAA: 1.375rem;
 
   --fluidPadding: clamp(0.313rem, 4.5vw + -0.25rem, 2rem);
 }
@@ -48,13 +49,13 @@ h3 {
   line-height: 0.85em;
 
   sup {
-    margin-left: 0.25ch;
+    // margin-left: 0.25ch;
   }
 }
 
 h1 {
   font-family: var(--headerFont);
-  font-size: 21px;
+  font-size: 1.3125rem;
   font-style: normal;
   font-weight: 700;
 }
@@ -62,7 +63,7 @@ h1 {
 h2 {
   font-family: var(--headerFont);
   color: var(--min-body-text-black);
-  font-size: 18px;
+  font-size: 1.125rem;
   font-style: normal;
   font-weight: 700;
   margin-bottom: 0.3em;
@@ -93,20 +94,20 @@ td {
   line-height: 1.5em;
 
   sup {
-    margin-right: 0.5ch;
+    // margin-right: 0.5ch;
   }
 }
 
 p {
   font-family: var(--bodyFont);
-  font-size: 16px;
+  font-size: var(--minBodyTextSize);
   font-style: normal;
   font-weight: 400;
   max-width: 40ch;
   line-height: 1.5em;
 
   sup {
-    margin-right: 0.5ch;
+    // margin-right: 0.5ch;
   }
 }
 
