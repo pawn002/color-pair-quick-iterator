@@ -40,14 +40,14 @@ export class PaletteTableComponent {
         wacg2Comp: NaN,
       },
       {
-        color: 'blue',
+        color: '#2456d3',
         lightness: 0.5,
         Chroma: 0.2,
         pContrast: NaN,
         wacg2Comp: NaN,
       },
       {
-        color: 'cyan',
+        color: '#0137f6',
         lightness: 0.5,
         Chroma: 0.4,
         pContrast: NaN,
@@ -80,4 +80,5 @@ export class PaletteTableComponent {
   ];
 
   // TODO: create function that creates column headers for table based on dynamic data
+  getTableColumnHeaders() {}
 }

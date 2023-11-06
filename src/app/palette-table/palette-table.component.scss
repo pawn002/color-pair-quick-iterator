@@ -18,7 +18,9 @@
       min-height: var(--minHitDimensionAAA);
 
       &:hover {
-        box-shadow: 0 4px 0 0 #898989;
+        // box-shadow: 0 4px 0 0 #898989;
+        background-color: white !important;
+        border-color: #8f8f8f !important;
       }
     }
   }

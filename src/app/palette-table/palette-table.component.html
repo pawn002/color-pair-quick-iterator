@@ -18,7 +18,9 @@
         <td *ngFor="let cell of row">
           <button
             [style.backgroundColor]="cell.color ? cell.color : 'transparent'"
-          ></button>
+          >
+            <span class="sr-only">cell.color</span>
+          </button>
         </td>
       </tr>
     </tbody>
