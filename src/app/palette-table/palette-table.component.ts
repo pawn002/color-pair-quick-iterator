@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { ColorUtilService } from '../services/color-util.service';
 
 export class TableColorCell {
   color: string | null = null;
@@ -106,7 +107,11 @@ export class PaletteTableComponent implements OnInit {
     this.tableHeaders = headers;
   }
 
+  constructor(private cus: ColorUtilService) {}
+
   ngOnInit(): void {
+    this.dataStruct = this.cus.generateAllOklchVariants('violet', 20, 20);
+
     this.getTableColumnHeaders();
   }
 }

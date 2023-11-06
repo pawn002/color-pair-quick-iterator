@@ -3,7 +3,8 @@ import Color from 'colorjs.io';
 import { to } from 'colorjs.io/fn';
 import { ColorConstructor } from 'colorjs.io/types/src/color';
 import { scaleLinear } from 'd3';
-import { random } from 'lodash';
+import { random, reverse, uniqBy } from 'lodash';
+import { TableColorCell } from '../palette-table/palette-table.component';
 
 export type ColorPair = [string, string];
 
@@ -443,6 +444,77 @@ export class ColorUtilService {
     }
 
     return dimension;
+  }
+
+  // TODO: pick up here to generate data for table
+  generateAllOklchVariants(
+    color: string,
+    lightSteps: number,
+    chromaSteps: number
+  ) {
+    const parsedColor = this.parseColor(color);
+
+    const variantsCollection = [];
+
+    let sortedVariantsCollection = [];
+
+    if (parsedColor) {
+      const oklchColor = Color.to(parsedColor, 'oklch');
+      const lchCooords = oklchColor.coords;
+      const colorHue = lchCooords[2];
+
+      const lightMax = 1;
+      const lightMin = 0;
+      const lightInterval = (lightMax - lightMin) / lightSteps;
+
+      const chromaMax = 0.34;
+      const chromaMin = 0;
+      const chromaInterval = (chromaMax - chromaMin) / chromaSteps;
+
+      // generate all rows
+      for (let i = 0; i <= lightSteps; i++) {
+        const variantRow: Array<TableColorCell> = [];
+
+        for (let j = 0; j <= chromaSteps; j++) {
+          const targetLightness = parseFloat((i * lightInterval).toFixed(2));
+          const targetChroma = parseFloat((j * chromaInterval).toFixed(2));
+
+          const variantColor = new Color('oklch', [
+            targetLightness,
+            targetChroma,
+            colorHue,
+          ]);
+
+          const variantColorinGamut = variantColor.inGamut('srgb');
+
+          const variantObj: TableColorCell = {
+            color: variantColorinGamut
+              ? variantColor.to('srgb').toString({ format: 'hex' })
+              : null,
+            lightness: targetLightness,
+            chroma: targetChroma,
+            wacg2Comp: NaN,
+            pContrast: NaN,
+          };
+
+          variantRow.push(variantObj);
+        }
+
+        // variantsCollection.push(
+        //   uniqBy(variantRow, (e) => {
+        //     return e.color;
+        //   })
+        // );
+        variantsCollection.push(variantRow);
+      }
+    } else {
+      console.error(`could not parse color`);
+    }
+
+    // order color rows from light to dark
+    sortedVariantsCollection = reverse(variantsCollection);
+
+    return sortedVariantsCollection;
   }
 
   constructor() {}
