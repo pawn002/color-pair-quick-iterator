@@ -1,0 +1,21 @@
+.comp-container {
+  table {
+    tbody {
+      th {
+        text-align: right;
+      }
+    }
+
+    button {
+      border: transparent 2px solid;
+      border-radius: 5px;
+      background-color: #e1e1e1;
+      min-width: var(--minHitDimensionAAA);
+      min-height: var(--minHitDimensionAAA);
+
+      &:hover {
+        box-shadow: 0 4px 0 0 #898989;
+      }
+    }
+  }
+}
