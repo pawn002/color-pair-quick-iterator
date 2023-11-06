@@ -1,5 +1,9 @@
 .comp-container {
   table {
+    th {
+      font-family: var(--monoFont);
+    }
+
     tbody {
       th {
         text-align: right;

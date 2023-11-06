@@ -7,29 +7,19 @@
     <thead>
       <tr>
         <td>&nbsp;</td>
-        <th>0</th>
-        <th>.2</th>
-        <th>.4</th>
+        <th>0.0</th>
+        <th>0.2</th>
+        <th>0.4</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <th>1<span>.0</span></th>
-        <td><button>color</button></td>
-        <td><button>color</button></td>
-        <td><button>color</button></td>
-      </tr>
-      <tr>
-        <th>0.5</th>
-        <td><button>color</button></td>
-        <td><button>color</button></td>
-        <td><button>color</button></td>
-      </tr>
-      <tr>
-        <th>0</th>
-        <td><button>color</button></td>
-        <td><button>color</button></td>
-        <td><button>color</button></td>
+      <tr *ngFor="let row of dataStruct">
+        <th>{{ row[0]["lightness"] }}</th>
+        <td *ngFor="let cell of row">
+          <button
+            [style.backgroundColor]="cell.color ? cell.color : 'transparent'"
+          ></button>
+        </td>
       </tr>
     </tbody>
   </table>

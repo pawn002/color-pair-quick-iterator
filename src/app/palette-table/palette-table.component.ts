@@ -10,12 +10,74 @@ export class PaletteTableComponent {
   dataStruct = [
     [
       {
-        color: '',
-        lightness: NaN,
-        Chroma: NaN,
+        color: 'white',
+        lightness: 1,
+        Chroma: 0,
+        pContrast: NaN,
+        wacg2Comp: NaN,
+      },
+      {
+        color: null,
+        lightness: 1,
+        Chroma: 0.2,
+        pContrast: NaN,
+        wacg2Comp: NaN,
+      },
+      {
+        color: null,
+        lightness: 1,
+        Chroma: 0.4,
+        pContrast: NaN,
+        wacg2Comp: NaN,
+      },
+    ],
+    [
+      {
+        color: 'grey',
+        lightness: 0.5,
+        Chroma: 0,
+        pContrast: NaN,
+        wacg2Comp: NaN,
+      },
+      {
+        color: 'blue',
+        lightness: 0.5,
+        Chroma: 0.2,
+        pContrast: NaN,
+        wacg2Comp: NaN,
+      },
+      {
+        color: 'cyan',
+        lightness: 0.5,
+        Chroma: 0.4,
+        pContrast: NaN,
+        wacg2Comp: NaN,
+      },
+    ],
+    [
+      {
+        color: 'black',
+        lightness: 0,
+        Chroma: 0,
+        pContrast: NaN,
+        wacg2Comp: NaN,
+      },
+      {
+        color: null,
+        lightness: 0,
+        Chroma: 0.2,
+        pContrast: NaN,
+        wacg2Comp: NaN,
+      },
+      {
+        color: null,
+        lightness: 0,
+        Chroma: 0.4,
         pContrast: NaN,
         wacg2Comp: NaN,
       },
     ],
   ];
+
+  // TODO: create function that creates column headers for table based on dynamic data
 }
