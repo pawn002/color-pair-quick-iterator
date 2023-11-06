@@ -2000,7 +2000,7 @@
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ".app-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  padding: var(--fluidPadding) var(--fluidPadding) 0 var(--fluidPadding);\r\n  background-color: var(--background-color);\r\n\r\n  section {\r\n    // margin: 0.5rem 0;\r\n  }\r\n\r\n  .title-and-score {\r\n    display: flex;\r\n    gap: 1rem;\r\n    margin-bottom: 0.8rem;\r\n\r\n    h1 {\r\n      width: min-content;\r\n      text-align: right;\r\n    }\r\n\r\n    app-color-contrast {\r\n      flex-grow: 1;\r\n    }\r\n  }\r\n\r\n  .slide-group {\r\n    display: flex;\r\n    margin-bottom: 0.4rem;\r\n    align-items: center;\r\n\r\n    app-color-slider {\r\n      flex-grow: 1;\r\n    }\r\n  }\r\n\r\n  h2 {\r\n    text-align: center;\r\n  }\r\n\r\n  .quick-actions {\r\n    display: flex;\r\n    flex-wrap: wrap;\r\n    justify-content: center;\r\n\r\n    button {\r\n      background-color: var(--background-color);\r\n      border: transparent 2px solid;\r\n      box-sizing: border-box;\r\n      position: relative;\r\n      display: flex;\r\n      align-items: center;\r\n      margin: 11px;\r\n      border-radius: 5px;\r\n      font-style: italic;\r\n\r\n      min-width: var(--minHitDimensionAA);\r\n      min-height: var(--minHitDimensionAA);\r\n\r\n      // &:hover {\r\n      //   background-color: #c6c3b8;\r\n      // }\r\n\r\n      &:hover {\r\n        box-shadow: 0 4px 0 0 #8c897e;\r\n      }\r\n\r\n      svg {\r\n        fill: #000000;\r\n        transform: rotateZ(90deg);\r\n\r\n        height: auto;\r\n        width: 22px;\r\n\r\n        display: inline-block;\r\n      }\r\n    }\r\n  }\r\n\r\n  .options {\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n    flex-wrap: wrap;\r\n\r\n    .checkbox-group {\r\n      display: flex;\r\n      flex-direction: row-reverse;\r\n      justify-content: flex-end;\r\n      align-items: center;\r\n      flex-grow: 1;\r\n\r\n      label {\r\n        font-size: var(--minBodyTextSize);\r\n        font-family: var(--bodyFont);\r\n        color: var(--min-body-text-black);\r\n      }\r\n\r\n      input {\r\n        margin: 11px;\r\n        min-width: var(--minHitDimensionAA);\r\n        min-height: var(--minHitDimensionAA);\r\n\r\n        &:hover {\r\n          box-shadow: 0 4px 0 0 #8c897e;\r\n        }\r\n      }\r\n    }\r\n  }\r\n\r\n  .metadata {\r\n    h2 {\r\n      margin-bottom: 1.1em;\r\n    }\r\n  }\r\n\r\n  .notes {\r\n    display: flex;\r\n    flex-direction: column;\r\n    align-items: center;\r\n\r\n    p {\r\n      margin: 0 11px 1.15em 0;\r\n    }\r\n  }\r\n\r\n  .contact {\r\n    display: flex;\r\n    flex-direction: column;\r\n    align-items: center;\r\n\r\n    p {\r\n      // margin: 1.15em 11px 1.15em 0;\r\n    }\r\n  }\r\n\r\n  .alert {\r\n    position: sticky;\r\n    bottom: 0;\r\n  }\r\n}\r\n",
+                    "data": ".app-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  padding: var(--fluidPadding) var(--fluidPadding) 0 var(--fluidPadding);\r\n  background-color: var(--background-color);\r\n\r\n  section {\r\n    // margin: 0.5rem 0;\r\n  }\r\n\r\n  .title-and-score {\r\n    display: flex;\r\n    gap: 1rem;\r\n    margin-bottom: 0.8rem;\r\n\r\n    h1 {\r\n      width: min-content;\r\n      text-align: right;\r\n    }\r\n\r\n    app-color-contrast {\r\n      flex-grow: 1;\r\n    }\r\n  }\r\n\r\n  .slide-group {\r\n    display: flex;\r\n    margin-bottom: 0.4rem;\r\n    align-items: center;\r\n\r\n    app-color-slider {\r\n      flex-grow: 1;\r\n    }\r\n  }\r\n\r\n  h2 {\r\n    text-align: center;\r\n  }\r\n\r\n  .quick-actions {\r\n    display: flex;\r\n    flex-wrap: wrap;\r\n    justify-content: center;\r\n\r\n    button {\r\n      background-color: var(--background-color);\r\n      border: transparent 2px solid;\r\n      box-sizing: border-box;\r\n      position: relative;\r\n      display: flex;\r\n      align-items: center;\r\n      margin: 11px;\r\n      border-radius: 5px;\r\n      font-style: italic;\r\n      // color: var(--min-body-text-black);\r\n\r\n      min-width: var(--minHitDimensionAA);\r\n      min-height: var(--minHitDimensionAA);\r\n\r\n      // &:hover {\r\n      //   background-color: #c6c3b8;\r\n      // }\r\n\r\n      &:hover {\r\n        box-shadow: 0 4px 0 0 #8c897e;\r\n      }\r\n\r\n      svg {\r\n        fill: #000000;\r\n        transform: rotateZ(90deg);\r\n\r\n        height: auto;\r\n        width: 22px;\r\n\r\n        display: inline-block;\r\n      }\r\n    }\r\n  }\r\n\r\n  .options {\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n    flex-wrap: wrap;\r\n\r\n    h2 {\r\n      margin-bottom: 0;\r\n    }\r\n\r\n    p {\r\n      // text-align: center;\r\n      // width: 100%;\r\n    }\r\n\r\n    .checkbox-group {\r\n      display: flex;\r\n      flex-direction: row-reverse;\r\n      justify-content: flex-end;\r\n      align-items: center;\r\n      flex-grow: 1;\r\n\r\n      label {\r\n        font-size: var(--minBodyTextSize);\r\n        font-family: var(--bodyFont);\r\n        color: var(--min-body-text-black);\r\n      }\r\n\r\n      input {\r\n        margin: 11px;\r\n        min-width: var(--minHitDimensionAA);\r\n        min-height: var(--minHitDimensionAA);\r\n\r\n        &:hover {\r\n          box-shadow: 0 4px 0 0 #8c897e;\r\n        }\r\n      }\r\n    }\r\n  }\r\n\r\n  .metadata {\r\n    h2 {\r\n      margin-bottom: 1.1em;\r\n    }\r\n  }\r\n\r\n  .notes {\r\n    display: flex;\r\n    flex-direction: column;\r\n    align-items: center;\r\n\r\n    p {\r\n      margin: 0 11px 1.15em 0;\r\n    }\r\n  }\r\n\r\n  .contact {\r\n    display: flex;\r\n    flex-direction: column;\r\n    align-items: center;\r\n\r\n    p {\r\n      // margin: 1.15em 11px 1.15em 0;\r\n    }\r\n  }\r\n\r\n  .alert {\r\n    position: sticky;\r\n    bottom: 0;\r\n  }\r\n}\r\n",
                     "styleUrl": "./app.component.scss"
                 }
             ],
@@ -2035,7 +2035,7 @@
                 "OnInit",
                 "AfterViewInit"
             ],
-            "templateData": "<div class=\"app-container\">\r\n  <section class=\"title-and-sliders\">\r\n    <div class=\"title-and-score\">\r\n      <h1>\r\n        Perceptual Contrast<sup><span class=\"sr-only\">Superscript</span> a</sup>\r\n      </h1>\r\n      <app-color-contrast\r\n        [colorOne]=\"colorPickerOneComparedColor\"\r\n        [colorTwo]=\"colorPickerTwoComparedColor\"\r\n        [contrastType]=\"contrastType\"\r\n      ></app-color-contrast>\r\n    </div>\r\n\r\n    <h2 class=\"sr-only\">Main Color Controls</h2>\r\n    <div class=\"slide-group\">\r\n      <app-color-picker\r\n        [inputId]=\"'cp-0'\"\r\n        [inputName]=\"'Foreground Color'\"\r\n        [comparedColor]=\"colorPickerOneComparedColor\"\r\n        (selectedColor)=\"handleColorInputInput('One', $event)\"\r\n        [deltaColor]=\"colorPickerOneSelectedColor\"\r\n      ></app-color-picker>\r\n      <app-color-slider\r\n        [id]=\"'slider-0'\"\r\n        [name]=\"'Foreground Slider'\"\r\n        [color]=\"colorPickerOneSelectedColor\"\r\n        [constantChroma]=\"constantChroma\"\r\n        (colorVariant)=\"handleSliderInputInput('One', $event)\"\r\n        [resetSlider]=\"resetSlider\"\r\n      ></app-color-slider>\r\n      <app-copy-to-clipboard-button\r\n        [color]=\"colorPickerOneComparedColor\"\r\n        (copyEvent)=\"handleCopyEvent($event)\"\r\n      ></app-copy-to-clipboard-button>\r\n    </div>\r\n\r\n    <div class=\"slide-group\">\r\n      <app-color-picker\r\n        [inputId]=\"'cp-1'\"\r\n        [inputName]=\"'Background Color'\"\r\n        [comparedColor]=\"colorPickerTwoComparedColor\"\r\n        [deltaColor]=\"colorPickerTwoSelectedColor\"\r\n        (selectedColor)=\"handleColorInputInput('Two', $event)\"\r\n      ></app-color-picker>\r\n      <app-color-slider\r\n        [id]=\"'slider-1'\"\r\n        [name]=\"'Backgroundground Slider'\"\r\n        [color]=\"colorPickerTwoSelectedColor\"\r\n        [constantChroma]=\"constantChroma\"\r\n        (colorVariant)=\"handleSliderInputInput('Two', $event)\"\r\n        [resetSlider]=\"resetSlider\"\r\n      ></app-color-slider>\r\n      <app-copy-to-clipboard-button\r\n        [color]=\"colorPickerTwoComparedColor\"\r\n        (copyEvent)=\"handleCopyEvent($event)\"\r\n      ></app-copy-to-clipboard-button>\r\n    </div>\r\n  </section>\r\n\r\n  <section class=\"quick-actions\">\r\n    <button\r\n      [disabled]=\"!colorPickerOneSelectedColor || !colorPickerTwoSelectedColor\"\r\n      (click)=\"swapColors()\"\r\n    >\r\n      <span class=\"sr-only\">Swap Selected Colors</span>\r\n      <svg\r\n        aria-hidden=\"true\"\r\n        xmlns=\"http://www.w3.org/2000/svg\"\r\n        viewBox=\"0 0 32 32\"\r\n        x=\"0px\"\r\n        y=\"0px\"\r\n      >\r\n        <defs>\r\n          <style>\r\n            .cls-1 {\r\n              fill: none;\r\n            }\r\n          </style>\r\n        </defs>\r\n        <g>\r\n          <path\r\n            d=\"M6.29,8.71a1,1,0,0,1,0-1.42l4-4a1,1,0,1,1,1.42,1.42L9.41,7H19a7,7,0,0,1,7,7,1,1,0,0,1-2,0,5,5,0,0,0-5-5H9.41l2.3,2.29a1,1,0,0,1,0,1.42,1,1,0,0,1-1.42,0ZM21.71,19.29a1,1,0,0,0-1.42,1.42L22.59,23H13a5,5,0,0,1-5-5,1,1,0,0,0-2,0,7,7,0,0,0,7,7h9.59l-2.3,2.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0l4-4a1,1,0,0,0,0-1.42Z\"\r\n          />\r\n          <rect class=\"cls-1\" width=\"32\" height=\"32\" />\r\n        </g>\r\n      </svg>\r\n    </button>\r\n    <button (click)=\"setRandomColorPair()\">\r\n      <span class=\"sr-only\">Create Random Color Pair</span\r\n      ><span aria-hidden=\"true\">Ra</span>\r\n    </button>\r\n    <button (click)=\"resetSliders()\">\r\n      <span class=\"sr-only\">Reset Color Sliders</span\r\n      ><span aria-hidden=\"true\">Re</span>\r\n    </button>\r\n    <button (click)=\"matchChromas()\">\r\n      <span class=\"sr-only\">Harmonize Color Pair To Same Chroma</span\r\n      ><span aria-hidden=\"true\">Ch</span>\r\n    </button>\r\n  </section>\r\n\r\n  <hr />\r\n\r\n  <section class=\"metadata\">\r\n    <h2>Color Metadata</h2>\r\n\r\n    <app-metadata\r\n      [colorOne]=\"colorPickerOneComparedColor\"\r\n      [colorTwo]=\"colorPickerTwoComparedColor\"\r\n    ></app-metadata>\r\n  </section>\r\n\r\n  <hr />\r\n\r\n  <section class=\"options\">\r\n    <h2>Options</h2>\r\n    <div class=\"options\">\r\n      <div class=\"checkbox-group\">\r\n        <label for=\"option-score-toggle\"\r\n          >Display WCAG 2 compatible value<span class=\"sr-only\"\r\n            >; this affects a visual element not percievable to screenreaders\r\n            for good UX—same value is obtainable on Color Metadata section under\r\n            Differences.</span\r\n          >\r\n        </label>\r\n        <input\r\n          type=\"checkbox\"\r\n          name=\"Contrast Score Type Toggle\"\r\n          id=\"option-score-toggle\"\r\n          (change)=\"toggleContrastType($event)\"\r\n        />\r\n      </div>\r\n      <!-- <div class=\"checkbox-group\">\r\n        <label for=\"option-omit-hex\">Omit # from Copy</label>\r\n        <input\r\n          disabled\r\n          type=\"checkbox\"\r\n          name=\"Omit # from Hex Code Toggle\"\r\n          id=\"option-omit-hex\"\r\n        />\r\n      </div> -->\r\n      <div class=\"checkbox-group\">\r\n        <label for=\"option-const-chroma\"\r\n          >Constant chroma<sup\r\n            ><span class=\"sr-only\">Superscript</span> b</sup\r\n          ></label\r\n        >\r\n        <input\r\n          type=\"checkbox\"\r\n          name=\"Constant Chroma Toggle\"\r\n          id=\"option-const-chroma\"\r\n          (change)=\"toggleConstantChroma($event)\"\r\n        />\r\n      </div>\r\n    </div>\r\n  </section>\r\n\r\n  <hr />\r\n\r\n  <section class=\"notes\">\r\n    <h2>Notes</h2>\r\n\r\n    <p>\r\n      <sup>a</sup>For more information on the value used for Perceptual\r\n      Contrast, refer to Myndex article\r\n      <a href=\"https://git.apcacontrast.com/documentation/WhyAPCA.html\"\r\n        >Why APCA?</a\r\n      >\r\n    </p>\r\n    <p>\r\n      <sup>b</sup>Constant Chroma forces color slider to limit light and dark\r\n      variation of colors to tints and shades that have the same chroma and hue\r\n      of the inputted color maintaining the objective identity of your input\r\n      color.\r\n    </p>\r\n    <p>\r\n      <sup>c</sup>Object shows two different values. A number in pixels that the\r\n      current contrast level supports, and 'invisible' when the current contrast\r\n      level is too low to support <strong>any</strong> object.\r\n    </p>\r\n    <p>\r\n      <sup>d</sup>WCAG 2 scores are including for reference only—do not use this\r\n      score for judging Accessible Contrast.\r\n    </p>\r\n  </section>\r\n\r\n  <hr />\r\n\r\n  <section class=\"contact\">\r\n    <h2>Contact Information and Feedback</h2>\r\n\r\n    <p>\r\n      Made by <a href=\"https://github.com/pawn002\">pawn002</a>, who would\r\n      appreciate\r\n      <a\r\n        href=\"https://github.com/pawn002/color-pair-quick-iterator/issues/new/choose\"\r\n      >\r\n        bug reports and feature requests for this app</a\r\n      >\r\n      to help improve its Accessibility.\r\n    </p>\r\n  </section>\r\n\r\n  <div class=\"alert\">\r\n    <app-alert [alertMessage]=\"currentAlertMessage\"></app-alert>\r\n  </div>\r\n</div>\r\n"
+            "templateData": "<div class=\"app-container\">\r\n  <section class=\"title-and-sliders\">\r\n    <div class=\"title-and-score\">\r\n      <h1>Perceptual Contrast</h1>\r\n      <app-color-contrast\r\n        [colorOne]=\"colorPickerOneComparedColor\"\r\n        [colorTwo]=\"colorPickerTwoComparedColor\"\r\n        [contrastType]=\"contrastType\"\r\n      ></app-color-contrast>\r\n    </div>\r\n\r\n    <h2 class=\"sr-only\">Main Color Controls</h2>\r\n    <div class=\"slide-group\">\r\n      <app-color-picker\r\n        [inputId]=\"'cp-0'\"\r\n        [inputName]=\"'Foreground Color'\"\r\n        [comparedColor]=\"colorPickerOneComparedColor\"\r\n        (selectedColor)=\"handleColorInputInput('One', $event)\"\r\n        [deltaColor]=\"colorPickerOneSelectedColor\"\r\n      ></app-color-picker>\r\n      <app-color-slider\r\n        [id]=\"'slider-0'\"\r\n        [name]=\"'Foreground Slider'\"\r\n        [color]=\"colorPickerOneSelectedColor\"\r\n        [constantChroma]=\"constantChroma\"\r\n        (colorVariant)=\"handleSliderInputInput('One', $event)\"\r\n        [resetSlider]=\"resetSlider\"\r\n      ></app-color-slider>\r\n      <app-copy-to-clipboard-button\r\n        [color]=\"colorPickerOneComparedColor\"\r\n        (copyEvent)=\"handleCopyEvent($event)\"\r\n      ></app-copy-to-clipboard-button>\r\n    </div>\r\n\r\n    <div class=\"slide-group\">\r\n      <app-color-picker\r\n        [inputId]=\"'cp-1'\"\r\n        [inputName]=\"'Background Color'\"\r\n        [comparedColor]=\"colorPickerTwoComparedColor\"\r\n        [deltaColor]=\"colorPickerTwoSelectedColor\"\r\n        (selectedColor)=\"handleColorInputInput('Two', $event)\"\r\n      ></app-color-picker>\r\n      <app-color-slider\r\n        [id]=\"'slider-1'\"\r\n        [name]=\"'Backgroundground Slider'\"\r\n        [color]=\"colorPickerTwoSelectedColor\"\r\n        [constantChroma]=\"constantChroma\"\r\n        (colorVariant)=\"handleSliderInputInput('Two', $event)\"\r\n        [resetSlider]=\"resetSlider\"\r\n      ></app-color-slider>\r\n      <app-copy-to-clipboard-button\r\n        [color]=\"colorPickerTwoComparedColor\"\r\n        (copyEvent)=\"handleCopyEvent($event)\"\r\n      ></app-copy-to-clipboard-button>\r\n    </div>\r\n  </section>\r\n\r\n  <section class=\"quick-actions\">\r\n    <button\r\n      [disabled]=\"!colorPickerOneSelectedColor || !colorPickerTwoSelectedColor\"\r\n      (click)=\"swapColors()\"\r\n    >\r\n      <span class=\"sr-only\">Swap Selected Colors</span>\r\n      <svg\r\n        aria-hidden=\"true\"\r\n        xmlns=\"http://www.w3.org/2000/svg\"\r\n        viewBox=\"0 0 32 32\"\r\n        x=\"0px\"\r\n        y=\"0px\"\r\n      >\r\n        <defs>\r\n          <style>\r\n            .cls-1 {\r\n              fill: none;\r\n            }\r\n          </style>\r\n        </defs>\r\n        <g>\r\n          <path\r\n            d=\"M6.29,8.71a1,1,0,0,1,0-1.42l4-4a1,1,0,1,1,1.42,1.42L9.41,7H19a7,7,0,0,1,7,7,1,1,0,0,1-2,0,5,5,0,0,0-5-5H9.41l2.3,2.29a1,1,0,0,1,0,1.42,1,1,0,0,1-1.42,0ZM21.71,19.29a1,1,0,0,0-1.42,1.42L22.59,23H13a5,5,0,0,1-5-5,1,1,0,0,0-2,0,7,7,0,0,0,7,7h9.59l-2.3,2.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0l4-4a1,1,0,0,0,0-1.42Z\"\r\n          />\r\n          <rect class=\"cls-1\" width=\"32\" height=\"32\" />\r\n        </g>\r\n      </svg>\r\n    </button>\r\n    <button (click)=\"setRandomColorPair()\">\r\n      <span class=\"sr-only\">Create Random Color Pair</span\r\n      ><span aria-hidden=\"true\">Ra</span>\r\n    </button>\r\n    <button (click)=\"resetSliders()\">\r\n      <span class=\"sr-only\">Reset Color Sliders</span\r\n      ><span aria-hidden=\"true\">Re</span>\r\n    </button>\r\n    <button (click)=\"matchChromas()\">\r\n      <span class=\"sr-only\">Harmonize Color Pair To Same Chroma</span\r\n      ><span aria-hidden=\"true\">Ch</span>\r\n    </button>\r\n  </section>\r\n\r\n  <hr />\r\n\r\n  <section class=\"metadata\">\r\n    <h2>Color Metadata</h2>\r\n\r\n    <app-metadata\r\n      [colorOne]=\"colorPickerOneComparedColor\"\r\n      [colorTwo]=\"colorPickerTwoComparedColor\"\r\n    ></app-metadata>\r\n  </section>\r\n\r\n  <hr />\r\n\r\n  <section class=\"options\">\r\n    <h2>Options</h2>\r\n    <div class=\"options\">\r\n      <div class=\"checkbox-group\">\r\n        <label for=\"option-score-toggle\"\r\n          >Display WCAG 2 compatible value<span class=\"sr-only\"\r\n            >; this affects a visual element not percievable to screenreaders\r\n            for good UX—same value is obtainable on Color Metadata section under\r\n            Differences.</span\r\n          >\r\n        </label>\r\n        <input\r\n          type=\"checkbox\"\r\n          name=\"Contrast Score Type Toggle\"\r\n          id=\"option-score-toggle\"\r\n          (change)=\"toggleContrastType($event)\"\r\n        />\r\n      </div>\r\n\r\n      <div class=\"checkbox-group\">\r\n        <label for=\"option-const-chroma\">Constant chroma</label>\r\n        <input\r\n          type=\"checkbox\"\r\n          name=\"Constant Chroma Toggle\"\r\n          id=\"option-const-chroma\"\r\n          (change)=\"toggleConstantChroma($event)\"\r\n        />\r\n      </div>\r\n    </div>\r\n  </section>\r\n\r\n  <hr />\r\n\r\n  <section class=\"notes\">\r\n    <h2>Notes</h2>\r\n\r\n    <p id=\"notes-object\">\r\n      <span class=\"visual-header\">Object:</span> A readout that shows two\r\n      different values, a number in pixels that the current contrast level\r\n      supports, and 'invisible' when the current contrast level is too low to\r\n      support <strong>any</strong> object.\r\n    </p>\r\n    <p id=\"notes-perceptual-contrast\">\r\n      <span class=\"visual-header\"> Perceptual contrast:</span> Score that better\r\n      gauges contrast than WCAG 2 in the creation of inclusive visual designs.\r\n      For more information on the value used for Perceptual Contrast, refer to\r\n      Myndex article\r\n      <a href=\"https://git.apcacontrast.com/documentation/WhyAPCA.html\"\r\n        >Why APCA?</a\r\n      >\r\n    </p>\r\n    <p id=\"notes-wcag2-compat\">\r\n      <span class=\"visual-header\">WCAG 2 compatible:</span> A score compatible\r\n      with use for WCAG 2.x success criteria. This score meets or exceeds WCAG 2\r\n      scores to better include those with atypical vision.\r\n    </p>\r\n    <p id=\"notes-wcag2\">\r\n      <span class=\"visual-header\">WCAG 2:</span> Scores that are included for\r\n      reference only—do not use this score for judging Accessible Contrast.\r\n    </p>\r\n\r\n    <p id=\"notes-display-wcag2\">\r\n      <span class=\"visual-header\">Display WCAG 2 compatible value:</span>\r\n      Option that swaps out perceptual contrast score visually displayed at top\r\n      of the app. Screen reader users can access the same value regardless of\r\n      this option in the Differences table located in the Color Metadata\r\n      section.\r\n    </p>\r\n    <p id=\"notes-constant-chroma\">\r\n      <span class=\"visual-header\">Constant chroma:</span>\r\n      Option that forces the color sliders to limit light and dark variation of\r\n      colors to tints and shades that have the same chroma and hue of the\r\n      inputted color maintaining the objective identity of your input color.\r\n    </p>\r\n  </section>\r\n\r\n  <hr />\r\n\r\n  <section class=\"contact\">\r\n    <h2>Contact Information and Feedback</h2>\r\n\r\n    <p>\r\n      Made by <a href=\"https://github.com/pawn002\">pawn002</a>, who would\r\n      appreciate\r\n      <a\r\n        href=\"https://github.com/pawn002/color-pair-quick-iterator/issues/new/choose\"\r\n      >\r\n        bug reports and feature requests for this app</a\r\n      >\r\n      to help improve its Accessibility.\r\n    </p>\r\n  </section>\r\n\r\n  <div class=\"alert\">\r\n    <app-alert [alertMessage]=\"currentAlertMessage\"></app-alert>\r\n  </div>\r\n</div>\r\n"
         },
         {
             "name": "ButtonComponent",
@@ -2524,7 +2524,7 @@
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ".comp-container {\r\n  position: relative;\r\n  display: inline-block;\r\n\r\n  &:hover {\r\n    box-shadow: 0 4px 0 0 #8c897e;\r\n  }\r\n\r\n  input {\r\n    // NOTE: 2(15px) + 15px = 45px\r\n    width: 45px;\r\n    height: 45px;\r\n    box-sizing: border-box;\r\n    border-radius: 5px 0 0 5px;\r\n\r\n    &:focus {\r\n      box-shadow: 4px 4px 0 0 black, -4px -4px 0 0 black, -4px 4px 0 0 black,\r\n        4px -4px 0 0 black;\r\n    }\r\n  }\r\n\r\n  .color-preview {\r\n    border-radius: 5px 0 0 5px;\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n    // NOTE: 2(15px) + 15px = 45px\r\n    width: 45px;\r\n    height: 45px;\r\n    border: transparent 15px solid;\r\n    background-color: transparent;\r\n    pointer-events: none;\r\n    box-sizing: border-box;\r\n  }\r\n}\r\n",
+                    "data": ".comp-container {\r\n  position: relative;\r\n  display: inline-block;\r\n  border-radius: 5px 0 0 5px;\r\n\r\n  &:hover {\r\n    box-shadow: 0 4px 0 0 #8c897e;\r\n  }\r\n\r\n  input {\r\n    width: 50px;\r\n    height: 50px;\r\n    box-sizing: border-box;\r\n    border: transparent 2px solid;\r\n    border-radius: 5px 0 0 5px;\r\n  }\r\n\r\n  .color-preview {\r\n    border-radius: 5px 0 0 5px;\r\n    position: absolute;\r\n    top: 50%;\r\n    left: 50%;\r\n    transform: translate(-50%, -50%);\r\n    // NOTE: 2(15px) + 15px = 45px\r\n    width: 45px;\r\n    height: 45px;\r\n    border: transparent 15px solid;\r\n    background-color: transparent;\r\n    pointer-events: none;\r\n    box-sizing: border-box;\r\n  }\r\n}\r\n",
                     "styleUrl": "./color-picker.component.scss"
                 }
             ],
@@ -2841,7 +2841,7 @@
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ".comp-container {\r\n  box-sizing: border-box;\r\n  display: flex;\r\n  // gives input more room on left and right ends to be hit more successfully\r\n  padding: 0 calc(var(--minHitDimensionAAA) / 2);\r\n  align-items: center;\r\n  background-color: white;\r\n\r\n  &:hover {\r\n    box-shadow: 0 4px 0 0 #8c897e;\r\n  }\r\n\r\n  input {\r\n    flex-grow: 1;\r\n    min-height: var(--minHitDimensionAAA);\r\n    width: 100%;\r\n    margin: 0;\r\n  }\r\n\r\n  .special-case {\r\n    flex-grow: 1;\r\n    min-height: var(--minHitDimensionAAA);\r\n    display: flex;\r\n    align-items: center;\r\n\r\n    // TODO: what do custom input text need to be? <p>?\r\n    div {\r\n      font-family: var(--monoFont);\r\n      font-size: var(--minBodyTextSize);\r\n      font-style: italic;\r\n      font-weight: 400;\r\n    }\r\n  }\r\n}\r\n\r\n.dev-overlay {\r\n  position: absolute;\r\n  display: none;\r\n  gap: 1rem;\r\n  bottom: 0;\r\n  right: 0;\r\n\r\n  &.active {\r\n    display: flex;\r\n  }\r\n\r\n  .light-variant-chip {\r\n    border-radius: 100%;\r\n    width: 15px;\r\n    height: 15px;\r\n    border: 15px solid black;\r\n  }\r\n}\r\n",
+                    "data": ".comp-container {\r\n  box-sizing: border-box;\r\n  display: flex;\r\n  // gives input more room on left and right ends to be hit more successfully\r\n  padding: 0 calc(var(--minHitDimensionAAA) / 2);\r\n  align-items: center;\r\n  background-color: white;\r\n\r\n  &:hover {\r\n    box-shadow: 0 4px 0 0 #8c897e;\r\n  }\r\n\r\n  input {\r\n    flex-grow: 1;\r\n    min-height: var(--minHitDimensionAAA);\r\n    height: 50px;\r\n    width: 100%;\r\n    margin: 0;\r\n  }\r\n\r\n  .special-case {\r\n    flex-grow: 1;\r\n    min-height: var(--minHitDimensionAAA);\r\n    display: flex;\r\n    align-items: center;\r\n\r\n    // TODO: what do custom input text need to be? <p>?\r\n    div {\r\n      font-family: var(--monoFont);\r\n      font-size: var(--minBodyTextSize);\r\n      font-style: italic;\r\n      font-weight: 400;\r\n    }\r\n  }\r\n}\r\n\r\n.dev-overlay {\r\n  position: absolute;\r\n  display: none;\r\n  gap: 1rem;\r\n  bottom: 0;\r\n  right: 0;\r\n\r\n  &.active {\r\n    display: flex;\r\n  }\r\n\r\n  .light-variant-chip {\r\n    border-radius: 100%;\r\n    width: 15px;\r\n    height: 15px;\r\n    border: 15px solid black;\r\n  }\r\n}\r\n",
                     "styleUrl": "./color-slider.component.scss"
                 }
             ],
@@ -2947,7 +2947,7 @@
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ".comp-container {\r\n  position: relative;\r\n  display: inline-block;\r\n\r\n  button {\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    border-radius: 0 5px 5px 0;\r\n    border: transparent 2px solid;\r\n    background-color: white;\r\n    padding: 0.25rem;\r\n    min-width: var(--minHitDimensionAAA);\r\n    min-height: var(--minHitDimensionAAA);\r\n\r\n    // &:hover {\r\n    //   background-color: #dfdfdf;\r\n    // }\r\n\r\n    &:hover {\r\n      box-shadow: 0 4px 0 0 #8c897e;\r\n    }\r\n\r\n    .svg-container {\r\n      width: 22px;\r\n      height: auto;\r\n      svg {\r\n        fill: #000000;\r\n        display: block;\r\n      }\r\n    }\r\n  }\r\n}\r\n",
+                    "data": ".comp-container {\r\n  position: relative;\r\n  display: inline-block;\r\n\r\n  button {\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    border-radius: 0 5px 5px 0;\r\n    border: transparent 2px solid;\r\n    background-color: white;\r\n    padding: 0.25rem;\r\n    min-width: var(--minHitDimensionAAA);\r\n    min-height: var(--minHitDimensionAAA);\r\n    width: 50px;\r\n    height: 50px;\r\n\r\n    // &:hover {\r\n    //   background-color: #dfdfdf;\r\n    // }\r\n\r\n    &:hover {\r\n      box-shadow: 0 4px 0 0 #8c897e;\r\n    }\r\n\r\n    .svg-container {\r\n      width: 22px;\r\n      height: auto;\r\n      svg {\r\n        fill: #000000;\r\n        display: block;\r\n      }\r\n    }\r\n  }\r\n}\r\n",
                     "styleUrl": "./copy-to-clipboard-button.component.scss"
                 }
             ],
@@ -3216,7 +3216,7 @@
             "implements": [
                 "OnChanges"
             ],
-            "templateData": "<div class=\"comp-container\">\r\n  <div>\r\n    <h3>Successes and Minimums</h3>\r\n    <table>\r\n      <caption class=\"sr-only\">\r\n        Various pass, fails or minimum dimensions related to visual elements.\r\n      </caption>\r\n      <thead class=\"sr-only\">\r\n        <tr>\r\n          <th>Criteria</th>\r\n          <th>Value</th>\r\n        </tr>\r\n      </thead>\r\n      <tbody>\r\n        <tr>\r\n          <td>Text</td>\r\n          <td>{{ successes.text }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>Large Text</td>\r\n          <td>{{ successes.largeText }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>\r\n            Object<sup><span class=\"sr-only\">Superscript</span> c</sup>\r\n          </td>\r\n          <td>{{ successes.objectMinDimension }}</td>\r\n        </tr>\r\n      </tbody>\r\n    </table>\r\n  </div>\r\n\r\n  <div>\r\n    <h3>Differences</h3>\r\n    <table>\r\n      <caption class=\"sr-only\">\r\n        Differences between Color One and Color Two.\r\n      </caption>\r\n      <thead class=\"sr-only\">\r\n        <tr>\r\n          <th>Measurement</th>\r\n          <th>Value</th>\r\n        </tr>\r\n      </thead>\r\n      <tbody>\r\n        <tr>\r\n          <td>Delta E</td>\r\n          <td>{{ differences.deltaE }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>Perceptual contrast</td>\r\n          <td>{{ differences.apca }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>WCAG 2 Compatible</td>\r\n          <td>{{ differences.wcag2New }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>\r\n            WCAG 2<sup><span class=\"sr-only\">Superscript</span> d</sup>\r\n          </td>\r\n          <td>{{ differences.wcag2Old }}</td>\r\n        </tr>\r\n      </tbody>\r\n    </table>\r\n  </div>\r\n\r\n  <div>\r\n    <h3>Color One</h3>\r\n    <table>\r\n      <caption class=\"sr-only\">\r\n        Color One Metadata\r\n      </caption>\r\n      <thead class=\"sr-only\">\r\n        <tr>\r\n          <th>Measurement</th>\r\n          <th>Value</th>\r\n        </tr>\r\n      </thead>\r\n      <tbody>\r\n        <tr>\r\n          <td>Saturation</td>\r\n          <td>{{ colorOneMeta?.saturation }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>Lightness</td>\r\n          <td>{{ colorOneMeta?.lightness }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>Chroma</td>\r\n          <td>{{ colorOneMeta?.chroma }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>Hue</td>\r\n          <td>{{ colorOneMeta?.hue }}</td>\r\n        </tr>\r\n      </tbody>\r\n    </table>\r\n  </div>\r\n\r\n  <div>\r\n    <h3>Color Two</h3>\r\n    <table>\r\n      <caption class=\"sr-only\">\r\n        Color One Metadata\r\n      </caption>\r\n      <thead class=\"sr-only\">\r\n        <tr>\r\n          <th>Measurement</th>\r\n          <th>Value</th>\r\n        </tr>\r\n      </thead>\r\n      <tbody>\r\n        <tr>\r\n          <td>Saturation</td>\r\n          <td>{{ colorTwoMeta?.saturation }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>Lightness</td>\r\n          <td>{{ colorTwoMeta?.lightness }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>Chroma</td>\r\n          <td>{{ colorTwoMeta?.chroma }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>Hue</td>\r\n          <td>{{ colorTwoMeta?.hue }}</td>\r\n        </tr>\r\n      </tbody>\r\n    </table>\r\n  </div>\r\n</div>\r\n"
+            "templateData": "<div class=\"comp-container\">\r\n  <div>\r\n    <h3>Successes and Minimums</h3>\r\n    <table>\r\n      <caption class=\"sr-only\">\r\n        Various pass, fails or minimum dimensions related to visual elements.\r\n      </caption>\r\n      <thead class=\"sr-only\">\r\n        <tr>\r\n          <th>Criteria</th>\r\n          <th>Value</th>\r\n        </tr>\r\n      </thead>\r\n      <tbody>\r\n        <tr>\r\n          <td>Text</td>\r\n          <td>{{ successes.text }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>Large Text</td>\r\n          <td>{{ successes.largeText }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>\r\n            <cite><a href=\"#notes-object\">Object</a></cite>\r\n          </td>\r\n          <td>{{ successes.objectMinDimension }}</td>\r\n        </tr>\r\n      </tbody>\r\n    </table>\r\n  </div>\r\n\r\n  <div>\r\n    <h3>Differences</h3>\r\n    <table>\r\n      <caption class=\"sr-only\">\r\n        Differences between Color One and Color Two.\r\n      </caption>\r\n      <thead class=\"sr-only\">\r\n        <tr>\r\n          <th>Measurement</th>\r\n          <th>Value</th>\r\n        </tr>\r\n      </thead>\r\n      <tbody>\r\n        <tr>\r\n          <td>Delta E</td>\r\n          <td>{{ differences.deltaE }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>\r\n            <cite\r\n              ><a href=\"#notes-perceptual-contrast\">\r\n                Perceptual contrast</a\r\n              ></cite\r\n            >\r\n          </td>\r\n          <td>{{ differences.apca }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>\r\n            <cite><a href=\"#notes-wcag2-compat\"> WCAG 2 compatible</a></cite>\r\n          </td>\r\n          <td>{{ differences.wcag2New }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>\r\n            <cite><a href=\"#notes-wcag2\">WCAG 2</a></cite>\r\n          </td>\r\n          <td>{{ differences.wcag2Old }}</td>\r\n        </tr>\r\n      </tbody>\r\n    </table>\r\n  </div>\r\n\r\n  <div>\r\n    <h3>Color One</h3>\r\n    <table>\r\n      <caption class=\"sr-only\">\r\n        Color One Metadata\r\n      </caption>\r\n      <thead class=\"sr-only\">\r\n        <tr>\r\n          <th>Measurement</th>\r\n          <th>Value</th>\r\n        </tr>\r\n      </thead>\r\n      <tbody>\r\n        <tr>\r\n          <td>Saturation</td>\r\n          <td>{{ colorOneMeta?.saturation }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>Lightness</td>\r\n          <td>{{ colorOneMeta?.lightness }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>Chroma</td>\r\n          <td>{{ colorOneMeta?.chroma }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>Hue</td>\r\n          <td>{{ colorOneMeta?.hue }}</td>\r\n        </tr>\r\n      </tbody>\r\n    </table>\r\n  </div>\r\n\r\n  <div>\r\n    <h3>Color Two</h3>\r\n    <table>\r\n      <caption class=\"sr-only\">\r\n        Color One Metadata\r\n      </caption>\r\n      <thead class=\"sr-only\">\r\n        <tr>\r\n          <th>Measurement</th>\r\n          <th>Value</th>\r\n        </tr>\r\n      </thead>\r\n      <tbody>\r\n        <tr>\r\n          <td>Saturation</td>\r\n          <td>{{ colorTwoMeta?.saturation }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>Lightness</td>\r\n          <td>{{ colorTwoMeta?.lightness }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>Chroma</td>\r\n          <td>{{ colorTwoMeta?.chroma }}</td>\r\n        </tr>\r\n        <tr>\r\n          <td>Hue</td>\r\n          <td>{{ colorTwoMeta?.hue }}</td>\r\n        </tr>\r\n      </tbody>\r\n    </table>\r\n  </div>\r\n</div>\r\n"
         },
         {
             "name": "PageComponent",
@@ -3300,18 +3300,61 @@
                 }
             ],
             "stylesData": ""
+        },
+        {
+            "name": "PaletteTableComponent",
+            "id": "component-PaletteTableComponent-ffea12b273e6aaeceeb3a3e5fbc8d458751ee70523a02af54b67bb59ddb40b55460ef6a2eb5e83d0d977563ddeaf9c0278ef16d02d0535e2fd1e6e1125ea3e2f",
+            "file": "src/app/palette-table/palette-table.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-palette-table",
+            "styleUrls": [
+                "./palette-table.component.scss"
+            ],
+            "styles": [],
+            "templateUrl": [
+                "./palette-table.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": false,
+            "imports": [],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from '@angular/core';\n\n@Component({\n  selector: 'app-palette-table',\n  templateUrl: './palette-table.component.html',\n  styleUrls: ['./palette-table.component.scss']\n})\nexport class PaletteTableComponent {\n\n}\n",
+            "assetsDirs": [],
+            "styleUrlsData": [
+                {
+                    "data": "",
+                    "styleUrl": "./palette-table.component.scss"
+                }
+            ],
+            "stylesData": "",
+            "templateData": "<p>palette-table works!</p>\n"
         }
     ],
     "modules": [
         {
             "name": "AppModule",
-            "id": "module-AppModule-5d2f7976d94abbc3f918cb7327902b288adf80705fcad2c8480c71ce958d1a3be5041a7e00006f68a92b560ec2aaa6fbd194809889ca2a70f86cd62562a6ab6e",
+            "id": "module-AppModule-da4007ce9d97259d629630da62229ef69bcb99dda94b7e463aaaba32bf2aea00cee2dc9cbb6ca0b03283c1020138b372f420a7851fe4304979c534be6c69028f",
             "description": "",
             "deprecationMessage": "",
             "deprecated": false,
             "file": "src/app/app.module.ts",
             "methods": [],
-            "sourceCode": "import { NgModule } from '@angular/core';\r\nimport { BrowserModule } from '@angular/platform-browser';\r\n\r\nimport { AppRoutingModule } from './app-routing.module';\r\nimport { AppComponent } from './app.component';\r\nimport { ColorSliderComponent } from './color-slider/color-slider.component';\r\nimport { ColorPickerComponent } from './color-picker/color-picker.component';\r\nimport { ColorContrastComponent } from './color-contrast/color-contrast.component';\r\nimport { CopyToClipboardButtonComponent } from './copy-to-clipboard-button/copy-to-clipboard-button.component';\r\nimport { AlertComponent } from './alert/alert.component';\r\nimport { MetadataComponent } from './metadata/metadata.component';\r\n\r\n@NgModule({\r\n  declarations: [\r\n    AppComponent,\r\n    ColorSliderComponent,\r\n    ColorPickerComponent,\r\n    ColorContrastComponent,\r\n    CopyToClipboardButtonComponent,\r\n    AlertComponent,\r\n    MetadataComponent\r\n  ],\r\n  imports: [\r\n    BrowserModule,\r\n    AppRoutingModule\r\n  ],\r\n  providers: [],\r\n  bootstrap: [AppComponent]\r\n})\r\nexport class AppModule { }\r\n",
+            "sourceCode": "import { NgModule } from '@angular/core';\r\nimport { BrowserModule } from '@angular/platform-browser';\r\n\r\nimport { AppRoutingModule } from './app-routing.module';\r\nimport { AppComponent } from './app.component';\r\nimport { ColorSliderComponent } from './color-slider/color-slider.component';\r\nimport { ColorPickerComponent } from './color-picker/color-picker.component';\r\nimport { ColorContrastComponent } from './color-contrast/color-contrast.component';\r\nimport { CopyToClipboardButtonComponent } from './copy-to-clipboard-button/copy-to-clipboard-button.component';\r\nimport { AlertComponent } from './alert/alert.component';\r\nimport { MetadataComponent } from './metadata/metadata.component';\nimport { PaletteTableComponent } from './palette-table/palette-table.component';\r\n\r\n@NgModule({\r\n  declarations: [\r\n    AppComponent,\r\n    ColorSliderComponent,\r\n    ColorPickerComponent,\r\n    ColorContrastComponent,\r\n    CopyToClipboardButtonComponent,\r\n    AlertComponent,\r\n    MetadataComponent,\r\n    PaletteTableComponent\r\n  ],\r\n  imports: [\r\n    BrowserModule,\r\n    AppRoutingModule\r\n  ],\r\n  providers: [],\r\n  bootstrap: [AppComponent]\r\n})\r\nexport class AppModule { }\r\n",
             "children": [
                 {
                     "type": "providers",
@@ -3340,6 +3383,9 @@
                         },
                         {
                             "name": "MetadataComponent"
+                        },
+                        {
+                            "name": "PaletteTableComponent"
                         }
                     ]
                 },
@@ -3516,7 +3562,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Meta<AlertComponent>",
-                "defaultValue": "{\r\n  title: 'App/Alert',\r\n  component: AlertComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: AlertComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    showAlert: {\r\n      control: { type: 'boolean' },\r\n    },\r\n    alertMessage: {\r\n      control: { type: 'text' },\r\n    },\r\n  },\r\n}"
+                "defaultValue": "{\r\n  title: 'App/Alert',\r\n  component: AlertComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: AlertComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {},\r\n}"
             },
             {
                 "name": "meta",
@@ -3542,6 +3588,16 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
+                "file": "src/app/color-slider/color-slider.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<ColorSliderComponent>",
+                "defaultValue": "{\r\n  title: 'App/Color Slider',\r\n  component: ColorSliderComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorSliderComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
                 "file": "src/app/copy-to-clipboard-button/copy-to-clipboard-button.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
@@ -3562,11 +3618,11 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/app/color-slider/color-slider.stories.ts",
+                "file": "src/app/palette-table/palette-table.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "Meta<ColorSliderComponent>",
-                "defaultValue": "{\r\n  title: 'App/Color Slider',\r\n  component: ColorSliderComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorSliderComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
+                "type": "Meta<PaletteTableComponent>",
+                "defaultValue": "{\r\n  title: 'App/Palette Table',\r\n  component: PaletteTableComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: PaletteTableComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {},\r\n}"
             },
             {
                 "name": "NoHueColor",
@@ -3702,6 +3758,16 @@
                 "name": "Typical",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
+                "file": "src/app/color-slider/color-slider.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\r\n  args: {\r\n    color: 'coral',\r\n  },\r\n}"
+            },
+            {
+                "name": "Typical",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
                 "file": "src/app/copy-to-clipboard-button/copy-to-clipboard-button.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
@@ -3722,11 +3788,11 @@
                 "name": "Typical",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/app/color-slider/color-slider.stories.ts",
+                "file": "src/app/palette-table/palette-table.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
-                "defaultValue": "{\r\n  args: {\r\n    color: 'coral',\r\n  },\r\n}"
+                "defaultValue": "{\r\n  args: {},\r\n}"
             },
             {
                 "name": "WCAGEnhanced",
@@ -3854,6 +3920,17 @@
                 "name": "Story",
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
+                "rawtype": "StoryObj<ColorSliderComponent>",
+                "file": "src/app/color-slider/color-slider.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 180
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
                 "rawtype": "StoryObj<CopyToClipboardButtonComponent>",
                 "file": "src/app/copy-to-clipboard-button/copy-to-clipboard-button.stories.ts",
                 "deprecated": false,
@@ -3876,8 +3953,8 @@
                 "name": "Story",
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
-                "rawtype": "StoryObj<ColorSliderComponent>",
-                "file": "src/app/color-slider/color-slider.stories.ts",
+                "rawtype": "StoryObj<PaletteTableComponent>",
+                "file": "src/app/palette-table/palette-table.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "description": "",
@@ -3957,7 +4034,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Meta<AlertComponent>",
-                    "defaultValue": "{\r\n  title: 'App/Alert',\r\n  component: AlertComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: AlertComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    showAlert: {\r\n      control: { type: 'boolean' },\r\n    },\r\n    alertMessage: {\r\n      control: { type: 'text' },\r\n    },\r\n  },\r\n}"
+                    "defaultValue": "{\r\n  title: 'App/Alert',\r\n  component: AlertComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: AlertComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {},\r\n}"
                 },
                 {
                     "name": "Typical",
@@ -4108,6 +4185,68 @@
                     "defaultValue": "{\r\n  args: {\r\n    comparedColor: '',\r\n  },\r\n}"
                 }
             ],
+            "src/app/color-slider/color-slider.stories.ts": [
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/color-slider/color-slider.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<ColorSliderComponent>",
+                    "defaultValue": "{\r\n  title: 'App/Color Slider',\r\n  component: ColorSliderComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorSliderComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
+                },
+                {
+                    "name": "NoHueColor",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/color-slider/color-slider.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\r\n  args: {\r\n    color: 'gray',\r\n  },\r\n}"
+                },
+                {
+                    "name": "RgbBlue",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/color-slider/color-slider.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\r\n  args: {\r\n    color: 'blue',\r\n  },\r\n}"
+                },
+                {
+                    "name": "RgbGreen",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/color-slider/color-slider.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\r\n  args: {\r\n    color: 'green',\r\n  },\r\n}"
+                },
+                {
+                    "name": "RgbRed",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/color-slider/color-slider.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\r\n  args: {\r\n    color: 'red',\r\n  },\r\n}"
+                },
+                {
+                    "name": "Typical",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/color-slider/color-slider.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\r\n  args: {\r\n    color: 'coral',\r\n  },\r\n}"
+                }
+            ],
             "src/app/copy-to-clipboard-button/copy-to-clipboard-button.stories.ts": [
                 {
                     "name": "meta",
@@ -4172,66 +4311,26 @@
                     "defaultValue": "{\r\n  args: {},\r\n}"
                 }
             ],
-            "src/app/color-slider/color-slider.stories.ts": [
+            "src/app/palette-table/palette-table.stories.ts": [
                 {
                     "name": "meta",
                     "ctype": "miscellaneous",
                     "subtype": "variable",
-                    "file": "src/app/color-slider/color-slider.stories.ts",
+                    "file": "src/app/palette-table/palette-table.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "Meta<ColorSliderComponent>",
-                    "defaultValue": "{\r\n  title: 'App/Color Slider',\r\n  component: ColorSliderComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorSliderComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
-                },
-                {
-                    "name": "NoHueColor",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/color-slider/color-slider.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\r\n  args: {\r\n    color: 'gray',\r\n  },\r\n}"
-                },
-                {
-                    "name": "RgbBlue",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/color-slider/color-slider.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\r\n  args: {\r\n    color: 'blue',\r\n  },\r\n}"
-                },
-                {
-                    "name": "RgbGreen",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/color-slider/color-slider.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\r\n  args: {\r\n    color: 'green',\r\n  },\r\n}"
-                },
-                {
-                    "name": "RgbRed",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/color-slider/color-slider.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\r\n  args: {\r\n    color: 'red',\r\n  },\r\n}"
+                    "type": "Meta<PaletteTableComponent>",
+                    "defaultValue": "{\r\n  title: 'App/Palette Table',\r\n  component: PaletteTableComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: PaletteTableComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {},\r\n}"
                 },
                 {
                     "name": "Typical",
                     "ctype": "miscellaneous",
                     "subtype": "variable",
-                    "file": "src/app/color-slider/color-slider.stories.ts",
+                    "file": "src/app/palette-table/palette-table.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Story",
-                    "defaultValue": "{\r\n  args: {\r\n    color: 'coral',\r\n  },\r\n}"
+                    "defaultValue": "{\r\n  args: {},\r\n}"
                 }
             ],
             ".storybook/preview.ts": [
@@ -4365,6 +4464,19 @@
                     "kind": 180
                 }
             ],
+            "src/app/color-slider/color-slider.stories.ts": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "StoryObj<ColorSliderComponent>",
+                    "file": "src/app/color-slider/color-slider.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 180
+                }
+            ],
             "src/app/copy-to-clipboard-button/copy-to-clipboard-button.stories.ts": [
                 {
                     "name": "Story",
@@ -4391,13 +4503,13 @@
                     "kind": 180
                 }
             ],
-            "src/app/color-slider/color-slider.stories.ts": [
+            "src/app/palette-table/palette-table.stories.ts": [
                 {
                     "name": "Story",
                     "ctype": "miscellaneous",
                     "subtype": "typealias",
-                    "rawtype": "StoryObj<ColorSliderComponent>",
-                    "file": "src/app/color-slider/color-slider.stories.ts",
+                    "rawtype": "StoryObj<PaletteTableComponent>",
+                    "file": "src/app/palette-table/palette-table.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "description": "",
@@ -4763,6 +4875,35 @@
             },
             {
                 "filePath": "src/app/metadata/metadata.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Typical",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/palette-table/palette-table.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "PaletteTableComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/palette-table/palette-table.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "meta",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/palette-table/palette-table.stories.ts",
                 "type": "variable",
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
