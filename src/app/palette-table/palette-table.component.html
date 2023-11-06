@@ -2,14 +2,13 @@
   <table>
     <caption class="sr-only">
       Collection of colors sharing the same hue organized by chroma as columns,
-      and lightness as rows.
+      and lightness as rows. Selecting a button in the table will copy the its
+      color to the clipboard.
     </caption>
     <thead>
       <tr>
         <td>&nbsp;</td>
-        <th>0.0</th>
-        <th>0.2</th>
-        <th>0.4</th>
+        <th *ngFor="let header of tableHeaders">{{ header }}</th>
       </tr>
     </thead>
     <tbody>
