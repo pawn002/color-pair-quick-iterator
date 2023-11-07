@@ -1,4 +1,11 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnChanges,
+  AfterViewInit,
+  Input,
+  SimpleChanges,
+} from '@angular/core';
 import { ColorUtilService } from '../services/color-util.service';
 
 export class TableColorCell {
@@ -18,81 +25,13 @@ export type TableData = Array<TableRow>;
   templateUrl: './palette-table.component.html',
   styleUrls: ['./palette-table.component.scss'],
 })
-export class PaletteTableComponent implements OnInit {
+export class PaletteTableComponent implements OnInit, OnChanges {
+  @Input() color: string | null = null;
+
   tableHeaders: Array<number> = [];
 
   // An array of arrays where each array is a 'row' of data, and objects are cells of data.
-  dataStruct: TableData = [
-    [
-      {
-        color: 'white',
-        lightness: 1,
-        chroma: 0,
-        pContrast: NaN,
-        wacg2Comp: NaN,
-      },
-      {
-        color: null,
-        lightness: 1,
-        chroma: 0.2,
-        pContrast: NaN,
-        wacg2Comp: NaN,
-      },
-      {
-        color: null,
-        lightness: 1,
-        chroma: 0.4,
-        pContrast: NaN,
-        wacg2Comp: NaN,
-      },
-    ],
-    [
-      {
-        color: 'grey',
-        lightness: 0.5,
-        chroma: 0,
-        pContrast: NaN,
-        wacg2Comp: NaN,
-      },
-      {
-        color: '#2456d3',
-        lightness: 0.5,
-        chroma: 0.2,
-        pContrast: NaN,
-        wacg2Comp: NaN,
-      },
-      {
-        color: '#0137f6',
-        lightness: 0.5,
-        chroma: 0.4,
-        pContrast: NaN,
-        wacg2Comp: NaN,
-      },
-    ],
-    [
-      {
-        color: 'black',
-        lightness: 0,
-        chroma: 0,
-        pContrast: NaN,
-        wacg2Comp: NaN,
-      },
-      {
-        color: null,
-        lightness: 0,
-        chroma: 0.2,
-        pContrast: NaN,
-        wacg2Comp: NaN,
-      },
-      {
-        color: null,
-        lightness: 0,
-        chroma: 0.4,
-        pContrast: NaN,
-        wacg2Comp: NaN,
-      },
-    ],
-  ];
+  dataStruct: TableData = [];
 
   getTableColumnHeaders() {
     const headers = [];
@@ -107,11 +46,26 @@ export class PaletteTableComponent implements OnInit {
     this.tableHeaders = headers;
   }
 
+  getTableData() {
+    if (this.color) {
+      this.dataStruct = this.cus.generateAllOklchVariants(this.color, 20, 20);
+
+      this.getTableColumnHeaders();
+    } else {
+      console.error(`no color for palette table`);
+    }
+  }
+
   constructor(private cus: ColorUtilService) {}
 
-  ngOnInit(): void {
-    this.dataStruct = this.cus.generateAllOklchVariants('violet', 20, 20);
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(`-----OnChanges`);
 
-    this.getTableColumnHeaders();
+    this.getTableData();
+  }
+
+  ngOnInit(): void {
+    console.log(`-----OnInit`);
+    // this.getTableData();
   }
 }

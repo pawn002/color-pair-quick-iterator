@@ -11,7 +11,11 @@ const meta: Meta<PaletteTableComponent> = {
       ...args,
     },
   }),
-  argTypes: {},
+  argTypes: {
+    color: {
+      control: 'color',
+    },
+  },
 };
 
 export default meta;
@@ -20,4 +24,10 @@ type Story = StoryObj<PaletteTableComponent>;
 // More on writing stories with args: https://storybook.js.org/docs/angular/writing-stories/args
 export const Typical: Story = {
   args: {},
+};
+
+export const Populated: Story = {
+  args: {
+    color: 'purple',
+  },
 };

@@ -1,19 +1,19 @@
 <div class="comp-container">
-  <table>
+  <table *ngIf="dataStruct" [style.backgroundColor]="color">
     <caption class="sr-only">
       Collection of colors sharing the same hue organized by chroma as columns,
       and lightness as rows. Selecting a button in the table will copy the its
       color to the clipboard.
     </caption>
     <thead>
-      <tr>
+      <tr class="sr-only">
         <td>&nbsp;</td>
         <th *ngFor="let header of tableHeaders">{{ header }}</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let row of dataStruct">
-        <th>{{ row[0]["lightness"] }}</th>
+        <th class="sr-only">{{ row[0]["lightness"] }}</th>
         <td *ngFor="let cell of row">
           <button
             [style.backgroundColor]="cell.color ? cell.color : 'transparent'"
