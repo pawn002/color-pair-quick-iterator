@@ -46,9 +46,13 @@ export class PaletteTableComponent implements OnInit, OnChanges {
     this.tableHeaders = headers;
   }
 
-  getTableData() {
+  async getTableData() {
     if (this.color) {
-      this.dataStruct = this.cus.generateAllOklchVariants(this.color, 20, 20);
+      this.dataStruct = await this.cus.generateAllOklchVariants(
+        this.color,
+        20,
+        20
+      );
 
       this.getTableColumnHeaders();
     } else {
