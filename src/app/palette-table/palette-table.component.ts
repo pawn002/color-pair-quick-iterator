@@ -5,6 +5,8 @@ import {
   AfterViewInit,
   Input,
   SimpleChanges,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { ColorUtilService } from '../services/color-util.service';
 
@@ -28,6 +30,8 @@ export type TableData = Array<TableRow>;
 export class PaletteTableComponent implements OnInit, OnChanges {
   @Input() color: string | null = null;
 
+  @Output() selectedColor = new EventEmitter<TableColorCell>();
+
   tableHeaders: Array<number> = [];
 
   // An array of arrays where each array is a 'row' of data, and objects are cells of data.
@@ -37,6 +41,7 @@ export class PaletteTableComponent implements OnInit, OnChanges {
     const headers = [];
 
     const sampleRow = this.dataStruct[0];
+
     for (let i = 0; i < sampleRow.length; i++) {
       const curCell = sampleRow[i];
 
@@ -44,6 +49,15 @@ export class PaletteTableComponent implements OnInit, OnChanges {
     }
 
     this.tableHeaders = headers;
+  }
+
+  selectColor(rowNum: number, columnNum: number) {
+    const targetColor = this.dataStruct[rowNum][columnNum];
+
+    console.log(rowNum, columnNum);
+    console.log(targetColor.color);
+
+    this.selectedColor.emit(targetColor);
   }
 
   async getTableData() {

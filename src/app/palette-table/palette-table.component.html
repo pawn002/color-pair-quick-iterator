@@ -12,11 +12,12 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let row of dataStruct">
+      <tr *ngFor="let row of dataStruct; index as i">
         <th class="sr-only">{{ row[0]["lightness"] }}</th>
-        <td *ngFor="let cell of row">
+        <td *ngFor="let cell of row; index as j">
           <button
             [style.backgroundColor]="cell.color ? cell.color : 'transparent'"
+            (click)="selectColor(i, j)"
           >
             <span class="sr-only">cell.color</span>
           </button>
