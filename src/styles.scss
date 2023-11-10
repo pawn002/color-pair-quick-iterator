@@ -142,6 +142,12 @@ cite {
   // min-height: var(--minHitDimensionAAA) !important;
 }
 
+strong {
+  font-size: var(--minTextSize);
+  text-transform: uppercase;
+  letter-spacing: 0.05ch;
+}
+
 .sr-only:not(:focus):not(:active) {
   clip: rect(0 0 0 0) !important;
   clip-path: inset(50%) !important;
