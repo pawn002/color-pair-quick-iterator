@@ -1,0 +1,32 @@
+.comp-container {
+  table {
+    th {
+      font-family: var(--monoFont);
+    }
+    td {
+      margin: 0;
+      padding: 7.5px;
+      line-height: 0;
+      // height: fit-content;
+    }
+
+    tbody {
+      th {
+        text-align: right;
+      }
+    }
+
+    button {
+      border: transparent 2px solid;
+      border-radius: 5px;
+      background-color: #e1e1e1;
+      min-width: var(--minHitDimensionAA);
+      min-height: var(--minHitDimensionAA);
+
+      &:hover {
+        background-color: white !important;
+        border-color: #8f8f8f !important;
+      }
+    }
+  }
+}

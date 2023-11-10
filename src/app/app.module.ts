@@ -9,6 +9,7 @@ import { ColorContrastComponent } from './color-contrast/color-contrast.componen
 import { CopyToClipboardButtonComponent } from './copy-to-clipboard-button/copy-to-clipboard-button.component';
 import { AlertComponent } from './alert/alert.component';
 import { MetadataComponent } from './metadata/metadata.component';
+import { PaletteTableComponent } from './palette-table/palette-table.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { MetadataComponent } from './metadata/metadata.component';
     ColorContrastComponent,
     CopyToClipboardButtonComponent,
     AlertComponent,
-    MetadataComponent
+    MetadataComponent,
+    PaletteTableComponent
   ],
   imports: [
     BrowserModule,
