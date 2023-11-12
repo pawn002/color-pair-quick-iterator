@@ -6,7 +6,7 @@ export class DifferencesDataObj {
   deltaE: number | null = null;
   wcag2Old: number | null = null;
   wcag2New: number | null = null;
-  apca: number = NaN;
+  apca: number | null = null;
 }
 export class SuccessesObj {
   text: 'pass' | 'fail' | null = null;
@@ -74,7 +74,7 @@ export class MetadataComponent implements OnChanges {
         this.colorOne,
         this.colorTwo,
         'apca'
-      ) as number;
+      );
     } else {
       console.warn(`failed to get color differences`);
     }
@@ -86,24 +86,28 @@ export class MetadataComponent implements OnChanges {
         this.colorOne,
         this.colorTwo,
         'bpca'
-      ) as number;
+      );
 
       const apcaScore = this.cms.getContrast(
         this.colorOne,
         this.colorTwo,
         'apca'
-      ) as number;
+      );
 
-      if (wcagNew >= 0 && Math.abs(apcaScore) >= 0) {
-        this.successes.text = wcagNew >= 4.5 ? 'pass' : 'fail';
+      if (wcagNew && apcaScore) {
+        if (wcagNew >= 0 && Math.abs(apcaScore) >= 0) {
+          this.successes.text = wcagNew >= 4.5 ? 'pass' : 'fail';
 
-        this.successes.largeText = wcagNew >= 3 ? 'pass' : 'fail';
+          this.successes.largeText = wcagNew >= 3 ? 'pass' : 'fail';
 
-        const minDimension = this.cus.getMinObjectDimension(apcaScore);
+          const minDimension = this.cus.getMinObjectDimension(apcaScore);
 
-        this.successes.objectMinDimension = Number.isNaN(minDimension)
-          ? 'invisible'
-          : minDimension;
+          this.successes.objectMinDimension = Number.isNaN(minDimension)
+            ? 'invisible'
+            : minDimension;
+        } else {
+          console.warn(`something wonky with calculating scores`);
+        }
       } else {
         console.warn(`trouble getting scores`);
       }
