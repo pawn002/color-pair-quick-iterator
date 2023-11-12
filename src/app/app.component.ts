@@ -114,10 +114,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
-  setRandomColorPair(initialAppColors?: boolean) {
-    setTimeout(() => {
-      const randomColorPair = this.cus.getRandomColorPair();
+  async setRandomColorPair(initialAppColors?: boolean) {
+    const randomColorPair = await this.cus.getRandomColorPair();
 
+    setTimeout(() => {
       this.colorPickerOneSelectedColor = randomColorPair[0];
       this.colorPickerTwoSelectedColor = randomColorPair[1];
 

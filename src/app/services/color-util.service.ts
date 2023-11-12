@@ -233,15 +233,16 @@ export class ColorUtilService {
     return returnedObject;
   }
 
-  getRandomColorPair(): ColorPair {
+  async getRandomColorPair(): Promise<ColorPair> {
     let pair: ColorPair = ['black', 'white'];
 
     // ref: oklch.com
-    const targetChroma = 0.11;
+    // const targetChroma = 0.11;
+    const targetChroma = random(0.11, 0.34, true);
 
-    const colorOneLight = random(0.25, 0.3, true);
+    const colorOneLight = random(0.25, 0.26, true);
     const colorOneHue = random(0, 360, true);
-    const colorTwoLight = random(0.9, 0.95, true);
+    const colorTwoLight = random(0.94, 0.95, true);
     const colorTwoHue = random(0, 360, true);
 
     const colorOne = new Color('oklch', [
@@ -264,7 +265,8 @@ export class ColorUtilService {
 
     pair = [colorOne, colorTwo];
 
-    return pair;
+    // return pair;
+    return (await this.matchChromas(pair)).colors as ColorPair;
   }
 
   async matchChromas(colorpair: ColorPair): Promise<ChromaMatchObject> {
