@@ -224,19 +224,31 @@ export class BpcaService {
   } // End alphaBlend()
 
   calcBPCA(textColor: string, bgColor: string, places = -1, isInt = true) {
-    // Note that this function required colorParsley !!
+    // NOTE:  that this function required colorParsley !!
     // let txClr = colorParsley(textColor);
     // let bgClr = colorParsley(bgColor);
-    let txClr = this.cus.getRgb255Array(textColor) as number[];
-    let bgClr = this.cus.getRgb255Array(bgColor) as number[];
-
     // let hasAlpha = txClr[3] != '' && txClr[3] < 1 ? true : false;
-
     // if (hasAlpha) {
     // txClr = this.alphaBlend(txClr, bgClr, isInt);
     // }
+    // return this.BPCAcontrast(this.sRGBtoY(txClr), this.sRGBtoY(bgClr), places);
 
-    return this.BPCAcontrast(this.sRGBtoY(txClr), this.sRGBtoY(bgClr), places);
+    let bpca: string | number = NaN;
+
+    let txClr = this.cus.getRgb255Array(textColor);
+    let bgClr = this.cus.getRgb255Array(bgColor);
+
+    if (txClr && bgClr) {
+      bpca = this.BPCAcontrast(
+        this.sRGBtoY(txClr),
+        this.sRGBtoY(bgClr),
+        places
+      );
+    } else {
+      console.warn(`issue calculating BPCA`);
+    }
+
+    return bpca;
   } // End calcBPCA()
 
   constructor(private cus: ColorUtilService) {}
