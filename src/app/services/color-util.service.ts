@@ -274,6 +274,42 @@ export class ColorUtilService {
     return pair;
   }
 
+  // This function only adjust the first color of the pair.
+  async adjustColorPairForPresentation(pair: ColorPair): Promise<ColorPair> {
+    let returnedPair: ColorPair = ['black', 'white'];
+
+    const colorOne = pair[0];
+    const colortwo = pair[1];
+
+    const parsedColorOne = this.parseColor(colorOne);
+
+    const colorOneMinMaxLightObj = await this.getMinMaxLight(colorOne);
+
+    if (parsedColorOne && colorOneMinMaxLightObj) {
+      const colorOneTargetLightness =
+        colorOneMinMaxLightObj.lightMin +
+        (colorOneMinMaxLightObj.lightMax - colorOneMinMaxLightObj.lightMin) / 2;
+
+      const oklchColorOne = new Color('srgb', parsedColorOne.coords).to(
+        'oklch'
+      );
+
+      const adjColorOne = new Color('oklch', [
+        colorOneTargetLightness,
+        oklchColorOne.coords[1],
+        oklchColorOne.coords[2],
+      ])
+        .to('srgb')
+        .toString({ format: 'hex' });
+
+      returnedPair = [adjColorOne, colortwo];
+    } else {
+      console.warn('trouble adjusting colors');
+    }
+
+    return returnedPair;
+  }
+
   async matchChromas(colorpair: ColorPair): Promise<ChromaMatchObject> {
     let pair: ChromaMatchObject = {
       success: false,
