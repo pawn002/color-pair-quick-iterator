@@ -274,36 +274,27 @@ export class ColorUtilService {
     return pair;
   }
 
+  // This function only adjust the first color of the pair.
   async adjustColorPairForPresentation(pair: ColorPair): Promise<ColorPair> {
     let returnedPair: ColorPair = ['black', 'white'];
 
-    const parsedColorOne = this.parseColor(pair[0]);
-    const parsedColorTwo = this.parseColor(pair[1]);
+    const colorOne = pair[0];
+    const colortwo = pair[1];
 
-    const colorOneMinMaxLightObj = await this.getMinMaxLight(pair[0]);
-    const colorTwoMinMaxLightObj = await this.getMinMaxLight(pair[0]);
+    const parsedColorOne = this.parseColor(colorOne);
 
-    if (
-      parsedColorOne &&
-      parsedColorTwo &&
-      colorOneMinMaxLightObj &&
-      colorTwoMinMaxLightObj
-    ) {
+    const colorOneMinMaxLightObj = await this.getMinMaxLight(colorOne);
+
+    if (parsedColorOne && colorOneMinMaxLightObj) {
       const colorOneTargetLightness =
+        colorOneMinMaxLightObj.lightMin +
         (colorOneMinMaxLightObj.lightMax - colorOneMinMaxLightObj.lightMin) / 2;
-      const colorTwoTargetLightness =
-        (colorTwoMinMaxLightObj.lightMax - colorTwoMinMaxLightObj.lightMin) / 2;
 
-      // TODO: continue this algo. . .
       const oklchColorOne = new Color('srgb', parsedColorOne.coords).to(
-        'oklch'
-      );
-      const oklchColorTwo = new Color('srgb', parsedColorTwo.coords).to(
         'oklch'
       );
 
       const adjColorOne = new Color('oklch', [
-        // colorOneMinMaxLightObj.lightMax - colorOneTargetLightness / 1.5,
         colorOneTargetLightness,
         oklchColorOne.coords[1],
         oklchColorOne.coords[2],
@@ -311,16 +302,7 @@ export class ColorUtilService {
         .to('srgb')
         .toString({ format: 'hex' });
 
-      const adjColorTwo = new Color('oklch', [
-        colorTwoTargetLightness,
-        oklchColorTwo.coords[1],
-        oklchColorTwo.coords[2],
-      ])
-        .to('srgb')
-        .toString({ format: 'hex' });
-
-      // returnedPair = [adjColorOne, adjColorTwo];
-      returnedPair = [adjColorOne, pair[1]];
+      returnedPair = [adjColorOne, colortwo];
     } else {
       console.warn('trouble adjusting colors');
     }
