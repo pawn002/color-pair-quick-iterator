@@ -58,14 +58,20 @@ export class ColorMetricsService {
   }
 
   calcRawBpcaContrast(colorOne: string, colorTwo: string) {
+    let wcag: number = NaN;
+
     const lc = this.bpca.calcBPCA(colorOne, colorTwo) as number;
-    const colorOneArray255 = this.cus.getRgb255Array(colorOne) as number[];
-    const colorTwoArray255 = this.cus.getRgb255Array(colorTwo) as number[];
-    const colorOneY = this.bpca.sRGBtoY(colorOneArray255);
-    const colorTwoY = this.bpca.sRGBtoY(colorTwoArray255);
-    const wcag = parseFloat(
-      this.bpca.bridgeRatio(lc, colorOneY, colorTwoY, '')
-    );
+    const colorOneArray255 = this.cus.getRgb255Array(colorOne);
+    const colorTwoArray255 = this.cus.getRgb255Array(colorTwo);
+
+    if (colorOneArray255 && colorTwoArray255) {
+      const colorOneY = this.bpca.sRGBtoY(colorOneArray255);
+      const colorTwoY = this.bpca.sRGBtoY(colorTwoArray255);
+
+      wcag = parseFloat(this.bpca.bridgeRatio(lc, colorOneY, colorTwoY, ''));
+    } else {
+      console.warn(`trouble calculating raw BPCA`);
+    }
 
     return wcag;
   }

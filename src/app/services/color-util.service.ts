@@ -11,6 +11,8 @@ import {
 
 export type ColorPair = [string, string];
 
+export type ColorCoordArray = [number, number, number];
+
 export class ChromaMatchObject {
   success: boolean = false;
   colors: ColorPair | null = null;
@@ -18,12 +20,12 @@ export class ChromaMatchObject {
 }
 
 export interface MinMaxLightObject {
-  originalCoords: [number, number, number];
+  originalCoords: ColorCoordArray;
   lightMin: number;
   lightMax: number;
 }
 
-export type ColorVariant = [number, number, number];
+// export type ColorVariant = [number, number, number];
 
 export interface ColorMetaObj {
   lightness: number | string;
@@ -104,7 +106,7 @@ export class ColorUtilService {
     return srgbColor;
   }
 
-  isInSrgbGamut(oklchColorCoord: [number, number, number]): Promise<boolean> {
+  isInSrgbGamut(oklchColorCoord: ColorCoordArray): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       try {
         const colorObject = new Color('oklch', oklchColorCoord);
@@ -117,8 +119,8 @@ export class ColorUtilService {
     });
   }
 
-  createVariants(color: string): Array<ColorVariant> | null {
-    let variantCollection: Array<ColorVariant> | null = null;
+  createVariants(color: string): Array<ColorCoordArray> | null {
+    let variantCollection: Array<ColorCoordArray> | null = null;
 
     const parsedColor = this.parseColor(color);
 
@@ -140,7 +142,7 @@ export class ColorUtilService {
       // 2a) this actually creates `lightnessSteps + 1` variants as initial variant has to start at zero.
       for (let i = 0; i <= lightnessSteps; i++) {
         const variantTargetLight = i * lightInterval;
-        const variant: ColorVariant = [
+        const variant: ColorCoordArray = [
           variantTargetLight,
           colorChroma,
           colorHue,
@@ -156,8 +158,8 @@ export class ColorUtilService {
   }
 
   filterOutOfGamutVariants(
-    variants: Array<ColorVariant> | null
-  ): Promise<Array<ColorVariant>> {
+    variants: Array<ColorCoordArray> | null
+  ): Promise<Array<ColorCoordArray>> {
     return new Promise(async (resolve, reject) => {
       if (!variants) {
         reject(`no variants`);
@@ -263,10 +265,13 @@ export class ColorUtilService {
       .to('srgb')
       .toString({ format: 'hex' });
 
-    pair = [colorOne, colorTwo];
+    const initPair: ColorPair = [colorOne, colorTwo];
 
-    // return pair;
-    return (await this.matchChromas(pair)).colors as ColorPair;
+    const chromaMatchedPair = await this.matchChromas(initPair);
+
+    pair = chromaMatchedPair.colors ? chromaMatchedPair.colors : pair;
+
+    return pair;
   }
 
   async matchChromas(colorpair: ColorPair): Promise<ChromaMatchObject> {
@@ -290,16 +295,16 @@ export class ColorUtilService {
       );
       const colorTwoChroma = colorTwoOklch.coords[1];
 
-      const colorOneCandCoords = [
+      const colorOneCandCoords: ColorCoordArray = [
         colorOneOklch.coords[0],
         colorTwoChroma,
         colorOneOklch.coords[2],
-      ] as [number, number, number];
-      const colorTwoCandCoords = [
+      ];
+      const colorTwoCandCoords: ColorCoordArray = [
         colorTwoOklch.coords[0],
         colorOneChroma,
         colorTwoOklch.coords[2],
-      ] as [number, number, number];
+      ];
 
       const colorOneCandInGamut = await this.isInSrgbGamut(colorOneCandCoords);
       const colorTwoCandInGamut = await this.isInSrgbGamut(colorTwoCandCoords);
