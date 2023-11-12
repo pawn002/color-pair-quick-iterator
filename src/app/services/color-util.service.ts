@@ -265,10 +265,13 @@ export class ColorUtilService {
       .to('srgb')
       .toString({ format: 'hex' });
 
-    pair = [colorOne, colorTwo];
+    const initPair: ColorPair = [colorOne, colorTwo];
 
-    // return pair;
-    return (await this.matchChromas(pair)).colors as ColorPair;
+    const chromaMatchedPair = await this.matchChromas(initPair);
+
+    pair = chromaMatchedPair.colors ? chromaMatchedPair.colors : pair;
+
+    return pair;
   }
 
   async matchChromas(colorpair: ColorPair): Promise<ChromaMatchObject> {
