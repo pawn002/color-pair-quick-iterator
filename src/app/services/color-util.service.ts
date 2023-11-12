@@ -277,8 +277,6 @@ export class ColorUtilService {
   async adjustColorPairForPresentation(pair: ColorPair): Promise<ColorPair> {
     let returnedPair: ColorPair = ['black', 'white'];
 
-    const initPair = await this.getRandomColorPair();
-
     const parsedColorOne = this.parseColor(pair[0]);
     const parsedColorTwo = this.parseColor(pair[1]);
 
@@ -297,12 +295,35 @@ export class ColorUtilService {
         (colorTwoMinMaxLightObj.lightMax - colorTwoMinMaxLightObj.lightMin) / 2;
 
       // TODO: continue this algo. . .
-      const adjOklchColorOne = new Color('srgb', parsedColorOne.coords);
+      const oklchColorOne = new Color('srgb', parsedColorOne.coords).to(
+        'oklch'
+      );
+      const oklchColorTwo = new Color('srgb', parsedColorTwo.coords).to(
+        'oklch'
+      );
+
+      const adjColorOne = new Color('oklch', [
+        // colorOneMinMaxLightObj.lightMax - colorOneTargetLightness / 1.5,
+        colorOneTargetLightness,
+        oklchColorOne.coords[1],
+        oklchColorOne.coords[2],
+      ])
+        .to('srgb')
+        .toString({ format: 'hex' });
+
+      const adjColorTwo = new Color('oklch', [
+        colorTwoTargetLightness,
+        oklchColorTwo.coords[1],
+        oklchColorTwo.coords[2],
+      ])
+        .to('srgb')
+        .toString({ format: 'hex' });
+
+      // returnedPair = [adjColorOne, adjColorTwo];
+      returnedPair = [adjColorOne, pair[1]];
     } else {
       console.warn('trouble adjusting colors');
     }
-
-    console.log();
 
     return returnedPair;
   }
