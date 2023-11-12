@@ -274,6 +274,39 @@ export class ColorUtilService {
     return pair;
   }
 
+  async adjustColorPairForPresentation(pair: ColorPair): Promise<ColorPair> {
+    let returnedPair: ColorPair = ['black', 'white'];
+
+    const initPair = await this.getRandomColorPair();
+
+    const parsedColorOne = this.parseColor(pair[0]);
+    const parsedColorTwo = this.parseColor(pair[1]);
+
+    const colorOneMinMaxLightObj = await this.getMinMaxLight(pair[0]);
+    const colorTwoMinMaxLightObj = await this.getMinMaxLight(pair[0]);
+
+    if (
+      parsedColorOne &&
+      parsedColorTwo &&
+      colorOneMinMaxLightObj &&
+      colorTwoMinMaxLightObj
+    ) {
+      const colorOneTargetLightness =
+        (colorOneMinMaxLightObj.lightMax - colorOneMinMaxLightObj.lightMin) / 2;
+      const colorTwoTargetLightness =
+        (colorTwoMinMaxLightObj.lightMax - colorTwoMinMaxLightObj.lightMin) / 2;
+
+      // TODO: continue this algo. . .
+      const adjOklchColorOne = new Color('srgb', parsedColorOne.coords);
+    } else {
+      console.warn('trouble adjusting colors');
+    }
+
+    console.log();
+
+    return returnedPair;
+  }
+
   async matchChromas(colorpair: ColorPair): Promise<ChromaMatchObject> {
     let pair: ChromaMatchObject = {
       success: false,
