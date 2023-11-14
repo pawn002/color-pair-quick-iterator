@@ -15,19 +15,16 @@
     width: 50px;
     height: 50px;
 
-    // &:hover {
-    //   background-color: #dfdfdf;
-    // }
-
     &:hover {
-      box-shadow: 0 4px 0 0 #8c897e;
+      box-shadow: 0 4px 0 0 var(--ui-shadow-color);
     }
 
     .svg-container {
       width: 22px;
       height: auto;
+
       svg {
-        fill: #000000;
+        fill: var(--app-black);
         display: block;
       }
     }

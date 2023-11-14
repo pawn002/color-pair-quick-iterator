@@ -10,11 +10,12 @@
 
 /* Vars */
 :root {
-  --background-color: #f5ebc5;
+  --background-color: #efe5bf;
+  --ui-shadow-color: #978e6a;
   --app-black: #002a1e;
-  --ideal-body-text-black: #173e31;
-  --min-body-text-black: #3a6153;
-  --min-large-text-black: #61897a;
+  --ideal-body-text-black: #093327;
+  --min-body-text-black: #335a4c;
+  --min-large-text-black: #5c8475;
 
   --headerFont: "Atkinson Hyperlegible", sans-serif;
   --bodyFont: "Atkinson Hyperlegible", sans-serif;
@@ -34,7 +35,7 @@
 
 body {
   margin: 0;
-  background-color: #3b3b3b;
+  background-color: var(--app-black);
 }
 
 hr {
@@ -62,7 +63,7 @@ h1 {
 
 h2 {
   font-family: var(--headerFont);
-  color: var(--min-body-text-black);
+  color: var(--ideal-body-text-black);
   font-size: 1.125rem;
   font-style: normal;
   font-weight: 700;
