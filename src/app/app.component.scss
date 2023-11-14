@@ -14,6 +14,7 @@
     margin-bottom: 0.8rem;
 
     h1 {
+      color: var(--ideal-body-text-black);
       width: min-content;
       text-align: right;
     }
@@ -52,21 +53,17 @@
       margin: 11px;
       border-radius: 5px;
       font-style: italic;
-      // color: var(--min-body-text-black);
+      color: var(--ideal-body-text-black);
 
       min-width: var(--minHitDimensionAA);
       min-height: var(--minHitDimensionAA);
-
-      // &:hover {
-      //   background-color: #c6c3b8;
-      // }
 
       &:hover {
         box-shadow: 0 4px 0 0 #8c897e;
       }
 
       svg {
-        fill: #000000;
+        fill: var(--app-black);
         transform: rotateZ(90deg);
 
         height: auto;
@@ -102,7 +99,7 @@
       label {
         font-size: var(--minBodyTextSize);
         font-family: var(--bodyFont);
-        color: var(--min-body-text-black);
+        color: var(--ideal-body-text-black);
       }
 
       input {
