@@ -58,6 +58,29 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
+  toggleAccordion(event: Event, targetAccordionID: string) {
+    const targetButtonElem = event.target as HTMLButtonElement;
+
+    const targetAccordionContentElem =
+      document.getElementById(targetAccordionID);
+
+    if (targetAccordionContentElem) {
+      if (targetAccordionContentElem.hidden) {
+        setTimeout(() => {
+          targetAccordionContentElem.removeAttribute('hidden');
+          targetButtonElem.setAttribute('aria-expanded', 'true');
+        }, 0);
+      }
+
+      if (!targetAccordionContentElem.hidden) {
+        targetAccordionContentElem.setAttribute('hidden', '');
+        targetButtonElem.setAttribute('aria-expanded', 'false');
+      }
+    } else {
+      console.error('no elem');
+    }
+  }
+
   toggleContrastType(event: Event) {
     const inputElement = event.target as HTMLInputElement;
     const checked = inputElement.checked;

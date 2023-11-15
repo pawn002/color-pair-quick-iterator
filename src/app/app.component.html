@@ -38,15 +38,22 @@
     <div class="accordion-group">
       <h4 class="accordion-header-and-control">
         <button
+          (click)="toggleAccordion($event, 'sect1')"
           type="button"
-          aria-expanded="true"
+          aria-expanded="false"
           aria-controls="sect1"
           id="accordion1id"
         >
           <span>Foreground Limits Graph</span>
         </button>
       </h4>
-      <div class="accordion-content" id="sect1" [hidden]="true">
+      <div
+        class="accordion-content"
+        role="region"
+        aria-labelledby="accordion1id"
+        id="sect1"
+        hidden
+      >
         <app-palette-table
           [color]="colorPickerOneSelectedColor"
         ></app-palette-table>
@@ -80,15 +87,22 @@
     <div class="accordion-group">
       <h4 class="accordion-header-and-control">
         <button
+          (click)="toggleAccordion($event, 'sect2')"
           type="button"
-          aria-expanded="true"
-          aria-controls="sect1"
-          id="accordion1id"
+          aria-expanded="false"
+          aria-controls="sect2"
+          id="accordion2id"
         >
           <span>Background Limit Graph</span>
         </button>
       </h4>
-      <div class="accordion-content" id="sect1" [hidden]="true">
+      <div
+        class="accordion-content"
+        id="sect2"
+        role="region"
+        aria-labelledby="accordion2id"
+        hidden
+      >
         <app-palette-table
           [color]="colorPickerTwoSelectedColor"
         ></app-palette-table>
