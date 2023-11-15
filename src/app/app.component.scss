@@ -60,6 +60,7 @@
         font-size: var(--minTextSize);
         font-family: inherit;
         font-style: italic;
+        background-color: white;
 
         &:hover {
           box-shadow: 0 4px 0 0 #8c897e;
@@ -69,6 +70,7 @@
 
     .accordion-content {
       width: 100%;
+      height: fit-content;
       overflow: auto;
     }
   }
