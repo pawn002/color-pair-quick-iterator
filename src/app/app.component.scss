@@ -15,7 +15,7 @@
   .title-and-score {
     display: flex;
     gap: 1rem;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.6rem;
 
     h1 {
       color: var(--ideal-body-text-black);
@@ -30,7 +30,7 @@
 
   .slide-group {
     display: flex;
-    margin-bottom: 0.4rem;
+    margin-bottom: 4px;
     align-items: center;
 
     app-color-slider {
@@ -39,7 +39,7 @@
   }
 
   .accordion-group {
-    padding: 0 5px;
+    padding: 0 2px;
     border-radius: 5px;
     margin-bottom: 0.5rem;
     background-color: white;
@@ -61,6 +61,10 @@
         font-family: inherit;
         font-style: italic;
         background-color: white;
+
+        * {
+          color: var(--min-text-on-white);
+        }
 
         &:hover {
           box-shadow: 0 4px 0 0 #8c897e;

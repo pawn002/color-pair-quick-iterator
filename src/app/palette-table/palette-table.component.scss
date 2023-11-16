@@ -20,8 +20,8 @@
       border: transparent 2px solid;
       border-radius: 5px;
       background-color: #e1e1e1;
-      min-width: var(--minHitDimensionAA);
-      min-height: var(--minHitDimensionAA);
+      width: var(--minHitDimensionAA);
+      height: var(--minHitDimensionAA);
 
       &:hover {
         background-color: white !important;
