@@ -38,7 +38,7 @@
 body {
   margin: 0;
   background-color: var(--app-black);
-  overflow-x: hidden;
+  // overflow-x: hidden;
 }
 
 hr {
@@ -67,7 +67,7 @@ h1 {
 
 h2 {
   font-family: var(--headerFont);
-  color: var(--ideal-body-text-black);
+  color: var(--min-body-text-black);
   font-size: 1.125rem;
   font-style: normal;
   font-weight: 700;

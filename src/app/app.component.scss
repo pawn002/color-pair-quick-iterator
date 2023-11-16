@@ -8,6 +8,12 @@
     text-align: center;
   }
 
+  h3 {
+    margin-top: 0.8em;
+    margin-bottom: 0.2em;
+    margin-left: 2px;
+  }
+
   section {
     // margin: 0.5rem 0;
   }
@@ -18,7 +24,7 @@
     margin-bottom: 0.6rem;
 
     h1 {
-      color: var(--ideal-body-text-black);
+      color: var(--min-body-text-black);
       width: min-content;
       text-align: right;
     }
@@ -73,8 +79,9 @@
     }
 
     .accordion-content {
-      width: 100%;
-      height: fit-content;
+      position: relative;
+      max-width: 100%;
+      // height: fit-content;
       overflow: auto;
     }
   }
