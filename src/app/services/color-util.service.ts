@@ -508,6 +508,8 @@ export class ColorUtilService {
       if (parsedColor) {
         const oklchColor = Color.to(parsedColor, 'oklch');
         const lchCooords = oklchColor.coords;
+        const colorLight = lchCooords[0];
+        const colorChroma = lchCooords[1];
         const colorHue = lchCooords[2];
 
         const lightMax = 1;
@@ -540,14 +542,22 @@ export class ColorUtilService {
 
             const deltaE = colorVal ? this.calcDeltaE(colorVal, color) : null;
 
+            const dLight = colorVal
+              ? Math.round(((targetLightness - colorLight) / colorLight) * 100)
+              : null;
+
+            const dChroma = colorVal
+              ? Math.round(((targetChroma - colorChroma) / colorChroma) * 100)
+              : null;
+
             const variantObj: TableColorCell = {
               color: colorVal,
               lightness: targetLightness,
               chroma: targetChroma,
               hue: colorHue,
               deltaE: deltaE,
-              deltaChroma: NaN,
-              deltaLightness: NaN,
+              deltaChroma: dChroma,
+              deltaLightness: dLight,
               // wacg2Comp: NaN,
               // pContrast: NaN,
             };

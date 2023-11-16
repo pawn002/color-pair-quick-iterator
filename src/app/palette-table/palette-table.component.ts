@@ -16,8 +16,8 @@ export class TableColorCell {
   chroma: number = NaN;
   hue: number = NaN;
   deltaE: number | null = null;
-  deltaLightness: number = NaN;
-  deltaChroma: number = NaN;
+  deltaLightness: number | null = null;
+  deltaChroma: number | null = null;
 
   // pContrast: number = NaN;
   // wacg2Comp: number = NaN;
