@@ -93,6 +93,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (paletteChartNum === 'Two') {
       this.colorPickerTwoSelectedColor = event.color;
     }
+
+    this.alertUser({
+      message: `Color picker ${paletteChartNum} changed to ${event.color}`,
+    });
   }
 
   toggleContrastType(event: Event) {
