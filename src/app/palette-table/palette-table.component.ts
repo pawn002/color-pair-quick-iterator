@@ -14,8 +14,13 @@ export class TableColorCell {
   color: string | null = null;
   lightness: number = NaN;
   chroma: number = NaN;
-  pContrast: number = NaN;
-  wacg2Comp: number = NaN;
+  hue: number = NaN;
+  deltaE: number | null = null;
+  deltaLightness: number = NaN;
+  deltaChroma: number = NaN;
+
+  // pContrast: number = NaN;
+  // wacg2Comp: number = NaN;
 }
 
 export type TableRow = Array<TableColorCell>;
@@ -32,8 +37,8 @@ export class PaletteTableComponent implements OnInit, OnChanges {
 
   @Output() selectedColor = new EventEmitter<TableColorCell>();
 
-  chromaSteps = 30;
-  lightSteps = 90;
+  chromaSteps = 70;
+  lightSteps = 50;
 
   tableHeaders: Array<number> = [];
 
@@ -61,6 +66,12 @@ export class PaletteTableComponent implements OnInit, OnChanges {
     console.log(targetColor.color);
 
     this.selectedColor.emit(targetColor);
+  }
+
+  getTextColor(bkgdColor: string) {
+    return (this.cus.calcWcag2('white', bkgdColor) as number) >= 7
+      ? 'white'
+      : 'black';
   }
 
   async getTableData() {

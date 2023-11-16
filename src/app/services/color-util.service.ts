@@ -415,9 +415,10 @@ export class ColorUtilService {
 
       const rawDelta = colorOneObj.deltaE2000(colorTwoObj);
 
-      const fixedDelta = rawDelta.toFixed(2);
+      // const fixedDelta = rawDelta.toFixed(2);
 
-      delta = parseFloat(fixedDelta);
+      // delta = parseFloat(fixedDelta);
+      delta = Math.round(rawDelta);
     }
 
     return delta;
@@ -513,7 +514,7 @@ export class ColorUtilService {
         const lightMin = 0;
         const lightInterval = (lightMax - lightMin) / lightSteps;
 
-        const chromaMax = 0.34;
+        const chromaMax = 0.33;
         const chromaMin = 0;
         const chromaInterval = (chromaMax - chromaMin) / chromaSteps;
 
@@ -533,14 +534,22 @@ export class ColorUtilService {
 
             const variantColorinGamut = variantColor.inGamut('srgb');
 
+            const colorVal = variantColorinGamut
+              ? variantColor.to('srgb').toString({ format: 'hex' })
+              : null;
+
+            const deltaE = colorVal ? this.calcDeltaE(colorVal, color) : null;
+
             const variantObj: TableColorCell = {
-              color: variantColorinGamut
-                ? variantColor.to('srgb').toString({ format: 'hex' })
-                : null,
+              color: colorVal,
               lightness: targetLightness,
               chroma: targetChroma,
-              wacg2Comp: NaN,
-              pContrast: NaN,
+              hue: colorHue,
+              deltaE: deltaE,
+              deltaChroma: NaN,
+              deltaLightness: NaN,
+              // wacg2Comp: NaN,
+              // pContrast: NaN,
             };
 
             variantRow.push(variantObj);
