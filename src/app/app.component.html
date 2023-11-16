@@ -10,6 +10,9 @@
     </div>
 
     <h2 class="sr-only">Main Color Controls</h2>
+
+    <h3 class="sr-only">Foreground Color</h3>
+
     <div class="slide-group">
       <app-color-picker
         [inputId]="'cp-0'"
@@ -32,6 +35,34 @@
       ></app-copy-to-clipboard-button>
     </div>
 
+    <div class="accordion-group">
+      <h4 class="accordion-header-and-control">
+        <button
+          (click)="toggleAccordion($event, 'sect1')"
+          type="button"
+          aria-expanded="false"
+          aria-controls="sect1"
+          id="accordion1id"
+        >
+          <span>Foreground Limits Graph</span>
+        </button>
+      </h4>
+      <div
+        class="accordion-content"
+        role="region"
+        aria-labelledby="accordion1id"
+        id="sect1"
+        hidden
+      >
+        <app-palette-table
+          [color]="colorPickerOneSelectedColor"
+          (selectedColor)="handleColorPaletteButtonEvent('One', $event)"
+        ></app-palette-table>
+      </div>
+    </div>
+
+    <h3 class="sr-only">Background Color</h3>
+
     <div class="slide-group">
       <app-color-picker
         [inputId]="'cp-1'"
@@ -52,6 +83,32 @@
         [color]="colorPickerTwoComparedColor"
         (copyEvent)="handleCopyEvent($event)"
       ></app-copy-to-clipboard-button>
+    </div>
+
+    <div class="accordion-group">
+      <h4 class="accordion-header-and-control">
+        <button
+          (click)="toggleAccordion($event, 'sect2')"
+          type="button"
+          aria-expanded="false"
+          aria-controls="sect2"
+          id="accordion2id"
+        >
+          <span>Background Limit Graph</span>
+        </button>
+      </h4>
+      <div
+        id="sect2"
+        class="accordion-content"
+        role="region"
+        aria-labelledby="accordion2id"
+        hidden
+      >
+        <app-palette-table
+          [color]="colorPickerTwoSelectedColor"
+          (selectedColor)="handleColorPaletteButtonEvent('Two', $event)"
+        ></app-palette-table>
+      </div>
     </div>
   </section>
 

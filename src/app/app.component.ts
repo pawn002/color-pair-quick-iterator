@@ -9,6 +9,7 @@ import { ColorUtilService } from './services/color-util.service';
 import { CopyToClipboardEvent } from './copy-to-clipboard-button/copy-to-clipboard-button.component';
 import { ResetObject } from './color-slider/color-slider.component';
 import { AlertMessagObj } from './alert/alert.component';
+import { TableColorCell } from './palette-table/palette-table.component';
 
 @Component({
   selector: 'app-root',
@@ -55,6 +56,42 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.alertUser({ message: `${event.color} copied to clipboard.` });
     } else {
       console.error(`color copy error.`);
+    }
+  }
+
+  toggleAccordion(event: Event, targetAccordionID: string) {
+    const targetButtonElem = event.target as HTMLButtonElement;
+
+    const targetAccordionContentElem =
+      document.getElementById(targetAccordionID);
+
+    if (targetAccordionContentElem) {
+      if (targetAccordionContentElem.hidden) {
+        setTimeout(() => {
+          targetAccordionContentElem.removeAttribute('hidden');
+          targetButtonElem.setAttribute('aria-expanded', 'true');
+        }, 0);
+      }
+
+      if (!targetAccordionContentElem.hidden) {
+        targetAccordionContentElem.setAttribute('hidden', '');
+        targetButtonElem.setAttribute('aria-expanded', 'false');
+      }
+    } else {
+      console.error('no elem');
+    }
+  }
+
+  handleColorPaletteButtonEvent(
+    paletteChartNum: 'One' | 'Two',
+    event: TableColorCell
+  ) {
+    if (paletteChartNum === 'One') {
+      this.colorPickerOneSelectedColor = event.color;
+    }
+
+    if (paletteChartNum === 'Two') {
+      this.colorPickerTwoSelectedColor = event.color;
     }
   }
 

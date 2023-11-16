@@ -36,6 +36,7 @@
 body {
   margin: 0;
   background-color: var(--app-black);
+  overflow-x: hidden;
 }
 
 hr {
@@ -45,7 +46,8 @@ hr {
 
 h1,
 h2,
-h3 {
+h3,
+h4 {
   margin: 0;
   line-height: 1.05em;
 
@@ -71,6 +73,15 @@ h2 {
 }
 
 h3 {
+  line-height: unset;
+  color: var(--min-body-text-black);
+  font-family: var(--headerFont);
+  font-size: var(--minBodyTextSize);
+  font-style: normal;
+  font-weight: 700;
+}
+
+h4 {
   line-height: unset;
   color: var(--min-body-text-black);
   font-family: var(--headerFont);

@@ -4,6 +4,10 @@
   padding: var(--fluidPadding) var(--fluidPadding) 0 var(--fluidPadding);
   background-color: var(--background-color);
 
+  h2 {
+    text-align: center;
+  }
+
   section {
     // margin: 0.5rem 0;
   }
@@ -34,8 +38,41 @@
     }
   }
 
-  h2 {
-    text-align: center;
+  .accordion-group {
+    padding: 0 5px;
+    border-radius: 5px;
+    margin-bottom: 0.5rem;
+    background-color: white;
+
+    .accordion-header-and-control {
+      margin: 0;
+      display: flex;
+      margin-bottom: 6px;
+
+      button {
+        border: 2px solid transparent;
+        border-radius: 5px;
+        height: var(--minHitDimensionAA);
+        width: var(--minHitDimensionAA);
+        flex-grow: 1;
+        text-align: left;
+        // font-size: inherit;
+        font-size: var(--minTextSize);
+        font-family: inherit;
+        font-style: italic;
+        background-color: white;
+
+        &:hover {
+          box-shadow: 0 4px 0 0 #8c897e;
+        }
+      }
+    }
+
+    .accordion-content {
+      width: 100%;
+      height: fit-content;
+      overflow: auto;
+    }
   }
 
   .quick-actions {
