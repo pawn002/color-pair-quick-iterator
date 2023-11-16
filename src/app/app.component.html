@@ -56,6 +56,7 @@
       >
         <app-palette-table
           [color]="colorPickerOneSelectedColor"
+          (selectedColor)="handleColorPaletteButtonEvent('One', $event)"
         ></app-palette-table>
       </div>
     </div>
@@ -97,14 +98,15 @@
         </button>
       </h4>
       <div
+        id="sect2"
         class="accordion-content"
         role="region"
         aria-labelledby="accordion2id"
         hidden
       >
         <app-palette-table
-          id="sect2"
           [color]="colorPickerTwoSelectedColor"
+          (selectedColor)="handleColorPaletteButtonEvent('Two', $event)"
         ></app-palette-table>
       </div>
     </div>

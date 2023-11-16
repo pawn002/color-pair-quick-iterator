@@ -9,6 +9,7 @@ import { ColorUtilService } from './services/color-util.service';
 import { CopyToClipboardEvent } from './copy-to-clipboard-button/copy-to-clipboard-button.component';
 import { ResetObject } from './color-slider/color-slider.component';
 import { AlertMessagObj } from './alert/alert.component';
+import { TableColorCell } from './palette-table/palette-table.component';
 
 @Component({
   selector: 'app-root',
@@ -78,6 +79,19 @@ export class AppComponent implements OnInit, AfterViewInit {
       }
     } else {
       console.error('no elem');
+    }
+  }
+
+  handleColorPaletteButtonEvent(
+    paletteChartNum: 'One' | 'Two',
+    event: TableColorCell
+  ) {
+    if (paletteChartNum === 'One') {
+      this.colorPickerOneSelectedColor = event.color;
+    }
+
+    if (paletteChartNum === 'Two') {
+      this.colorPickerTwoSelectedColor = event.color;
     }
   }
 
