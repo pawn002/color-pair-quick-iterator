@@ -1,9 +1,11 @@
 .comp-container {
   table {
+    border-collapse: collapse;
     th {
       font-family: var(--monoFont);
     }
     td {
+      // border: 2px solid white;
       margin: 0;
       padding: 7.5px;
       line-height: 0;
@@ -22,8 +24,8 @@
       box-sizing: border-box;
       border-radius: 5px;
       background-color: #e1e1e1;
-      min-width: var(--minHitDimensionAAA);
-      min-height: var(--minHitDimensionAAA);
+      min-width: var(--minHitDimensionAA);
+      min-height: var(--minHitDimensionAA);
       font-family: var(--monoFont);
       font-weight: 700;
       font-size: 19px;
