@@ -522,8 +522,8 @@ export class ColorUtilService {
           const variantRow: Array<TableColorCell> = [];
 
           for (let j = 0; j <= chromaSteps; j++) {
-            const targetLightness = parseFloat((i * lightInterval).toFixed(2));
-            const targetChroma = parseFloat((j * chromaInterval).toFixed(2));
+            const targetLightness = parseFloat((i * lightInterval).toFixed(5));
+            const targetChroma = parseFloat((j * chromaInterval).toFixed(5));
 
             const variantColor = new Color('oklch', [
               targetLightness,
