@@ -7,6 +7,7 @@
       margin: 0;
       padding: 7.5px;
       line-height: 0;
+      display: inline-flexbox;
       // height: fit-content;
     }
 
@@ -21,8 +22,17 @@
       box-sizing: border-box;
       border-radius: 5px;
       background-color: #e1e1e1;
-      width: var(--minHitDimensionAA);
-      height: var(--minHitDimensionAA);
+      min-width: var(--minHitDimensionAAA);
+      min-height: var(--minHitDimensionAAA);
+      font-family: var(--monoFont);
+      font-weight: 700;
+      font-size: 19px;
+      width: 100%;
+      flex-grow: 1;
+
+      span {
+        line-height: 0;
+      }
 
       &:hover {
         background-color: white !important;

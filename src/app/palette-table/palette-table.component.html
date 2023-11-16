@@ -17,9 +17,17 @@
         <td *ngFor="let cell of row; index as j">
           <button
             [style.backgroundColor]="cell.color ? cell.color : 'transparent'"
+            [style.color]="cell.color ? getTextColor(cell.color) : 'black'"
             (click)="selectColor(i, j)"
           >
-            <span class="sr-only">cell.color</span>
+            <span *ngIf="cell.color" class="sr-only">{{ cell.color }}, </span>
+            <span *ngIf="cell.color" class="sr-only"
+              >{{ cell.deltaLightness }}%,
+            </span>
+            <span *ngIf="cell.color" class="sr-only"
+              >{{ cell.deltaChroma }}%,
+            </span>
+            <span *ngIf="cell.color">{{ cell.deltaE }}</span>
           </button>
         </td>
       </tr>
