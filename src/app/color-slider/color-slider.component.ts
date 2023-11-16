@@ -29,8 +29,8 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   debug: boolean = false;
   devColorVariant: string | null = null;
 
-  slideInterval: number | null = 0.001;
-  // slideInterval: number | null = 0.005;
+  // slideInterval: number | null = 0.001;
+  slideInterval: number | null = 0.005;
   slideMin: number | null = null;
   slideMax: number | null = null;
   initValue: number | null = null;
