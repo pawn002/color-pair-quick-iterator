@@ -492,7 +492,6 @@ export class ColorUtilService {
     return dimension;
   }
 
-  // TODO: pick up here to generate data for table
   generateAllOklchVariants(
     color: string,
     lightSteps: number,

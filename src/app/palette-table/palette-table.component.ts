@@ -32,6 +32,9 @@ export class PaletteTableComponent implements OnInit, OnChanges {
 
   @Output() selectedColor = new EventEmitter<TableColorCell>();
 
+  chromaSteps = 37;
+  lightSteps = 80;
+
   tableHeaders: Array<number> = [];
 
   // An array of arrays where each array is a 'row' of data, and objects are cells of data.
@@ -64,8 +67,8 @@ export class PaletteTableComponent implements OnInit, OnChanges {
     if (this.color) {
       this.dataStruct = await this.cus.generateAllOklchVariants(
         this.color,
-        20,
-        20
+        this.lightSteps,
+        this.chromaSteps
       );
 
       this.getTableColumnHeaders();
