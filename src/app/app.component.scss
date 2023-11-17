@@ -105,7 +105,7 @@
       font-style: italic;
       color: var(--ideal-body-text-black);
 
-      min-width: var(--minHitDimensionAA);
+      min-width: var(--minHitDimensionAA) !important;
       min-height: var(--minHitDimensionAA);
 
       &:hover {

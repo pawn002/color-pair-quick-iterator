@@ -24,7 +24,7 @@
       box-sizing: border-box;
       border-radius: 5px;
       background-color: #e1e1e1;
-      min-width: var(--minHitDimensionAA);
+      min-width: var(--minHitDimensionAA) !important;
       min-height: var(--minHitDimensionAA);
       font-family: var(--monoFont);
       font-weight: 700;
