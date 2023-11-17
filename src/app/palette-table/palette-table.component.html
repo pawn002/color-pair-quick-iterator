@@ -15,20 +15,22 @@
       <tr *ngFor="let row of dataStruct; index as i">
         <th class="sr-only">{{ row[0]["lightness"] }}</th>
         <td *ngFor="let cell of row; index as j">
-          <button
-            [style.backgroundColor]="cell.color ? cell.color : 'transparent'"
-            [style.color]="cell.color ? getTextColor(cell.color) : 'black'"
-            (click)="selectColor(i, j)"
-          >
-            <span *ngIf="cell.color" class="sr-only">{{ cell.color }}, </span>
-            <span *ngIf="cell.color" class="sr-only"
-              >{{ cell.deltaLightness }}%,
-            </span>
-            <span *ngIf="cell.color" class="sr-only"
-              >{{ cell.deltaChroma }}%,
-            </span>
-            <span *ngIf="cell.color" class="sr-only">{{ cell.deltaE }}</span>
-          </button>
+          <div>
+            <button
+              [style.backgroundColor]="cell.color ? cell.color : 'transparent'"
+              [style.color]="cell.color ? getTextColor(cell.color) : 'black'"
+              (click)="selectColor(i, j)"
+            >
+              <span *ngIf="cell.color" class="sr-only">{{ cell.color }}, </span>
+              <span *ngIf="cell.color" class="sr-only"
+                >{{ cell.deltaLightness }}%,
+              </span>
+              <span *ngIf="cell.color" class="sr-only"
+                >{{ cell.deltaChroma }}%,
+              </span>
+              <span *ngIf="cell.color" class="sr-only">{{ cell.deltaE }}</span>
+            </button>
+          </div>
         </td>
       </tr>
     </tbody>
