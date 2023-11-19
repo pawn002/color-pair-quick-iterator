@@ -7,13 +7,14 @@
     </caption>
     <thead>
       <tr class="sr-only">
+        <!-- <tr> -->
         <td>&nbsp;</td>
-        <th *ngFor="let header of tableHeaders">{{ header }}</th>
+        <th *ngFor="let header of tableHeaders">{{ header.toFixed(5) }}</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let row of dataStruct; index as i">
-        <th class="sr-only">{{ row[0]["lightness"] }}</th>
+        <th class="sr-only">{{ row[0]["lightness"].toFixed(5) }}</th>
         <td *ngFor="let cell of row; index as j">
           <div>
             <button
