@@ -93,13 +93,13 @@ export class PaletteTableComponent implements OnInit, OnChanges {
   constructor(private cus: ColorUtilService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(`-----OnChanges`);
+    // console.log(`-----OnChanges`);
 
     this.getTableData();
   }
 
   ngOnInit(): void {
-    console.log(`-----OnInit`);
+    // console.log(`-----OnInit`);
     // this.getTableData();
   }
 }
