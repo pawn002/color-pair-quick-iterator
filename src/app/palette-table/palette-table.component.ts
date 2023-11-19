@@ -37,8 +37,10 @@ export class PaletteTableComponent implements OnInit, OnChanges {
 
   @Output() selectedColor = new EventEmitter<TableColorCell>();
 
-  chromaSteps = 70;
-  lightSteps = 50;
+  // lightSteps = 50;
+  // chromaSteps = 70;
+  lightSteps = 5;
+  chromaSteps = 23;
 
   tableHeaders: Array<number> = [];
 
@@ -62,8 +64,8 @@ export class PaletteTableComponent implements OnInit, OnChanges {
   selectColor(rowNum: number, columnNum: number) {
     const targetColor = this.dataStruct[rowNum][columnNum];
 
-    console.log(rowNum, columnNum);
-    console.log(targetColor.color);
+    // console.log(rowNum, columnNum);
+    // console.log(targetColor.color);
 
     this.selectedColor.emit(targetColor);
   }
@@ -91,13 +93,13 @@ export class PaletteTableComponent implements OnInit, OnChanges {
   constructor(private cus: ColorUtilService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(`-----OnChanges`);
+    // console.log(`-----OnChanges`);
 
     this.getTableData();
   }
 
   ngOnInit(): void {
-    console.log(`-----OnInit`);
+    // console.log(`-----OnInit`);
     // this.getTableData();
   }
 }

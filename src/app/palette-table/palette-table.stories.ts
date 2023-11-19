@@ -28,6 +28,6 @@ export const Typical: Story = {
 
 export const Populated: Story = {
   args: {
-    color: 'purple',
+    color: '#ff00ff',
   },
 };
