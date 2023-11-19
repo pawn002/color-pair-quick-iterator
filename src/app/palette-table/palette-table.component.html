@@ -19,6 +19,8 @@
             <button
               [style.backgroundColor]="cell.color ? cell.color : 'transparent'"
               [style.color]="cell.color ? getTextColor(cell.color) : 'black'"
+              [style.borderColor]="cell.deltaE === 0 ? 'white' : 'auto'"
+              [style.backgroundColor]="cell.deltaE === 0 ? 'black' : 'auto'"
               (click)="selectColor(i, j)"
             >
               <span *ngIf="cell.color" class="sr-only">{{ cell.color }}, </span>
