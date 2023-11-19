@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import Color from 'colorjs.io';
 import { to } from 'colorjs.io/fn';
 import { ColorConstructor } from 'colorjs.io/types/src/color';
-import { scaleLinear } from 'd3';
-import { random, reverse, uniqBy } from 'lodash';
+import { scaleLinear, sort } from 'd3';
+import { random, reverse, uniqBy, uniq } from 'lodash';
 import {
   TableColorCell,
   TableData,
@@ -516,17 +516,58 @@ export class ColorUtilService {
         const lightMin = 0;
         const lightInterval = (lightMax - lightMin) / lightSteps;
 
+        // calculate light levels
+        const rawLightLevels = [];
+
+        let lLevel = colorLight;
+        do {
+          rawLightLevels.push(lLevel);
+
+          lLevel = lLevel + lightInterval;
+        } while (lLevel <= lightMax);
+
+        lLevel = colorLight;
+
+        do {
+          rawLightLevels.push(lLevel);
+
+          lLevel = lLevel - lightInterval;
+        } while (lLevel >= lightMin);
+
+        const sortedLightLevels = sort(uniq(rawLightLevels));
+
         const chromaMax = 0.33;
         const chromaMin = 0;
         const chromaInterval = (chromaMax - chromaMin) / chromaSteps;
 
+        // calculate chroma levels
+        const rawChromaLevels = [];
+
+        let cLevel = colorChroma;
+        do {
+          rawChromaLevels.push(cLevel);
+
+          cLevel = cLevel + chromaInterval;
+        } while (cLevel <= chromaMax);
+
+        cLevel = colorChroma;
+
+        do {
+          rawChromaLevels.push(cLevel);
+
+          cLevel = cLevel - chromaInterval;
+        } while (cLevel >= chromaMin);
+
+        const sortedChromaLevels = sort(uniq(rawChromaLevels));
+
         // generate all rows
-        for (let i = 0; i <= lightSteps; i++) {
+        for (let i = 0; i < sortedLightLevels.length; i++) {
           const variantRow: Array<TableColorCell> = [];
 
-          for (let j = 0; j <= chromaSteps; j++) {
-            const targetLightness = parseFloat((i * lightInterval).toFixed(5));
-            const targetChroma = parseFloat((j * chromaInterval).toFixed(5));
+          for (let j = 0; j < sortedChromaLevels.length; j++) {
+            const targetLightness = sortedLightLevels[i];
+
+            const targetChroma = sortedChromaLevels[j];
 
             const variantColor = new Color('oklch', [
               targetLightness,
@@ -565,11 +606,6 @@ export class ColorUtilService {
             variantRow.push(variantObj);
           }
 
-          // variantsCollection.push(
-          //   uniqBy(variantRow, (e) => {
-          //     return e.color;
-          //   })
-          // );
           variantsCollection.push(variantRow);
         }
       } else {
