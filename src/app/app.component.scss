@@ -87,13 +87,15 @@
     }
 
     .accordion-content {
+      border: 2px solid white;
+      box-sizing: border-box;
       position: relative;
       margin-top: 6px;
-      max-width: 100%;
+      width: 100%;
       // height: fit-content;
       overflow: auto;
       // justify-content: center;
-      padding-bottom: 4px;
+      // padding: 0 4px 4px 4px;
     }
   }
 
