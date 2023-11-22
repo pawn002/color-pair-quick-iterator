@@ -35,31 +35,14 @@
       ></app-copy-to-clipboard-button>
     </div>
 
-    <div class="accordion-group">
-      <h4 class="accordion-header-and-control">
-        <button
-          (click)="toggleAccordion($event, 'sect1')"
-          type="button"
-          aria-expanded="false"
-          aria-controls="sect1"
-          id="accordion1id"
-        >
-          <span>Foreground LCH Limits</span>
-        </button>
-      </h4>
-      <div
-        class="accordion-content"
-        role="region"
-        aria-labelledby="accordion1id"
-        id="sect1"
-        hidden
-      >
-        <app-palette-table
-          [color]="colorPickerOneSelectedColor"
-          (selectedColor)="handleColorPaletteButtonEvent('One', $event)"
-        ></app-palette-table>
-      </div>
-    </div>
+    <details class="pallette-viz-container">
+      <summary>Foreground LCH Limits</summary>
+
+      <app-palette-table
+        [color]="colorPickerOneSelectedColor"
+        (selectedColor)="handleColorPaletteButtonEvent('One', $event)"
+      ></app-palette-table>
+    </details>
 
     <h3>Background Color</h3>
 
@@ -85,31 +68,14 @@
       ></app-copy-to-clipboard-button>
     </div>
 
-    <div class="accordion-group">
-      <h4 class="accordion-header-and-control">
-        <button
-          (click)="toggleAccordion($event, 'sect2')"
-          type="button"
-          aria-expanded="false"
-          aria-controls="sect2"
-          id="accordion2id"
-        >
-          <span>Background LCH Limits</span>
-        </button>
-      </h4>
-      <div
-        id="sect2"
-        class="accordion-content"
-        role="region"
-        aria-labelledby="accordion2id"
-        hidden
-      >
-        <app-palette-table
-          [color]="colorPickerTwoSelectedColor"
-          (selectedColor)="handleColorPaletteButtonEvent('Two', $event)"
-        ></app-palette-table>
-      </div>
-    </div>
+    <details class="pallette-viz-container">
+      <summary>Background LCH Limits</summary>
+
+      <app-palette-table
+        [color]="colorPickerTwoSelectedColor"
+        (selectedColor)="handleColorPaletteButtonEvent('Two', $event)"
+      ></app-palette-table>
+    </details>
   </section>
 
   <section class="quick-actions">
