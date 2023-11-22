@@ -1,1 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 30" x="0px" y="0px"><path fill-rule="evenodd" d="M384,608 L384,624 L368,624 L368,608 L384,608 Z M370,622 L382,622 L382,610 L370,610 L370,622 Z M362,602 L362,614 L366,614 L366,616 L360,616 L360,600 L376,600 L376,606 L374,606 L374,602 L362,602 Z" transform="translate(-360 -600)"/><text x="0" y="39" fill="#000000" font-size="5px" font-weight="bold" font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">Created by Andrejs Kirma</text><text x="0" y="44" fill="#000000" font-size="5px" font-weight="bold" font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">from the Noun Project</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 30" x="0px" y="0px">
+  <path
+    fill-rule="evenodd"
+    d="M384,608 L384,624 L368,624 L368,608 L384,608 Z M370,622 L382,622 L382,610 L370,610 L370,622 Z M362,602 L362,614 L366,614 L366,616 L360,616 L360,600 L376,600 L376,606 L374,606 L374,602 L362,602 Z"
+    transform="translate(-360 -600)"
+  />
+  <text
+    x="0"
+    y="39"
+    fill="#000000"
+    font-size="5px"
+    font-weight="bold"
+    font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif"
+  >
+    Created by Andrejs Kirma
+  </text>
+  <text
+    x="0"
+    y="44"
+    fill="#000000"
+    font-size="5px"
+    font-weight="bold"
+    font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif"
+  >
+    from the Noun Project
+  </text>
+</svg>
