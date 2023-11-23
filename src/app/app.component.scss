@@ -47,12 +47,9 @@
 
   .pallette-viz-container {
     // padding: 0 2px;
-    max-width: 100%;
-    overflow: auto;
 
     summary {
-      padding: 0 2px;
-
+      padding: 0 0.5ch;
       color: var(--min-body-text-black);
       border-radius: 5px;
       font-family: var(--bodyFont);
@@ -61,10 +58,17 @@
       margin-bottom: 0.4em;
       min-height: var(--minHitDimensionAA);
       min-width: var(--minHitDimensionAA);
+      line-height: 1.6em;
 
       &:hover {
         box-shadow: 0 4px 0 0 #8c897e;
       }
+    }
+
+    .content {
+      max-width: 100%;
+      overflow: auto;
+      margin: 0 0.9rem;
     }
   }
 

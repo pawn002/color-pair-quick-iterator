@@ -38,10 +38,12 @@
     <details class="pallette-viz-container">
       <summary>Foreground LCH Limits</summary>
 
-      <app-palette-table
-        [color]="colorPickerOneSelectedColor"
-        (selectedColor)="handleColorPaletteButtonEvent('One', $event)"
-      ></app-palette-table>
+      <div class="content">
+        <app-palette-table
+          [color]="colorPickerOneSelectedColor"
+          (selectedColor)="handleColorPaletteButtonEvent('One', $event)"
+        ></app-palette-table>
+      </div>
     </details>
 
     <h3>Background Color</h3>
@@ -71,10 +73,12 @@
     <details class="pallette-viz-container">
       <summary>Background LCH Limits</summary>
 
-      <app-palette-table
-        [color]="colorPickerTwoSelectedColor"
-        (selectedColor)="handleColorPaletteButtonEvent('Two', $event)"
-      ></app-palette-table>
+      <div class="content">
+        <app-palette-table
+          [color]="colorPickerTwoSelectedColor"
+          (selectedColor)="handleColorPaletteButtonEvent('Two', $event)"
+        ></app-palette-table>
+      </div>
     </details>
   </section>
 
