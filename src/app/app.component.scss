@@ -61,7 +61,7 @@
       line-height: 1.6em;
 
       &:hover {
-        box-shadow: 0 4px 0 0 #8c897e;
+        box-shadow: 0 4px 0 0 var(--ui-shadow-color);
       }
     }
 
@@ -79,9 +79,8 @@
     // background-color: #d0c6a1;
 
     button {
-      color: var(--min-text-on-white);
+      color: var(--app-black);
       background-color: var(--app-white);
-      // background-color: var(--background-color);
       border: transparent 2px solid;
       box-sizing: border-box;
       position: relative;
@@ -95,7 +94,7 @@
       min-height: var(--minHitDimensionAA);
 
       &:hover {
-        box-shadow: 0 4px 0 0 #8c897e;
+        box-shadow: 0 4px 0 0 var(--ui-shadow-color);
       }
 
       svg {
@@ -144,7 +143,7 @@
         min-height: var(--minHitDimensionAA);
 
         &:hover {
-          box-shadow: 0 4px 0 0 #8c897e;
+          box-shadow: 0 4px 0 0 var(--ui-shadow-color);
         }
       }
     }
