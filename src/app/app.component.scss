@@ -61,7 +61,7 @@
       line-height: 1.6em;
 
       &:hover {
-        box-shadow: 0 4px 0 0 #8c897e;
+        box-shadow: 0 4px 0 0 var(--ui-shadow-color);
       }
     }
 
@@ -95,11 +95,11 @@
       min-height: var(--minHitDimensionAA);
 
       &:hover {
-        box-shadow: 0 4px 0 0 #8c897e;
+        box-shadow: 0 4px 0 0 var(--ui-shadow-color);
       }
 
       svg {
-        fill: var(--app-black);
+        fill: var(--min-text-on-white);
         transform: rotateZ(90deg);
 
         height: auto;
@@ -144,7 +144,7 @@
         min-height: var(--minHitDimensionAA);
 
         &:hover {
-          box-shadow: 0 4px 0 0 #8c897e;
+          box-shadow: 0 4px 0 0 var(--ui-shadow-color);
         }
       }
     }

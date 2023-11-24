@@ -10,14 +10,14 @@
 
 /* Vars */
 :root {
-  --background-color: #efe5bf;
-  --ui-shadow-color: #978e6a;
-  --app-white: #fff;
-  --min-text-on-white: #335a4c;
-  --app-black: #002a1e;
-  --ideal-body-text-black: #093327;
-  --min-body-text-black: #335a4c;
-  --min-large-text-black: #5c8475;
+  --background-color: #ede3bd;
+  --ui-shadow-color: #948b67;
+  --app-white: #fffef8;
+  --min-text-on-white: #776e4c;
+  --app-black: #292100;
+  --ideal-body-text-black: var(--app-black);
+  --min-body-text-black: #584f2e;
+  --min-large-text-black: #837a57;
 
   // --headerFont: "Atkinson Hyperlegible", sans-serif;
   --headerFont: "Source Code Pro Variable", sans-serif;
@@ -111,7 +111,7 @@ th {
 td {
   font-family: var(--bodyFont);
   font-size: var(--minBodyTextSize);
-  color: var(--min-body-text-black);
+  color: var(--ideal-body-text-black);
   font-style: normal;
   font-weight: 400;
   max-width: 40ch;
@@ -125,7 +125,7 @@ td {
 p {
   font-family: var(--bodyFont);
   font-size: var(--minBodyTextSize);
-  color: var(--min-body-text-black);
+  color: var(--ideal-body-text-black);
   font-style: normal;
   font-weight: 400;
   max-width: 40ch;
