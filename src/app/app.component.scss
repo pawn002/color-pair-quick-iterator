@@ -79,9 +79,8 @@
     // background-color: #d0c6a1;
 
     button {
-      color: var(--min-text-on-white);
+      color: var(--app-black);
       background-color: var(--app-white);
-      // background-color: var(--background-color);
       border: transparent 2px solid;
       box-sizing: border-box;
       position: relative;
@@ -99,7 +98,7 @@
       }
 
       svg {
-        fill: var(--min-text-on-white);
+        fill: var(--app-black);
         transform: rotateZ(90deg);
 
         height: auto;
