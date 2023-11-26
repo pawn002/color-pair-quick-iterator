@@ -16,19 +16,21 @@ export class CopyToClipboardButtonComponent {
 
   async copyToClipboard(): Promise<void> {
     if (this.color) {
+      const colorSansHex = this.color.replace('#', '');
+
       try {
-        await navigator.clipboard.writeText(this.color);
+        await navigator.clipboard.writeText(colorSansHex);
 
         this.copyEvent.emit({
           copied: true,
-          color: this.color,
+          color: colorSansHex,
         });
 
         // console.log(this.color, 'copied to clipboard');
       } catch (err) {
         this.copyEvent.emit({
           copied: false,
-          color: this.color,
+          color: colorSansHex,
         });
 
         console.error('Failed to copy text: ', err);
