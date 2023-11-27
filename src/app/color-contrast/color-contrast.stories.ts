@@ -19,7 +19,7 @@ const meta: Meta<ColorContrastComponent> = {
       control: 'color',
     },
     contrastType: {
-      options: ['apca', 'bpca'],
+      options: ['apca', 'bpca', 'apca object'],
       control: { type: 'radio' },
     },
   },
@@ -58,5 +58,13 @@ export const WCAGEnhancedEdgeCase: Story = {
     colorOne: '#928f8f',
     colorTwo: 'white',
     contrastType: 'bpca',
+  },
+};
+
+export const ObjectContrast: Story = {
+  args: {
+    colorOne: '#928f8f',
+    colorTwo: 'white',
+    contrastType: 'apca object',
   },
 };

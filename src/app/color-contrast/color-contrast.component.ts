@@ -10,6 +10,7 @@ import {
   ColorMetricsService,
   ContrastType,
 } from '../services/color-metrics.service';
+import { ColorUtilService } from '../services/color-util.service';
 
 export class ContrastObject {
   score: number | null = null;
@@ -24,13 +25,16 @@ export class ContrastObject {
 export class ColorContrastComponent implements OnChanges {
   @Input() colorOne: string | null = null;
   @Input() colorTwo: string | null = null;
-  @Input() contrastType: ContrastType | null = null;
+  @Input() contrastType: ContrastType | 'apca object' | null = null;
 
   @Output() contrast = new EventEmitter<ContrastObject>();
 
   contrastScore: number | null = null;
 
-  constructor(private cms: ColorMetricsService) {}
+  constructor(
+    private cms: ColorMetricsService,
+    private cus: ColorUtilService
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     // console.log(changes);
@@ -39,10 +43,17 @@ export class ColorContrastComponent implements OnChanges {
       const score = this.cms.getContrast(
         this.colorOne,
         this.colorTwo,
-        this.contrastType
+        this.contrastType === 'apca object' ? 'apca' : this.contrastType
       );
 
       this.contrastScore = score;
+
+      if (score) {
+        this.contrastScore =
+          this.contrastType === 'apca object'
+            ? this.cus.getMinObjectDimension(score)
+            : this.contrastScore;
+      }
     } else {
       console.warn('contrast comp has incomplete bindings');
     }
