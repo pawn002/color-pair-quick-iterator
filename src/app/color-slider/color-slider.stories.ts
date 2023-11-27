@@ -31,16 +31,19 @@ export const Typical: Story = {
 export const RgbRed: Story = {
   args: {
     color: 'red',
+    constantChroma: true,
   },
 };
 export const RgbGreen: Story = {
   args: {
     color: 'green',
+    constantChroma: true,
   },
 };
 export const RgbBlue: Story = {
   args: {
     color: 'blue',
+    constantChroma: true,
   },
 };
 
