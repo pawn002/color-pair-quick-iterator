@@ -23,7 +23,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   colorPickerTwoSelectedColor: string | null = null;
   colorPickerTwoComparedColor: string | null = null;
 
-  contrastType: ContrastType = 'apca';
+  contrastType: ContrastType | 'apca object' = 'apca';
 
   resetSlider: ResetObject | null = null;
 
@@ -76,11 +76,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     });
   }
 
-  setContrastType(type: ContrastType) {
-    // const inputElement = event.target as HTMLInputElement;
-    // const checked = inputElement.checked;
-
-    this.contrastType = type;
+  radioChange(changeTo: ContrastType | 'apca object') {
+    console.log(changeTo);
+    this.contrastType = changeTo;
   }
 
   toggleContrastType(event: Event) {

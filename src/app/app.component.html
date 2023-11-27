@@ -142,7 +142,13 @@
                 Metadata section under Differences.</span
               >
             </label>
-            <input type="radio" name="contrastType" id="ct-apca" />
+            <input
+              type="radio"
+              name="contrastType"
+              id="ct-apca"
+              (change)="radioChange('apca')"
+              checked
+            />
           </div>
           <div class="radio-group">
             <label for="ct-bpca"
@@ -152,7 +158,12 @@
                 Metadata section under Differences.</span
               >
             </label>
-            <input type="radio" name="contrastType" id="ct-bpca" />
+            <input
+              type="radio"
+              name="contrastType"
+              id="ct-bpca"
+              (change)="radioChange('bpca')"
+            />
           </div>
           <div class="radio-group">
             <label for="ct-apca-object"
@@ -163,7 +174,12 @@
                 Metadata section under Differences.</span
               >
             </label>
-            <input type="radio" name="contrastType" id="ct-apca-object" />
+            <input
+              type="radio"
+              name="contrastType"
+              id="ct-apca-object"
+              (change)="radioChange('apca object')"
+            />
           </div>
         </div>
       </div>
