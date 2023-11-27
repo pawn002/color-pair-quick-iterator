@@ -76,6 +76,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     });
   }
 
+  setContrastType(type: ContrastType) {
+    // const inputElement = event.target as HTMLInputElement;
+    // const checked = inputElement.checked;
+
+    this.contrastType = type;
+  }
+
   toggleContrastType(event: Event) {
     const inputElement = event.target as HTMLInputElement;
     const checked = inputElement.checked;

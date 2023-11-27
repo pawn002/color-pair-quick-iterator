@@ -1,8 +1,13 @@
 .app-container {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
+  // align-items: center;
   padding: var(--fluidPadding) var(--fluidPadding) 0 var(--fluidPadding);
   background-color: var(--background-color);
+  max-width: 400px;
 
   h2 {
     text-align: center;
@@ -111,39 +116,72 @@
 
   .options {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
 
     h2 {
-      margin-bottom: 0;
+      // margin-bottom: 0;
     }
 
-    p {
-      // text-align: center;
-      // width: 100%;
-    }
-
-    .checkbox-group {
+    .radio-section {
       display: flex;
-      flex-direction: row-reverse;
-      justify-content: flex-end;
-      align-items: center;
-      flex-grow: 1;
+      flex-wrap: wrap;
+      // flex-direction: column;
+      gap: 0.25ch;
 
-      label {
-        font-size: var(--minBodyTextSize);
-        font-family: var(--bodyFont);
-        color: var(--ideal-body-text-black);
+      .radio-group {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+        align-items: center;
+
+        label {
+          font-size: var(--minBodyTextSize);
+          font-family: var(--bodyFont);
+          color: var(--ideal-body-text-black);
+        }
+
+        input {
+          margin: 11px;
+          min-width: var(--minHitDimensionAA);
+          min-height: var(--minHitDimensionAA);
+
+          &:hover {
+            box-shadow: 0 4px 0 0 var(--ui-shadow-color);
+          }
+        }
       }
+    }
 
-      input {
-        margin: 11px;
-        min-width: var(--minHitDimensionAA);
-        min-height: var(--minHitDimensionAA);
+    .checkbox-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2ch;
 
-        &:hover {
-          box-shadow: 0 4px 0 0 var(--ui-shadow-color);
+      .checkbox-group {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+        align-items: center;
+        flex-grow: 1;
+        // margin-left: 0.25rem;
+
+        label {
+          font-size: var(--minBodyTextSize);
+          font-family: var(--bodyFont);
+          color: var(--ideal-body-text-black);
+        }
+
+        input {
+          margin: 11px;
+          min-width: var(--minHitDimensionAA);
+          min-height: var(--minHitDimensionAA);
+
+          &:hover {
+            box-shadow: 0 4px 0 0 var(--ui-shadow-color);
+          }
         }
       }
     }
@@ -156,6 +194,10 @@
   }
 
   .instructions {
+    h2 {
+      margin-bottom: 1.1em;
+    }
+
     p,
     li {
       margin: 0 11px 0 0;
@@ -172,6 +214,9 @@
   }
 
   .notes {
+    h2 {
+      margin-bottom: 1.1em;
+    }
     p {
       margin: 0 11px 1.15em 0;
       // flex-grow: 1;
@@ -190,6 +235,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    h2 {
+      margin-bottom: 1.1em;
+    }
 
     h2,
     p {

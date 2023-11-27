@@ -128,31 +128,60 @@
 
   <section class="options">
     <h2>Options</h2>
+
     <div class="options">
-      <div class="checkbox-group">
-        <label for="option-score-toggle"
-          >Display WCAG 2 compatible value<span class="sr-only"
-            >; this affects a visual element not percievable to screenreaders
-            for good UX—same value is obtainable on Color Metadata section under
-            Differences.</span
-          >
-        </label>
-        <input
-          type="checkbox"
-          name="Contrast Score Type Toggle"
-          id="option-score-toggle"
-          (change)="toggleContrastType($event)"
-        />
+      <div>
+        <h3>Display Value</h3>
+
+        <div class="radio-section">
+          <div class="radio-group">
+            <label for="ct-apca"
+              >Perceptual<span class="sr-only"
+                >; this affects a visual element not percievable to
+                screenreaders for good UX—same value is obtainable on Color
+                Metadata section under Differences.</span
+              >
+            </label>
+            <input type="radio" name="contrastType" id="ct-apca" />
+          </div>
+          <div class="radio-group">
+            <label for="ct-bpca"
+              >WCAG 2 compatible<span class="sr-only"
+                >; this affects a visual element not percievable to
+                screenreaders for good UX—same value is obtainable on Color
+                Metadata section under Differences.</span
+              >
+            </label>
+            <input type="radio" name="contrastType" id="ct-bpca" />
+          </div>
+          <div class="radio-group">
+            <label for="ct-apca-object"
+              >Object
+              <span class="sr-only"
+                >; this affects a visual element not percievable to
+                screenreaders for good UX—same value is obtainable on Color
+                Metadata section under Differences.</span
+              >
+            </label>
+            <input type="radio" name="contrastType" id="ct-apca-object" />
+          </div>
+        </div>
       </div>
 
-      <div class="checkbox-group">
-        <label for="option-const-chroma">Constant chroma</label>
-        <input
-          type="checkbox"
-          name="Constant Chroma Toggle"
-          id="option-const-chroma"
-          (change)="toggleConstantChroma($event)"
-        />
+      <div>
+        <h3>Color Sliders</h3>
+
+        <div class="checkbox-section">
+          <div class="checkbox-group">
+            <label for="option-const-chroma">Constant chroma</label>
+            <input
+              type="checkbox"
+              name="Constant Chroma Toggle"
+              id="option-const-chroma"
+              (change)="toggleConstantChroma($event)"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </section>
