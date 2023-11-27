@@ -4,7 +4,7 @@
   // gives input more room on left and right ends to be hit more successfully
   padding: 0 calc(var(--minHitDimensionAAA) / 2);
   align-items: center;
-  background-color: white;
+  background-color: var(--app-white);
 
   &:hover {
     box-shadow: 0 4px 0 0 var(--ui-shadow-color);
@@ -50,6 +50,6 @@
     border-radius: 100%;
     width: 15px;
     height: 15px;
-    border: 15px solid black;
+    border: 15px solid var(--app-black);
   }
 }
