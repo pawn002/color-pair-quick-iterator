@@ -29,8 +29,7 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   debug: boolean = false;
   devColorVariant: string | null = null;
 
-  // slideInterval: number | null = 0.001;
-  slideInterval: number | null = 0.005;
+  slideInterval: number | null = null;
   slideMin: number | null = null;
   slideMax: number | null = null;
   initValue: number | null = null;
@@ -66,6 +65,8 @@ export class ColorSliderComponent implements OnInit, OnChanges {
 
         this.slideMax = rangeObject.lightMax;
       }
+
+      this.slideInterval = (this.slideMax - this.slideMin) / 80;
 
       const lightnessIndex = 0;
       const initialSlideValue = rangeObject.originalCoords[lightnessIndex];
