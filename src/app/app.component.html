@@ -173,6 +173,34 @@
 
   <hr />
 
+  <section class="instructions">
+    <h2>Instructions</h2>
+
+    <details>
+      <summary>How to use this app.</summary>
+
+      <div class="content">
+        <p id="quick-start">
+          <span class="visual-header">Quick Start:</span>
+          Input a color for both Foreground and Background Color using the color
+          inputs at the start of each color section. You can then:
+        </p>
+        <ul>
+          <li>
+            Use the slider inputs to adjust your inputted colors light and dark
+            until you have your desired combination of contrast and tone.
+          </li>
+          <li>
+            Use the Copy to Clipboard button to copy each color to the clipboard
+            for use in other applications.
+          </li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <hr />
+
   <section class="notes">
     <h2>Notes</h2>
 
@@ -183,8 +211,10 @@
         <p id="notes-lch-limits">
           <span class="visual-header">LCH Limits:</span>
           This feature displays a collection of different buttons showing
-          possible variants of your selected color limited by the sRGB color
-          gamut. The visualization is built using a
+          possible variants of your selected color in the sRGB color gamut
+          allowing a user to see what different hues are capable of e.g. the
+          strongest yellow is only possible a high lightness level. The
+          visualization is built using a
           <code>table</code> element to provide an equitable experience in
           choosing colors based on lightness and chroma.
         </p>
