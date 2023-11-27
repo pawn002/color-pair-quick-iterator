@@ -156,9 +156,15 @@
   }
 
   .notes {
+    // border: 2px solid black;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    // align-items: center;
+    // width: 100%;
+
+    // * {
+    //   flex-grow: 1;
+    // }
 
     p {
       margin: 0 11px 1.15em 0;

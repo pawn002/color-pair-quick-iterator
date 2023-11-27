@@ -126,17 +126,6 @@
 
   <hr />
 
-  <section class="metadata">
-    <h2>Color Metadata</h2>
-
-    <app-metadata
-      [colorOne]="colorPickerOneComparedColor"
-      [colorTwo]="colorPickerTwoComparedColor"
-    ></app-metadata>
-  </section>
-
-  <hr />
-
   <section class="options">
     <h2>Options</h2>
     <div class="options">
@@ -170,55 +159,73 @@
 
   <hr />
 
+  <section class="metadata">
+    <h2>Color Metadata</h2>
+    <details>
+      <summary>Descriptive data about your inputted colors.</summary>
+
+      <app-metadata
+        [colorOne]="colorPickerOneComparedColor"
+        [colorTwo]="colorPickerTwoComparedColor"
+      ></app-metadata>
+    </details>
+  </section>
+
+  <hr />
+
   <section class="notes">
     <h2>Notes</h2>
 
-    <p id="notes-lch-limits">
-      <span class="visual-header">LCH Limits:</span>
-      This feature displays a collection of different buttons showing possible
-      variants of your selected color limited by the sRGB color gamut. The
-      visualization is built using a
-      <code>table</code> element to provide an equitable experience in choosing
-      colors based on lightness and chroma.
-    </p>
-    <p id="notes-object">
-      <span class="visual-header">Object:</span> A readout that shows two
-      different values, a number in pixels that the current contrast level
-      supports, and 'invisible' when the current contrast level is too low to
-      support <strong>any</strong> object.
-    </p>
-    <p id="notes-perceptual-contrast">
-      <span class="visual-header"> Perceptual contrast:</span> Score that better
-      gauges contrast than WCAG 2 in the creation of inclusive visual designs.
-      For more information on the value used for Perceptual Contrast, refer to
-      Myndex article
-      <a href="https://git.apcacontrast.com/documentation/WhyAPCA.html"
-        >Why APCA?</a
-      >
-    </p>
-    <p id="notes-wcag2-compat">
-      <span class="visual-header">WCAG 2 compatible:</span> A score compatible
-      with use for WCAG 2.x success criteria. This score meets or exceeds WCAG 2
-      scores to better include those with atypical vision.
-    </p>
-    <p id="notes-wcag2">
-      <span class="visual-header">WCAG 2:</span> Scores that are included for
-      reference only—do not use this score for judging Accessible Contrast.
-    </p>
+    <details>
+      <summary>Details about app features.</summary>
 
-    <p id="notes-display-wcag2">
-      <span class="visual-header">Display WCAG 2 compatible value:</span>
-      Option that swaps out perceptual contrast score visually displayed at top
-      of the app. Screen reader users can access the same value regardless of
-      this option in the Differences table located in the Color Metadata
-      section.
-    </p>
-    <p id="notes-constant-chroma">
-      <span class="visual-header">Constant chroma:</span>
-      Option that forces the color sliders to limit light and dark variation of
-      colors to tints and shades that have the same chroma and hue of the
-      inputted color maintaining the objective identity of your input color.
-    </p>
+      <p id="notes-lch-limits">
+        <span class="visual-header">LCH Limits:</span>
+        This feature displays a collection of different buttons showing possible
+        variants of your selected color limited by the sRGB color gamut. The
+        visualization is built using a
+        <code>table</code> element to provide an equitable experience in
+        choosing colors based on lightness and chroma.
+      </p>
+      <p id="notes-object">
+        <span class="visual-header">Object:</span> A readout that shows two
+        different values, a number in pixels that the current contrast level
+        supports, and 'invisible' when the current contrast level is too low to
+        support <strong>any</strong> object.
+      </p>
+      <p id="notes-perceptual-contrast">
+        <span class="visual-header"> Perceptual contrast:</span> Score that
+        better gauges contrast than WCAG 2 in the creation of inclusive visual
+        designs. For more information on the value used for Perceptual Contrast,
+        refer to Myndex article
+        <a href="https://git.apcacontrast.com/documentation/WhyAPCA.html"
+          >Why APCA?</a
+        >
+      </p>
+      <p id="notes-wcag2-compat">
+        <span class="visual-header">WCAG 2 compatible:</span> A score compatible
+        with use for WCAG 2.x success criteria. This score meets or exceeds WCAG
+        2 scores to better include those with atypical vision.
+      </p>
+      <p id="notes-wcag2">
+        <span class="visual-header">WCAG 2:</span> Scores that are included for
+        reference only—do not use this score for judging Accessible Contrast.
+      </p>
+
+      <p id="notes-display-wcag2">
+        <span class="visual-header">Display WCAG 2 compatible value:</span>
+        Option that swaps out perceptual contrast score visually displayed at
+        top of the app. Screen reader users can access the same value regardless
+        of this option in the Differences table located in the Color Metadata
+        section.
+      </p>
+      <p id="notes-constant-chroma">
+        <span class="visual-header">Constant chroma:</span>
+        Option that forces the color sliders to limit light and dark variation
+        of colors to tints and shades that have the same chroma and hue of the
+        inputted color maintaining the objective identity of your input color.
+      </p>
+    </details>
   </section>
 
   <hr />
