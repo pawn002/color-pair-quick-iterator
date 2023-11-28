@@ -139,7 +139,7 @@
         // width: 100%;
 
         label {
-          font-size: var(--minBodyTextSize);
+          font-size: var(--minTextSize);
           font-family: var(--bodyFont);
           color: var(--ideal-body-text-black);
         }
@@ -157,26 +157,19 @@
     }
 
     .checkbox-section {
-      // border: coral 1px solid;
       display: flex;
       flex-wrap: wrap;
       align-items: flex-start;
-      // width: 100%;
       flex-grow: 1;
-      // gap: 2ch;
 
       .checkbox-group {
         display: flex;
         flex-direction: row-reverse;
         justify-content: flex-end;
         align-items: center;
-        // width: 100%;
-
-        // flex-grow: 1;
-        // margin-left: 0.25rem;
 
         label {
-          font-size: var(--minBodyTextSize);
+          font-size: var(--minTextSize);
           font-family: var(--bodyFont);
           color: var(--ideal-body-text-black);
         }
