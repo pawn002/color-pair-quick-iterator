@@ -2,7 +2,7 @@
   box-sizing: border-box;
   display: flex;
   // gives input more room on left and right ends to be hit more successfully
-  padding: 0 calc(var(--minHitDimensionAAA) / 2);
+  padding: 0 calc(var(--min-hit-dimension-aaa) / 2);
   align-items: center;
   background-color: var(--app-white);
 
@@ -12,7 +12,7 @@
 
   input {
     flex-grow: 1;
-    min-height: var(--minHitDimensionAAA);
+    min-height: var(--min-hit-dimension-aaa);
     height: 50px;
     width: 100%;
     margin: 0;
@@ -20,15 +20,15 @@
 
   .special-case {
     flex-grow: 1;
-    min-height: var(--minHitDimensionAAA);
+    min-height: var(--min-hit-dimension-aaa);
     height: 50px;
     display: flex;
     align-items: center;
 
     // TODO: what do custom input text need to be? <p>?
     div {
-      font-family: var(--monoFont);
-      font-size: var(--minBodyTextSize);
+      font-family: var(--mono-font);
+      font-size: var(--min-body-text-size);
       font-style: italic;
       font-weight: 400;
     }

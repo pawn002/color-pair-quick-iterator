@@ -5,7 +5,7 @@
   display: flex;
   flex-direction: column;
   // align-items: center;
-  padding: var(--fluidPadding) var(--fluidPadding) 0 var(--fluidPadding);
+  padding: var(--fluid-padding) var(--fluid-padding) 0 var(--fluid-padding);
   background-color: var(--background-color);
   max-width: 400px;
 
@@ -58,12 +58,12 @@
       padding: 0 0.5ch;
       color: var(--min-body-text-black);
       border-radius: 5px;
-      font-family: var(--bodyFont);
-      font-size: var(--minTextSize);
+      font-family: var(--body-font);
+      font-size: var(--min-text-size);
       font-style: italic;
       margin-bottom: 0.4em;
-      min-height: var(--minHitDimensionAA);
-      min-width: var(--minHitDimensionAA);
+      min-height: var(--min-hit-dimension-aa);
+      min-width: var(--min-hit-dimension-aa);
       line-height: 1.6em;
 
       &:hover {
@@ -96,8 +96,8 @@
       border-radius: 5px;
       font-style: italic;
 
-      min-width: var(--minHitDimensionAA);
-      min-height: var(--minHitDimensionAA);
+      min-width: var(--min-hit-dimension-aa);
+      min-height: var(--min-hit-dimension-aa);
 
       &:hover {
         box-shadow: 0 4px 0 0 var(--ui-shadow-color);
@@ -142,8 +142,8 @@
         gap: 0.8ch;
 
         label {
-          font-size: var(--minTextSize);
-          font-family: var(--bodyFont);
+          font-size: var(--min-text-size);
+          font-family: var(--body-font);
           color: var(--ideal-body-text-black);
         }
 
@@ -151,8 +151,8 @@
           --visual-padding: 28px;
           margin: calc(var(--visual-padding) / 2) 0
             calc(var(--visual-padding) / 2) calc(var(--visual-padding) / 2);
-          width: calc(var(--minHitDimensionAAA) - var(--visual-padding));
-          height: calc(var(--minHitDimensionAAA) - var(--visual-padding));
+          width: calc(var(--min-hit-dimension-aaa) - var(--visual-padding));
+          height: calc(var(--min-hit-dimension-aaa) - var(--visual-padding));
 
           &:hover {
             box-shadow: 0 4px 0 0 var(--ui-shadow-color);
@@ -180,8 +180,8 @@
         gap: 0.8ch;
 
         label {
-          font-size: var(--minTextSize);
-          font-family: var(--bodyFont);
+          font-size: var(--min-text-size);
+          font-family: var(--body-font);
           color: var(--ideal-body-text-black);
         }
 
@@ -189,8 +189,8 @@
           --visual-padding: 28px;
           margin: calc(var(--visual-padding) / 2) 0
             calc(var(--visual-padding) / 2) calc(var(--visual-padding) / 2);
-          width: calc(var(--minHitDimensionAAA) - var(--visual-padding));
-          height: calc(var(--minHitDimensionAAA) - var(--visual-padding));
+          width: calc(var(--min-hit-dimension-aaa) - var(--visual-padding));
+          height: calc(var(--min-hit-dimension-aaa) - var(--visual-padding));
 
           &:hover {
             box-shadow: 0 4px 0 0 var(--ui-shadow-color);
@@ -256,7 +256,7 @@
     h2,
     p {
       // margin: 1.15em 11px 1.15em 0;
-      // font-size: var(--minTextSize);
+      // font-size: var(--min-text-size);
       // width: 100%;
     }
   }
