@@ -118,7 +118,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    // align-items: center;
+    align-items: center;
     // flex-wrap: wrap;
 
     h2 {
@@ -129,13 +129,15 @@
       display: flex;
       flex-wrap: wrap;
       // flex-direction: column;
-      gap: 0.25ch;
+      // justify-content: center;
+      // gap: 2.5ch;
 
       .radio-group {
         display: flex;
         flex-direction: row-reverse;
         justify-content: flex-end;
         align-items: center;
+        gap: 0.8ch;
         // width: 100%;
 
         label {
@@ -145,9 +147,11 @@
         }
 
         input {
-          margin: 11px;
-          min-width: var(--minHitDimensionAA);
-          min-height: var(--minHitDimensionAA);
+          --visual-padding: 28px;
+          margin: calc(var(--visual-padding) / 2) 0
+            calc(var(--visual-padding) / 2) calc(var(--visual-padding) / 2);
+          width: calc(var(--minHitDimensionAAA) - var(--visual-padding));
+          height: calc(var(--minHitDimensionAAA) - var(--visual-padding));
 
           &:hover {
             box-shadow: 0 4px 0 0 var(--ui-shadow-color);
@@ -158,15 +162,17 @@
 
     .checkbox-section {
       display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      flex-grow: 1;
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.8ch;
 
       .checkbox-group {
         display: flex;
         flex-direction: row-reverse;
         justify-content: flex-end;
         align-items: center;
+        gap: 0.8ch;
 
         label {
           font-size: var(--minTextSize);
@@ -175,9 +181,11 @@
         }
 
         input {
-          margin: 11px;
-          min-width: var(--minHitDimensionAA);
-          min-height: var(--minHitDimensionAA);
+          --visual-padding: 28px;
+          margin: calc(var(--visual-padding) / 2) 0
+            calc(var(--visual-padding) / 2) calc(var(--visual-padding) / 2);
+          width: calc(var(--minHitDimensionAAA) - var(--visual-padding));
+          height: calc(var(--minHitDimensionAAA) - var(--visual-padding));
 
           &:hover {
             box-shadow: 0 4px 0 0 var(--ui-shadow-color);
