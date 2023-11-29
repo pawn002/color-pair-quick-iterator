@@ -19,21 +19,18 @@
   --min-body-text-black: #584f2e;
   --min-large-text-black: #837a57;
 
-  // --headerFont: "Atkinson Hyperlegible", sans-serif;
-  --headerFont: "Source Code Pro Variable", sans-serif;
-  --bodyFont: "Atkinson Hyperlegible", sans-serif;
-  --monoFont: "Source Code Pro Variable", sans-serif;
+  --header-font: "Source Code Pro Variable", sans-serif;
+  --body-font: "Atkinson Hyperlegible", sans-serif;
+  --mono-font: "Source Code Pro Variable", sans-serif;
 
   // Assuming 1rem = 16px. . .
-  --minTextSize: 0.8125rem;
-  --minBodyTextSize: 1rem;
-  --largeTextBoldSize: 1.1875rem;
-  --largeTextRegularSize: 1.1875rem;
+  --min-text-size: 0.8125rem;
+  --min-body-text-size: 1rem;
 
-  --minHitDimensionAAA: 2.75rem;
-  --minHitDimensionAA: 1.375rem;
+  --min-hit-dimension-aaa: 2.75rem;
+  --min-hit-dimension-aa: 1.375rem;
 
-  --fluidPadding: clamp(0.313rem, 4.5vw + -0.25rem, 2rem);
+  --fluid-padding: clamp(0.313rem, 4.5vw + -0.25rem, 2rem);
 }
 
 body {
@@ -67,13 +64,13 @@ th {
 }
 
 h1 {
-  font-family: var(--headerFont);
+  font-family: var(--header-font);
   font-size: 1.2rem;
   font-style: normal;
 }
 
 h2 {
-  font-family: var(--headerFont);
+  font-family: var(--header-font);
   color: var(--min-body-text-black);
   font-size: 1.125rem;
   font-style: normal;
@@ -83,36 +80,36 @@ h2 {
 h3 {
   line-height: unset;
   color: var(--min-body-text-black);
-  font-family: var(--headerFont);
-  font-size: var(--minBodyTextSize);
+  font-family: var(--header-font);
+  font-size: var(--min-body-text-size);
   font-style: normal;
 }
 
 h4 {
   line-height: unset;
   color: var(--min-body-text-black);
-  font-family: var(--headerFont);
-  font-size: var(--minBodyTextSize);
+  font-family: var(--header-font);
+  font-size: var(--min-body-text-size);
   font-style: normal;
 }
 
 th {
-  font-family: var(--headerFont);
-  font-size: var(--minBodyTextSize);
+  font-family: var(--header-font);
+  font-size: var(--min-body-text-size);
   font-style: normal;
 }
 
 .visual-header {
   color: var(--min-body-text-black);
-  font-family: var(--headerFont);
-  // font-size: var(--minTextSize);
+  font-family: var(--header-font);
+  // font-size: var(--min-text-size);
   font-style: normal;
   font-weight: 650;
 }
 
 td {
-  font-family: var(--bodyFont);
-  font-size: var(--minBodyTextSize);
+  font-family: var(--body-font);
+  font-size: var(--min-body-text-size);
   color: var(--ideal-body-text-black);
   font-style: normal;
   font-weight: 400;
@@ -127,8 +124,8 @@ td {
 p,
 li,
 summary {
-  font-family: var(--bodyFont);
-  font-size: var(--minBodyTextSize);
+  font-family: var(--body-font);
+  font-size: var(--min-body-text-size);
   color: var(--ideal-body-text-black);
   font-style: normal;
   font-weight: 400;
@@ -153,7 +150,7 @@ details {
 sup {
   color: var(--min-body-text-black) !important;
   font-weight: 400 !important;
-  font-size: var(--minTextSize) !important;
+  font-size: var(--min-text-size) !important;
 }
 
 cite {
@@ -163,12 +160,12 @@ cite {
   a {
     color: inherit;
   }
-  // min-width: var(--minHitDimensionAAA) !important;
-  // min-height: var(--minHitDimensionAAA) !important;
+  // min-width: var(--min-hit-dimension-aaa) !important;
+  // min-height: var(--min-hit-dimension-aaa) !important;
 }
 
 strong {
-  font-size: var(--minTextSize);
+  font-size: var(--min-text-size);
   text-transform: uppercase;
   letter-spacing: 0.05ch;
 }
