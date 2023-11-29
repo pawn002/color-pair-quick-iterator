@@ -197,6 +197,16 @@
               (change)="toggleConstantChroma($event)"
             />
           </div>
+          <div class="checkbox-group">
+            <label for="option-show-grad">Show Gradient</label>
+            <input
+              disabled
+              type="checkbox"
+              name="Constant Chroma Toggle"
+              id="option-show-grad"
+              (change)="toggleConstantChroma($event)"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -301,6 +311,11 @@
           Option that forces the color sliders to limit light and dark variation
           of colors to tints and shades that have the same chroma and hue of the
           inputted color maintaining the objective identity of your input color.
+        </p>
+        <p id="notes-show-grad">
+          <span class="visual-header">Show Gradient:</span>
+          Currently disabled, but will render a gradient behind the color
+          sliders showing the possible colors an inputted color is capable of.
         </p>
       </div>
     </details>

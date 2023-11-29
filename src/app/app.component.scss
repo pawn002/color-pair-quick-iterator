@@ -122,6 +122,10 @@
     align-items: center;
     // flex-wrap: wrap;
 
+    // div:is(:first-child) {
+    //   width: 100%;
+    // }
+
     h2 {
       // margin-bottom: 0;
     }
@@ -129,9 +133,6 @@
     .radio-section {
       display: flex;
       flex-wrap: wrap;
-      // flex-direction: column;
-      // justify-content: center;
-      // gap: 2.5ch;
 
       .radio-group {
         display: flex;
@@ -139,7 +140,6 @@
         justify-content: flex-end;
         align-items: center;
         gap: 0.8ch;
-        // width: 100%;
 
         label {
           font-size: var(--minTextSize);
@@ -163,10 +163,14 @@
 
     .checkbox-section {
       display: flex;
-      flex-direction: row-reverse;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 0.8ch;
+      flex-wrap: wrap;
+      // flex-direction: column;
+      // flex-grow: 1;
+      // width: 100%;
+      // flex-direction: row-reverse;
+      // justify-content: flex-end;
+      // align-items: center;
+      // gap: 0.8ch;
 
       .checkbox-group {
         display: flex;
