@@ -1,7 +1,8 @@
 .comp-container {
   box-sizing: border-box;
   display: flex;
-  // gives input more room on left and right ends to be hit more successfully
+
+  /* gives input more room on left and right ends to be hit more successfully */
   padding: 0 calc(var(--min-hit-dimension-aaa) / 2);
   align-items: center;
   background-color: var(--app-white);
@@ -12,20 +13,20 @@
 
   input {
     flex-grow: 1;
-    min-height: var(--min-hit-dimension-aaa);
-    height: 50px;
     width: 100%;
+    height: 50px;
+    min-height: var(--min-hit-dimension-aaa);
     margin: 0;
   }
 
   .special-case {
+    display: flex;
     flex-grow: 1;
     min-height: var(--min-hit-dimension-aaa);
     height: 50px;
-    display: flex;
     align-items: center;
 
-    // TODO: what do custom input text need to be? <p>?
+    /* TODO: what do custom input text need to be? <p>? */
     div {
       font-family: var(--mono-font);
       font-size: var(--min-body-text-size);
@@ -36,11 +37,11 @@
 }
 
 .dev-overlay {
-  position: absolute;
   display: none;
+  position: absolute;
   gap: 1rem;
-  bottom: 0;
   right: 0;
+  bottom: 0;
 
   &.active {
     display: flex;

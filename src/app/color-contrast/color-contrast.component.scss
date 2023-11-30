@@ -1,6 +1,6 @@
 .comp-container {
-  border: var(--min-body-text-black) solid 3px;
   padding: 0.5em 0.25ch;
+  border: var(--min-body-text-black) solid 3px;
 
   .score-container {
     display: flex;
@@ -8,7 +8,6 @@
     align-items: center;
 
     .score {
-      // background-color: red;
       color: var(--ideal-body-text-black);
       font-weight: 600;
       font-family: var(--mono-font);

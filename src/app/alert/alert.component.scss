@@ -11,7 +11,7 @@
     gap: 0.3rem;
     opacity: 1;
     transform: scale(1);
-    animation-name: showAlert;
+    animation-name: show-alert;
     animation-duration: 200ms;
 
     p {
@@ -45,7 +45,7 @@
     }
   }
 
-  @keyframes showAlert {
+  @keyframes show-alert {
     from {
       display: none;
       opacity: 0;

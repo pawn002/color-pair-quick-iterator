@@ -1,7 +1,6 @@
 .comp-container {
-  position: relative;
   display: flex;
-  // flex-direction: column;
+  position: relative;
   flex-wrap: wrap;
   align-items: flex-start;
   gap: 0.5rem 4rem;
@@ -20,8 +19,6 @@
 
   table {
     margin-bottom: 1rem;
-    // flex-grow: 1;
-    // min-width: 33vw;
   }
 
   tr {
