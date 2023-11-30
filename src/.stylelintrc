@@ -1,0 +1,29 @@
+{
+  "extends": "stylelint-config-standard",
+  "plugins": ["stylelint-order"],
+  "rules": {
+    "order/properties-order": [
+      [
+        "display",
+        "position",
+        "top",
+        "right",
+        "bottom",
+        "left",
+        "width",
+        "height",
+        "margin",
+        "padding",
+        "border",
+        "background",
+        "color",
+        "font",
+        "text-decoration",
+        "text-align",
+        "vertical-align",
+        "opacity",
+        "transform"
+      ]
+    ]
+  }
+}

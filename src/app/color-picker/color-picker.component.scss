@@ -1,6 +1,6 @@
 .comp-container {
-  position: relative;
   display: inline-block;
+  position: relative;
   border-radius: 5px 0 0 5px;
 
   &:hover {
@@ -20,11 +20,12 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    // NOTE: 2(15px) + 15px = 45px
+
+    /* NOTE: 2(15px) + 15px = 45px */
     width: 45px;
     height: 45px;
     border: transparent 15px solid;
+    transform: translate(-50%, -50%);
     background-color: transparent;
     pointer-events: none;
     box-sizing: border-box;
