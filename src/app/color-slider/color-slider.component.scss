@@ -9,12 +9,12 @@
   --gradient-background: linear-gradient(
     to right,
     var(--grad-stop-0),
-    var(--grad-stop-0),
+    var(--grad-stop-0) 5%,
     var(--grad-stop-1),
     var(--grad-stop-2),
     var(--grad-stop-3),
     var(--grad-stop-4),
-    var(--grad-stop-5),
+    var(--grad-stop-5) 95%,
     var(--grad-stop-5)
   );
 
@@ -36,7 +36,8 @@
     height: 50px;
     min-height: var(--min-hit-dimension-aaa);
     margin: 0;
-    background: var(--gradient-background);
+    background: var(--default-background);
+    background-color: red;
   }
 
   .special-case {

@@ -75,6 +75,8 @@ export class ColorSliderComponent implements OnInit, OnChanges {
       this.initValue = initialSlideValue;
 
       this.value = initialSlideValue;
+
+      this.redefineGradientStops(this.slideMin, this.slideMax);
     } else {
       console.error(`no range object for slider`);
     }
@@ -117,8 +119,6 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   }
 
   gradient(val: 'on' | 'off') {
-    console.log(`gradient: ${val}`);
-
     const onlyElem = 0;
     // TODO: Anguar way to do this?
     const targetElem = document.getElementsByClassName('comp-container')[
@@ -149,20 +149,23 @@ export class ColorSliderComponent implements OnInit, OnChanges {
       )[0] as HTMLElement;
 
       const stops = [
-        'grad-stop-0',
-        'grad-stop-1',
-        'grad-stop-2',
-        'grad-stop-3',
-        'grad-stop-4',
-        'grad-stop-5',
+        '--grad-stop-0',
+        '--grad-stop-1',
+        '--grad-stop-2',
+        '--grad-stop-3',
+        '--grad-stop-4',
+        '--grad-stop-5',
       ];
 
       // get new stop values
-      const stopInterval = (lightMax - lightMin) / stops.length;
+      const stopInterval = (lightMax - lightMin) / (stops.length - 1);
       const stopVals = [];
 
       for (let i = 0; i < stops.length; i++) {
-        const targetLight = stopInterval * i;
+        const targetLight = stopInterval * i + lightMin;
+        targetLight;
+
+        console.log(targetLight);
 
         const stopColor = this.cus.createSrgbColor(this.color, targetLight);
 
