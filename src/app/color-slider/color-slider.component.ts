@@ -134,6 +134,58 @@ export class ColorSliderComponent implements OnInit, OnChanges {
     }
   }
 
+  redefineVariable(
+    element: HTMLElement,
+    variableName: string,
+    newValue: string
+  ) {
+    element.style.setProperty(variableName, newValue);
+  }
+
+  redefineGradientStops(lightMin: number, lightMax: number) {
+    if (this.color) {
+      const targetElement = document.getElementsByClassName(
+        'comp-container'
+      )[0] as HTMLElement;
+
+      const stops = [
+        'grad-stop-0',
+        'grad-stop-1',
+        'grad-stop-2',
+        'grad-stop-3',
+        'grad-stop-4',
+        'grad-stop-5',
+      ];
+
+      // get new stop values
+      const stopInterval = (lightMax - lightMin) / stops.length;
+      const stopVals = [];
+
+      for (let i = 0; i < stops.length; i++) {
+        const targetLight = stopInterval * i;
+
+        const stopColor = this.cus.createSrgbColor(this.color, targetLight);
+
+        stopVals.push(stopColor);
+      }
+
+      // assign new stop values
+
+      for (let i = 0; i < stops.length; i++) {
+        const targetStop = stops[i];
+        const targetStopVal = stopVals[i];
+
+        if (targetStopVal) {
+          this.redefineVariable(targetElement, targetStop, targetStopVal);
+        } else {
+          console.log(`no new val to assign`);
+        }
+      }
+    } else {
+      console.log(`no color specified`);
+    }
+  }
+
   constructor(private cus: ColorUtilService) {}
 
   ngOnInit(): void {}
