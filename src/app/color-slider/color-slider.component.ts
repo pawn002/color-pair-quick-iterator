@@ -23,10 +23,11 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   @Input() name: string | 'color-slider' = 'color-slider';
   @Input() color: string | null = null;
   @Input() constantChroma: boolean = false;
+  @Input() showGradient: boolean = false;
   @Input() resetSlider: ResetObject | null = null;
   @Output() colorVariant = new EventEmitter<string | null>();
 
-  debug: boolean = false;
+  debug: boolean = true;
   devColorVariant: string | null = null;
 
   slideInterval: number | null = null;
@@ -115,6 +116,24 @@ export class ColorSliderComponent implements OnInit, OnChanges {
     }
   }
 
+  gradient(val: 'on' | 'off') {
+    console.log(`gradient: ${val}`);
+
+    const onlyElem = 0;
+    // TODO: Anguar way to do this?
+    const targetElem = document.getElementsByClassName('comp-container')[
+      onlyElem
+    ] as HTMLElement;
+
+    if (val === 'on') {
+      targetElem.style.background = 'var(--gradient-background)';
+    }
+
+    if (val === 'off') {
+      targetElem.style.background = 'var(--default-background)';
+    }
+  }
+
   constructor(private cus: ColorUtilService) {}
 
   ngOnInit(): void {}
@@ -126,6 +145,14 @@ export class ColorSliderComponent implements OnInit, OnChanges {
       });
     } else {
       console.warn(`no color specified to comp`);
+    }
+
+    if (this.showGradient) {
+      this.gradient('on');
+    }
+
+    if (!this.showGradient) {
+      this.gradient('off');
     }
 
     if (this.resetSlider) {

@@ -146,12 +146,12 @@
         },
         {
             "name": "ResetObject",
-            "id": "interface-ResetObject-5679a0e2825073faf4b34f69cb5d97f484de926fd9be0c2d8c68f8c28de9a10cb87e3383e9323d66b7607dc23be0fdc08f233ca47e6a3812de6456114a77c1b5",
+            "id": "interface-ResetObject-be474616f695bad81bbd6804da57466f6236406f1287bc66ec4b722eae55690259f6731daf87c2645753f104eab8956a9484919c5054f17beb53079cfa6947c5",
             "file": "src/app/color-slider/color-slider.component.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {\r\n  Component,\r\n  Input,\r\n  OnChanges,\r\n  OnInit,\r\n  Output,\r\n  EventEmitter,\r\n  SimpleChanges,\r\n} from '@angular/core';\r\nimport { ColorUtilService } from '../services/color-util.service';\r\n\r\nexport interface ResetObject {\r\n  reset: true;\r\n}\r\n\r\n@Component({\r\n  selector: 'app-color-slider',\r\n  templateUrl: './color-slider.component.html',\r\n  styleUrls: ['./color-slider.component.scss'],\r\n})\r\nexport class ColorSliderComponent implements OnInit, OnChanges {\r\n  @Input() id: string | 'slider-0' = 'slider-0';\r\n  @Input() name: string | 'color-slider' = 'color-slider';\r\n  @Input() color: string | null = null;\r\n  @Input() constantChroma: boolean = false;\r\n  @Input() resetSlider: ResetObject | null = null;\r\n  @Output() colorVariant = new EventEmitter<string | null>();\r\n\r\n  debug: boolean = false;\r\n  devColorVariant: string | null = null;\r\n\r\n  // slideInterval: number | null = 0.001;\r\n  slideInterval: number | null = 0.005;\r\n  slideMin: number | null = null;\r\n  slideMax: number | null = null;\r\n  initValue: number | null = null;\r\n  value: number | null = null;\r\n\r\n  getInitValue() {\r\n    return this.initValue;\r\n  }\r\n\r\n  sendInitialLightVariant() {\r\n    // Good UX to just send the input color?\r\n    this.colorVariant.emit(this.color);\r\n\r\n    if (this.debug) {\r\n      this.devColorVariant = this.color;\r\n    }\r\n  }\r\n\r\n  async getAndSetLightnessRange(\r\n    color: string,\r\n    options?: { constantChroma: boolean }\r\n  ) {\r\n    const rangeObject = await this.cus.getMinMaxLight(color);\r\n\r\n    if (rangeObject) {\r\n      this.sendInitialLightVariant();\r\n\r\n      this.slideMin = 0;\r\n      this.slideMax = 1;\r\n\r\n      if (options?.constantChroma) {\r\n        this.slideMin = rangeObject.lightMin;\r\n\r\n        this.slideMax = rangeObject.lightMax;\r\n      }\r\n\r\n      const lightnessIndex = 0;\r\n      const initialSlideValue = rangeObject.originalCoords[lightnessIndex];\r\n\r\n      this.initValue = initialSlideValue;\r\n\r\n      this.value = initialSlideValue;\r\n    } else {\r\n      console.error(`no range object for slider`);\r\n    }\r\n  }\r\n\r\n  handleSliding(event: Event) {\r\n    const inputElem = event.target as HTMLInputElement;\r\n\r\n    if (inputElem) {\r\n      const lightValue = parseFloat(inputElem.value);\r\n\r\n      if (this.color) {\r\n        const lightnessVariant = this.cus.createSrgbColor(\r\n          this.color,\r\n          lightValue\r\n        );\r\n\r\n        if (this.debug) {\r\n          console.log(`slide modding ${this.color} to ${lightnessVariant}`);\r\n\r\n          this.devColorVariant = lightnessVariant;\r\n        }\r\n\r\n        this.colorVariant.emit(lightnessVariant);\r\n      } else {\r\n        console.error(`no color specified`);\r\n      }\r\n    }\r\n  }\r\n\r\n  reset() {\r\n    // TODO: Isn't there an angular way to do this?\r\n    const element = document.getElementById(this.id) as HTMLInputElement;\r\n\r\n    if (this.initValue) {\r\n      element.value = this.initValue.toString();\r\n    } else {\r\n      console.error(`trouble resetting slider`);\r\n    }\r\n  }\r\n\r\n  constructor(private cus: ColorUtilService) {}\r\n\r\n  ngOnInit(): void {}\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    if (this.color) {\r\n      this.getAndSetLightnessRange(this.color, {\r\n        constantChroma: this.constantChroma,\r\n      });\r\n    } else {\r\n      console.warn(`no color specified to comp`);\r\n    }\r\n\r\n    if (this.resetSlider) {\r\n      this.reset();\r\n    }\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  Component,\r\n  Input,\r\n  OnChanges,\r\n  OnInit,\r\n  Output,\r\n  EventEmitter,\r\n  SimpleChanges,\r\n} from '@angular/core';\r\nimport { ColorUtilService } from '../services/color-util.service';\r\n\r\nexport interface ResetObject {\r\n  reset: true;\r\n}\r\n\r\n@Component({\r\n  selector: 'app-color-slider',\r\n  templateUrl: './color-slider.component.html',\r\n  styleUrls: ['./color-slider.component.scss'],\r\n})\r\nexport class ColorSliderComponent implements OnInit, OnChanges {\r\n  @Input() id: string | 'slider-0' = 'slider-0';\r\n  @Input() name: string | 'color-slider' = 'color-slider';\r\n  @Input() color: string | null = null;\r\n  @Input() constantChroma: boolean = false;\r\n  @Input() showGradient: boolean = false;\r\n  @Input() resetSlider: ResetObject | null = null;\r\n  @Output() colorVariant = new EventEmitter<string | null>();\r\n\r\n  debug: boolean = true;\r\n  devColorVariant: string | null = null;\r\n\r\n  slideInterval: number | null = null;\r\n  slideMin: number | null = null;\r\n  slideMax: number | null = null;\r\n  initValue: number | null = null;\r\n  value: number | null = null;\r\n\r\n  getInitValue() {\r\n    return this.initValue;\r\n  }\r\n\r\n  sendInitialLightVariant() {\r\n    // Good UX to just send the input color?\r\n    this.colorVariant.emit(this.color);\r\n\r\n    if (this.debug) {\r\n      this.devColorVariant = this.color;\r\n    }\r\n  }\r\n\r\n  async getAndSetLightnessRange(\r\n    color: string,\r\n    options?: { constantChroma: boolean }\r\n  ) {\r\n    const rangeObject = await this.cus.getMinMaxLight(color);\r\n\r\n    if (rangeObject) {\r\n      this.sendInitialLightVariant();\r\n\r\n      this.slideMin = 0;\r\n      this.slideMax = 1;\r\n\r\n      if (options?.constantChroma) {\r\n        this.slideMin = rangeObject.lightMin;\r\n\r\n        this.slideMax = rangeObject.lightMax;\r\n      }\r\n\r\n      this.slideInterval = (this.slideMax - this.slideMin) / 80;\r\n\r\n      const lightnessIndex = 0;\r\n      const initialSlideValue = rangeObject.originalCoords[lightnessIndex];\r\n\r\n      this.initValue = initialSlideValue;\r\n\r\n      this.value = initialSlideValue;\r\n    } else {\r\n      console.error(`no range object for slider`);\r\n    }\r\n  }\r\n\r\n  handleSliding(event: Event) {\r\n    const inputElem = event.target as HTMLInputElement;\r\n\r\n    if (inputElem) {\r\n      const lightValue = parseFloat(inputElem.value);\r\n\r\n      if (this.color) {\r\n        const lightnessVariant = this.cus.createSrgbColor(\r\n          this.color,\r\n          lightValue\r\n        );\r\n\r\n        if (this.debug) {\r\n          console.log(`slide modding ${this.color} to ${lightnessVariant}`);\r\n\r\n          this.devColorVariant = lightnessVariant;\r\n        }\r\n\r\n        this.colorVariant.emit(lightnessVariant);\r\n      } else {\r\n        console.error(`no color specified`);\r\n      }\r\n    }\r\n  }\r\n\r\n  reset() {\r\n    // TODO: Isn't there an angular way to do this?\r\n    const element = document.getElementById(this.id) as HTMLInputElement;\r\n\r\n    if (this.initValue) {\r\n      element.value = this.initValue.toString();\r\n    } else {\r\n      console.error(`trouble resetting slider`);\r\n    }\r\n  }\r\n\r\n  gradient(val: 'on' | 'off') {\r\n    console.log(`gradient: ${val}`);\r\n\r\n    const onlyElem = 0;\r\n    // TODO: Anguar way to do this?\r\n    const targetElem = document.getElementsByClassName('comp-container')[\r\n      onlyElem\r\n    ] as HTMLElement;\r\n\r\n    if (val === 'on') {\r\n      targetElem.style.background = 'var(--gradient-background)';\r\n    }\r\n\r\n    if (val === 'off') {\r\n      targetElem.style.background = 'var(--default-background)';\r\n    }\r\n  }\r\n\r\n  constructor(private cus: ColorUtilService) {}\r\n\r\n  ngOnInit(): void {}\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    if (this.color) {\r\n      this.getAndSetLightnessRange(this.color, {\r\n        constantChroma: this.constantChroma,\r\n      });\r\n    } else {\r\n      console.warn(`no color specified to comp`);\r\n    }\r\n\r\n    if (this.showGradient) {\r\n      this.gradient('on');\r\n    }\r\n\r\n    if (!this.showGradient) {\r\n      this.gradient('off');\r\n    }\r\n\r\n    if (this.resetSlider) {\r\n      this.reset();\r\n    }\r\n  }\r\n}\r\n",
             "properties": [
                 {
                     "name": "reset",
@@ -1340,12 +1340,12 @@
         },
         {
             "name": "ContrastObject",
-            "id": "class-ContrastObject-6fb709cf1993e4c8dd61049eb240dff369a7e026a5179bac884820e20fc27f163e0dd803a54adcb5d7277061fadd81bfb5ce824a0c91f4916c54b2d69fa15c7b",
+            "id": "class-ContrastObject-5e8166baa3ea8427286d0cf19c5d3dda1f0d14f922862b0092b73fe68612d7a9f2243cb7ac611881cbe298dc780dc512e12e01c200f3e7d2d15125f94fdcfffa",
             "file": "src/app/color-contrast/color-contrast.component.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "class",
-            "sourceCode": "import {\r\n  Component,\r\n  EventEmitter,\r\n  Input,\r\n  OnChanges,\r\n  Output,\r\n  SimpleChanges,\r\n} from '@angular/core';\r\nimport {\r\n  ColorMetricsService,\r\n  ContrastType,\r\n} from '../services/color-metrics.service';\r\n\r\nexport class ContrastObject {\r\n  score: number | null = null;\r\n  type: ContrastType | null = null;\r\n}\r\n\r\n@Component({\r\n  selector: 'app-color-contrast',\r\n  templateUrl: './color-contrast.component.html',\r\n  styleUrls: ['./color-contrast.component.scss'],\r\n})\r\nexport class ColorContrastComponent implements OnChanges {\r\n  @Input() colorOne: string | null = null;\r\n  @Input() colorTwo: string | null = null;\r\n  @Input() contrastType: ContrastType | null = null;\r\n\r\n  @Output() contrast = new EventEmitter<ContrastObject>();\r\n\r\n  contrastScore: number | null = null;\r\n\r\n  constructor(private cms: ColorMetricsService) {}\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    // console.log(changes);\r\n\r\n    if (this.colorOne && this.colorTwo && this.contrastType) {\r\n      const score = this.cms.getContrast(\r\n        this.colorOne,\r\n        this.colorTwo,\r\n        this.contrastType\r\n      );\r\n\r\n      this.contrastScore = score;\r\n    } else {\r\n      console.warn('contrast comp has incomplete bindings');\r\n    }\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  Component,\r\n  EventEmitter,\r\n  Input,\r\n  OnChanges,\r\n  Output,\r\n  SimpleChanges,\r\n} from '@angular/core';\r\nimport {\r\n  ColorMetricsService,\r\n  ContrastType,\r\n} from '../services/color-metrics.service';\r\nimport { ColorUtilService } from '../services/color-util.service';\r\n\r\nexport class ContrastObject {\r\n  score: number | null = null;\r\n  type: ContrastType | null = null;\r\n}\r\n\r\n@Component({\r\n  selector: 'app-color-contrast',\r\n  templateUrl: './color-contrast.component.html',\r\n  styleUrls: ['./color-contrast.component.scss'],\r\n})\r\nexport class ColorContrastComponent implements OnChanges {\r\n  @Input() colorOne: string | null = null;\r\n  @Input() colorTwo: string | null = null;\r\n  @Input() contrastType: ContrastType | 'apca object' | null = null;\r\n\r\n  @Output() contrast = new EventEmitter<ContrastObject>();\r\n\r\n  contrastScore: number | null = null;\r\n\r\n  constructor(\r\n    private cms: ColorMetricsService,\r\n    private cus: ColorUtilService\r\n  ) {}\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    // console.log(changes);\r\n\r\n    if (this.colorOne && this.colorTwo && this.contrastType) {\r\n      const score = this.cms.getContrast(\r\n        this.colorOne,\r\n        this.colorTwo,\r\n        this.contrastType === 'apca object' ? 'apca' : this.contrastType\r\n      );\r\n\r\n      this.contrastScore = score;\r\n\r\n      if (score) {\r\n        this.contrastScore =\r\n          this.contrastType === 'apca object'\r\n            ? this.cus.getMinObjectDimension(score)\r\n            : this.contrastScore;\r\n      }\r\n    } else {\r\n      console.warn('contrast comp has incomplete bindings');\r\n    }\r\n  }\r\n}\r\n",
             "properties": [
                 {
                     "name": "score",
@@ -1355,7 +1355,7 @@
                     "type": "number | null",
                     "optional": false,
                     "description": "",
-                    "line": 15
+                    "line": 16
                 },
                 {
                     "name": "type",
@@ -1365,7 +1365,7 @@
                     "type": "ContrastType | null",
                     "optional": false,
                     "description": "",
-                    "line": 16
+                    "line": 17
                 }
             ],
             "methods": [],
@@ -1769,7 +1769,7 @@
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ".comp-container {\r\n  .alert-content {\r\n    box-shadow: 0 0 4px 0 black;\r\n    border-bottom: transparent;\r\n    border-radius: 5px 5px 0 0;\r\n    background-color: white;\r\n    display: flex;\r\n    flex-direction: column;\r\n    align-items: center;\r\n    padding: 0.3rem;\r\n    gap: 0.3rem;\r\n    opacity: 1;\r\n    transform: scale(1);\r\n    animation-name: showAlert;\r\n    animation-duration: 200ms;\r\n\r\n    p {\r\n      margin: 0;\r\n      text-align: center;\r\n    }\r\n\r\n    button {\r\n      font-family: var(--bodyFont);\r\n      min-height: var(--minHitDimensionAAA);\r\n      min-width: var(--minHitDimensionAAA);\r\n      border: transparent 2px solid;\r\n      border-radius: 5px;\r\n      background-color: white;\r\n      font-style: italic;\r\n\r\n      &:hover {\r\n        background-color: #dfdfdf;\r\n      }\r\n    }\r\n\r\n    .msg-id {\r\n      color: #717171;\r\n      font-size: var(--minTextSize);\r\n    }\r\n\r\n    &:empty {\r\n      display: none;\r\n      opacity: 0;\r\n      transform: translateY(100%);\r\n    }\r\n  }\r\n\r\n  @keyframes showAlert {\r\n    from {\r\n      display: none;\r\n      opacity: 0;\r\n      transform: translateY(100%);\r\n    }\r\n\r\n    to {\r\n      display: flex;\r\n      opacity: 1;\r\n      transform: translateY(0);\r\n    }\r\n  }\r\n}\r\n",
+                    "data": ".comp-container {\r\n  .alert-content {\r\n    box-shadow: 0 0 4px 0 black;\r\n    border-bottom: transparent;\r\n    border-radius: 5px 5px 0 0;\r\n    background-color: white;\r\n    display: flex;\r\n    flex-direction: column;\r\n    align-items: center;\r\n    padding: 0.3rem;\r\n    gap: 0.3rem;\r\n    opacity: 1;\r\n    transform: scale(1);\r\n    animation-name: show-alert;\r\n    animation-duration: 200ms;\r\n\r\n    p {\r\n      margin: 0;\r\n      text-align: center;\r\n    }\r\n\r\n    button {\r\n      font-family: var(--body-font);\r\n      min-height: var(--min-hit-dimension-aaa);\r\n      min-width: var(--min-hit-dimension-aaa);\r\n      border: transparent 2px solid;\r\n      border-radius: 5px;\r\n      background-color: white;\r\n      font-style: italic;\r\n\r\n      &:hover {\r\n        background-color: #dfdfdf;\r\n      }\r\n    }\r\n\r\n    .msg-id {\r\n      color: #717171;\r\n      font-size: var(--min-text-size);\r\n    }\r\n\r\n    &:empty {\r\n      display: none;\r\n      opacity: 0;\r\n      transform: translateY(100%);\r\n    }\r\n  }\r\n\r\n  @keyframes show-alert {\r\n    from {\r\n      display: none;\r\n      opacity: 0;\r\n      transform: translateY(100%);\r\n    }\r\n\r\n    to {\r\n      display: flex;\r\n      opacity: 1;\r\n      transform: translateY(0);\r\n    }\r\n  }\r\n}\r\n",
                     "styleUrl": "./alert.component.scss"
                 }
             ],
@@ -1782,7 +1782,7 @@
         },
         {
             "name": "AppComponent",
-            "id": "component-AppComponent-0754cc2a099d9ecf83de9f0fb2bd318d00cfd93b01131e2f5e30aa7a7227926ac81fe51af63d156699b4e4912fce4c8c25f3d6c8d388248421188d3270e742cb",
+            "id": "component-AppComponent-a454e883a8b9e053b4dd4bf913841d40522154ba8bd5eb6246330cb8b87cac055bfd4b72340c07c0f8391d9469b8f0eecb903e6ae9cc39450dbec0e7a82308c1",
             "file": "src/app/app.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -1857,7 +1857,7 @@
                     "defaultValue": "'apca'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "ContrastType",
+                    "type": "ContrastType | \"apca object\"",
                     "optional": false,
                     "description": "",
                     "line": 26
@@ -1897,7 +1897,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 186,
+                    "line": 191,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2075,7 +2075,7 @@
                     "optional": false,
                     "returnType": "any",
                     "typeParameters": [],
-                    "line": 160,
+                    "line": 165,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -2088,7 +2088,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 194,
+                    "line": 199,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2098,9 +2098,37 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 192,
+                    "line": 197,
                     "deprecated": false,
                     "deprecationMessage": ""
+                },
+                {
+                    "name": "radioChange",
+                    "args": [
+                        {
+                            "name": "changeTo",
+                            "type": "ContrastType | \"apca object\"",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 79,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "changeTo",
+                            "type": "ContrastType | \"apca object\"",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
                 },
                 {
                     "name": "resetSliders",
@@ -2108,7 +2136,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 154,
+                    "line": 159,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2126,7 +2154,7 @@
                     "optional": false,
                     "returnType": "any",
                     "typeParameters": [],
-                    "line": 135,
+                    "line": 140,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -2151,7 +2179,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 93,
+                    "line": 98,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2168,7 +2196,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 86,
+                    "line": 91,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2196,7 +2224,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 79,
+                    "line": 84,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2221,11 +2249,11 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {\r\n  Component,\r\n  OnInit,\r\n  AfterViewInit,\r\n  AfterViewChecked,\r\n} from '@angular/core';\r\nimport { ContrastType } from './services/color-metrics.service';\r\nimport { ColorUtilService } from './services/color-util.service';\r\nimport { CopyToClipboardEvent } from './copy-to-clipboard-button/copy-to-clipboard-button.component';\r\nimport { ResetObject } from './color-slider/color-slider.component';\r\nimport { AlertMessagObj } from './alert/alert.component';\r\nimport { TableColorCell } from './palette-table/palette-table.component';\r\n\r\n@Component({\r\n  selector: 'app-root',\r\n  templateUrl: './app.component.html',\r\n  styleUrls: ['./app.component.scss'],\r\n})\r\nexport class AppComponent implements OnInit, AfterViewInit {\r\n  colorPickerOneSelectedColor: string | null = null;\r\n  colorPickerOneComparedColor: string | null = null;\r\n\r\n  colorPickerTwoSelectedColor: string | null = null;\r\n  colorPickerTwoComparedColor: string | null = null;\r\n\r\n  contrastType: ContrastType = 'apca';\r\n\r\n  resetSlider: ResetObject | null = null;\r\n\r\n  constantChroma: boolean = false;\r\n\r\n  currentAlertMessage: AlertMessagObj | null = null;\r\n\r\n  handleColorInputInput(inputNumber: 'One' | 'Two', event: string) {\r\n    if (inputNumber === 'One') {\r\n      this.colorPickerOneSelectedColor = event;\r\n    }\r\n\r\n    if (inputNumber === 'Two') {\r\n      this.colorPickerTwoSelectedColor = event;\r\n    }\r\n  }\r\n\r\n  handleSliderInputInput(inputNumber: 'One' | 'Two', event: string | null) {\r\n    if (inputNumber === 'One') {\r\n      this.colorPickerOneComparedColor = event;\r\n    }\r\n\r\n    if (inputNumber === 'Two') {\r\n      this.colorPickerTwoComparedColor = event;\r\n    }\r\n  }\r\n\r\n  handleCopyEvent(event: CopyToClipboardEvent) {\r\n    if (event.copied) {\r\n      this.alertUser({ message: `${event.color} copied to clipboard.` });\r\n    } else {\r\n      console.error(`color copy error.`);\r\n    }\r\n  }\r\n\r\n  handleColorPaletteButtonEvent(\r\n    paletteChartNum: 'One' | 'Two',\r\n    event: TableColorCell\r\n  ) {\r\n    if (paletteChartNum === 'One') {\r\n      this.colorPickerOneSelectedColor = event.color;\r\n    }\r\n\r\n    if (paletteChartNum === 'Two') {\r\n      this.colorPickerTwoSelectedColor = event.color;\r\n    }\r\n\r\n    this.alertUser({\r\n      message: `Color picker ${paletteChartNum} changed to ${event.color}`,\r\n    });\r\n  }\r\n\r\n  toggleContrastType(event: Event) {\r\n    const inputElement = event.target as HTMLInputElement;\r\n    const checked = inputElement.checked;\r\n\r\n    this.contrastType = checked ? 'bpca' : 'apca';\r\n  }\r\n\r\n  toggleConstantChroma(event: Event) {\r\n    const inputElement = event.target as HTMLInputElement;\r\n    const checked = inputElement.checked;\r\n\r\n    this.constantChroma = checked ? true : false;\r\n  }\r\n\r\n  swapColors() {\r\n    const getColor = (type: 'fg' | 'bg'): string | null => {\r\n      let color: string | null = null;\r\n\r\n      switch (type) {\r\n        case 'fg':\r\n          color = this.colorPickerOneSelectedColor;\r\n\r\n          break;\r\n        case 'bg':\r\n          color = this.colorPickerTwoSelectedColor;\r\n\r\n          break;\r\n\r\n        default:\r\n          break;\r\n      }\r\n\r\n      return color;\r\n    };\r\n\r\n    const oldPairing = {\r\n      foreground: getColor('fg'),\r\n      background: getColor('bg'),\r\n    };\r\n\r\n    const newPairing = {\r\n      foreground: oldPairing.background,\r\n      background: oldPairing.foreground,\r\n    };\r\n\r\n    if (newPairing.foreground && newPairing.background) {\r\n      this.colorPickerOneSelectedColor = newPairing.foreground;\r\n\r\n      this.colorPickerTwoSelectedColor = newPairing.background;\r\n\r\n      this.alertUser({ message: 'Swapped Color One and Two.' });\r\n    } else {\r\n      console.error('swapping colors went badly. . .');\r\n    }\r\n  }\r\n\r\n  async setRandomColorPair(initialAppColors?: boolean) {\r\n    const initColorPair = await this.cus.getRandomColorPair();\r\n\r\n    const randomColorPair = await this.cus.adjustColorPairForPresentation(\r\n      initColorPair\r\n    );\r\n\r\n    setTimeout(() => {\r\n      this.colorPickerOneSelectedColor = randomColorPair[0];\r\n      this.colorPickerTwoSelectedColor = randomColorPair[1];\r\n\r\n      if (!initialAppColors) {\r\n        this.alertUser({\r\n          message: `Random color pair generated: ${randomColorPair[0]}, and ${randomColorPair[1]}`,\r\n        });\r\n      }\r\n    }, 0);\r\n  }\r\n\r\n  resetSliders() {\r\n    this.resetSlider = { reset: true };\r\n\r\n    this.alertUser({ message: 'Color Sliders reset to initial states.' });\r\n  }\r\n\r\n  async matchChromas() {\r\n    if (this.colorPickerOneSelectedColor && this.colorPickerTwoSelectedColor) {\r\n      const matchedColors = await this.cus.matchChromas([\r\n        this.colorPickerOneSelectedColor,\r\n        this.colorPickerTwoSelectedColor,\r\n      ]);\r\n\r\n      if (\r\n        matchedColors.success &&\r\n        matchedColors.colors &&\r\n        matchedColors.chroma\r\n      ) {\r\n        this.colorPickerOneSelectedColor = matchedColors.colors[0];\r\n        this.colorPickerTwoSelectedColor = matchedColors.colors[1];\r\n\r\n        this.alertUser({\r\n          message: `Chroma matched colors to ${matchedColors.chroma.toFixed(\r\n            2\r\n          )}`,\r\n        });\r\n      } else {\r\n        this.alertUser({ message: 'Unable to chroma match colors' });\r\n      }\r\n    }\r\n  }\r\n\r\n  alertUser(message: AlertMessagObj) {\r\n    this.currentAlertMessage = message;\r\n  }\r\n\r\n  constructor(private cus: ColorUtilService) {}\r\n\r\n  ngOnInit(): void {}\r\n\r\n  ngAfterViewInit(): void {\r\n    this.setRandomColorPair(true);\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  Component,\r\n  OnInit,\r\n  AfterViewInit,\r\n  AfterViewChecked,\r\n} from '@angular/core';\r\nimport { ContrastType } from './services/color-metrics.service';\r\nimport { ColorUtilService } from './services/color-util.service';\r\nimport { CopyToClipboardEvent } from './copy-to-clipboard-button/copy-to-clipboard-button.component';\r\nimport { ResetObject } from './color-slider/color-slider.component';\r\nimport { AlertMessagObj } from './alert/alert.component';\r\nimport { TableColorCell } from './palette-table/palette-table.component';\r\n\r\n@Component({\r\n  selector: 'app-root',\r\n  templateUrl: './app.component.html',\r\n  styleUrls: ['./app.component.scss'],\r\n})\r\nexport class AppComponent implements OnInit, AfterViewInit {\r\n  colorPickerOneSelectedColor: string | null = null;\r\n  colorPickerOneComparedColor: string | null = null;\r\n\r\n  colorPickerTwoSelectedColor: string | null = null;\r\n  colorPickerTwoComparedColor: string | null = null;\r\n\r\n  contrastType: ContrastType | 'apca object' = 'apca';\r\n\r\n  resetSlider: ResetObject | null = null;\r\n\r\n  constantChroma: boolean = false;\r\n\r\n  currentAlertMessage: AlertMessagObj | null = null;\r\n\r\n  handleColorInputInput(inputNumber: 'One' | 'Two', event: string) {\r\n    if (inputNumber === 'One') {\r\n      this.colorPickerOneSelectedColor = event;\r\n    }\r\n\r\n    if (inputNumber === 'Two') {\r\n      this.colorPickerTwoSelectedColor = event;\r\n    }\r\n  }\r\n\r\n  handleSliderInputInput(inputNumber: 'One' | 'Two', event: string | null) {\r\n    if (inputNumber === 'One') {\r\n      this.colorPickerOneComparedColor = event;\r\n    }\r\n\r\n    if (inputNumber === 'Two') {\r\n      this.colorPickerTwoComparedColor = event;\r\n    }\r\n  }\r\n\r\n  handleCopyEvent(event: CopyToClipboardEvent) {\r\n    if (event.copied) {\r\n      this.alertUser({ message: `${event.color} copied to clipboard.` });\r\n    } else {\r\n      console.error(`color copy error.`);\r\n    }\r\n  }\r\n\r\n  handleColorPaletteButtonEvent(\r\n    paletteChartNum: 'One' | 'Two',\r\n    event: TableColorCell\r\n  ) {\r\n    if (paletteChartNum === 'One') {\r\n      this.colorPickerOneSelectedColor = event.color;\r\n    }\r\n\r\n    if (paletteChartNum === 'Two') {\r\n      this.colorPickerTwoSelectedColor = event.color;\r\n    }\r\n\r\n    this.alertUser({\r\n      message: `Color picker ${paletteChartNum} changed to ${event.color}`,\r\n    });\r\n  }\r\n\r\n  radioChange(changeTo: ContrastType | 'apca object') {\r\n    console.log(changeTo);\r\n    this.contrastType = changeTo;\r\n  }\r\n\r\n  toggleContrastType(event: Event) {\r\n    const inputElement = event.target as HTMLInputElement;\r\n    const checked = inputElement.checked;\r\n\r\n    this.contrastType = checked ? 'bpca' : 'apca';\r\n  }\r\n\r\n  toggleConstantChroma(event: Event) {\r\n    const inputElement = event.target as HTMLInputElement;\r\n    const checked = inputElement.checked;\r\n\r\n    this.constantChroma = checked ? true : false;\r\n  }\r\n\r\n  swapColors() {\r\n    const getColor = (type: 'fg' | 'bg'): string | null => {\r\n      let color: string | null = null;\r\n\r\n      switch (type) {\r\n        case 'fg':\r\n          color = this.colorPickerOneSelectedColor;\r\n\r\n          break;\r\n        case 'bg':\r\n          color = this.colorPickerTwoSelectedColor;\r\n\r\n          break;\r\n\r\n        default:\r\n          break;\r\n      }\r\n\r\n      return color;\r\n    };\r\n\r\n    const oldPairing = {\r\n      foreground: getColor('fg'),\r\n      background: getColor('bg'),\r\n    };\r\n\r\n    const newPairing = {\r\n      foreground: oldPairing.background,\r\n      background: oldPairing.foreground,\r\n    };\r\n\r\n    if (newPairing.foreground && newPairing.background) {\r\n      this.colorPickerOneSelectedColor = newPairing.foreground;\r\n\r\n      this.colorPickerTwoSelectedColor = newPairing.background;\r\n\r\n      this.alertUser({ message: 'Swapped Color One and Two.' });\r\n    } else {\r\n      console.error('swapping colors went badly. . .');\r\n    }\r\n  }\r\n\r\n  async setRandomColorPair(initialAppColors?: boolean) {\r\n    const initColorPair = await this.cus.getRandomColorPair();\r\n\r\n    const randomColorPair = await this.cus.adjustColorPairForPresentation(\r\n      initColorPair\r\n    );\r\n\r\n    setTimeout(() => {\r\n      this.colorPickerOneSelectedColor = randomColorPair[0];\r\n      this.colorPickerTwoSelectedColor = randomColorPair[1];\r\n\r\n      if (!initialAppColors) {\r\n        this.alertUser({\r\n          message: `Random color pair generated: ${randomColorPair[0]}, and ${randomColorPair[1]}`,\r\n        });\r\n      }\r\n    }, 0);\r\n  }\r\n\r\n  resetSliders() {\r\n    this.resetSlider = { reset: true };\r\n\r\n    this.alertUser({ message: 'Color Sliders reset to initial states.' });\r\n  }\r\n\r\n  async matchChromas() {\r\n    if (this.colorPickerOneSelectedColor && this.colorPickerTwoSelectedColor) {\r\n      const matchedColors = await this.cus.matchChromas([\r\n        this.colorPickerOneSelectedColor,\r\n        this.colorPickerTwoSelectedColor,\r\n      ]);\r\n\r\n      if (\r\n        matchedColors.success &&\r\n        matchedColors.colors &&\r\n        matchedColors.chroma\r\n      ) {\r\n        this.colorPickerOneSelectedColor = matchedColors.colors[0];\r\n        this.colorPickerTwoSelectedColor = matchedColors.colors[1];\r\n\r\n        this.alertUser({\r\n          message: `Chroma matched colors to ${matchedColors.chroma.toFixed(\r\n            2\r\n          )}`,\r\n        });\r\n      } else {\r\n        this.alertUser({ message: 'Unable to chroma match colors' });\r\n      }\r\n    }\r\n  }\r\n\r\n  alertUser(message: AlertMessagObj) {\r\n    this.currentAlertMessage = message;\r\n  }\r\n\r\n  constructor(private cus: ColorUtilService) {}\r\n\r\n  ngOnInit(): void {}\r\n\r\n  ngAfterViewInit(): void {\r\n    this.setRandomColorPair(true);\r\n  }\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ".app-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  padding: var(--fluidPadding) var(--fluidPadding) 0 var(--fluidPadding);\r\n  background-color: var(--background-color);\r\n\r\n  h2 {\r\n    text-align: center;\r\n  }\r\n\r\n  h3 {\r\n    text-align: center;\r\n    margin-top: 0.6em;\r\n    margin-bottom: 0.2em;\r\n    margin-left: 2px;\r\n  }\r\n\r\n  section {\r\n    // margin: 0.5rem 0;\r\n  }\r\n\r\n  .title-and-score {\r\n    display: flex;\r\n    gap: 0.6rem;\r\n    margin-bottom: 0.6rem;\r\n\r\n    h1 {\r\n      color: var(--min-body-text-black);\r\n      width: min-content;\r\n      text-align: right;\r\n    }\r\n\r\n    app-color-contrast {\r\n      flex-grow: 1;\r\n    }\r\n  }\r\n\r\n  .slide-group {\r\n    display: flex;\r\n    margin-bottom: 4px;\r\n    align-items: center;\r\n\r\n    app-color-slider {\r\n      flex-grow: 1;\r\n    }\r\n  }\r\n\r\n  .pallette-viz-container {\r\n    // padding: 0 2px;\r\n\r\n    summary {\r\n      padding: 0 0.5ch;\r\n      color: var(--min-body-text-black);\r\n      border-radius: 5px;\r\n      font-family: var(--bodyFont);\r\n      font-size: var(--minTextSize);\r\n      font-style: italic;\r\n      margin-bottom: 0.4em;\r\n      min-height: var(--minHitDimensionAA);\r\n      min-width: var(--minHitDimensionAA);\r\n      line-height: 1.6em;\r\n\r\n      &:hover {\r\n        box-shadow: 0 4px 0 0 var(--ui-shadow-color);\r\n      }\r\n    }\r\n\r\n    .content {\r\n      max-width: 100%;\r\n      overflow: auto;\r\n      margin: 0 0.9rem;\r\n    }\r\n  }\r\n\r\n  .quick-actions {\r\n    display: flex;\r\n    flex-wrap: wrap;\r\n    justify-content: center;\r\n    // background-color: #d0c6a1;\r\n\r\n    button {\r\n      color: var(--app-black);\r\n      background-color: var(--app-white);\r\n      border: transparent 2px solid;\r\n      box-sizing: border-box;\r\n      position: relative;\r\n      display: flex;\r\n      align-items: center;\r\n      margin: 11px;\r\n      border-radius: 5px;\r\n      font-style: italic;\r\n\r\n      min-width: var(--minHitDimensionAA);\r\n      min-height: var(--minHitDimensionAA);\r\n\r\n      &:hover {\r\n        box-shadow: 0 4px 0 0 var(--ui-shadow-color);\r\n      }\r\n\r\n      svg {\r\n        fill: var(--app-black);\r\n        transform: rotateZ(90deg);\r\n\r\n        height: auto;\r\n        width: 22px;\r\n\r\n        display: inline-block;\r\n      }\r\n    }\r\n  }\r\n\r\n  .options {\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n    flex-wrap: wrap;\r\n\r\n    h2 {\r\n      margin-bottom: 0;\r\n    }\r\n\r\n    p {\r\n      // text-align: center;\r\n      // width: 100%;\r\n    }\r\n\r\n    .checkbox-group {\r\n      display: flex;\r\n      flex-direction: row-reverse;\r\n      justify-content: flex-end;\r\n      align-items: center;\r\n      flex-grow: 1;\r\n\r\n      label {\r\n        font-size: var(--minBodyTextSize);\r\n        font-family: var(--bodyFont);\r\n        color: var(--ideal-body-text-black);\r\n      }\r\n\r\n      input {\r\n        margin: 11px;\r\n        min-width: var(--minHitDimensionAA);\r\n        min-height: var(--minHitDimensionAA);\r\n\r\n        &:hover {\r\n          box-shadow: 0 4px 0 0 var(--ui-shadow-color);\r\n        }\r\n      }\r\n    }\r\n  }\r\n\r\n  .metadata {\r\n    h2 {\r\n      margin-bottom: 1.1em;\r\n    }\r\n  }\r\n\r\n  .notes {\r\n    p {\r\n      margin: 0 11px 1.15em 0;\r\n      // flex-grow: 1;\r\n    }\r\n\r\n    .content {\r\n      display: flex;\r\n      flex-direction: column;\r\n      align-items: center;\r\n      // flex-flow: ;\r\n      // flex-wrap: wrap;\r\n    }\r\n  }\r\n\r\n  .contact {\r\n    display: flex;\r\n    flex-direction: column;\r\n    align-items: center;\r\n\r\n    h2,\r\n    p {\r\n      // margin: 1.15em 11px 1.15em 0;\r\n      // font-size: var(--minTextSize);\r\n      // width: 100%;\r\n    }\r\n  }\r\n\r\n  .alert {\r\n    position: sticky;\r\n    bottom: 0;\r\n  }\r\n}\r\n",
+                    "data": ".app-container {\r\n  display: flex;\r\n  position: relative;\r\n  left: 50%;\r\n  padding: var(--fluid-padding) var(--fluid-padding) 0 var(--fluid-padding);\r\n  transform: translateX(-50%);\r\n  flex-direction: column;\r\n  background-color: var(--background-color);\r\n  max-width: 400px;\r\n\r\n  h2 {\r\n    text-align: center;\r\n  }\r\n\r\n  h3 {\r\n    text-align: center;\r\n    margin-top: 0.6em;\r\n    margin-bottom: 0.2em;\r\n    margin-left: 2px;\r\n  }\r\n\r\n  .title-and-score {\r\n    display: flex;\r\n    gap: 0.6rem;\r\n    margin-bottom: 0.6rem;\r\n\r\n    h1 {\r\n      width: min-content;\r\n      color: var(--min-body-text-black);\r\n      text-align: right;\r\n    }\r\n\r\n    app-color-contrast {\r\n      flex-grow: 1;\r\n    }\r\n  }\r\n\r\n  .slide-group {\r\n    display: flex;\r\n    margin-bottom: 4px;\r\n    align-items: center;\r\n\r\n    app-color-slider {\r\n      flex-grow: 1;\r\n    }\r\n  }\r\n\r\n  .pallette-viz-container {\r\n    summary {\r\n      padding: 0 0.5ch;\r\n      color: var(--min-body-text-black);\r\n      border-radius: 5px;\r\n      font-family: var(--body-font);\r\n      font-size: var(--min-text-size);\r\n      font-style: italic;\r\n      margin-bottom: 0.4em;\r\n      min-height: var(--min-hit-dimension-aa);\r\n      min-width: var(--min-hit-dimension-aa);\r\n      line-height: 1.6em;\r\n\r\n      &:hover {\r\n        box-shadow: 0 4px 0 0 var(--ui-shadow-color);\r\n      }\r\n    }\r\n\r\n    .content {\r\n      max-width: 100%;\r\n      overflow: auto;\r\n      margin: 0 0.9rem;\r\n    }\r\n  }\r\n\r\n  .quick-actions {\r\n    display: flex;\r\n    flex-wrap: wrap;\r\n    justify-content: center;\r\n\r\n    button {\r\n      display: flex;\r\n      position: relative;\r\n      margin: 11px;\r\n      border: transparent 2px solid;\r\n      color: var(--app-black);\r\n      background-color: var(--app-white);\r\n      box-sizing: border-box;\r\n      align-items: center;\r\n      border-radius: 5px;\r\n      font-style: italic;\r\n      min-width: var(--min-hit-dimension-aa);\r\n      min-height: var(--min-hit-dimension-aa);\r\n\r\n      &:hover {\r\n        box-shadow: 0 4px 0 0 var(--ui-shadow-color);\r\n      }\r\n\r\n      svg {\r\n        display: inline-block;\r\n        width: 22px;\r\n        height: auto;\r\n        fill: var(--app-black);\r\n        transform: rotateZ(90deg);\r\n      }\r\n    }\r\n  }\r\n\r\n  .options {\r\n    display: flex;\r\n    flex-direction: column;\r\n    justify-content: center;\r\n    align-items: center;\r\n\r\n    input {\r\n      --visual-padding: 28px;\r\n\r\n      width: calc(var(--min-hit-dimension-aaa) - var(--visual-padding));\r\n      height: calc(var(--min-hit-dimension-aaa) - var(--visual-padding));\r\n      margin: calc(var(--visual-padding) / 2) 0 calc(var(--visual-padding) / 2)\r\n        calc(var(--visual-padding) / 2);\r\n\r\n      &:hover {\r\n        box-shadow: 0 4px 0 0 var(--ui-shadow-color);\r\n      }\r\n    }\r\n\r\n    .checkbox-section {\r\n      display: flex;\r\n      flex-wrap: wrap;\r\n\r\n      .checkbox-group {\r\n        display: flex;\r\n        flex-direction: row-reverse;\r\n        justify-content: flex-end;\r\n        align-items: center;\r\n        gap: 0.8ch;\r\n\r\n        label {\r\n          font-size: var(--min-text-size);\r\n          font-family: var(--body-font);\r\n          color: var(--ideal-body-text-black);\r\n        }\r\n      }\r\n    }\r\n\r\n    .radio-section {\r\n      display: flex;\r\n      flex-wrap: wrap;\r\n\r\n      .radio-group {\r\n        display: flex;\r\n        flex-direction: row-reverse;\r\n        justify-content: flex-end;\r\n        align-items: center;\r\n        gap: 0.8ch;\r\n\r\n        label {\r\n          font-size: var(--min-text-size);\r\n          font-family: var(--body-font);\r\n          color: var(--ideal-body-text-black);\r\n        }\r\n      }\r\n    }\r\n  }\r\n\r\n  .metadata {\r\n    h2 {\r\n      margin-bottom: 1.1em;\r\n    }\r\n  }\r\n\r\n  .instructions {\r\n    h2 {\r\n      margin-bottom: 1.1em;\r\n    }\r\n\r\n    p,\r\n    li {\r\n      margin: 0 11px 0 0;\r\n    }\r\n\r\n    .content {\r\n      display: flex;\r\n      flex-direction: column;\r\n      align-items: center;\r\n    }\r\n  }\r\n\r\n  .notes {\r\n    h2 {\r\n      margin-bottom: 1.1em;\r\n    }\r\n\r\n    p {\r\n      margin: 0 11px 1.15em 0;\r\n    }\r\n\r\n    .content {\r\n      display: flex;\r\n      flex-direction: column;\r\n      align-items: center;\r\n    }\r\n  }\r\n\r\n  .contact {\r\n    display: flex;\r\n    flex-direction: column;\r\n    align-items: center;\r\n\r\n    h2 {\r\n      margin-bottom: 1.1em;\r\n    }\r\n  }\r\n\r\n  .alert {\r\n    position: sticky;\r\n    bottom: 0;\r\n  }\r\n}\r\n",
                     "styleUrl": "./app.component.scss"
                 }
             ],
@@ -2243,7 +2271,7 @@
                         "deprecationMessage": ""
                     }
                 ],
-                "line": 188,
+                "line": 193,
                 "jsdoctags": [
                     {
                         "name": "cus",
@@ -2260,7 +2288,7 @@
                 "OnInit",
                 "AfterViewInit"
             ],
-            "templateData": "<div class=\"app-container\">\r\n  <section class=\"title-and-sliders\">\r\n    <div class=\"title-and-score\">\r\n      <h1>Perceptual Contrast</h1>\r\n      <app-color-contrast\r\n        [colorOne]=\"colorPickerOneComparedColor\"\r\n        [colorTwo]=\"colorPickerTwoComparedColor\"\r\n        [contrastType]=\"contrastType\"\r\n      ></app-color-contrast>\r\n    </div>\r\n\r\n    <h2 class=\"sr-only\">Main Color Controls</h2>\r\n\r\n    <h3>Foreground Color</h3>\r\n\r\n    <div class=\"slide-group\">\r\n      <app-color-picker\r\n        [inputId]=\"'cp-0'\"\r\n        [inputName]=\"'Foreground Color'\"\r\n        [comparedColor]=\"colorPickerOneComparedColor\"\r\n        (selectedColor)=\"handleColorInputInput('One', $event)\"\r\n        [deltaColor]=\"colorPickerOneSelectedColor\"\r\n      ></app-color-picker>\r\n      <app-color-slider\r\n        [id]=\"'slider-0'\"\r\n        [name]=\"'Foreground Slider'\"\r\n        [color]=\"colorPickerOneSelectedColor\"\r\n        [constantChroma]=\"constantChroma\"\r\n        (colorVariant)=\"handleSliderInputInput('One', $event)\"\r\n        [resetSlider]=\"resetSlider\"\r\n      ></app-color-slider>\r\n      <app-copy-to-clipboard-button\r\n        [color]=\"colorPickerOneComparedColor\"\r\n        (copyEvent)=\"handleCopyEvent($event)\"\r\n      ></app-copy-to-clipboard-button>\r\n    </div>\r\n\r\n    <details class=\"pallette-viz-container\">\r\n      <summary>Foreground LCH Limits</summary>\r\n\r\n      <div class=\"content\">\r\n        <app-palette-table\r\n          [color]=\"colorPickerOneSelectedColor\"\r\n          (selectedColor)=\"handleColorPaletteButtonEvent('One', $event)\"\r\n        ></app-palette-table>\r\n      </div>\r\n    </details>\r\n\r\n    <h3>Background Color</h3>\r\n\r\n    <div class=\"slide-group\">\r\n      <app-color-picker\r\n        [inputId]=\"'cp-1'\"\r\n        [inputName]=\"'Background Color'\"\r\n        [comparedColor]=\"colorPickerTwoComparedColor\"\r\n        [deltaColor]=\"colorPickerTwoSelectedColor\"\r\n        (selectedColor)=\"handleColorInputInput('Two', $event)\"\r\n      ></app-color-picker>\r\n      <app-color-slider\r\n        [id]=\"'slider-1'\"\r\n        [name]=\"'Backgroundground Slider'\"\r\n        [color]=\"colorPickerTwoSelectedColor\"\r\n        [constantChroma]=\"constantChroma\"\r\n        (colorVariant)=\"handleSliderInputInput('Two', $event)\"\r\n        [resetSlider]=\"resetSlider\"\r\n      ></app-color-slider>\r\n      <app-copy-to-clipboard-button\r\n        [color]=\"colorPickerTwoComparedColor\"\r\n        (copyEvent)=\"handleCopyEvent($event)\"\r\n      ></app-copy-to-clipboard-button>\r\n    </div>\r\n\r\n    <details class=\"pallette-viz-container\">\r\n      <summary>Background LCH Limits</summary>\r\n\r\n      <div class=\"content\">\r\n        <app-palette-table\r\n          [color]=\"colorPickerTwoSelectedColor\"\r\n          (selectedColor)=\"handleColorPaletteButtonEvent('Two', $event)\"\r\n        ></app-palette-table>\r\n      </div>\r\n    </details>\r\n  </section>\r\n\r\n  <section class=\"quick-actions\">\r\n    <button\r\n      [disabled]=\"!colorPickerOneSelectedColor || !colorPickerTwoSelectedColor\"\r\n      (click)=\"swapColors()\"\r\n    >\r\n      <span class=\"sr-only\">Swap Selected Colors</span>\r\n      <svg\r\n        aria-hidden=\"true\"\r\n        xmlns=\"http://www.w3.org/2000/svg\"\r\n        viewBox=\"0 0 32 32\"\r\n        x=\"0px\"\r\n        y=\"0px\"\r\n      >\r\n        <defs>\r\n          <style>\r\n            .cls-1 {\r\n              fill: none;\r\n            }\r\n          </style>\r\n        </defs>\r\n        <g>\r\n          <path\r\n            d=\"M6.29,8.71a1,1,0,0,1,0-1.42l4-4a1,1,0,1,1,1.42,1.42L9.41,7H19a7,7,0,0,1,7,7,1,1,0,0,1-2,0,5,5,0,0,0-5-5H9.41l2.3,2.29a1,1,0,0,1,0,1.42,1,1,0,0,1-1.42,0ZM21.71,19.29a1,1,0,0,0-1.42,1.42L22.59,23H13a5,5,0,0,1-5-5,1,1,0,0,0-2,0,7,7,0,0,0,7,7h9.59l-2.3,2.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0l4-4a1,1,0,0,0,0-1.42Z\"\r\n          />\r\n          <rect class=\"cls-1\" width=\"32\" height=\"32\" />\r\n        </g>\r\n      </svg>\r\n    </button>\r\n    <button (click)=\"setRandomColorPair()\">\r\n      <span class=\"sr-only\">Create Random Color Pair</span\r\n      ><span aria-hidden=\"true\">Ra</span>\r\n    </button>\r\n    <button (click)=\"resetSliders()\">\r\n      <span class=\"sr-only\">Reset Color Sliders</span\r\n      ><span aria-hidden=\"true\">Re</span>\r\n    </button>\r\n    <button (click)=\"matchChromas()\">\r\n      <span class=\"sr-only\">Harmonize Color Pair To Same Chroma</span\r\n      ><span aria-hidden=\"true\">Ch</span>\r\n    </button>\r\n  </section>\r\n\r\n  <hr />\r\n\r\n  <section class=\"options\">\r\n    <h2>Options</h2>\r\n    <div class=\"options\">\r\n      <div class=\"checkbox-group\">\r\n        <label for=\"option-score-toggle\"\r\n          >Display WCAG 2 compatible value<span class=\"sr-only\"\r\n            >; this affects a visual element not percievable to screenreaders\r\n            for good UX—same value is obtainable on Color Metadata section under\r\n            Differences.</span\r\n          >\r\n        </label>\r\n        <input\r\n          type=\"checkbox\"\r\n          name=\"Contrast Score Type Toggle\"\r\n          id=\"option-score-toggle\"\r\n          (change)=\"toggleContrastType($event)\"\r\n        />\r\n      </div>\r\n\r\n      <div class=\"checkbox-group\">\r\n        <label for=\"option-const-chroma\">Constant chroma</label>\r\n        <input\r\n          type=\"checkbox\"\r\n          name=\"Constant Chroma Toggle\"\r\n          id=\"option-const-chroma\"\r\n          (change)=\"toggleConstantChroma($event)\"\r\n        />\r\n      </div>\r\n    </div>\r\n  </section>\r\n\r\n  <hr />\r\n\r\n  <section class=\"metadata\">\r\n    <h2>Color Metadata</h2>\r\n    <details>\r\n      <summary>Descriptive data about your inputted colors.</summary>\r\n\r\n      <app-metadata\r\n        [colorOne]=\"colorPickerOneComparedColor\"\r\n        [colorTwo]=\"colorPickerTwoComparedColor\"\r\n      ></app-metadata>\r\n    </details>\r\n  </section>\r\n\r\n  <hr />\r\n\r\n  <section class=\"notes\">\r\n    <h2>Notes</h2>\r\n\r\n    <details>\r\n      <summary>Details about app features.</summary>\r\n\r\n      <div class=\"content\">\r\n        <p id=\"notes-lch-limits\">\r\n          <span class=\"visual-header\">LCH Limits:</span>\r\n          This feature displays a collection of different buttons showing\r\n          possible variants of your selected color limited by the sRGB color\r\n          gamut. The visualization is built using a\r\n          <code>table</code> element to provide an equitable experience in\r\n          choosing colors based on lightness and chroma.\r\n        </p>\r\n        <p id=\"notes-object\">\r\n          <span class=\"visual-header\">Object:</span> A readout that shows two\r\n          different values, a number in pixels that the current contrast level\r\n          supports, and 'invisible' when the current contrast level is too low\r\n          to support <strong>any</strong> object.\r\n        </p>\r\n        <p id=\"notes-perceptual-contrast\">\r\n          <span class=\"visual-header\"> Perceptual contrast:</span> Score that\r\n          better gauges contrast than WCAG 2 in the creation of inclusive visual\r\n          designs. For more information on the value used for Perceptual\r\n          Contrast, refer to Myndex article\r\n          <a href=\"https://git.apcacontrast.com/documentation/WhyAPCA.html\"\r\n            >Why APCA?</a\r\n          >\r\n        </p>\r\n        <p id=\"notes-wcag2-compat\">\r\n          <span class=\"visual-header\">WCAG 2 compatible:</span> A score\r\n          compatible with use for WCAG 2.x success criteria. This score meets or\r\n          exceeds WCAG 2 scores to better include those with atypical vision.\r\n        </p>\r\n        <p id=\"notes-wcag2\">\r\n          <span class=\"visual-header\">WCAG 2:</span> Scores that are included\r\n          for reference only—do not use this score for judging Accessible\r\n          Contrast.\r\n        </p>\r\n\r\n        <p id=\"notes-display-wcag2\">\r\n          <span class=\"visual-header\">Display WCAG 2 compatible value:</span>\r\n          Option that swaps out perceptual contrast score visually displayed at\r\n          top of the app. Screen reader users can access the same value\r\n          regardless of this option in the Differences table located in the\r\n          Color Metadata section.\r\n        </p>\r\n        <p id=\"notes-constant-chroma\">\r\n          <span class=\"visual-header\">Constant chroma:</span>\r\n          Option that forces the color sliders to limit light and dark variation\r\n          of colors to tints and shades that have the same chroma and hue of the\r\n          inputted color maintaining the objective identity of your input color.\r\n        </p>\r\n      </div>\r\n    </details>\r\n  </section>\r\n\r\n  <hr />\r\n\r\n  <section class=\"contact\">\r\n    <h2>Contact Information and Feedback</h2>\r\n\r\n    <p>\r\n      Made by <a href=\"https://github.com/pawn002\">pawn002</a>, who would\r\n      appreciate\r\n      <a\r\n        href=\"https://github.com/pawn002/color-pair-quick-iterator/issues/new/choose\"\r\n      >\r\n        bug reports and feature requests for this app</a\r\n      >\r\n      to help improve its Accessibility.\r\n    </p>\r\n  </section>\r\n\r\n  <div class=\"alert\">\r\n    <app-alert [alertMessage]=\"currentAlertMessage\"></app-alert>\r\n  </div>\r\n</div>\r\n"
+            "templateData": "<div class=\"app-container\">\r\n  <section class=\"title-and-sliders\">\r\n    <div class=\"title-and-score\">\r\n      <h1>Colors Contrast</h1>\r\n      <app-color-contrast\r\n        [colorOne]=\"colorPickerOneComparedColor\"\r\n        [colorTwo]=\"colorPickerTwoComparedColor\"\r\n        [contrastType]=\"contrastType\"\r\n      ></app-color-contrast>\r\n    </div>\r\n\r\n    <h2 class=\"sr-only\">Main Color Controls</h2>\r\n\r\n    <h3>Foreground Color</h3>\r\n\r\n    <div class=\"slide-group\">\r\n      <app-color-picker\r\n        [inputId]=\"'cp-0'\"\r\n        [inputName]=\"'Foreground Color'\"\r\n        [comparedColor]=\"colorPickerOneComparedColor\"\r\n        (selectedColor)=\"handleColorInputInput('One', $event)\"\r\n        [deltaColor]=\"colorPickerOneSelectedColor\"\r\n      ></app-color-picker>\r\n      <app-color-slider\r\n        [id]=\"'slider-0'\"\r\n        [name]=\"'Foreground Slider'\"\r\n        [color]=\"colorPickerOneSelectedColor\"\r\n        [constantChroma]=\"constantChroma\"\r\n        (colorVariant)=\"handleSliderInputInput('One', $event)\"\r\n        [resetSlider]=\"resetSlider\"\r\n      ></app-color-slider>\r\n      <app-copy-to-clipboard-button\r\n        [color]=\"colorPickerOneComparedColor\"\r\n        (copyEvent)=\"handleCopyEvent($event)\"\r\n      ></app-copy-to-clipboard-button>\r\n    </div>\r\n\r\n    <details class=\"pallette-viz-container\">\r\n      <summary>Foreground LCH Limits</summary>\r\n\r\n      <div class=\"content\">\r\n        <app-palette-table\r\n          [color]=\"colorPickerOneSelectedColor\"\r\n          (selectedColor)=\"handleColorPaletteButtonEvent('One', $event)\"\r\n        ></app-palette-table>\r\n      </div>\r\n    </details>\r\n\r\n    <h3>Background Color</h3>\r\n\r\n    <div class=\"slide-group\">\r\n      <app-color-picker\r\n        [inputId]=\"'cp-1'\"\r\n        [inputName]=\"'Background Color'\"\r\n        [comparedColor]=\"colorPickerTwoComparedColor\"\r\n        [deltaColor]=\"colorPickerTwoSelectedColor\"\r\n        (selectedColor)=\"handleColorInputInput('Two', $event)\"\r\n      ></app-color-picker>\r\n      <app-color-slider\r\n        [id]=\"'slider-1'\"\r\n        [name]=\"'Backgroundground Slider'\"\r\n        [color]=\"colorPickerTwoSelectedColor\"\r\n        [constantChroma]=\"constantChroma\"\r\n        (colorVariant)=\"handleSliderInputInput('Two', $event)\"\r\n        [resetSlider]=\"resetSlider\"\r\n      ></app-color-slider>\r\n      <app-copy-to-clipboard-button\r\n        [color]=\"colorPickerTwoComparedColor\"\r\n        (copyEvent)=\"handleCopyEvent($event)\"\r\n      ></app-copy-to-clipboard-button>\r\n    </div>\r\n\r\n    <details class=\"pallette-viz-container\">\r\n      <summary>Background LCH Limits</summary>\r\n\r\n      <div class=\"content\">\r\n        <app-palette-table\r\n          [color]=\"colorPickerTwoSelectedColor\"\r\n          (selectedColor)=\"handleColorPaletteButtonEvent('Two', $event)\"\r\n        ></app-palette-table>\r\n      </div>\r\n    </details>\r\n  </section>\r\n\r\n  <section class=\"quick-actions\">\r\n    <button\r\n      [disabled]=\"!colorPickerOneSelectedColor || !colorPickerTwoSelectedColor\"\r\n      (click)=\"swapColors()\"\r\n    >\r\n      <span class=\"sr-only\">Swap Selected Colors</span>\r\n      <svg\r\n        aria-hidden=\"true\"\r\n        xmlns=\"http://www.w3.org/2000/svg\"\r\n        viewBox=\"0 0 32 32\"\r\n        x=\"0px\"\r\n        y=\"0px\"\r\n      >\r\n        <defs>\r\n          <style>\r\n            .cls-1 {\r\n              fill: none;\r\n            }\r\n          </style>\r\n        </defs>\r\n        <g>\r\n          <path\r\n            d=\"M6.29,8.71a1,1,0,0,1,0-1.42l4-4a1,1,0,1,1,1.42,1.42L9.41,7H19a7,7,0,0,1,7,7,1,1,0,0,1-2,0,5,5,0,0,0-5-5H9.41l2.3,2.29a1,1,0,0,1,0,1.42,1,1,0,0,1-1.42,0ZM21.71,19.29a1,1,0,0,0-1.42,1.42L22.59,23H13a5,5,0,0,1-5-5,1,1,0,0,0-2,0,7,7,0,0,0,7,7h9.59l-2.3,2.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0l4-4a1,1,0,0,0,0-1.42Z\"\r\n          />\r\n          <rect class=\"cls-1\" width=\"32\" height=\"32\" />\r\n        </g>\r\n      </svg>\r\n    </button>\r\n    <button (click)=\"setRandomColorPair()\">\r\n      <span class=\"sr-only\">Create Random Color Pair</span\r\n      ><span aria-hidden=\"true\">Ra</span>\r\n    </button>\r\n    <button (click)=\"resetSliders()\">\r\n      <span class=\"sr-only\">Reset Color Sliders</span\r\n      ><span aria-hidden=\"true\">Re</span>\r\n    </button>\r\n    <button (click)=\"matchChromas()\">\r\n      <span class=\"sr-only\">Harmonize Color Pair To Same Chroma</span\r\n      ><span aria-hidden=\"true\">Ch</span>\r\n    </button>\r\n  </section>\r\n\r\n  <hr />\r\n\r\n  <section class=\"options\">\r\n    <h2>Options</h2>\r\n\r\n    <div class=\"options\">\r\n      <div>\r\n        <h3>Display Value</h3>\r\n\r\n        <div class=\"radio-section\">\r\n          <div class=\"radio-group\">\r\n            <label for=\"ct-apca\"\r\n              >Perceptual<span class=\"sr-only\"\r\n                >; this affects a visual element not percievable to\r\n                screenreaders for good UX—same value is obtainable on Color\r\n                Metadata section under Differences.</span\r\n              >\r\n            </label>\r\n            <input\r\n              type=\"radio\"\r\n              name=\"contrastType\"\r\n              id=\"ct-apca\"\r\n              (change)=\"radioChange('apca')\"\r\n              checked\r\n            />\r\n          </div>\r\n          <div class=\"radio-group\">\r\n            <label for=\"ct-bpca\"\r\n              >WCAG 2 compatible<span class=\"sr-only\"\r\n                >; this affects a visual element not percievable to\r\n                screenreaders for good UX—same value is obtainable on Color\r\n                Metadata section under Differences.</span\r\n              >\r\n            </label>\r\n            <input\r\n              type=\"radio\"\r\n              name=\"contrastType\"\r\n              id=\"ct-bpca\"\r\n              (change)=\"radioChange('bpca')\"\r\n            />\r\n          </div>\r\n          <div class=\"radio-group\">\r\n            <label for=\"ct-apca-object\"\r\n              >Object\r\n              <span class=\"sr-only\"\r\n                >; this affects a visual element not percievable to\r\n                screenreaders for good UX—same value is obtainable on Color\r\n                Metadata section under Differences.</span\r\n              >\r\n            </label>\r\n            <input\r\n              type=\"radio\"\r\n              name=\"contrastType\"\r\n              id=\"ct-apca-object\"\r\n              (change)=\"radioChange('apca object')\"\r\n            />\r\n          </div>\r\n        </div>\r\n      </div>\r\n\r\n      <div>\r\n        <h3>Color Sliders</h3>\r\n\r\n        <div class=\"checkbox-section\">\r\n          <div class=\"checkbox-group\">\r\n            <label for=\"option-const-chroma\">Constant chroma</label>\r\n            <input\r\n              type=\"checkbox\"\r\n              name=\"Constant Chroma Toggle\"\r\n              id=\"option-const-chroma\"\r\n              (change)=\"toggleConstantChroma($event)\"\r\n            />\r\n          </div>\r\n          <div class=\"checkbox-group\">\r\n            <label for=\"option-show-grad\">Show Gradient</label>\r\n            <input\r\n              disabled\r\n              type=\"checkbox\"\r\n              name=\"Constant Chroma Toggle\"\r\n              id=\"option-show-grad\"\r\n              (change)=\"toggleConstantChroma($event)\"\r\n            />\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </section>\r\n\r\n  <hr />\r\n\r\n  <section class=\"metadata\">\r\n    <h2>Color Metadata</h2>\r\n    <details>\r\n      <summary>Descriptive data about your inputted colors.</summary>\r\n\r\n      <app-metadata\r\n        [colorOne]=\"colorPickerOneComparedColor\"\r\n        [colorTwo]=\"colorPickerTwoComparedColor\"\r\n      ></app-metadata>\r\n    </details>\r\n  </section>\r\n\r\n  <hr />\r\n\r\n  <section class=\"instructions\">\r\n    <h2>Instructions</h2>\r\n\r\n    <details>\r\n      <summary>How to use this app.</summary>\r\n\r\n      <div class=\"content\">\r\n        <p id=\"quick-start\">\r\n          <span class=\"visual-header\">Quick Start:</span>\r\n          Input a color for both Foreground and Background Color using the color\r\n          inputs at the start of each color section. You can then:\r\n        </p>\r\n        <ul>\r\n          <li>\r\n            Use the slider inputs to adjust your inputted colors light and dark\r\n            until you have your desired combination of contrast and tone.\r\n          </li>\r\n          <li>\r\n            Use the Copy to Clipboard button to copy each color to the clipboard\r\n            for use in other applications.\r\n          </li>\r\n        </ul>\r\n      </div>\r\n    </details>\r\n  </section>\r\n\r\n  <hr />\r\n\r\n  <section class=\"notes\">\r\n    <h2>Notes</h2>\r\n\r\n    <details>\r\n      <summary>Details about app features.</summary>\r\n\r\n      <div class=\"content\">\r\n        <p id=\"notes-lch-limits\">\r\n          <span class=\"visual-header\">LCH Limits:</span>\r\n          This feature displays a collection of different buttons showing\r\n          possible variants of your selected color in the sRGB color gamut\r\n          allowing a user to see what different hues are capable of e.g. the\r\n          strongest yellow is only possible a high lightness level. The\r\n          visualization is built using a\r\n          <code>table</code> element to provide an equitable experience in\r\n          choosing colors based on lightness and chroma.\r\n        </p>\r\n        <p id=\"notes-object\">\r\n          <span class=\"visual-header\">Object:</span> A readout that shows two\r\n          different values, a number in pixels that the current contrast level\r\n          supports, and 'invisible' when the current contrast level is too low\r\n          to support <strong>any</strong> object.\r\n        </p>\r\n        <p id=\"notes-perceptual-contrast\">\r\n          <span class=\"visual-header\"> Perceptual contrast:</span> Score that\r\n          better gauges contrast than WCAG 2 in the creation of inclusive visual\r\n          designs. For more information on the value used for Perceptual\r\n          Contrast, refer to Myndex article\r\n          <a href=\"https://git.apcacontrast.com/documentation/WhyAPCA.html\"\r\n            >Why APCA?</a\r\n          >\r\n        </p>\r\n        <p id=\"notes-wcag2-compat\">\r\n          <span class=\"visual-header\">WCAG 2 compatible:</span> A score\r\n          compatible with use for WCAG 2.x success criteria. This score meets or\r\n          exceeds WCAG 2 scores to better include those with atypical vision.\r\n        </p>\r\n        <p id=\"notes-wcag2\">\r\n          <span class=\"visual-header\">WCAG 2:</span> Scores that are included\r\n          for reference only—do not use this score for judging Accessible\r\n          Contrast.\r\n        </p>\r\n\r\n        <p id=\"notes-display-wcag2\">\r\n          <span class=\"visual-header\">Display WCAG 2 compatible value:</span>\r\n          Option that swaps out perceptual contrast score visually displayed at\r\n          top of the app. Screen reader users can access the same value\r\n          regardless of this option in the Differences table located in the\r\n          Color Metadata section.\r\n        </p>\r\n        <p id=\"notes-constant-chroma\">\r\n          <span class=\"visual-header\">Constant chroma:</span>\r\n          Option that forces the color sliders to limit light and dark variation\r\n          of colors to tints and shades that have the same chroma and hue of the\r\n          inputted color maintaining the objective identity of your input color.\r\n        </p>\r\n        <p id=\"notes-show-grad\">\r\n          <span class=\"visual-header\">Show Gradient:</span>\r\n          Currently disabled, but will render a gradient behind the color\r\n          sliders showing the possible colors an inputted color is capable of.\r\n        </p>\r\n      </div>\r\n    </details>\r\n  </section>\r\n\r\n  <hr />\r\n\r\n  <section class=\"contact\">\r\n    <h2>Contact Information and Feedback</h2>\r\n\r\n    <p>\r\n      Made by <a href=\"https://github.com/pawn002\">pawn002</a>, who would\r\n      appreciate\r\n      <a\r\n        href=\"https://github.com/pawn002/color-pair-quick-iterator/issues/new/choose\"\r\n      >\r\n        bug reports and feature requests for this app</a\r\n      >\r\n      to help improve its Accessibility.\r\n    </p>\r\n  </section>\r\n\r\n  <div class=\"alert\">\r\n    <app-alert [alertMessage]=\"currentAlertMessage\"></app-alert>\r\n  </div>\r\n</div>\r\n"
         },
         {
             "name": "ButtonComponent",
@@ -2396,7 +2424,7 @@
         },
         {
             "name": "ColorContrastComponent",
-            "id": "component-ColorContrastComponent-6fb709cf1993e4c8dd61049eb240dff369a7e026a5179bac884820e20fc27f163e0dd803a54adcb5d7277061fadd81bfb5ce824a0c91f4916c54b2d69fa15c7b",
+            "id": "component-ColorContrastComponent-5e8166baa3ea8427286d0cf19c5d3dda1f0d14f922862b0092b73fe68612d7a9f2243cb7ac611881cbe298dc780dc512e12e01c200f3e7d2d15125f94fdcfffa",
             "file": "src/app/color-contrast/color-contrast.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -2419,7 +2447,7 @@
                     "defaultValue": "null",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 25,
+                    "line": 26,
                     "type": "string | null",
                     "decorators": []
                 },
@@ -2428,7 +2456,7 @@
                     "defaultValue": "null",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 26,
+                    "line": 27,
                     "type": "string | null",
                     "decorators": []
                 },
@@ -2437,8 +2465,8 @@
                     "defaultValue": "null",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 27,
-                    "type": "ContrastType | null",
+                    "line": 28,
+                    "type": "ContrastType | \"apca object\" | null",
                     "decorators": []
                 }
             ],
@@ -2448,7 +2476,7 @@
                     "defaultValue": "new EventEmitter<ContrastObject>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 29,
+                    "line": 30,
                     "type": "EventEmitter"
                 }
             ],
@@ -2461,7 +2489,7 @@
                     "type": "number | null",
                     "optional": false,
                     "description": "",
-                    "line": 31
+                    "line": 32
                 }
             ],
             "methodsClass": [
@@ -2478,7 +2506,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 35,
+                    "line": 39,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2503,11 +2531,11 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {\r\n  Component,\r\n  EventEmitter,\r\n  Input,\r\n  OnChanges,\r\n  Output,\r\n  SimpleChanges,\r\n} from '@angular/core';\r\nimport {\r\n  ColorMetricsService,\r\n  ContrastType,\r\n} from '../services/color-metrics.service';\r\n\r\nexport class ContrastObject {\r\n  score: number | null = null;\r\n  type: ContrastType | null = null;\r\n}\r\n\r\n@Component({\r\n  selector: 'app-color-contrast',\r\n  templateUrl: './color-contrast.component.html',\r\n  styleUrls: ['./color-contrast.component.scss'],\r\n})\r\nexport class ColorContrastComponent implements OnChanges {\r\n  @Input() colorOne: string | null = null;\r\n  @Input() colorTwo: string | null = null;\r\n  @Input() contrastType: ContrastType | null = null;\r\n\r\n  @Output() contrast = new EventEmitter<ContrastObject>();\r\n\r\n  contrastScore: number | null = null;\r\n\r\n  constructor(private cms: ColorMetricsService) {}\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    // console.log(changes);\r\n\r\n    if (this.colorOne && this.colorTwo && this.contrastType) {\r\n      const score = this.cms.getContrast(\r\n        this.colorOne,\r\n        this.colorTwo,\r\n        this.contrastType\r\n      );\r\n\r\n      this.contrastScore = score;\r\n    } else {\r\n      console.warn('contrast comp has incomplete bindings');\r\n    }\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  Component,\r\n  EventEmitter,\r\n  Input,\r\n  OnChanges,\r\n  Output,\r\n  SimpleChanges,\r\n} from '@angular/core';\r\nimport {\r\n  ColorMetricsService,\r\n  ContrastType,\r\n} from '../services/color-metrics.service';\r\nimport { ColorUtilService } from '../services/color-util.service';\r\n\r\nexport class ContrastObject {\r\n  score: number | null = null;\r\n  type: ContrastType | null = null;\r\n}\r\n\r\n@Component({\r\n  selector: 'app-color-contrast',\r\n  templateUrl: './color-contrast.component.html',\r\n  styleUrls: ['./color-contrast.component.scss'],\r\n})\r\nexport class ColorContrastComponent implements OnChanges {\r\n  @Input() colorOne: string | null = null;\r\n  @Input() colorTwo: string | null = null;\r\n  @Input() contrastType: ContrastType | 'apca object' | null = null;\r\n\r\n  @Output() contrast = new EventEmitter<ContrastObject>();\r\n\r\n  contrastScore: number | null = null;\r\n\r\n  constructor(\r\n    private cms: ColorMetricsService,\r\n    private cus: ColorUtilService\r\n  ) {}\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    // console.log(changes);\r\n\r\n    if (this.colorOne && this.colorTwo && this.contrastType) {\r\n      const score = this.cms.getContrast(\r\n        this.colorOne,\r\n        this.colorTwo,\r\n        this.contrastType === 'apca object' ? 'apca' : this.contrastType\r\n      );\r\n\r\n      this.contrastScore = score;\r\n\r\n      if (score) {\r\n        this.contrastScore =\r\n          this.contrastType === 'apca object'\r\n            ? this.cus.getMinObjectDimension(score)\r\n            : this.contrastScore;\r\n      }\r\n    } else {\r\n      console.warn('contrast comp has incomplete bindings');\r\n    }\r\n  }\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ".comp-container {\r\n  border: var(--min-body-text-black) solid 3px;\r\n  padding: 0.5rem;\r\n\r\n  .score-container {\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n\r\n    .score {\r\n      // background-color: red;\r\n      color: var(--ideal-body-text-black);\r\n      font-weight: 600;\r\n      font-family: var(--monoFont);\r\n    }\r\n  }\r\n}\r\n",
+                    "data": ".comp-container {\r\n  padding: 0.5em 0.25ch;\r\n  border: var(--min-body-text-black) solid 3px;\r\n\r\n  .score-container {\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n\r\n    .score {\r\n      color: var(--ideal-body-text-black);\r\n      font-weight: 600;\r\n      font-family: var(--mono-font);\r\n    }\r\n  }\r\n}\r\n",
                     "styleUrl": "./color-contrast.component.scss"
                 }
             ],
@@ -2523,13 +2551,28 @@
                         "type": "ColorMetricsService",
                         "deprecated": false,
                         "deprecationMessage": ""
+                    },
+                    {
+                        "name": "cus",
+                        "type": "ColorUtilService",
+                        "deprecated": false,
+                        "deprecationMessage": ""
                     }
                 ],
-                "line": 31,
+                "line": 32,
                 "jsdoctags": [
                     {
                         "name": "cms",
                         "type": "ColorMetricsService",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
+                    {
+                        "name": "cus",
+                        "type": "ColorUtilService",
                         "deprecated": false,
                         "deprecationMessage": "",
                         "tagName": {
@@ -2541,7 +2584,7 @@
             "implements": [
                 "OnChanges"
             ],
-            "templateData": "<!-- This comp is for users with typical vision. The same information is delivered with better UX for a user who is blind in the Color Metadata section. -->\r\n<div class=\"comp-container\" aria-hidden=\"true\">\r\n  <div class=\"score-container\">\r\n    <label class=\"sr-only\" for=\"contrast-score\"\r\n      >Contrast Score for Selected Colors</label\r\n    >\r\n\r\n    <div id=\"contrast-score\" class=\"score\">\r\n      {{ contrastScore || contrastScore === 0 ? contrastScore : \"null\" }}\r\n    </div>\r\n  </div>\r\n</div>\r\n"
+            "templateData": "<!-- This comp is for users with typical vision. The same information is delivered with better UX for a user who is blind in the Color Metadata section. -->\r\n<div class=\"comp-container\" aria-hidden=\"true\">\r\n  <div class=\"score-container\">\r\n    <label class=\"sr-only\" for=\"contrast-score\"\r\n      >Contrast Score for Selected Colors</label\r\n    >\r\n\r\n    <div id=\"contrast-score\" class=\"score\">\r\n      {{ contrastScore ? contrastScore : \"!\" }}\r\n      <!-- {{ contrastScore }} -->\r\n    </div>\r\n  </div>\r\n</div>\r\n"
         },
         {
             "name": "ColorPickerComponent",
@@ -2749,7 +2792,7 @@
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ".comp-container {\r\n  position: relative;\r\n  display: inline-block;\r\n  border-radius: 5px 0 0 5px;\r\n\r\n  &:hover {\r\n    box-shadow: 0 4px 0 0 var(--ui-shadow-color);\r\n  }\r\n\r\n  input {\r\n    width: 50px;\r\n    height: 50px;\r\n    box-sizing: border-box;\r\n    border: var(--app-white) 2px solid;\r\n    border-radius: 5px 0 0 5px;\r\n  }\r\n\r\n  .color-preview {\r\n    border-radius: 5px 0 0 5px;\r\n    position: absolute;\r\n    top: 50%;\r\n    left: 50%;\r\n    transform: translate(-50%, -50%);\r\n    // NOTE: 2(15px) + 15px = 45px\r\n    width: 45px;\r\n    height: 45px;\r\n    border: transparent 15px solid;\r\n    background-color: transparent;\r\n    pointer-events: none;\r\n    box-sizing: border-box;\r\n  }\r\n}\r\n",
+                    "data": ".comp-container {\r\n  display: inline-block;\r\n  position: relative;\r\n  border-radius: 5px 0 0 5px;\r\n\r\n  &:hover {\r\n    box-shadow: 0 4px 0 0 var(--ui-shadow-color);\r\n  }\r\n\r\n  input {\r\n    width: 50px;\r\n    height: 50px;\r\n    box-sizing: border-box;\r\n    border: var(--app-white) 2px solid;\r\n    border-radius: 5px 0 0 5px;\r\n  }\r\n\r\n  .color-preview {\r\n    border-radius: 5px 0 0 5px;\r\n    position: absolute;\r\n    top: 50%;\r\n    left: 50%;\r\n\r\n    /* NOTE: 2(15px) + 15px = 45px */\r\n    width: 45px;\r\n    height: 45px;\r\n    border: transparent 15px solid;\r\n    transform: translate(-50%, -50%);\r\n    background-color: transparent;\r\n    pointer-events: none;\r\n    box-sizing: border-box;\r\n  }\r\n}\r\n",
                     "styleUrl": "./color-picker.component.scss"
                 }
             ],
@@ -2761,7 +2804,7 @@
         },
         {
             "name": "ColorSliderComponent",
-            "id": "component-ColorSliderComponent-5679a0e2825073faf4b34f69cb5d97f484de926fd9be0c2d8c68f8c28de9a10cb87e3383e9323d66b7607dc23be0fdc08f233ca47e6a3812de6456114a77c1b5",
+            "id": "component-ColorSliderComponent-be474616f695bad81bbd6804da57466f6236406f1287bc66ec4b722eae55690259f6731daf87c2645753f104eab8956a9484919c5054f17beb53079cfa6947c5",
             "file": "src/app/color-slider/color-slider.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -2820,8 +2863,17 @@
                     "defaultValue": "null",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 26,
+                    "line": 27,
                     "type": "ResetObject | null",
+                    "decorators": []
+                },
+                {
+                    "name": "showGradient",
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 26,
+                    "type": "boolean",
                     "decorators": []
                 }
             ],
@@ -2831,20 +2883,20 @@
                     "defaultValue": "new EventEmitter<string | null>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 27,
+                    "line": 28,
                     "type": "EventEmitter"
                 }
             ],
             "propertiesClass": [
                 {
                     "name": "debug",
-                    "defaultValue": "false",
+                    "defaultValue": "true",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "boolean",
                     "optional": false,
                     "description": "",
-                    "line": 29
+                    "line": 30
                 },
                 {
                     "name": "devColorVariant",
@@ -2854,7 +2906,7 @@
                     "type": "string | null",
                     "optional": false,
                     "description": "",
-                    "line": 30
+                    "line": 31
                 },
                 {
                     "name": "initValue",
@@ -2868,7 +2920,7 @@
                 },
                 {
                     "name": "slideInterval",
-                    "defaultValue": "0.005",
+                    "defaultValue": "null",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "number | null",
@@ -2967,6 +3019,34 @@
                     "deprecationMessage": ""
                 },
                 {
+                    "name": "gradient",
+                    "args": [
+                        {
+                            "name": "val",
+                            "type": "\"on\" | \"off\"",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 119,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "val",
+                            "type": "\"on\" | \"off\"",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
                     "name": "handleSliding",
                     "args": [
                         {
@@ -2979,7 +3059,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 81,
+                    "line": 83,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -3007,7 +3087,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 121,
+                    "line": 141,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -3028,7 +3108,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 119,
+                    "line": 139,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -3038,7 +3118,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 106,
+                    "line": 108,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -3062,11 +3142,11 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {\r\n  Component,\r\n  Input,\r\n  OnChanges,\r\n  OnInit,\r\n  Output,\r\n  EventEmitter,\r\n  SimpleChanges,\r\n} from '@angular/core';\r\nimport { ColorUtilService } from '../services/color-util.service';\r\n\r\nexport interface ResetObject {\r\n  reset: true;\r\n}\r\n\r\n@Component({\r\n  selector: 'app-color-slider',\r\n  templateUrl: './color-slider.component.html',\r\n  styleUrls: ['./color-slider.component.scss'],\r\n})\r\nexport class ColorSliderComponent implements OnInit, OnChanges {\r\n  @Input() id: string | 'slider-0' = 'slider-0';\r\n  @Input() name: string | 'color-slider' = 'color-slider';\r\n  @Input() color: string | null = null;\r\n  @Input() constantChroma: boolean = false;\r\n  @Input() resetSlider: ResetObject | null = null;\r\n  @Output() colorVariant = new EventEmitter<string | null>();\r\n\r\n  debug: boolean = false;\r\n  devColorVariant: string | null = null;\r\n\r\n  // slideInterval: number | null = 0.001;\r\n  slideInterval: number | null = 0.005;\r\n  slideMin: number | null = null;\r\n  slideMax: number | null = null;\r\n  initValue: number | null = null;\r\n  value: number | null = null;\r\n\r\n  getInitValue() {\r\n    return this.initValue;\r\n  }\r\n\r\n  sendInitialLightVariant() {\r\n    // Good UX to just send the input color?\r\n    this.colorVariant.emit(this.color);\r\n\r\n    if (this.debug) {\r\n      this.devColorVariant = this.color;\r\n    }\r\n  }\r\n\r\n  async getAndSetLightnessRange(\r\n    color: string,\r\n    options?: { constantChroma: boolean }\r\n  ) {\r\n    const rangeObject = await this.cus.getMinMaxLight(color);\r\n\r\n    if (rangeObject) {\r\n      this.sendInitialLightVariant();\r\n\r\n      this.slideMin = 0;\r\n      this.slideMax = 1;\r\n\r\n      if (options?.constantChroma) {\r\n        this.slideMin = rangeObject.lightMin;\r\n\r\n        this.slideMax = rangeObject.lightMax;\r\n      }\r\n\r\n      const lightnessIndex = 0;\r\n      const initialSlideValue = rangeObject.originalCoords[lightnessIndex];\r\n\r\n      this.initValue = initialSlideValue;\r\n\r\n      this.value = initialSlideValue;\r\n    } else {\r\n      console.error(`no range object for slider`);\r\n    }\r\n  }\r\n\r\n  handleSliding(event: Event) {\r\n    const inputElem = event.target as HTMLInputElement;\r\n\r\n    if (inputElem) {\r\n      const lightValue = parseFloat(inputElem.value);\r\n\r\n      if (this.color) {\r\n        const lightnessVariant = this.cus.createSrgbColor(\r\n          this.color,\r\n          lightValue\r\n        );\r\n\r\n        if (this.debug) {\r\n          console.log(`slide modding ${this.color} to ${lightnessVariant}`);\r\n\r\n          this.devColorVariant = lightnessVariant;\r\n        }\r\n\r\n        this.colorVariant.emit(lightnessVariant);\r\n      } else {\r\n        console.error(`no color specified`);\r\n      }\r\n    }\r\n  }\r\n\r\n  reset() {\r\n    // TODO: Isn't there an angular way to do this?\r\n    const element = document.getElementById(this.id) as HTMLInputElement;\r\n\r\n    if (this.initValue) {\r\n      element.value = this.initValue.toString();\r\n    } else {\r\n      console.error(`trouble resetting slider`);\r\n    }\r\n  }\r\n\r\n  constructor(private cus: ColorUtilService) {}\r\n\r\n  ngOnInit(): void {}\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    if (this.color) {\r\n      this.getAndSetLightnessRange(this.color, {\r\n        constantChroma: this.constantChroma,\r\n      });\r\n    } else {\r\n      console.warn(`no color specified to comp`);\r\n    }\r\n\r\n    if (this.resetSlider) {\r\n      this.reset();\r\n    }\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  Component,\r\n  Input,\r\n  OnChanges,\r\n  OnInit,\r\n  Output,\r\n  EventEmitter,\r\n  SimpleChanges,\r\n} from '@angular/core';\r\nimport { ColorUtilService } from '../services/color-util.service';\r\n\r\nexport interface ResetObject {\r\n  reset: true;\r\n}\r\n\r\n@Component({\r\n  selector: 'app-color-slider',\r\n  templateUrl: './color-slider.component.html',\r\n  styleUrls: ['./color-slider.component.scss'],\r\n})\r\nexport class ColorSliderComponent implements OnInit, OnChanges {\r\n  @Input() id: string | 'slider-0' = 'slider-0';\r\n  @Input() name: string | 'color-slider' = 'color-slider';\r\n  @Input() color: string | null = null;\r\n  @Input() constantChroma: boolean = false;\r\n  @Input() showGradient: boolean = false;\r\n  @Input() resetSlider: ResetObject | null = null;\r\n  @Output() colorVariant = new EventEmitter<string | null>();\r\n\r\n  debug: boolean = true;\r\n  devColorVariant: string | null = null;\r\n\r\n  slideInterval: number | null = null;\r\n  slideMin: number | null = null;\r\n  slideMax: number | null = null;\r\n  initValue: number | null = null;\r\n  value: number | null = null;\r\n\r\n  getInitValue() {\r\n    return this.initValue;\r\n  }\r\n\r\n  sendInitialLightVariant() {\r\n    // Good UX to just send the input color?\r\n    this.colorVariant.emit(this.color);\r\n\r\n    if (this.debug) {\r\n      this.devColorVariant = this.color;\r\n    }\r\n  }\r\n\r\n  async getAndSetLightnessRange(\r\n    color: string,\r\n    options?: { constantChroma: boolean }\r\n  ) {\r\n    const rangeObject = await this.cus.getMinMaxLight(color);\r\n\r\n    if (rangeObject) {\r\n      this.sendInitialLightVariant();\r\n\r\n      this.slideMin = 0;\r\n      this.slideMax = 1;\r\n\r\n      if (options?.constantChroma) {\r\n        this.slideMin = rangeObject.lightMin;\r\n\r\n        this.slideMax = rangeObject.lightMax;\r\n      }\r\n\r\n      this.slideInterval = (this.slideMax - this.slideMin) / 80;\r\n\r\n      const lightnessIndex = 0;\r\n      const initialSlideValue = rangeObject.originalCoords[lightnessIndex];\r\n\r\n      this.initValue = initialSlideValue;\r\n\r\n      this.value = initialSlideValue;\r\n    } else {\r\n      console.error(`no range object for slider`);\r\n    }\r\n  }\r\n\r\n  handleSliding(event: Event) {\r\n    const inputElem = event.target as HTMLInputElement;\r\n\r\n    if (inputElem) {\r\n      const lightValue = parseFloat(inputElem.value);\r\n\r\n      if (this.color) {\r\n        const lightnessVariant = this.cus.createSrgbColor(\r\n          this.color,\r\n          lightValue\r\n        );\r\n\r\n        if (this.debug) {\r\n          console.log(`slide modding ${this.color} to ${lightnessVariant}`);\r\n\r\n          this.devColorVariant = lightnessVariant;\r\n        }\r\n\r\n        this.colorVariant.emit(lightnessVariant);\r\n      } else {\r\n        console.error(`no color specified`);\r\n      }\r\n    }\r\n  }\r\n\r\n  reset() {\r\n    // TODO: Isn't there an angular way to do this?\r\n    const element = document.getElementById(this.id) as HTMLInputElement;\r\n\r\n    if (this.initValue) {\r\n      element.value = this.initValue.toString();\r\n    } else {\r\n      console.error(`trouble resetting slider`);\r\n    }\r\n  }\r\n\r\n  gradient(val: 'on' | 'off') {\r\n    console.log(`gradient: ${val}`);\r\n\r\n    const onlyElem = 0;\r\n    // TODO: Anguar way to do this?\r\n    const targetElem = document.getElementsByClassName('comp-container')[\r\n      onlyElem\r\n    ] as HTMLElement;\r\n\r\n    if (val === 'on') {\r\n      targetElem.style.background = 'var(--gradient-background)';\r\n    }\r\n\r\n    if (val === 'off') {\r\n      targetElem.style.background = 'var(--default-background)';\r\n    }\r\n  }\r\n\r\n  constructor(private cus: ColorUtilService) {}\r\n\r\n  ngOnInit(): void {}\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    if (this.color) {\r\n      this.getAndSetLightnessRange(this.color, {\r\n        constantChroma: this.constantChroma,\r\n      });\r\n    } else {\r\n      console.warn(`no color specified to comp`);\r\n    }\r\n\r\n    if (this.showGradient) {\r\n      this.gradient('on');\r\n    }\r\n\r\n    if (!this.showGradient) {\r\n      this.gradient('off');\r\n    }\r\n\r\n    if (this.resetSlider) {\r\n      this.reset();\r\n    }\r\n  }\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ".comp-container {\r\n  box-sizing: border-box;\r\n  display: flex;\r\n  // gives input more room on left and right ends to be hit more successfully\r\n  padding: 0 calc(var(--minHitDimensionAAA) / 2);\r\n  align-items: center;\r\n  background-color: var(--app-white);\r\n\r\n  &:hover {\r\n    box-shadow: 0 4px 0 0 var(--ui-shadow-color);\r\n  }\r\n\r\n  input {\r\n    flex-grow: 1;\r\n    min-height: var(--minHitDimensionAAA);\r\n    height: 50px;\r\n    width: 100%;\r\n    margin: 0;\r\n  }\r\n\r\n  .special-case {\r\n    flex-grow: 1;\r\n    min-height: var(--minHitDimensionAAA);\r\n    height: 50px;\r\n    display: flex;\r\n    align-items: center;\r\n\r\n    // TODO: what do custom input text need to be? <p>?\r\n    div {\r\n      font-family: var(--monoFont);\r\n      font-size: var(--minBodyTextSize);\r\n      font-style: italic;\r\n      font-weight: 400;\r\n    }\r\n  }\r\n}\r\n\r\n.dev-overlay {\r\n  position: absolute;\r\n  display: none;\r\n  gap: 1rem;\r\n  bottom: 0;\r\n  right: 0;\r\n\r\n  &.active {\r\n    display: flex;\r\n  }\r\n\r\n  .light-variant-chip {\r\n    border-radius: 100%;\r\n    width: 15px;\r\n    height: 15px;\r\n    border: 15px solid var(--app-black);\r\n  }\r\n}\r\n",
+                    "data": ".comp-container {\r\n  --default-background: var(--app-white);\r\n  --grad-stop-0: black;\r\n  --grad-stop-1: rgb(8.6104% 8.6104% 8.6104%);\r\n  --grad-stop-2: rgb(28.06% 28.06% 28.06%);\r\n  --grad-stop-3: rgb(50.211% 50.211% 50.211%);\r\n  --grad-stop-4: rgb(74.321% 74.321% 74.321%);\r\n  --grad-stop-5: white;\r\n  --gradient-background: linear-gradient(\r\n    to right,\r\n    var(--grad-stop-0),\r\n    var(--grad-stop-0),\r\n    var(--grad-stop-1),\r\n    var(--grad-stop-2),\r\n    var(--grad-stop-3),\r\n    var(--grad-stop-4),\r\n    var(--grad-stop-5),\r\n    var(--grad-stop-5)\r\n  );\r\n\r\n  box-sizing: border-box;\r\n  display: flex;\r\n\r\n  /* gives input more room on left and right ends to be hit more successfully */\r\n  padding: 0 calc(var(--min-hit-dimension-aaa) / 2);\r\n  align-items: center;\r\n  background: var(--default-background);\r\n\r\n  &:hover {\r\n    box-shadow: 0 4px 0 0 var(--ui-shadow-color);\r\n  }\r\n\r\n  input {\r\n    flex-grow: 1;\r\n    width: 100%;\r\n    height: 50px;\r\n    min-height: var(--min-hit-dimension-aaa);\r\n    margin: 0;\r\n    background: var(--gradient-background);\r\n  }\r\n\r\n  .special-case {\r\n    display: flex;\r\n    flex-grow: 1;\r\n    min-height: var(--min-hit-dimension-aaa);\r\n    height: 50px;\r\n    align-items: center;\r\n\r\n    /* TODO: what do custom input text need to be? <p>? */\r\n    div {\r\n      font-family: var(--mono-font);\r\n      font-size: var(--min-body-text-size);\r\n      font-style: italic;\r\n      font-weight: 400;\r\n    }\r\n  }\r\n}\r\n\r\n.dev-overlay {\r\n  display: none;\r\n  position: absolute;\r\n  gap: 1rem;\r\n  right: 0;\r\n  bottom: 0;\r\n\r\n  &.active {\r\n    display: flex;\r\n  }\r\n\r\n  .light-variant-chip {\r\n    border-radius: 100%;\r\n    width: 15px;\r\n    height: 15px;\r\n    border: 15px solid var(--app-black);\r\n  }\r\n}\r\n",
                     "styleUrl": "./color-slider.component.scss"
                 }
             ],
@@ -3084,7 +3164,7 @@
                         "deprecationMessage": ""
                     }
                 ],
-                "line": 115,
+                "line": 135,
                 "jsdoctags": [
                     {
                         "name": "cus",
@@ -3172,7 +3252,7 @@
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ".comp-container {\r\n  position: relative;\r\n  display: inline-block;\r\n\r\n  button {\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    border-radius: 0 5px 5px 0;\r\n    border: transparent 2px solid;\r\n    background-color: var(--app-white);\r\n    padding: 0.25rem;\r\n    min-width: var(--minHitDimensionAAA);\r\n    min-height: var(--minHitDimensionAAA);\r\n    width: 50px;\r\n    height: 50px;\r\n\r\n    &:hover {\r\n      box-shadow: 0 4px 0 0 var(--ui-shadow-color);\r\n    }\r\n\r\n    .svg-container {\r\n      width: 22px;\r\n      height: auto;\r\n\r\n      svg {\r\n        fill: var(--app-black);\r\n        display: block;\r\n      }\r\n    }\r\n  }\r\n}\r\n",
+                    "data": ".comp-container {\r\n  display: inline-block;\r\n  position: relative;\r\n\r\n  button {\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    border-radius: 0 5px 5px 0;\r\n    width: 50px;\r\n    height: 50px;\r\n    padding: 0.25rem;\r\n    border: transparent 2px solid;\r\n    background-color: var(--app-white);\r\n    min-width: var(--min-hit-dimension-aaa);\r\n    min-height: var(--min-hit-dimension-aaa);\r\n\r\n    &:hover {\r\n      box-shadow: 0 4px 0 0 var(--ui-shadow-color);\r\n    }\r\n\r\n    .svg-container {\r\n      width: 22px;\r\n      height: auto;\r\n\r\n      svg {\r\n        fill: var(--app-black);\r\n        display: block;\r\n      }\r\n    }\r\n  }\r\n}\r\n",
                     "styleUrl": "./copy-to-clipboard-button.component.scss"
                 }
             ],
@@ -3392,7 +3472,7 @@
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ".comp-container {\r\n  position: relative;\r\n  display: flex;\r\n  // flex-direction: column;\r\n  flex-wrap: wrap;\r\n  align-items: flex-start;\r\n  gap: 0.5rem 4rem;\r\n  justify-content: center;\r\n\r\n  div {\r\n    flex-grow: 1;\r\n    display: flex;\r\n    flex-direction: column;\r\n    max-width: 30ch;\r\n  }\r\n\r\n  h3 {\r\n    text-align: center;\r\n  }\r\n\r\n  table {\r\n    margin-bottom: 1rem;\r\n    // flex-grow: 1;\r\n    // min-width: 33vw;\r\n  }\r\n\r\n  tr {\r\n    :nth-child(2) {\r\n      font-family: var(--monoFont);\r\n      text-align: right;\r\n      font-style: normal;\r\n      padding-left: 1ch;\r\n    }\r\n  }\r\n}\r\n",
+                    "data": ".comp-container {\r\n  display: flex;\r\n  position: relative;\r\n  flex-wrap: wrap;\r\n  align-items: flex-start;\r\n  gap: 0.5rem 4rem;\r\n  justify-content: center;\r\n\r\n  div {\r\n    flex-grow: 1;\r\n    display: flex;\r\n    flex-direction: column;\r\n    max-width: 30ch;\r\n  }\r\n\r\n  h3 {\r\n    text-align: center;\r\n  }\r\n\r\n  table {\r\n    margin-bottom: 1rem;\r\n  }\r\n\r\n  tr {\r\n    :nth-child(2) {\r\n      font-family: var(--mono-font);\r\n      text-align: right;\r\n      font-style: normal;\r\n      padding-left: 1ch;\r\n    }\r\n  }\r\n}\r\n",
                     "styleUrl": "./metadata.component.scss"
                 }
             ],
@@ -3755,7 +3835,7 @@
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ".comp-container {\r\n  border-radius: 2px;\r\n  table {\r\n    border-collapse: collapse;\r\n\r\n    th {\r\n      font-family: var(--monoFont);\r\n    }\r\n\r\n    td {\r\n      margin: 0;\r\n      padding: 7.5px;\r\n      line-height: 0;\r\n    }\r\n\r\n    tbody {\r\n      th {\r\n        text-align: right;\r\n      }\r\n    }\r\n\r\n    button {\r\n      border: transparent 2px solid;\r\n      box-sizing: border-box;\r\n      border-radius: 5px;\r\n      min-width: 15px;\r\n      min-height: 15px;\r\n      line-height: 0;\r\n      font-size: 0;\r\n      padding: 0;\r\n      margin: 0;\r\n\r\n      span {\r\n        line-height: 0;\r\n      }\r\n\r\n      &:hover {\r\n        background-color: white !important;\r\n        border-color: #8f8f8f !important;\r\n      }\r\n    }\r\n  }\r\n}\r\n",
+                    "data": ".comp-container {\r\n  border-radius: 2px;\r\n\r\n  table {\r\n    border-collapse: collapse;\r\n\r\n    th {\r\n      font-family: var(--mono-font);\r\n    }\r\n\r\n    td {\r\n      margin: 0;\r\n      padding: 7.5px;\r\n      line-height: 0;\r\n    }\r\n\r\n    tbody {\r\n      th {\r\n        text-align: right;\r\n      }\r\n    }\r\n\r\n    button {\r\n      margin: 0;\r\n      padding: 0;\r\n      border: transparent 2px solid;\r\n      box-sizing: border-box;\r\n      border-radius: 5px;\r\n      min-width: 15px;\r\n      min-height: 15px;\r\n      line-height: 0;\r\n      font-size: 0;\r\n\r\n      span {\r\n        line-height: 0;\r\n      }\r\n\r\n      &:hover {\r\n        background-color: white !important;\r\n        border-color: #8f8f8f !important;\r\n      }\r\n    }\r\n  }\r\n}\r\n",
                     "styleUrl": "./palette-table.component.scss"
                 }
             ],
@@ -4020,7 +4100,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Meta<ColorContrastComponent>",
-                "defaultValue": "{\r\n  title: 'App/Color Contrast',\r\n  component: ColorContrastComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorContrastComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    colorOne: {\r\n      control: 'color',\r\n    },\r\n    colorTwo: {\r\n      control: 'color',\r\n    },\r\n    contrastType: {\r\n      options: ['apca', 'bpca'],\r\n      control: { type: 'radio' },\r\n    },\r\n  },\r\n}"
+                "defaultValue": "{\r\n  title: 'App/Color Contrast',\r\n  component: ColorContrastComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorContrastComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    colorOne: {\r\n      control: 'color',\r\n    },\r\n    colorTwo: {\r\n      control: 'color',\r\n    },\r\n    contrastType: {\r\n      options: ['apca', 'bpca', 'apca object'],\r\n      control: { type: 'radio' },\r\n    },\r\n  },\r\n}"
             },
             {
                 "name": "meta",
@@ -4036,21 +4116,21 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/app/color-slider/color-slider.stories.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Meta<ColorSliderComponent>",
-                "defaultValue": "{\r\n  title: 'App/Color Slider',\r\n  component: ColorSliderComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorSliderComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
-            },
-            {
-                "name": "meta",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
                 "file": "src/app/copy-to-clipboard-button/copy-to-clipboard-button.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Meta<CopyToClipboardButtonComponent>",
                 "defaultValue": "{\r\n  title: 'App/Copy to Clipboard Button',\r\n  component: CopyToClipboardButtonComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: CopyToClipboardButtonComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/color-slider/color-slider.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<ColorSliderComponent>",
+                "defaultValue": "{\r\n  title: 'App/Color Slider',\r\n  component: ColorSliderComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorSliderComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
             },
             {
                 "name": "meta",
@@ -4080,7 +4160,17 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
-                "defaultValue": "{\r\n  args: {\r\n    color: 'gray',\r\n  },\r\n}"
+                "defaultValue": "{\r\n  args: {\r\n    color: 'gray',\r\n    // showGradient: true,\r\n  },\r\n}"
+            },
+            {
+                "name": "ObjectContrast",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/color-contrast/color-contrast.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\r\n  args: {\r\n    colorOne: '#928f8f',\r\n    colorTwo: 'white',\r\n    contrastType: 'apca object',\r\n  },\r\n}"
             },
             {
                 "name": "Populated",
@@ -4120,7 +4210,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
-                "defaultValue": "{\r\n  args: {\r\n    color: 'blue',\r\n  },\r\n}"
+                "defaultValue": "{\r\n  args: {\r\n    color: 'blue',\r\n    constantChroma: true,\r\n  },\r\n}"
             },
             {
                 "name": "RgbGreen",
@@ -4130,7 +4220,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
-                "defaultValue": "{\r\n  args: {\r\n    color: 'green',\r\n  },\r\n}"
+                "defaultValue": "{\r\n  args: {\r\n    color: 'green',\r\n    constantChroma: true,\r\n  },\r\n}"
             },
             {
                 "name": "RgbRed",
@@ -4140,7 +4230,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
-                "defaultValue": "{\r\n  args: {\r\n    color: 'red',\r\n  },\r\n}"
+                "defaultValue": "{\r\n  args: {\r\n    color: 'red',\r\n    constantChroma: true,\r\n  },\r\n}"
             },
             {
                 "name": "Secondary",
@@ -4216,21 +4306,21 @@
                 "name": "Typical",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/app/color-slider/color-slider.stories.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Story",
-                "defaultValue": "{\r\n  args: {\r\n    color: 'coral',\r\n  },\r\n}"
-            },
-            {
-                "name": "Typical",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
                 "file": "src/app/copy-to-clipboard-button/copy-to-clipboard-button.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
                 "defaultValue": "{\r\n  args: {\r\n    color: null,\r\n  },\r\n}"
+            },
+            {
+                "name": "Typical",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/color-slider/color-slider.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\r\n  args: {\r\n    color: 'coral',\r\n  },\r\n}"
             },
             {
                 "name": "Typical",
@@ -4378,8 +4468,8 @@
                 "name": "Story",
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
-                "rawtype": "StoryObj<ColorSliderComponent>",
-                "file": "src/app/color-slider/color-slider.stories.ts",
+                "rawtype": "StoryObj<CopyToClipboardButtonComponent>",
+                "file": "src/app/copy-to-clipboard-button/copy-to-clipboard-button.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "description": "",
@@ -4389,8 +4479,8 @@
                 "name": "Story",
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
-                "rawtype": "StoryObj<CopyToClipboardButtonComponent>",
-                "file": "src/app/copy-to-clipboard-button/copy-to-clipboard-button.stories.ts",
+                "rawtype": "StoryObj<ColorSliderComponent>",
+                "file": "src/app/color-slider/color-slider.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "description": "",
@@ -4462,7 +4552,17 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Meta<ColorContrastComponent>",
-                    "defaultValue": "{\r\n  title: 'App/Color Contrast',\r\n  component: ColorContrastComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorContrastComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    colorOne: {\r\n      control: 'color',\r\n    },\r\n    colorTwo: {\r\n      control: 'color',\r\n    },\r\n    contrastType: {\r\n      options: ['apca', 'bpca'],\r\n      control: { type: 'radio' },\r\n    },\r\n  },\r\n}"
+                    "defaultValue": "{\r\n  title: 'App/Color Contrast',\r\n  component: ColorContrastComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorContrastComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    colorOne: {\r\n      control: 'color',\r\n    },\r\n    colorTwo: {\r\n      control: 'color',\r\n    },\r\n    contrastType: {\r\n      options: ['apca', 'bpca', 'apca object'],\r\n      control: { type: 'radio' },\r\n    },\r\n  },\r\n}"
+                },
+                {
+                    "name": "ObjectContrast",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/color-contrast/color-contrast.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\r\n  args: {\r\n    colorOne: '#928f8f',\r\n    colorTwo: 'white',\r\n    contrastType: 'apca object',\r\n  },\r\n}"
                 },
                 {
                     "name": "Typical",
@@ -4665,68 +4765,6 @@
                     "defaultValue": "{\r\n  args: {\r\n    comparedColor: '',\r\n  },\r\n}"
                 }
             ],
-            "src/app/color-slider/color-slider.stories.ts": [
-                {
-                    "name": "meta",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/color-slider/color-slider.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Meta<ColorSliderComponent>",
-                    "defaultValue": "{\r\n  title: 'App/Color Slider',\r\n  component: ColorSliderComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorSliderComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
-                },
-                {
-                    "name": "NoHueColor",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/color-slider/color-slider.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\r\n  args: {\r\n    color: 'gray',\r\n  },\r\n}"
-                },
-                {
-                    "name": "RgbBlue",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/color-slider/color-slider.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\r\n  args: {\r\n    color: 'blue',\r\n  },\r\n}"
-                },
-                {
-                    "name": "RgbGreen",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/color-slider/color-slider.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\r\n  args: {\r\n    color: 'green',\r\n  },\r\n}"
-                },
-                {
-                    "name": "RgbRed",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/color-slider/color-slider.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\r\n  args: {\r\n    color: 'red',\r\n  },\r\n}"
-                },
-                {
-                    "name": "Typical",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/color-slider/color-slider.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\r\n  args: {\r\n    color: 'coral',\r\n  },\r\n}"
-                }
-            ],
             "src/app/copy-to-clipboard-button/copy-to-clipboard-button.stories.ts": [
                 {
                     "name": "meta",
@@ -4757,6 +4795,68 @@
                     "deprecationMessage": "",
                     "type": "Story",
                     "defaultValue": "{\r\n  args: {\r\n    color: null,\r\n  },\r\n}"
+                }
+            ],
+            "src/app/color-slider/color-slider.stories.ts": [
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/color-slider/color-slider.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<ColorSliderComponent>",
+                    "defaultValue": "{\r\n  title: 'App/Color Slider',\r\n  component: ColorSliderComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorSliderComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
+                },
+                {
+                    "name": "NoHueColor",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/color-slider/color-slider.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\r\n  args: {\r\n    color: 'gray',\r\n    // showGradient: true,\r\n  },\r\n}"
+                },
+                {
+                    "name": "RgbBlue",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/color-slider/color-slider.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\r\n  args: {\r\n    color: 'blue',\r\n    constantChroma: true,\r\n  },\r\n}"
+                },
+                {
+                    "name": "RgbGreen",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/color-slider/color-slider.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\r\n  args: {\r\n    color: 'green',\r\n    constantChroma: true,\r\n  },\r\n}"
+                },
+                {
+                    "name": "RgbRed",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/color-slider/color-slider.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\r\n  args: {\r\n    color: 'red',\r\n    constantChroma: true,\r\n  },\r\n}"
+                },
+                {
+                    "name": "Typical",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/color-slider/color-slider.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\r\n  args: {\r\n    color: 'coral',\r\n  },\r\n}"
                 }
             ],
             "src/app/metadata/metadata.stories.ts": [
@@ -4954,19 +5054,6 @@
                     "kind": 180
                 }
             ],
-            "src/app/color-slider/color-slider.stories.ts": [
-                {
-                    "name": "Story",
-                    "ctype": "miscellaneous",
-                    "subtype": "typealias",
-                    "rawtype": "StoryObj<ColorSliderComponent>",
-                    "file": "src/app/color-slider/color-slider.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "description": "",
-                    "kind": 180
-                }
-            ],
             "src/app/copy-to-clipboard-button/copy-to-clipboard-button.stories.ts": [
                 {
                     "name": "Story",
@@ -4974,6 +5061,19 @@
                     "subtype": "typealias",
                     "rawtype": "StoryObj<CopyToClipboardButtonComponent>",
                     "file": "src/app/copy-to-clipboard-button/copy-to-clipboard-button.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 180
+                }
+            ],
+            "src/app/color-slider/color-slider.stories.ts": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "StoryObj<ColorSliderComponent>",
+                    "file": "src/app/color-slider/color-slider.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "description": "",
@@ -5114,7 +5214,7 @@
                 "linktype": "component",
                 "name": "AppComponent",
                 "coveragePercent": 0,
-                "coverageCount": "0/23",
+                "coverageCount": "0/24",
                 "status": "low"
             },
             {
@@ -5151,6 +5251,16 @@
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
                 "name": "meta",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/color-contrast/color-contrast.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "ObjectContrast",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"
@@ -5220,7 +5330,7 @@
                 "linktype": "component",
                 "name": "ColorSliderComponent",
                 "coveragePercent": 0,
-                "coverageCount": "0/22",
+                "coverageCount": "0/24",
                 "status": "low"
             },
             {

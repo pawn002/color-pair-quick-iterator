@@ -50,5 +50,6 @@ export const RgbBlue: Story = {
 export const NoHueColor: Story = {
   args: {
     color: 'gray',
+    // showGradient: true,
   },
 };
