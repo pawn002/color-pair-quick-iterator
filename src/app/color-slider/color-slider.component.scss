@@ -9,12 +9,12 @@
   --gradient-background: linear-gradient(
     to right,
     var(--grad-stop-0),
-    var(--grad-stop-0) 10%,
+    var(--grad-stop-0) calc(var(--min-hit-dimension-aaa) / 2),
     var(--grad-stop-1),
     var(--grad-stop-2),
     var(--grad-stop-3),
     var(--grad-stop-4),
-    var(--grad-stop-5) 90%,
+    var(--grad-stop-5) calc(100% - (var(--min-hit-dimension-aaa) / 2)),
     var(--grad-stop-5)
   );
 
@@ -46,8 +46,8 @@
   .special-case {
     display: flex;
     flex-grow: 1;
+    height: 46px;
     min-height: var(--min-hit-dimension-aaa);
-    height: 50px;
     align-items: center;
 
     /* TODO: what do custom input text need to be? <p>? */

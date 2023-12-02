@@ -27,7 +27,7 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   @Input() resetSlider: ResetObject | null = null;
   @Output() colorVariant = new EventEmitter<string | null>();
 
-  debug: boolean = true;
+  debug: boolean = false;
   devColorVariant: string | null = null;
 
   slideInterval: number | null = null;
@@ -119,17 +119,19 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   }
 
   gradient(val: 'on' | 'off') {
-    console.log(`gradient: ${val}`);
-
     // TODO: Anguar way to do this?
     const targetElem = document.getElementById(`cc-${this.id}`) as HTMLElement;
 
-    if (val === 'on') {
-      targetElem.style.background = 'var(--gradient-background)';
-    }
+    if (targetElem) {
+      if (val === 'on') {
+        targetElem.style.background = 'var(--gradient-background)';
+      }
 
-    if (val === 'off') {
-      targetElem.style.background = 'var(--default-background)';
+      if (val === 'off') {
+        targetElem.style.background = 'var(--default-background)';
+      }
+    } else {
+      console.warn(`no elem to assign gradient to.`);
     }
   }
 
