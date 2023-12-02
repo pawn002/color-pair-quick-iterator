@@ -35,6 +35,21 @@
     }
   }
 
+  .app-instruction-start {
+    summary {
+      font-size: var(--min-text-size);
+      color: var(--min-body-text-black);
+      text-align: center;
+      max-width: unset;
+    }
+
+    a {
+      font-size: var(--min-text-size);
+    }
+
+    margin: 0;
+  }
+
   .slide-group {
     display: flex;
     margin-bottom: 4px;

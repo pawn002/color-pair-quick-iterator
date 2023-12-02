@@ -9,6 +9,37 @@
       ></app-color-contrast>
     </div>
 
+    <details class="app-instruction-start">
+      <summary>How to use this app.</summary>
+
+      <p>
+        <span class="visual-header">Quick Start:</span>
+        Input a color for both Foreground and Background Color using the color
+        inputs the next section. You can then:
+      </p>
+      <ul>
+        <li>
+          Use the slider inputs to adjust your inputted colors light and dark
+          until you have your desired combination of contrast (shown at the
+          top-right of the app) and tone.
+        </li>
+
+        <li>
+          Use the Copy to Clipboard button to copy each color to the clipboard
+          for use in other applications.
+        </li>
+      </ul>
+
+      <p>
+        <a href="#additional-instructions"
+          >Additional instructions, including screen reader specific
+          workflows.</a
+        >
+      </p>
+    </details>
+
+    <hr />
+
     <h2 class="sr-only">Main Color Controls</h2>
 
     <h3>Foreground Color</h3>
@@ -218,7 +249,8 @@
   <hr />
 
   <section class="metadata">
-    <h2>Color Metadata</h2>
+    <h2 id="color-metadata">Color Metadata</h2>
+
     <details>
       <summary>Descriptive data about your inputted colors.</summary>
 
@@ -232,27 +264,27 @@
   <hr />
 
   <section class="instructions">
-    <h2>Instructions</h2>
+    <h2 id="additional-instructions">Additional Instructions</h2>
 
     <details>
-      <summary>How to use this app.</summary>
+      <summary>Detailed instructions and workflows.</summary>
 
       <div class="content">
-        <p id="quick-start">
-          <span class="visual-header">Quick Start:</span>
-          Input a color for both Foreground and Background Color using the color
-          inputs at the start of each color section. You can then:
+        <p>
+          <span class="visual-header">Screen Reader Workflow:</span> Input a
+          Foreground Color and a Background Color in the Main Color Controls
+          section. You can then:
         </p>
-        <ul>
+        <ol>
           <li>
-            Use the slider inputs to adjust your inputted colors light and dark
-            until you have your desired combination of contrast and tone.
+            Adjust your inputted colors lighter and darker using the color
+            sliders. . .
           </li>
           <li>
-            Use the Copy to Clipboard button to copy each color to the clipboard
-            for use in other applications.
+            . . .while checking contrast and color descriptions in the
+            <a href="#color-metatdat">Color Metadata</a> section.
           </li>
-        </ul>
+        </ol>
       </div>
     </details>
   </section>
