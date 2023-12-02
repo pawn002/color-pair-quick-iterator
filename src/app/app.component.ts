@@ -87,6 +87,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     const checked = inputElement.checked;
 
     this.constantChroma = checked ? true : false;
+
+    this.resetSliders();
   }
 
   toggleShowGradient(event: Event) {
