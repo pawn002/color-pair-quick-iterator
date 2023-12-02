@@ -119,11 +119,10 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   }
 
   gradient(val: 'on' | 'off') {
-    const onlyElem = 0;
+    console.log(`gradient: ${val}`);
+
     // TODO: Anguar way to do this?
-    const targetElem = document.getElementsByClassName('comp-container')[
-      onlyElem
-    ] as HTMLElement;
+    const targetElem = document.getElementById(`cc-${this.id}`) as HTMLElement;
 
     if (val === 'on') {
       targetElem.style.background = 'var(--gradient-background)';
@@ -144,9 +143,9 @@ export class ColorSliderComponent implements OnInit, OnChanges {
 
   redefineGradientStops(lightMin: number, lightMax: number) {
     if (this.color) {
-      const targetElement = document.getElementsByClassName(
-        'comp-container'
-      )[0] as HTMLElement;
+      const targetElement = document.getElementById(
+        `cc-${this.id}`
+      ) as HTMLElement;
 
       const stops = [
         '--grad-stop-0',
@@ -164,8 +163,6 @@ export class ColorSliderComponent implements OnInit, OnChanges {
       for (let i = 0; i < stops.length; i++) {
         const targetLight = stopInterval * i + lightMin;
         targetLight;
-
-        console.log(targetLight);
 
         const stopColor = this.cus.createSrgbColor(this.color, targetLight);
 

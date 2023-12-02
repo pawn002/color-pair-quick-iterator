@@ -9,12 +9,12 @@
   --gradient-background: linear-gradient(
     to right,
     var(--grad-stop-0),
-    var(--grad-stop-0) 5%,
+    var(--grad-stop-0) 10%,
     var(--grad-stop-1),
     var(--grad-stop-2),
     var(--grad-stop-3),
     var(--grad-stop-4),
-    var(--grad-stop-5) 95%,
+    var(--grad-stop-5) 90%,
     var(--grad-stop-5)
   );
 
@@ -23,6 +23,9 @@
 
   /* gives input more room on left and right ends to be hit more successfully */
   padding: 0 calc(var(--min-hit-dimension-aaa) / 2);
+  border: 2px solid var(--app-white);
+  border-left: none;
+  border-right: none;
   align-items: center;
   background: var(--default-background);
 
@@ -33,7 +36,7 @@
   input {
     flex-grow: 1;
     width: 100%;
-    height: 50px;
+    height: 46px;
     min-height: var(--min-hit-dimension-aaa);
     margin: 0;
     background: var(--default-background);
