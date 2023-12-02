@@ -28,6 +28,7 @@
         [constantChroma]="constantChroma"
         (colorVariant)="handleSliderInputInput('One', $event)"
         [resetSlider]="resetSlider"
+        [showGradient]="showGradient"
       ></app-color-slider>
       <app-copy-to-clipboard-button
         [color]="colorPickerOneComparedColor"
@@ -63,6 +64,7 @@
         [constantChroma]="constantChroma"
         (colorVariant)="handleSliderInputInput('Two', $event)"
         [resetSlider]="resetSlider"
+        [showGradient]="showGradient"
       ></app-color-slider>
       <app-copy-to-clipboard-button
         [color]="colorPickerTwoComparedColor"
@@ -191,6 +193,7 @@
           <div class="checkbox-group">
             <label for="option-const-chroma">Constant chroma</label>
             <input
+              checked
               type="checkbox"
               name="Constant Chroma Toggle"
               id="option-const-chroma"
@@ -200,11 +203,11 @@
           <div class="checkbox-group">
             <label for="option-show-grad">Show Gradient</label>
             <input
-              disabled
+              checked
               type="checkbox"
-              name="Constant Chroma Toggle"
+              name="Show Gradient Toggle"
               id="option-show-grad"
-              (change)="toggleConstantChroma($event)"
+              (change)="toggleShowGradient($event)"
             />
           </div>
         </div>

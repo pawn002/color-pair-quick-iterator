@@ -27,7 +27,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   resetSlider: ResetObject | null = null;
 
-  constantChroma: boolean = false;
+  constantChroma: boolean = true;
+  showGradient: boolean = true;
 
   currentAlertMessage: AlertMessagObj | null = null;
 
@@ -81,18 +82,20 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.contrastType = changeTo;
   }
 
-  toggleContrastType(event: Event) {
-    const inputElement = event.target as HTMLInputElement;
-    const checked = inputElement.checked;
-
-    this.contrastType = checked ? 'bpca' : 'apca';
-  }
-
   toggleConstantChroma(event: Event) {
     const inputElement = event.target as HTMLInputElement;
     const checked = inputElement.checked;
 
     this.constantChroma = checked ? true : false;
+
+    this.resetSliders();
+  }
+
+  toggleShowGradient(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    const checked = inputElement.checked;
+
+    this.showGradient = checked ? true : false;
   }
 
   swapColors() {

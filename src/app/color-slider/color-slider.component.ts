@@ -27,7 +27,7 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   @Input() resetSlider: ResetObject | null = null;
   @Output() colorVariant = new EventEmitter<string | null>();
 
-  debug: boolean = true;
+  debug: boolean = false;
   devColorVariant: string | null = null;
 
   slideInterval: number | null = null;
@@ -75,6 +75,8 @@ export class ColorSliderComponent implements OnInit, OnChanges {
       this.initValue = initialSlideValue;
 
       this.value = initialSlideValue;
+
+      this.redefineGradientStops(this.slideMin, this.slideMax);
     } else {
       console.error(`no range object for slider`);
     }
@@ -117,20 +119,72 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   }
 
   gradient(val: 'on' | 'off') {
-    console.log(`gradient: ${val}`);
-
-    const onlyElem = 0;
     // TODO: Anguar way to do this?
-    const targetElem = document.getElementsByClassName('comp-container')[
-      onlyElem
-    ] as HTMLElement;
+    const targetElem = document.getElementById(`cc-${this.id}`) as HTMLElement;
 
-    if (val === 'on') {
-      targetElem.style.background = 'var(--gradient-background)';
+    if (targetElem) {
+      if (val === 'on') {
+        targetElem.style.background = 'var(--gradient-background)';
+      }
+
+      if (val === 'off') {
+        targetElem.style.background = 'var(--default-background)';
+      }
+    } else {
+      console.warn(`no elem to assign gradient to.`);
     }
+  }
 
-    if (val === 'off') {
-      targetElem.style.background = 'var(--default-background)';
+  redefineVariable(
+    element: HTMLElement,
+    variableName: string,
+    newValue: string
+  ) {
+    element.style.setProperty(variableName, newValue);
+  }
+
+  redefineGradientStops(lightMin: number, lightMax: number) {
+    if (this.color) {
+      const targetElement = document.getElementById(
+        `cc-${this.id}`
+      ) as HTMLElement;
+
+      const stops = [
+        '--grad-stop-0',
+        '--grad-stop-1',
+        '--grad-stop-2',
+        '--grad-stop-3',
+        '--grad-stop-4',
+        '--grad-stop-5',
+      ];
+
+      // get new stop values
+      const stopInterval = (lightMax - lightMin) / (stops.length - 1);
+      const stopVals = [];
+
+      for (let i = 0; i < stops.length; i++) {
+        const targetLight = stopInterval * i + lightMin;
+        targetLight;
+
+        const stopColor = this.cus.createSrgbColor(this.color, targetLight);
+
+        stopVals.push(stopColor);
+      }
+
+      // assign new stop values
+
+      for (let i = 0; i < stops.length; i++) {
+        const targetStop = stops[i];
+        const targetStopVal = stopVals[i];
+
+        if (targetStopVal) {
+          this.redefineVariable(targetElement, targetStop, targetStopVal);
+        } else {
+          console.log(`no new val to assign`);
+        }
+      }
+    } else {
+      console.log(`no color specified`);
     }
   }
 

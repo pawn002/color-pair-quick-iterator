@@ -86,7 +86,7 @@ export class PaletteTableComponent implements OnInit, OnChanges {
 
       this.getTableColumnHeaders();
     } else {
-      console.error(`no color for palette table`);
+      console.warn(`no color for palette table`);
     }
   }
 
