@@ -8,14 +8,14 @@
   --grad-stop-5: white;
   --gradient-background: linear-gradient(
     to right,
-    var(--grad-stop-0),
-    var(--grad-stop-0) calc(var(--min-hit-dimension-aaa) / 2),
+    black,
+    var(--grad-stop-0) calc((var(--min-hit-dimension-aaa) / 2) + 8px),
     var(--grad-stop-1),
     var(--grad-stop-2),
     var(--grad-stop-3),
     var(--grad-stop-4),
-    var(--grad-stop-5) calc(100% - (var(--min-hit-dimension-aaa) / 2)),
-    var(--grad-stop-5)
+    var(--grad-stop-5) calc(100% - (var(--min-hit-dimension-aaa) / 2) - 8px),
+    white
   );
 
   box-sizing: border-box;
