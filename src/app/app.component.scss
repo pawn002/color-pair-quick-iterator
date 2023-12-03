@@ -46,20 +46,10 @@
     }
   }
 
-  .instructons-hr {
-    margin-block-start: 0 !important;
-  }
-
   .app-instruction-start {
-    summary {
-      max-width: unset;
-    }
-
     a {
       font-size: var(--min-text-size);
     }
-
-    margin: 0;
   }
 
   .slide-group {
