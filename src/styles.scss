@@ -44,6 +44,12 @@ hr {
   border-right: none;
 }
 
+details {
+  summary {
+    cursor: default;
+  }
+}
+
 sup {
   color: var(--min-body-text-black) !important;
   font-weight: 400 !important;
@@ -67,6 +73,7 @@ th {
 h1 {
   font-family: var(--header-font);
   font-size: 1.2rem;
+  line-height: 1.1em;
   font-style: normal;
 }
 
@@ -119,7 +126,7 @@ td {
 
 p,
 li,
-summary {
+details > summary {
   font-family: var(--body-font);
   font-size: var(--min-body-text-size);
   color: var(--ideal-body-text-black);
@@ -137,19 +144,11 @@ summary {
   }
 }
 
-details {
-  summary {
-    margin-bottom: 0.5em;
-  }
-}
-
-cite {
-  display: inline-block;
-  font-style: normal;
-
-  a {
-    color: inherit;
-  }
+details > summary {
+  font-size: var(--min-text-size);
+  margin-bottom: 0.3em;
+  max-width: unset;
+  text-align: center;
 }
 
 strong {

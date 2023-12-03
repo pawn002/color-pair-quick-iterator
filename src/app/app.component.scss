@@ -19,10 +19,21 @@
     margin-left: 2px;
   }
 
+  .title-and-sliders {
+    position: relative;
+  }
+
   .title-and-score {
     display: flex;
+    position: sticky;
+    border-bottom: var(--min-large-text-black) 2px solid;
+    top: 0;
     gap: 0.6rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.6rem;
     margin-bottom: 0.6rem;
+    background-color: var(--background-color);
+    z-index: 2;
 
     h1 {
       width: min-content;
@@ -32,6 +43,12 @@
 
     app-color-contrast {
       flex-grow: 1;
+    }
+  }
+
+  .app-instruction-start {
+    a {
+      font-size: var(--min-text-size);
     }
   }
 
@@ -48,7 +65,9 @@
   .pallette-viz-container {
     summary {
       padding: 0 0.5ch;
-      color: var(--min-body-text-black);
+      background-color: var(--app-white);
+      color: var(--min-text-on-white);
+      box-sizing: border-box;
       border-radius: 5px;
       font-family: var(--body-font);
       font-size: var(--min-text-size);
@@ -56,7 +75,10 @@
       margin-bottom: 0.4em;
       min-height: var(--min-hit-dimension-aa);
       min-width: var(--min-hit-dimension-aa);
+      max-width: unset;
       line-height: 1.6em;
+      list-style: none;
+      text-align: center;
 
       &:hover {
         box-shadow: 0 4px 0 0 var(--ui-shadow-color);
@@ -66,7 +88,6 @@
     .content {
       max-width: 100%;
       overflow: auto;
-      margin: 0 0.9rem;
     }
   }
 

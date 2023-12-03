@@ -9,6 +9,37 @@
       ></app-color-contrast>
     </div>
 
+    <details class="app-instruction-start">
+      <summary>How to use this app.</summary>
+
+      <p>
+        <span class="visual-header">Quick Start:</span>
+        Input a color for both Foreground and Background Color using the color
+        inputs the next section. You can then:
+      </p>
+      <ul>
+        <li>
+          Use the slider inputs to adjust your inputted colors light and dark
+          until you have your desired combination of contrast (shown at the
+          top-right of the app) and tone.
+        </li>
+
+        <li>
+          Use the Copy to Clipboard button to copy each color to the clipboard
+          for use in other applications.
+        </li>
+      </ul>
+
+      <p>
+        <a href="#additional-instructions"
+          >Additional instructions, including screen reader specific
+          workflows.</a
+        >
+      </p>
+    </details>
+
+    <hr class="instructions-hr" />
+
     <h2 class="sr-only">Main Color Controls</h2>
 
     <h3>Foreground Color</h3>
@@ -133,7 +164,7 @@
 
     <div class="options">
       <div>
-        <h3>Display Value</h3>
+        <h3>Colors Contrast Value</h3>
 
         <div class="radio-section">
           <div class="radio-group">
@@ -218,7 +249,8 @@
   <hr />
 
   <section class="metadata">
-    <h2>Color Metadata</h2>
+    <h2 id="color-metadata">Color Metadata</h2>
+
     <details>
       <summary>Descriptive data about your inputted colors.</summary>
 
@@ -232,27 +264,47 @@
   <hr />
 
   <section class="instructions">
-    <h2>Instructions</h2>
+    <h2 id="additional-instructions">Additional Instructions</h2>
 
     <details>
-      <summary>How to use this app.</summary>
+      <summary>Detailed instructions and workflows.</summary>
 
       <div class="content">
-        <p id="quick-start">
-          <span class="visual-header">Quick Start:</span>
-          Input a color for both Foreground and Background Color using the color
-          inputs at the start of each color section. You can then:
+        <p>
+          <span class="visual-header">Screen Reader Workflow:</span> Input a
+          Foreground Color and a Background Color in the Main Color Controls
+          section. You can then:
+        </p>
+        <ol>
+          <li>
+            Adjust your inputted colors lighter and darker using the color
+            sliders. . .
+          </li>
+          <li>
+            . . .while checking contrast and color descriptions in the
+            <a href="#color-metatdata">Color Metadata</a> section.
+          </li>
+        </ol>
+
+        <p>
+          <span class="visual-header">Low Vision Users:</span> This app was
+          designed from the ground up with you in mind. Zooming your browser
+          with ctrl + will enlarge the app while keeping the most important
+          parts of the UI visible to you:
         </p>
         <ul>
-          <li>
-            Use the slider inputs to adjust your inputted colors light and dark
-            until you have your desired combination of contrast and tone.
-          </li>
-          <li>
-            Use the Copy to Clipboard button to copy each color to the clipboard
-            for use in other applications.
-          </li>
+          <li>The contrast value</li>
+          <li>The color inputs</li>
+          <li>The color sliders</li>
+          <li>The color copy to clipboard buttons</li>
         </ul>
+
+        <p>
+          <span class="visual-header"> Random Color Pairs:</span> The app starts
+          you off with a pair of colors that passes most if not all levels of
+          Accessible Contrast—you just need to use the sliders to create tones
+          of those colors for each contrast level you need.
+        </p>
       </div>
     </details>
   </section>
@@ -317,8 +369,9 @@
         </p>
         <p id="notes-show-grad">
           <span class="visual-header">Show Gradient:</span>
-          Currently disabled, but will render a gradient behind the color
-          sliders showing the possible colors an inputted color is capable of.
+          Renders a gradient behind the color sliders showing the possible
+          colors an inputted color is capable; results are diffferent if
+          Constant Chroma is not active.
         </p>
       </div>
     </details>
