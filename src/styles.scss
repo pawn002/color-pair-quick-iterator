@@ -44,6 +44,12 @@ hr {
   border-right: none;
 }
 
+details {
+  summary {
+    cursor: pointer;
+  }
+}
+
 sup {
   color: var(--min-body-text-black) !important;
   font-weight: 400 !important;
