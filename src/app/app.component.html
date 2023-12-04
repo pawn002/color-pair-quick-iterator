@@ -114,8 +114,8 @@
 
   <section class="quick-actions">
     <button
-      [disabled]="!colorPickerOneSelectedColor || !colorPickerTwoSelectedColor"
       (click)="swapColors()"
+      [disabled]="!colorPickerOneSelectedColor || !colorPickerTwoSelectedColor"
     >
       <span class="sr-only">Swap Selected Colors</span>
       <svg
@@ -140,17 +140,20 @@
         </g>
       </svg>
     </button>
-    <button (click)="setRandomColorPair()">
-      <span class="sr-only">Create Random Color Pair</span
-      ><span aria-hidden="true">Ra</span>
-    </button>
-    <button (click)="resetSliders()">
-      <span class="sr-only">Reset Color Sliders</span
-      ><span aria-hidden="true">Re</span>
-    </button>
+
     <button (click)="matchChromas()">
       <span class="sr-only">Harmonize Color Pair To Same Chroma</span
-      ><span aria-hidden="true">Ch</span>
+      ><span aria-hidden="true">Match Chromas</span>
+    </button>
+
+    <button (click)="resetSliders()">
+      <span class="sr-only">Reset Color Sliders</span
+      ><span aria-hidden="true">Reset Sliders</span>
+    </button>
+
+    <button (click)="setRandomColorPair()">
+      <span class="sr-only">Create Random Color Pair</span
+      ><span aria-hidden="true">Random Color Pair</span>
     </button>
   </section>
 
@@ -160,86 +163,89 @@
     <h2>Options</h2>
 
     <div class="options">
-      <div>
-        <h3>Colors Contrast Value</h3>
+      <details open>
+        <summary>Change how Colors Contrast works.</summary>
+        <div>
+          <h3>Colors Contrast Value</h3>
 
-        <div class="radio-section">
-          <div class="radio-group">
-            <label for="ct-apca"
-              >Perceptual<span class="sr-only"
-                >; this affects a visual element not percievable to
-                screenreaders for good UX—same value is obtainable on Color
-                Metadata section under Differences.</span
-              >
-            </label>
-            <input
-              type="radio"
-              name="contrastType"
-              id="ct-apca"
-              (change)="radioChange('apca')"
-              checked
-            />
-          </div>
-          <div class="radio-group">
-            <label for="ct-bpca"
-              >WCAG 2 compatible<span class="sr-only"
-                >; this affects a visual element not percievable to
-                screenreaders for good UX—same value is obtainable on Color
-                Metadata section under Differences.</span
-              >
-            </label>
-            <input
-              type="radio"
-              name="contrastType"
-              id="ct-bpca"
-              (change)="radioChange('bpca')"
-            />
-          </div>
-          <div class="radio-group">
-            <label for="ct-apca-object"
-              >Object
-              <span class="sr-only"
-                >; this affects a visual element not percievable to
-                screenreaders for good UX—same value is obtainable on Color
-                Metadata section under Differences.</span
-              >
-            </label>
-            <input
-              type="radio"
-              name="contrastType"
-              id="ct-apca-object"
-              (change)="radioChange('apca object')"
-            />
+          <div class="radio-section">
+            <div class="radio-group">
+              <label for="ct-apca"
+                >Perceptual<span class="sr-only"
+                  >; this affects a visual element not percievable to
+                  screenreaders for good UX—same value is obtainable on Color
+                  Metadata section under Differences.</span
+                >
+              </label>
+              <input
+                type="radio"
+                name="contrastType"
+                id="ct-apca"
+                (change)="radioChange('apca')"
+                checked
+              />
+            </div>
+            <div class="radio-group">
+              <label for="ct-bpca"
+                >WCAG 2 compatible<span class="sr-only"
+                  >; this affects a visual element not percievable to
+                  screenreaders for good UX—same value is obtainable on Color
+                  Metadata section under Differences.</span
+                >
+              </label>
+              <input
+                type="radio"
+                name="contrastType"
+                id="ct-bpca"
+                (change)="radioChange('bpca')"
+              />
+            </div>
+            <div class="radio-group">
+              <label for="ct-apca-object"
+                >Object
+                <span class="sr-only"
+                  >; this affects a visual element not percievable to
+                  screenreaders for good UX—same value is obtainable on Color
+                  Metadata section under Differences.</span
+                >
+              </label>
+              <input
+                type="radio"
+                name="contrastType"
+                id="ct-apca-object"
+                (change)="radioChange('apca object')"
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div>
-        <h3>Color Sliders</h3>
+        <div>
+          <h3>Color Sliders</h3>
 
-        <div class="checkbox-section">
-          <div class="checkbox-group">
-            <label for="option-const-chroma">Constant chroma</label>
-            <input
-              checked
-              type="checkbox"
-              name="Constant Chroma Toggle"
-              id="option-const-chroma"
-              (change)="toggleConstantChroma($event)"
-            />
-          </div>
-          <div class="checkbox-group">
-            <label for="option-show-grad">Show Gradient</label>
-            <input
-              checked
-              type="checkbox"
-              name="Show Gradient Toggle"
-              id="option-show-grad"
-              (change)="toggleShowGradient($event)"
-            />
+          <div class="checkbox-section">
+            <div class="checkbox-group">
+              <label for="option-const-chroma">Constant chroma</label>
+              <input
+                checked
+                type="checkbox"
+                name="Constant Chroma Toggle"
+                id="option-const-chroma"
+                (change)="toggleConstantChroma($event)"
+              />
+            </div>
+            <div class="checkbox-group">
+              <label for="option-show-grad">Show Gradient</label>
+              <input
+                checked
+                type="checkbox"
+                name="Show Gradient Toggle"
+                id="option-show-grad"
+                (change)="toggleShowGradient($event)"
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </details>
     </div>
   </section>
 
@@ -268,14 +274,14 @@
 
       <div class="content">
         <p>
-          <span class="visual-header">Screen Reader Workflow:</span> Input a
+          <span class="visual-header">Screen Reader Users:</span> Input a
           Foreground Color and a Background Color in the Main Color Controls
           section. You can then:
         </p>
         <ol>
           <li>
-            Adjust your inputted colors lighter and darker using the color
-            sliders. . .
+            Adjust your inputted colors lighter and darker using the slider
+            inputs. . .
           </li>
           <li>
             . . .while checking contrast and color descriptions in the
@@ -284,24 +290,32 @@
         </ol>
 
         <p>
-          <span class="visual-header">Low Vision Users:</span> This app was
-          designed from the ground up with you in mind. Zooming your browser
-          with ctrl + will enlarge the app while keeping the most important
-          parts of the UI visible to you:
+          <span class="visual-header">Low Vision Users:</span> We designed
+          Colors Contrast from the ground up with you in mind. You will notice
+          that zooming your browser still allows you to see the most important
+          parts of the UI:
         </p>
         <ul>
           <li>The contrast value</li>
           <li>The color inputs</li>
-          <li>The color sliders</li>
-          <li>The color copy to clipboard buttons</li>
+          <li>The slider inputs</li>
+          <li>The Copy to Clipboard buttons</li>
         </ul>
 
         <p>
-          <span class="visual-header"> Random Color Pairs:</span> The app starts
-          you off with a pair of colors that passes most if not all levels of
-          Accessible Contrast—you just need to use the sliders to create tones
-          of those colors for each contrast level you need.
+          <span class="visual-header"> Random Color Pairs:</span> Colors
+          Contrast starts you off with a random pair of colors that passes most
+          if not all levels of Accessible Contrast.
         </p>
+        <ul>
+          <li>
+            Use the slider inputs to create tones of those colors for each
+            contrast level you need.
+          </li>
+          <li>
+            Try swapping Foreground, and Background colors for a dark mode pair.
+          </li>
+        </ul>
       </div>
     </details>
   </section>

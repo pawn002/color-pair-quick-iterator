@@ -101,12 +101,11 @@
       position: relative;
       margin: 11px;
       border: transparent 2px solid;
-      color: var(--app-black);
+      color: var(--min-body-text-black);
       background-color: var(--app-white);
       box-sizing: border-box;
       align-items: center;
       border-radius: 5px;
-      font-style: italic;
       min-width: var(--min-hit-dimension-aa);
       min-height: var(--min-hit-dimension-aa);
 
@@ -118,7 +117,7 @@
         display: inline-block;
         width: 22px;
         height: auto;
-        fill: var(--app-black);
+        fill: var(--min-body-text-black);
         transform: rotateZ(90deg);
       }
     }
