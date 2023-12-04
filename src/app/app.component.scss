@@ -118,7 +118,10 @@
         width: 22px;
         height: auto;
         fill: var(--min-body-text-black);
-        transform: rotateZ(90deg);
+
+        &.swap-colors {
+          transform: rotateZ(90deg);
+        }
       }
     }
   }

@@ -119,6 +119,7 @@
     >
       <span class="sr-only">Swap Selected Colors</span>
       <svg
+        class="swap-colors"
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 32 32"
@@ -147,8 +148,19 @@
     </button>
 
     <button (click)="resetSliders()">
-      <span class="sr-only">Reset Color Sliders</span
-      ><span aria-hidden="true">Res</span>
+      <span class="sr-only">Reset Color Sliders</span>
+      <svg
+        class="reset-sliders"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        x="0px"
+        y="0px"
+      >
+        <path
+          d="M12,3A8.92277,8.92277,0,0,0,4.5,7.05823V5H3v5H8V8.5H5.38165A7.4775,7.4775,0,1,1,4.5,12H3a9,9,0,1,0,9-9Z"
+        />
+      </svg>
     </button>
 
     <button (click)="setRandomColorPair()">
