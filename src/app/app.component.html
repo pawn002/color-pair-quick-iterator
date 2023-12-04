@@ -14,26 +14,23 @@
 
       <p>
         <span class="visual-header">Quick Start:</span>
-        Input a color for both Foreground and Background Color using the color
-        inputs the next section. You can then:
+        Input a Foreground and Background Color using the color inputs in the
+        next section. You can then us the slider inputs, and Copy to Clipboard
+        buttons to:
       </p>
       <ul>
         <li>
-          Use the slider inputs to adjust your inputted colors light and dark
-          until you have your desired combination of contrast (shown at the
-          top-right of the app) and tone.
+          Change the tone of your colors to achieve your desired combination of
+          contrast and tone.
         </li>
 
-        <li>
-          Use the Copy to Clipboard button to copy each color to the clipboard
-          for use in other applications.
-        </li>
+        <li>Copy each color to the clipboard for use in other applications.</li>
       </ul>
 
       <p>
         <a href="#additional-instructions"
-          >Additional instructions, including screen reader specific
-          workflows.</a
+          >Screen reader–specific workflows, low vision user notes, and more
+          in-depth instructions.</a
         >
       </p>
     </details>
@@ -117,8 +114,8 @@
 
   <section class="quick-actions">
     <button
-      [disabled]="!colorPickerOneSelectedColor || !colorPickerTwoSelectedColor"
       (click)="swapColors()"
+      [disabled]="!colorPickerOneSelectedColor || !colorPickerTwoSelectedColor"
     >
       <span class="sr-only">Swap Selected Colors</span>
       <svg
@@ -143,17 +140,20 @@
         </g>
       </svg>
     </button>
-    <button (click)="setRandomColorPair()">
-      <span class="sr-only">Create Random Color Pair</span
-      ><span aria-hidden="true">Ra</span>
-    </button>
-    <button (click)="resetSliders()">
-      <span class="sr-only">Reset Color Sliders</span
-      ><span aria-hidden="true">Re</span>
-    </button>
+
     <button (click)="matchChromas()">
       <span class="sr-only">Harmonize Color Pair To Same Chroma</span
-      ><span aria-hidden="true">Ch</span>
+      ><span aria-hidden="true">Chr</span>
+    </button>
+
+    <button (click)="resetSliders()">
+      <span class="sr-only">Reset Color Sliders</span
+      ><span aria-hidden="true">Res</span>
+    </button>
+
+    <button (click)="setRandomColorPair()">
+      <span class="sr-only">Create Random Color Pair</span
+      ><span aria-hidden="true">Ran</span>
     </button>
   </section>
 
@@ -163,86 +163,89 @@
     <h2>Options</h2>
 
     <div class="options">
-      <div>
-        <h3>Colors Contrast Value</h3>
+      <details>
+        <summary>Change how Colors Contrast works.</summary>
+        <div>
+          <h3>Colors Contrast Value</h3>
 
-        <div class="radio-section">
-          <div class="radio-group">
-            <label for="ct-apca"
-              >Perceptual<span class="sr-only"
-                >; this affects a visual element not percievable to
-                screenreaders for good UX—same value is obtainable on Color
-                Metadata section under Differences.</span
-              >
-            </label>
-            <input
-              type="radio"
-              name="contrastType"
-              id="ct-apca"
-              (change)="radioChange('apca')"
-              checked
-            />
-          </div>
-          <div class="radio-group">
-            <label for="ct-bpca"
-              >WCAG 2 compatible<span class="sr-only"
-                >; this affects a visual element not percievable to
-                screenreaders for good UX—same value is obtainable on Color
-                Metadata section under Differences.</span
-              >
-            </label>
-            <input
-              type="radio"
-              name="contrastType"
-              id="ct-bpca"
-              (change)="radioChange('bpca')"
-            />
-          </div>
-          <div class="radio-group">
-            <label for="ct-apca-object"
-              >Object
-              <span class="sr-only"
-                >; this affects a visual element not percievable to
-                screenreaders for good UX—same value is obtainable on Color
-                Metadata section under Differences.</span
-              >
-            </label>
-            <input
-              type="radio"
-              name="contrastType"
-              id="ct-apca-object"
-              (change)="radioChange('apca object')"
-            />
+          <div class="radio-section">
+            <div class="radio-group">
+              <label for="ct-apca"
+                >Perceptual<span class="sr-only"
+                  >; this affects a visual element not percievable to
+                  screenreaders for good UX—same value is obtainable on Color
+                  Metadata section under Differences.</span
+                >
+              </label>
+              <input
+                type="radio"
+                name="contrastType"
+                id="ct-apca"
+                (change)="radioChange('apca')"
+                checked
+              />
+            </div>
+            <div class="radio-group">
+              <label for="ct-bpca"
+                >WCAG 2 compatible<span class="sr-only"
+                  >; this affects a visual element not percievable to
+                  screenreaders for good UX—same value is obtainable on Color
+                  Metadata section under Differences.</span
+                >
+              </label>
+              <input
+                type="radio"
+                name="contrastType"
+                id="ct-bpca"
+                (change)="radioChange('bpca')"
+              />
+            </div>
+            <div class="radio-group">
+              <label for="ct-apca-object"
+                >Object
+                <span class="sr-only"
+                  >; this affects a visual element not percievable to
+                  screenreaders for good UX—same value is obtainable on Color
+                  Metadata section under Differences.</span
+                >
+              </label>
+              <input
+                type="radio"
+                name="contrastType"
+                id="ct-apca-object"
+                (change)="radioChange('apca object')"
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div>
-        <h3>Color Sliders</h3>
+        <div>
+          <h3>Color Sliders</h3>
 
-        <div class="checkbox-section">
-          <div class="checkbox-group">
-            <label for="option-const-chroma">Constant chroma</label>
-            <input
-              checked
-              type="checkbox"
-              name="Constant Chroma Toggle"
-              id="option-const-chroma"
-              (change)="toggleConstantChroma($event)"
-            />
-          </div>
-          <div class="checkbox-group">
-            <label for="option-show-grad">Show Gradient</label>
-            <input
-              checked
-              type="checkbox"
-              name="Show Gradient Toggle"
-              id="option-show-grad"
-              (change)="toggleShowGradient($event)"
-            />
+          <div class="checkbox-section">
+            <div class="checkbox-group">
+              <label for="option-const-chroma">Constant chroma</label>
+              <input
+                checked
+                type="checkbox"
+                name="Constant Chroma Toggle"
+                id="option-const-chroma"
+                (change)="toggleConstantChroma($event)"
+              />
+            </div>
+            <div class="checkbox-group">
+              <label for="option-show-grad">Show Gradient</label>
+              <input
+                checked
+                type="checkbox"
+                name="Show Gradient Toggle"
+                id="option-show-grad"
+                (change)="toggleShowGradient($event)"
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </details>
     </div>
   </section>
 
@@ -271,14 +274,14 @@
 
       <div class="content">
         <p>
-          <span class="visual-header">Screen Reader Workflow:</span> Input a
+          <span class="visual-header">Screen Reader Users:</span> Input a
           Foreground Color and a Background Color in the Main Color Controls
           section. You can then:
         </p>
         <ol>
           <li>
-            Adjust your inputted colors lighter and darker using the color
-            sliders. . .
+            Adjust your inputted colors lighter and darker using the slider
+            inputs. . .
           </li>
           <li>
             . . .while checking contrast and color descriptions in the
@@ -287,24 +290,32 @@
         </ol>
 
         <p>
-          <span class="visual-header">Low Vision Users:</span> This app was
-          designed from the ground up with you in mind. Zooming your browser
-          with ctrl + will enlarge the app while keeping the most important
-          parts of the UI visible to you:
+          <span class="visual-header">Low Vision Users:</span> We designed
+          Colors Contrast from the ground up with you in mind. You will notice
+          that zooming your browser still allows you to see the most important
+          parts of the UI:
         </p>
         <ul>
           <li>The contrast value</li>
           <li>The color inputs</li>
-          <li>The color sliders</li>
-          <li>The color copy to clipboard buttons</li>
+          <li>The slider inputs</li>
+          <li>The Copy to Clipboard buttons</li>
         </ul>
 
         <p>
-          <span class="visual-header"> Random Color Pairs:</span> The app starts
-          you off with a pair of colors that passes most if not all levels of
-          Accessible Contrast—you just need to use the sliders to create tones
-          of those colors for each contrast level you need.
+          <span class="visual-header"> Random Color Pairs:</span> Colors
+          Contrast starts you off with a random pair of colors that passes most
+          if not all levels of Accessible Contrast.
         </p>
+        <ul>
+          <li>
+            Use the slider inputs to create tones of those colors for each
+            contrast level you need.
+          </li>
+          <li>
+            Try swapping Foreground, and Background colors for a dark mode pair.
+          </li>
+        </ul>
       </div>
     </details>
   </section>
@@ -320,25 +331,52 @@
       <div class="content">
         <p id="notes-lch-limits">
           <span class="visual-header">LCH Limits:</span>
-          This feature displays a collection of different buttons showing
-          possible variants of your selected color in the sRGB color gamut
-          allowing a user to see what different hues are capable of e.g. the
-          strongest yellow is only possible a high lightness level. The
-          visualization is built using a
-          <code>table</code> element to provide an equitable experience in
-          choosing colors based on lightness and chroma.
+          This feature displays variants of your selected color. Unlike most
+          color pickers, this feature only shows you what is in the sRGB color
+          gamut. This allows you to know:
         </p>
+        <ul>
+          <li>
+            How your choice of hue affects your options for lightness and color
+            strength. For example, strong yellows are only possible at high
+            lightness levels.
+          </li>
+          <li>
+            How lightness and color strength relate to each other for your
+            selected hue.
+          </li>
+        </ul>
+        <p>
+          This feature uses an HTML table element that should allow screen
+          reader users to:
+        </p>
+        <ul>
+          <li>
+            Use column and row headers to examine and choose specific variants.
+          </li>
+          <li>Read various color metadata.</li>
+        </ul>
+
         <p id="notes-object">
-          <span class="visual-header">Object:</span> A readout that shows two
-          different values, a number in pixels that the current contrast level
-          supports, and 'invisible' when the current contrast level is too low
-          to support <strong>any</strong> object.
+          <span class="visual-header">Object:</span> This readout shows two
+          different values:
         </p>
+        <ul>
+          <li>
+            The first value is a number in pixels that the current contrast
+            level supports.
+          </li>
+          <li>
+            The second value is an exclamation point. This occurs when the
+            current contrast level is too low to support
+            <strong>ANY</strong> object.
+          </li>
+        </ul>
+
         <p id="notes-perceptual-contrast">
-          <span class="visual-header"> Perceptual contrast:</span> Score that
-          better gauges contrast than WCAG 2 in the creation of inclusive visual
-          designs. For more information on the value used for Perceptual
-          Contrast, refer to Myndex article
+          <span class="visual-header"> Perceptual contrast:</span> This score
+          gauges inclusive contrast better than WCAG 2. For more information on
+          why, refer to Myndex article,
           <a href="https://git.apcacontrast.com/documentation/WhyAPCA.html"
             >Why APCA?</a
           >
@@ -349,29 +387,63 @@
           exceeds WCAG 2 scores to better include those with atypical vision.
         </p>
         <p id="notes-wcag2">
-          <span class="visual-header">WCAG 2:</span> Scores that are included
-          for reference only—do not use this score for judging Accessible
-          Contrast.
+          <span class="visual-header">WCAG 2:</span> This score is for reference
+          only—do not use this score for judging inclusive contrast.
         </p>
 
         <p id="notes-display-wcag2">
-          <span class="visual-header">Display WCAG 2 compatible value:</span>
-          Option that swaps out perceptual contrast score visually displayed at
-          top of the app. Screen reader users can access the same value
-          regardless of this option in the Differences table located in the
-          Color Metadata section.
+          <span class="visual-header">Colors Contrast Value: Perceptual:</span>
+          The default score displayed by Colors Contrast. It ranges from -108 to
+          106. Use this value in conjunction with
+          <a href="http://https://www.myndex.com/APCA/">Myndex guides</a> to
+          create inclusive designs.
         </p>
+        <p id="notes-display-wcag2">
+          <span class="visual-header"
+            >Colors Contrast Value: WCAG 2 compatible:</span
+          >
+          This option swaps in a score for a value usable with WCAG 2.x success
+          criteria.
+        </p>
+        <p id="notes-display-wcag2">
+          <span class="visual-header">Colors Contrast Value: Object:</span>
+          This option swaps in a score that either displays a number in pixels
+          or an exclamation point (!). The number is the smallest object
+          dimension you can use the current color variant pair for.
+        </p>
+        <ul>
+          <li>
+            Smallest object dimension is the smallest dimension of an object you
+            are designing.
+          </li>
+          <li>
+            For example, if an object is 15 pixels by 20 pixels, the smallest
+            dimension is 15 pixels.
+          </li>
+        </ul>
+
         <p id="notes-constant-chroma">
           <span class="visual-header">Constant chroma:</span>
-          Option that forces the color sliders to limit light and dark variation
-          of colors to tints and shades that have the same chroma and hue of the
-          inputted color maintaining the objective identity of your input color.
+          This option forces input sliders to limit tones with the same chroma
+          and hue of your inputted color.
         </p>
+        <ul>
+          <li>
+            Keeping the same chroma and hue preserves the identity of your input
+            color.
+          </li>
+          <li>
+            Deselecting this option allows you to generate more tones. Be aware
+            that a lot of tones generated will now clash with your inputted
+            color.
+          </li>
+        </ul>
         <p id="notes-show-grad">
           <span class="visual-header">Show Gradient:</span>
-          Renders a gradient behind the color sliders showing the possible
-          colors an inputted color is capable; results are diffferent if
-          Constant Chroma is not active.
+          This option renders a tone gradient behind the slider inputs. The
+          gradient shows the tonal possibilities of your inputted color. If
+          Constant Chroma is not active, the gradient ranges from black to
+          white.
         </p>
       </div>
     </details>
