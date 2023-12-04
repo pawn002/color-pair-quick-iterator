@@ -325,20 +325,38 @@
   <section class="notes">
     <h2>Notes</h2>
 
-    <details>
+    <details open>
       <summary>Details about app features.</summary>
 
       <div class="content">
         <p id="notes-lch-limits">
           <span class="visual-header">LCH Limits:</span>
-          This feature displays a collection of different buttons showing
-          possible variants of your selected color in the sRGB color gamut
-          allowing a user to see what different hues are capable of e.g. the
-          strongest yellow is only possible a high lightness level. The
-          visualization is built using a
-          <code>table</code> element to provide an equitable experience in
-          choosing colors based on lightness and chroma.
+          This feature displays variants of your selected color. Unlike most
+          color pickers, this feature only shows you what is in the sRGB color
+          gamut. This shows you:
         </p>
+        <ul>
+          <li>
+            How your choice of hue affects your options for lightness and color
+            strength. For example, strong yellows are only possible at high
+            lightness levels.
+          </li>
+          <li>
+            How lightness and color strength relate to each other for your
+            selected hue.
+          </li>
+        </ul>
+        <p>
+          This feature uses an HTML table element that should allow screen
+          reader users to:
+        </p>
+        <ul>
+          <li>
+            Use column and row headers to examine and choose specific variants.
+          </li>
+          <li>Read various color metadata.</li>
+        </ul>
+
         <p id="notes-object">
           <span class="visual-header">Object:</span> A readout that shows two
           different values, a number in pixels that the current contrast level
