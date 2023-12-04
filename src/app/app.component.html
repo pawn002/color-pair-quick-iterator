@@ -374,10 +374,9 @@
         </ul>
 
         <p id="notes-perceptual-contrast">
-          <span class="visual-header"> Perceptual contrast:</span> Score that
-          better gauges contrast than WCAG 2 in the creation of inclusive visual
-          designs. For more information on the value used for Perceptual
-          Contrast, refer to Myndex article
+          <span class="visual-header"> Perceptual contrast:</span> This score
+          gauges inclusive contrast better than WCAG 2. For more information on
+          why, refer to Myndex article,
           <a href="https://git.apcacontrast.com/documentation/WhyAPCA.html"
             >Why APCA?</a
           >
@@ -388,29 +387,63 @@
           exceeds WCAG 2 scores to better include those with atypical vision.
         </p>
         <p id="notes-wcag2">
-          <span class="visual-header">WCAG 2:</span> Scores that are included
-          for reference only—do not use this score for judging Accessible
-          Contrast.
+          <span class="visual-header">WCAG 2:</span> This score is for reference
+          only—do not use this score for judging inclusive contrast.
         </p>
 
         <p id="notes-display-wcag2">
-          <span class="visual-header">Display WCAG 2 compatible value:</span>
-          Option that swaps out perceptual contrast score visually displayed at
-          top of the app. Screen reader users can access the same value
-          regardless of this option in the Differences table located in the
-          Color Metadata section.
+          <span class="visual-header">Colors Contrast Value: Perceptual:</span>
+          The default score displayed by Colors Contrast. It ranges from -108 to
+          106. Use this value in conjunction with
+          <a href="http://https://www.myndex.com/APCA/">Myndex guides</a> to
+          create inclusive designs.
         </p>
+        <p id="notes-display-wcag2">
+          <span class="visual-header"
+            >Colors Contrast Value: WCAG 2 compatible:</span
+          >
+          This option swaps in a score for a value usable with WCAG 2.x success
+          criteria.
+        </p>
+        <p id="notes-display-wcag2">
+          <span class="visual-header">Colors Contrast Value: Object:</span>
+          This option swaps in a score that either displays a number in pixels
+          or an exclamation point (!). The number is the smallest object
+          dimension you can use the current color variant pair for.
+        </p>
+        <ul>
+          <li>
+            Smallest object dimension is the smallest dimension of an object you
+            are designing.
+          </li>
+          <li>
+            For example, if an object is 15 pixels by 20 pixels, the smallest
+            dimension is 15 pixels.
+          </li>
+        </ul>
+
         <p id="notes-constant-chroma">
           <span class="visual-header">Constant chroma:</span>
-          Option that forces the color sliders to limit light and dark variation
-          of colors to tints and shades that have the same chroma and hue of the
-          inputted color maintaining the objective identity of your input color.
+          This option forces input sliders to limit tones with the same chroma
+          and hue of your inputted color.
         </p>
+        <ul>
+          <li>
+            Keeping the same chroma and hue preserves the identity of your input
+            color.
+          </li>
+          <li>
+            Deselecting this option allows you to generate more tones. Be aware
+            that a lot of tones generated will now clash with your inputted
+            color.
+          </li>
+        </ul>
         <p id="notes-show-grad">
           <span class="visual-header">Show Gradient:</span>
-          Renders a gradient behind the color sliders showing the possible
-          colors an inputted color is capable; results are diffferent if
-          Constant Chroma is not active.
+          This option renders a tone gradient behind the slider inputs. The
+          gradient shows the tonal possibilities of your inputted color. If
+          Constant Chroma is not active, the gradient ranges from black to
+          white.
         </p>
       </div>
     </details>

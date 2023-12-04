@@ -200,7 +200,7 @@
     .content {
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
     }
   }
 
@@ -209,9 +209,13 @@
       margin-bottom: 1.1em;
     }
 
-    p,
-    li {
-      margin: 0 11px 0 0;
+    p {
+      margin: 0 0 1em;
+    }
+
+    ul,
+    ol {
+      margin-top: 0;
     }
 
     .content {
