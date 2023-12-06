@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 30" x="0px" y="0px">
+  <title>_</title>
+  <path
+    d="M12,3A8.92277,8.92277,0,0,0,4.5,7.05823V5H3v5H8V8.5H5.38165A7.4775,7.4775,0,1,1,4.5,12H3a9,9,0,1,0,9-9Z"
+  />
+  <text
+    x="0"
+    y="39"
+    fill="#000000"
+    font-size="5px"
+    font-weight="bold"
+    font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif"
+  >
+    Created by Sophia
+  </text>
+  <text
+    x="0"
+    y="44"
+    fill="#000000"
+    font-size="5px"
+    font-weight="bold"
+    font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif"
+  >
+    from the Noun Project
+  </text>
+</svg>
