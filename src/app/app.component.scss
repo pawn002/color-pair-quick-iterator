@@ -95,16 +95,20 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    gap: 11px;
+    margin: 11px 0 5px;
 
     button {
       display: flex;
       position: relative;
-      margin: 11px;
+      font-size: 0;
+      padding: 2px;
       border: transparent 2px solid;
       color: var(--min-body-text-black);
       background-color: var(--app-white);
       box-sizing: border-box;
       align-items: center;
+      justify-content: center;
       border-radius: 5px;
       min-width: var(--min-hit-dimension-aa);
       min-height: var(--min-hit-dimension-aa);
