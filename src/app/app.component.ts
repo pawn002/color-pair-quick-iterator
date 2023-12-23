@@ -134,7 +134,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
       this.colorPickerTwoSelectedColor = newPairing.background;
 
-      this.alertUser({ message: 'Swapped Color One and Two.' });
+      this.alertUser({ message: 'Swapped foreground and background colors.' });
     } else {
       console.error('swapping colors went badly. . .');
     }
@@ -162,7 +162,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   resetSliders() {
     this.resetSlider = { reset: true };
 
-    this.alertUser({ message: 'Color Sliders reset to initial states.' });
+    this.alertUser({ message: 'Resetted color sliders to initial states.' });
   }
 
   async matchChromas() {
@@ -181,12 +181,10 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.colorPickerTwoSelectedColor = matchedColors.colors[1];
 
         this.alertUser({
-          message: `Chroma matched colors to ${matchedColors.chroma.toFixed(
-            2
-          )}`,
+          message: `Chroma matched foreground and background colors.`,
         });
       } else {
-        this.alertUser({ message: 'Unable to chroma match colors' });
+        this.alertUser({ message: 'Unable to match  chroma across colors.' });
       }
     }
   }
