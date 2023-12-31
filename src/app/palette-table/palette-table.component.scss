@@ -26,8 +26,8 @@
       border: transparent 2px solid;
       box-sizing: border-box;
       border-radius: 5px;
-      min-width: 15px;
-      min-height: 15px;
+      min-width: 22px;
+      min-height: 22px;
       line-height: 0;
       font-size: 0;
 
@@ -35,7 +35,7 @@
         line-height: 0;
       }
 
-      &:hover {
+      &:hover:not([disabled]) {
         background-color: white !important;
         border-color: #8f8f8f !important;
       }
