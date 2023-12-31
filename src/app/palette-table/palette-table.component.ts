@@ -37,10 +37,8 @@ export class PaletteTableComponent implements OnInit, OnChanges {
 
   @Output() selectedColor = new EventEmitter<TableColorCell>();
 
-  // lightSteps = 50;
-  // chromaSteps = 70;
   lightSteps = 5;
-  chromaSteps = 23;
+  chromaSteps = 14;
 
   tableHeaders: Array<number> = [];
 
