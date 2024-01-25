@@ -149,6 +149,12 @@ details > summary {
   margin-bottom: 0.3em;
   max-width: unset;
   text-align: center;
+  cursor: pointer;
+}
+
+button,
+input {
+  cursor: pointer;
 }
 
 strong {
