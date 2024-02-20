@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 import { calcAPCA, sRGBtoY } from 'apca-w3';
 
@@ -16,6 +16,9 @@ export type ContrastType = 'apca' | 'bpca';
   providedIn: 'root',
 })
 export class ColorMetricsService {
+  cus = inject(ColorUtilService);
+  bpca = inject(BpcaService);
+
   dev: boolean = true;
 
   apcaToWcagLookup: NumberKeyLookup = {};
@@ -75,6 +78,4 @@ export class ColorMetricsService {
 
     return wcag;
   }
-
-  constructor(private cus: ColorUtilService, private bpca: BpcaService) {}
 }

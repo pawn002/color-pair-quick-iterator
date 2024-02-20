@@ -3,6 +3,7 @@ import {
   OnInit,
   AfterViewInit,
   AfterViewChecked,
+  inject,
 } from '@angular/core';
 import { ContrastType } from './services/color-metrics.service';
 import { ColorUtilService } from './services/color-util.service';
@@ -17,6 +18,8 @@ import { TableColorCell } from './palette-table/palette-table.component';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, AfterViewInit {
+  cus = inject(ColorUtilService);
+
   colorPickerOneSelectedColor: string | null = null;
   colorPickerOneComparedColor: string | null = null;
 
@@ -192,8 +195,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   alertUser(message: AlertMessagObj) {
     this.currentAlertMessage = message;
   }
-
-  constructor(private cus: ColorUtilService) {}
 
   ngOnInit(): void {}
 

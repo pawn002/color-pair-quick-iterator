@@ -7,6 +7,7 @@ import {
   SimpleChanges,
   Output,
   EventEmitter,
+  inject,
 } from '@angular/core';
 import { ColorUtilService } from '../services/color-util.service';
 
@@ -36,6 +37,8 @@ export class PaletteTableComponent implements OnInit, OnChanges {
   @Input() color: string | null = null;
 
   @Output() selectedColor = new EventEmitter<TableColorCell>();
+
+  cus = inject(ColorUtilService);
 
   lightSteps = 5;
   chromaSteps = 14;
@@ -87,8 +90,6 @@ export class PaletteTableComponent implements OnInit, OnChanges {
       console.warn(`no color for palette table`);
     }
   }
-
-  constructor(private cus: ColorUtilService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     // console.log(`-----OnChanges`);

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, inject } from '@angular/core';
 import { ColorUtilService, ColorMetaObj } from '../services/color-util.service';
 import { ColorMetricsService } from '../services/color-metrics.service';
 
@@ -22,6 +22,9 @@ export class SuccessesObj {
 export class MetadataComponent implements OnChanges {
   @Input() colorOne: string | null = null;
   @Input() colorTwo: string | null = null;
+
+  cus = inject(ColorUtilService);
+  cms = inject(ColorMetricsService);
 
   differences: DifferencesDataObj = {
     deltaE: null,
@@ -113,11 +116,6 @@ export class MetadataComponent implements OnChanges {
       }
     }
   }
-
-  constructor(
-    private cus: ColorUtilService,
-    private cms: ColorMetricsService
-  ) {}
 
   ngOnChanges() {
     this.getColorMeta();

@@ -6,6 +6,7 @@ import {
   Output,
   EventEmitter,
   SimpleChanges,
+  inject,
 } from '@angular/core';
 import { ColorUtilService } from '../services/color-util.service';
 
@@ -26,6 +27,8 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   @Input() showGradient: boolean = false;
   @Input() resetSlider: ResetObject | null = null;
   @Output() colorVariant = new EventEmitter<string | null>();
+
+  cus = inject(ColorUtilService);
 
   debug: boolean = false;
   devColorVariant: string | null = null;
@@ -187,8 +190,6 @@ export class ColorSliderComponent implements OnInit, OnChanges {
       console.log(`no color specified`);
     }
   }
-
-  constructor(private cus: ColorUtilService) {}
 
   ngOnInit(): void {}
 

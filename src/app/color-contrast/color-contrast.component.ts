@@ -5,6 +5,7 @@ import {
   OnChanges,
   Output,
   SimpleChanges,
+  inject,
 } from '@angular/core';
 import {
   ColorMetricsService,
@@ -29,12 +30,10 @@ export class ColorContrastComponent implements OnChanges {
 
   @Output() contrast = new EventEmitter<ContrastObject>();
 
-  contrastScore: number | null = null;
+  cus = inject(ColorUtilService);
+  cms = inject(ColorMetricsService);
 
-  constructor(
-    private cms: ColorMetricsService,
-    private cus: ColorUtilService
-  ) {}
+  contrastScore: number | null = null;
 
   ngOnChanges(changes: SimpleChanges): void {
     // console.log(changes);

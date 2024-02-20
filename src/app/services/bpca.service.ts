@@ -1,10 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ColorUtilService } from './color-util.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BpcaService {
+  cus = inject(ColorUtilService);
+
   // Following Code is copied with some modification from [Bridge-PCA algo](https://github.com/Myndex/bridge-pca/blob/master/src/bridge-pca.js)
   // Attempts to use bpca module as-is has failed because of some issue with colorparsely dependency
 
@@ -250,6 +252,4 @@ export class BpcaService {
 
     return bpca;
   } // End calcBPCA()
-
-  constructor(private cus: ColorUtilService) {}
 }
