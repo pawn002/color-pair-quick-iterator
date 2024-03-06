@@ -4,6 +4,12 @@ This repo contains the the files for inclusive design tool, Color Pair Quick Ite
 
 CPQI is meant to be used in conjunction with design tools to quick check and iterate on colors pairs for inclusive contrast.
 
+## Useful Links
+
+- [Current Tool](https://pawn002.github.io/color-pair-quick-iterator/)
+- [Myndex APCA Tool](https://www.myndex.com/APCA/)
+- [Myndex BPCA Tool](https://www.myndex.com/BPCA/)
+
 ## Angular
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.2.0.
