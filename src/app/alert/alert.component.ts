@@ -17,6 +17,7 @@ export interface AlertMessagObj {
   selector: 'app-alert',
   templateUrl: './alert.component.html',
   styleUrls: ['./alert.component.scss'],
+  standalone: true,
 })
 export class AlertComponent implements OnInit, OnChanges {
   @Input() alertMessage: AlertMessagObj | null = null;

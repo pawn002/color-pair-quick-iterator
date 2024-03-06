@@ -40,5 +40,17 @@
         border-color: #8f8f8f !important;
       }
     }
+
+    .no-color {
+      margin: 0;
+      padding: 0;
+      border: transparent 2px solid;
+      box-sizing: border-box;
+      border-radius: 5px;
+      min-width: 22px;
+      min-height: 22px;
+      line-height: 0;
+      font-size: 0;
+    }
   }
 }

@@ -32,6 +32,7 @@ export type TableData = Array<TableRow>;
   selector: 'app-palette-table',
   templateUrl: './palette-table.component.html',
   styleUrls: ['./palette-table.component.scss'],
+  standalone: true,
 })
 export class PaletteTableComponent implements OnInit, OnChanges {
   @Input() color: string | null = null;

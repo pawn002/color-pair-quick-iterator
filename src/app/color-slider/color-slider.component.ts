@@ -8,6 +8,7 @@ import {
   SimpleChanges,
   inject,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ColorUtilService } from '../services/color-util.service';
 
 export interface ResetObject {
@@ -18,6 +19,8 @@ export interface ResetObject {
   selector: 'app-color-slider',
   templateUrl: './color-slider.component.html',
   styleUrls: ['./color-slider.component.scss'],
+  imports: [CommonModule],
+  standalone: true,
 })
 export class ColorSliderComponent implements OnInit, OnChanges {
   @Input() id: string | 'slider-0' = 'slider-0';

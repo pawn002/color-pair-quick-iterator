@@ -18,6 +18,7 @@ export class SuccessesObj {
   selector: 'app-metadata',
   templateUrl: './metadata.component.html',
   styleUrls: ['./metadata.component.scss'],
+  standalone: true,
 })
 export class MetadataComponent implements OnChanges {
   @Input() colorOne: string | null = null;
