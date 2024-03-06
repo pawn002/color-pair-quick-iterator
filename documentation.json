@@ -4077,21 +4077,21 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/app/color-picker/color-picker.stories.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Meta<ColorPickerComponent>",
-                "defaultValue": "{\r\n  title: 'App/Color Picker',\r\n  component: ColorPickerComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorPickerComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    comparedColor: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
-            },
-            {
-                "name": "meta",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
                 "file": "src/app/color-slider/color-slider.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Meta<ColorSliderComponent>",
                 "defaultValue": "{\r\n  title: 'App/Color Slider',\r\n  component: ColorSliderComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorSliderComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/color-picker/color-picker.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<ColorPickerComponent>",
+                "defaultValue": "{\r\n  title: 'App/Color Picker',\r\n  component: ColorPickerComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorPickerComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    comparedColor: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
             },
             {
                 "name": "meta",
@@ -4267,21 +4267,21 @@
                 "name": "Typical",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/app/color-picker/color-picker.stories.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Story",
-                "defaultValue": "{\r\n  args: {\r\n    comparedColor: '',\r\n  },\r\n}"
-            },
-            {
-                "name": "Typical",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
                 "file": "src/app/color-slider/color-slider.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
                 "defaultValue": "{\r\n  args: {\r\n    color: 'coral',\r\n  },\r\n}"
+            },
+            {
+                "name": "Typical",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/color-picker/color-picker.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\r\n  args: {\r\n    comparedColor: '',\r\n  },\r\n}"
             },
             {
                 "name": "Typical",
@@ -4428,8 +4428,8 @@
                 "name": "Story",
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
-                "rawtype": "StoryObj<ColorPickerComponent>",
-                "file": "src/app/color-picker/color-picker.stories.ts",
+                "rawtype": "StoryObj<ColorSliderComponent>",
+                "file": "src/app/color-slider/color-slider.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "description": "",
@@ -4439,8 +4439,8 @@
                 "name": "Story",
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
-                "rawtype": "StoryObj<ColorSliderComponent>",
-                "file": "src/app/color-slider/color-slider.stories.ts",
+                "rawtype": "StoryObj<ColorPickerComponent>",
+                "file": "src/app/color-picker/color-picker.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "description": "",
@@ -4726,28 +4726,6 @@
                     "defaultValue": "{\r\n  title: 'Example/Page',\r\n  component: PageComponent,\r\n  parameters: {\r\n    // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout\r\n    layout: 'fullscreen',\r\n  },\r\n}"
                 }
             ],
-            "src/app/color-picker/color-picker.stories.ts": [
-                {
-                    "name": "meta",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/color-picker/color-picker.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Meta<ColorPickerComponent>",
-                    "defaultValue": "{\r\n  title: 'App/Color Picker',\r\n  component: ColorPickerComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorPickerComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    comparedColor: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
-                },
-                {
-                    "name": "Typical",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/color-picker/color-picker.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\r\n  args: {\r\n    comparedColor: '',\r\n  },\r\n}"
-                }
-            ],
             "src/app/color-slider/color-slider.stories.ts": [
                 {
                     "name": "meta",
@@ -4808,6 +4786,28 @@
                     "deprecationMessage": "",
                     "type": "Story",
                     "defaultValue": "{\r\n  args: {\r\n    color: 'coral',\r\n  },\r\n}"
+                }
+            ],
+            "src/app/color-picker/color-picker.stories.ts": [
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/color-picker/color-picker.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<ColorPickerComponent>",
+                    "defaultValue": "{\r\n  title: 'App/Color Picker',\r\n  component: ColorPickerComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorPickerComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    comparedColor: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
+                },
+                {
+                    "name": "Typical",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/color-picker/color-picker.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\r\n  args: {\r\n    comparedColor: '',\r\n  },\r\n}"
                 }
             ],
             "src/app/copy-to-clipboard-button/copy-to-clipboard-button.stories.ts": [
@@ -5024,19 +5024,6 @@
                     "kind": 183
                 }
             ],
-            "src/app/color-picker/color-picker.stories.ts": [
-                {
-                    "name": "Story",
-                    "ctype": "miscellaneous",
-                    "subtype": "typealias",
-                    "rawtype": "StoryObj<ColorPickerComponent>",
-                    "file": "src/app/color-picker/color-picker.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "description": "",
-                    "kind": 183
-                }
-            ],
             "src/app/color-slider/color-slider.stories.ts": [
                 {
                     "name": "Story",
@@ -5044,6 +5031,19 @@
                     "subtype": "typealias",
                     "rawtype": "StoryObj<ColorSliderComponent>",
                     "file": "src/app/color-slider/color-slider.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 183
+                }
+            ],
+            "src/app/color-picker/color-picker.stories.ts": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "StoryObj<ColorPickerComponent>",
+                    "file": "src/app/color-picker/color-picker.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "description": "",
