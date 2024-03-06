@@ -11,6 +11,7 @@ import {
   selector: 'app-color-picker',
   templateUrl: './color-picker.component.html',
   styleUrls: ['./color-picker.component.scss'],
+  standalone: true,
 })
 export class ColorPickerComponent implements OnChanges {
   @Input() inputId: string = 'fg-color';

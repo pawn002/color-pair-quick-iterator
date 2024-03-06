@@ -22,6 +22,7 @@ export class ContrastObject {
   selector: 'app-color-contrast',
   templateUrl: './color-contrast.component.html',
   styleUrls: ['./color-contrast.component.scss'],
+  standalone: true,
 })
 export class ColorContrastComponent implements OnChanges {
   @Input() colorOne: string | null = null;

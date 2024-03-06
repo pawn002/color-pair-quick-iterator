@@ -9,6 +9,7 @@ export class CopyToClipboardEvent {
   selector: 'app-copy-to-clipboard-button',
   templateUrl: './copy-to-clipboard-button.component.html',
   styleUrls: ['./copy-to-clipboard-button.component.scss'],
+  standalone: true,
 })
 export class CopyToClipboardButtonComponent {
   @Input() color: string | null = null;

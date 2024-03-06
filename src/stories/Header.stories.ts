@@ -1,30 +1,20 @@
-import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { CommonModule } from '@angular/common';
 
-import Button from './button.component';
-import Header from './header.component';
+import { HeaderComponent } from './header.component';
 
-const meta: Meta<Header> = {
+const meta: Meta<HeaderComponent> = {
   title: 'Example/Header',
-  component: Header,
-  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/angular/writing-docs/autodocs
+  component: HeaderComponent,
+  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
-  render: (args) => ({ props: args }),
-  decorators: [
-    moduleMetadata({
-      declarations: [Button],
-      imports: [CommonModule],
-    }),
-  ],
   parameters: {
-    // More on how to position stories at: https://storybook.js.org/docs/angular/configure/story-layout
+    // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
     layout: 'fullscreen',
   },
 };
 
 export default meta;
-type Story = StoryObj<Header>;
+type Story = StoryObj<HeaderComponent>;
 
 export const LoggedIn: Story = {
   args: {

@@ -1,10 +1,6 @@
-import {
-  Component,
-  OnInit,
-  AfterViewInit,
-  AfterViewChecked,
-  inject,
-} from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+
 import { ContrastType } from './services/color-metrics.service';
 import { ColorUtilService } from './services/color-util.service';
 import { CopyToClipboardEvent } from './copy-to-clipboard-button/copy-to-clipboard-button.component';
@@ -12,12 +8,31 @@ import { ResetObject } from './color-slider/color-slider.component';
 import { AlertMessagObj } from './alert/alert.component';
 import { TableColorCell } from './palette-table/palette-table.component';
 
+import { AlertComponent } from './alert/alert.component';
+import { ColorContrastComponent } from './color-contrast/color-contrast.component';
+import { ColorPickerComponent } from './color-picker/color-picker.component';
+import { ColorSliderComponent } from './color-slider/color-slider.component';
+import { CopyToClipboardButtonComponent } from './copy-to-clipboard-button/copy-to-clipboard-button.component';
+import { MetadataComponent } from './metadata/metadata.component';
+import { PaletteTableComponent } from './palette-table/palette-table.component';
+
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [
+    RouterOutlet,
+    AlertComponent,
+    ColorContrastComponent,
+    ColorPickerComponent,
+    ColorSliderComponent,
+    CopyToClipboardButtonComponent,
+    MetadataComponent,
+    PaletteTableComponent,
+  ],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  styleUrl: './app.component.scss',
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent {
   cus = inject(ColorUtilService);
 
   colorPickerOneSelectedColor: string | null = null;
