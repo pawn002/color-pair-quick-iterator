@@ -4031,7 +4031,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Meta<ButtonComponent>",
-                "defaultValue": "{\r\n  title: 'Example/Button',\r\n  component: ButtonComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ButtonComponent) => ({\r\n    props: {\r\n      backgroundColor: null,\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    backgroundColor: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
+                "defaultValue": "{\r\n  title: 'Example/Button',\r\n  component: ButtonComponent,\r\n  tags: ['autodocs'],\r\n  // render: (args: ButtonComponent) => ({\r\n  //   props: {\r\n  //     backgroundColor: null,\r\n  //     ...args,\r\n  //   },\r\n  // }),\r\n  argTypes: {\r\n    backgroundColor: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
             },
             {
                 "name": "meta",
@@ -4061,7 +4061,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Meta<AlertComponent>",
-                "defaultValue": "{\r\n  title: 'App/Alert',\r\n  component: AlertComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: AlertComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {},\r\n}"
+                "defaultValue": "{\r\n  title: 'App/Alert',\r\n  component: AlertComponent,\r\n  tags: ['autodocs'],\r\n  // render: (args: AlertComponent) => ({\r\n  //   props: {\r\n  //     ...args,\r\n  //   },\r\n  // }),\r\n  argTypes: {},\r\n}"
             },
             {
                 "name": "meta",
@@ -4071,17 +4071,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Meta<ColorContrastComponent>",
-                "defaultValue": "{\r\n  title: 'App/Color Contrast',\r\n  component: ColorContrastComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorContrastComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    colorOne: {\r\n      control: 'color',\r\n    },\r\n    colorTwo: {\r\n      control: 'color',\r\n    },\r\n    contrastType: {\r\n      options: ['apca', 'bpca', 'apca object'],\r\n      control: { type: 'radio' },\r\n    },\r\n  },\r\n}"
-            },
-            {
-                "name": "meta",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
-                "file": "src/app/color-slider/color-slider.stories.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Meta<ColorSliderComponent>",
-                "defaultValue": "{\r\n  title: 'App/Color Slider',\r\n  component: ColorSliderComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorSliderComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
+                "defaultValue": "{\r\n  title: 'App/Color Contrast',\r\n  component: ColorContrastComponent,\r\n  tags: ['autodocs'],\r\n  // render: (args: ColorContrastComponent) => ({\r\n  //   props: {\r\n  //     ...args,\r\n  //   },\r\n  // }),\r\n  argTypes: {\r\n    colorOne: {\r\n      control: 'color',\r\n    },\r\n    colorTwo: {\r\n      control: 'color',\r\n    },\r\n    contrastType: {\r\n      options: ['apca', 'bpca', 'apca object'],\r\n      control: { type: 'radio' },\r\n    },\r\n  },\r\n}"
             },
             {
                 "name": "meta",
@@ -4091,7 +4081,17 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Meta<ColorPickerComponent>",
-                "defaultValue": "{\r\n  title: 'App/Color Picker',\r\n  component: ColorPickerComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorPickerComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    comparedColor: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
+                "defaultValue": "{\r\n  title: 'App/Color Picker',\r\n  component: ColorPickerComponent,\r\n  tags: ['autodocs'],\r\n  // render: (args: ColorPickerComponent) => ({\r\n  //   props: {\r\n  //     ...args,\r\n  //   },\r\n  // }),\r\n  argTypes: {\r\n    comparedColor: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/color-slider/color-slider.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<ColorSliderComponent>",
+                "defaultValue": "{\r\n  title: 'App/Color Slider',\r\n  component: ColorSliderComponent,\r\n  tags: ['autodocs'],\r\n  // render: (args: ColorSliderComponent) => ({\r\n  //   props: {\r\n  //     ...args,\r\n  //   },\r\n  // }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
             },
             {
                 "name": "meta",
@@ -4101,7 +4101,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Meta<CopyToClipboardButtonComponent>",
-                "defaultValue": "{\r\n  title: 'App/Copy to Clipboard Button',\r\n  component: CopyToClipboardButtonComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: CopyToClipboardButtonComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
+                "defaultValue": "{\r\n  title: 'App/Copy to Clipboard Button',\r\n  component: CopyToClipboardButtonComponent,\r\n  tags: ['autodocs'],\r\n  // render: (args: CopyToClipboardButtonComponent) => ({\r\n  //   props: {\r\n  //     ...args,\r\n  //   },\r\n  // }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
             },
             {
                 "name": "meta",
@@ -4121,7 +4121,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Meta<PaletteTableComponent>",
-                "defaultValue": "{\r\n  title: 'App/Palette Table',\r\n  component: PaletteTableComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: PaletteTableComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
+                "defaultValue": "{\r\n  title: 'App/Palette Table',\r\n  component: PaletteTableComponent,\r\n  tags: ['autodocs'],\r\n  // render: (args: PaletteTableComponent) => ({\r\n  //   props: {\r\n  //     ...args,\r\n  //   },\r\n  // }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
             },
             {
                 "name": "NoHueColor",
@@ -4267,21 +4267,21 @@
                 "name": "Typical",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/app/color-slider/color-slider.stories.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Story",
-                "defaultValue": "{\r\n  args: {\r\n    color: 'coral',\r\n  },\r\n}"
-            },
-            {
-                "name": "Typical",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
                 "file": "src/app/color-picker/color-picker.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
                 "defaultValue": "{\r\n  args: {\r\n    comparedColor: '',\r\n  },\r\n}"
+            },
+            {
+                "name": "Typical",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/color-slider/color-slider.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\r\n  args: {\r\n    color: 'coral',\r\n  },\r\n}"
             },
             {
                 "name": "Typical",
@@ -4428,8 +4428,8 @@
                 "name": "Story",
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
-                "rawtype": "StoryObj<ColorSliderComponent>",
-                "file": "src/app/color-slider/color-slider.stories.ts",
+                "rawtype": "StoryObj<ColorPickerComponent>",
+                "file": "src/app/color-picker/color-picker.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "description": "",
@@ -4439,8 +4439,8 @@
                 "name": "Story",
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
-                "rawtype": "StoryObj<ColorPickerComponent>",
-                "file": "src/app/color-picker/color-picker.stories.ts",
+                "rawtype": "StoryObj<ColorSliderComponent>",
+                "file": "src/app/color-slider/color-slider.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "description": "",
@@ -4523,7 +4523,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Meta<ColorContrastComponent>",
-                    "defaultValue": "{\r\n  title: 'App/Color Contrast',\r\n  component: ColorContrastComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorContrastComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    colorOne: {\r\n      control: 'color',\r\n    },\r\n    colorTwo: {\r\n      control: 'color',\r\n    },\r\n    contrastType: {\r\n      options: ['apca', 'bpca', 'apca object'],\r\n      control: { type: 'radio' },\r\n    },\r\n  },\r\n}"
+                    "defaultValue": "{\r\n  title: 'App/Color Contrast',\r\n  component: ColorContrastComponent,\r\n  tags: ['autodocs'],\r\n  // render: (args: ColorContrastComponent) => ({\r\n  //   props: {\r\n  //     ...args,\r\n  //   },\r\n  // }),\r\n  argTypes: {\r\n    colorOne: {\r\n      control: 'color',\r\n    },\r\n    colorTwo: {\r\n      control: 'color',\r\n    },\r\n    contrastType: {\r\n      options: ['apca', 'bpca', 'apca object'],\r\n      control: { type: 'radio' },\r\n    },\r\n  },\r\n}"
                 },
                 {
                     "name": "ObjectContrast",
@@ -4597,7 +4597,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Meta<AlertComponent>",
-                    "defaultValue": "{\r\n  title: 'App/Alert',\r\n  component: AlertComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: AlertComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {},\r\n}"
+                    "defaultValue": "{\r\n  title: 'App/Alert',\r\n  component: AlertComponent,\r\n  tags: ['autodocs'],\r\n  // render: (args: AlertComponent) => ({\r\n  //   props: {\r\n  //     ...args,\r\n  //   },\r\n  // }),\r\n  argTypes: {},\r\n}"
                 },
                 {
                     "name": "Typical",
@@ -4629,7 +4629,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Meta<ButtonComponent>",
-                    "defaultValue": "{\r\n  title: 'Example/Button',\r\n  component: ButtonComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ButtonComponent) => ({\r\n    props: {\r\n      backgroundColor: null,\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    backgroundColor: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
+                    "defaultValue": "{\r\n  title: 'Example/Button',\r\n  component: ButtonComponent,\r\n  tags: ['autodocs'],\r\n  // render: (args: ButtonComponent) => ({\r\n  //   props: {\r\n  //     backgroundColor: null,\r\n  //     ...args,\r\n  //   },\r\n  // }),\r\n  argTypes: {\r\n    backgroundColor: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
                 },
                 {
                     "name": "Primary",
@@ -4726,6 +4726,28 @@
                     "defaultValue": "{\r\n  title: 'Example/Page',\r\n  component: PageComponent,\r\n  parameters: {\r\n    // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout\r\n    layout: 'fullscreen',\r\n  },\r\n}"
                 }
             ],
+            "src/app/color-picker/color-picker.stories.ts": [
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/color-picker/color-picker.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<ColorPickerComponent>",
+                    "defaultValue": "{\r\n  title: 'App/Color Picker',\r\n  component: ColorPickerComponent,\r\n  tags: ['autodocs'],\r\n  // render: (args: ColorPickerComponent) => ({\r\n  //   props: {\r\n  //     ...args,\r\n  //   },\r\n  // }),\r\n  argTypes: {\r\n    comparedColor: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
+                },
+                {
+                    "name": "Typical",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/color-picker/color-picker.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\r\n  args: {\r\n    comparedColor: '',\r\n  },\r\n}"
+                }
+            ],
             "src/app/color-slider/color-slider.stories.ts": [
                 {
                     "name": "meta",
@@ -4735,7 +4757,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Meta<ColorSliderComponent>",
-                    "defaultValue": "{\r\n  title: 'App/Color Slider',\r\n  component: ColorSliderComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorSliderComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
+                    "defaultValue": "{\r\n  title: 'App/Color Slider',\r\n  component: ColorSliderComponent,\r\n  tags: ['autodocs'],\r\n  // render: (args: ColorSliderComponent) => ({\r\n  //   props: {\r\n  //     ...args,\r\n  //   },\r\n  // }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
                 },
                 {
                     "name": "NoHueColor",
@@ -4788,28 +4810,6 @@
                     "defaultValue": "{\r\n  args: {\r\n    color: 'coral',\r\n  },\r\n}"
                 }
             ],
-            "src/app/color-picker/color-picker.stories.ts": [
-                {
-                    "name": "meta",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/color-picker/color-picker.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Meta<ColorPickerComponent>",
-                    "defaultValue": "{\r\n  title: 'App/Color Picker',\r\n  component: ColorPickerComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: ColorPickerComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    comparedColor: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
-                },
-                {
-                    "name": "Typical",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/color-picker/color-picker.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\r\n  args: {\r\n    comparedColor: '',\r\n  },\r\n}"
-                }
-            ],
             "src/app/copy-to-clipboard-button/copy-to-clipboard-button.stories.ts": [
                 {
                     "name": "meta",
@@ -4819,7 +4819,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Meta<CopyToClipboardButtonComponent>",
-                    "defaultValue": "{\r\n  title: 'App/Copy to Clipboard Button',\r\n  component: CopyToClipboardButtonComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: CopyToClipboardButtonComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
+                    "defaultValue": "{\r\n  title: 'App/Copy to Clipboard Button',\r\n  component: CopyToClipboardButtonComponent,\r\n  tags: ['autodocs'],\r\n  // render: (args: CopyToClipboardButtonComponent) => ({\r\n  //   props: {\r\n  //     ...args,\r\n  //   },\r\n  // }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
                 },
                 {
                     "name": "SomethingToCopy",
@@ -4883,7 +4883,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Meta<PaletteTableComponent>",
-                    "defaultValue": "{\r\n  title: 'App/Palette Table',\r\n  component: PaletteTableComponent,\r\n  tags: ['autodocs'],\r\n  render: (args: PaletteTableComponent) => ({\r\n    props: {\r\n      ...args,\r\n    },\r\n  }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
+                    "defaultValue": "{\r\n  title: 'App/Palette Table',\r\n  component: PaletteTableComponent,\r\n  tags: ['autodocs'],\r\n  // render: (args: PaletteTableComponent) => ({\r\n  //   props: {\r\n  //     ...args,\r\n  //   },\r\n  // }),\r\n  argTypes: {\r\n    color: {\r\n      control: 'color',\r\n    },\r\n  },\r\n}"
                 },
                 {
                     "name": "Populated",
@@ -5024,19 +5024,6 @@
                     "kind": 183
                 }
             ],
-            "src/app/color-slider/color-slider.stories.ts": [
-                {
-                    "name": "Story",
-                    "ctype": "miscellaneous",
-                    "subtype": "typealias",
-                    "rawtype": "StoryObj<ColorSliderComponent>",
-                    "file": "src/app/color-slider/color-slider.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "description": "",
-                    "kind": 183
-                }
-            ],
             "src/app/color-picker/color-picker.stories.ts": [
                 {
                     "name": "Story",
@@ -5044,6 +5031,19 @@
                     "subtype": "typealias",
                     "rawtype": "StoryObj<ColorPickerComponent>",
                     "file": "src/app/color-picker/color-picker.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 183
+                }
+            ],
+            "src/app/color-slider/color-slider.stories.ts": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "StoryObj<ColorSliderComponent>",
+                    "file": "src/app/color-slider/color-slider.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "description": "",

@@ -6,11 +6,11 @@ const meta: Meta<ColorPickerComponent> = {
   title: 'App/Color Picker',
   component: ColorPickerComponent,
   tags: ['autodocs'],
-  render: (args: ColorPickerComponent) => ({
-    props: {
-      ...args,
-    },
-  }),
+  // render: (args: ColorPickerComponent) => ({
+  //   props: {
+  //     ...args,
+  //   },
+  // }),
   argTypes: {
     comparedColor: {
       control: 'color',

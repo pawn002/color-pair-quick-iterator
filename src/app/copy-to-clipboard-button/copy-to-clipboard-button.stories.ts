@@ -6,11 +6,11 @@ const meta: Meta<CopyToClipboardButtonComponent> = {
   title: 'App/Copy to Clipboard Button',
   component: CopyToClipboardButtonComponent,
   tags: ['autodocs'],
-  render: (args: CopyToClipboardButtonComponent) => ({
-    props: {
-      ...args,
-    },
-  }),
+  // render: (args: CopyToClipboardButtonComponent) => ({
+  //   props: {
+  //     ...args,
+  //   },
+  // }),
   argTypes: {
     color: {
       control: 'color',

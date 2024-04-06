@@ -6,11 +6,11 @@ const meta: Meta<ColorContrastComponent> = {
   title: 'App/Color Contrast',
   component: ColorContrastComponent,
   tags: ['autodocs'],
-  render: (args: ColorContrastComponent) => ({
-    props: {
-      ...args,
-    },
-  }),
+  // render: (args: ColorContrastComponent) => ({
+  //   props: {
+  //     ...args,
+  //   },
+  // }),
   argTypes: {
     colorOne: {
       control: 'color',
