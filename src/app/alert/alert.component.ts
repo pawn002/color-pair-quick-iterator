@@ -2,6 +2,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  input,
   Output,
   OnChanges,
   SimpleChanges,
@@ -20,7 +21,15 @@ export interface AlertMessagObj {
   standalone: true,
 })
 export class AlertComponent implements OnInit, OnChanges {
-  @Input() alertMessage: AlertMessagObj | null = null;
+  // @Input() alertMessage: AlertMessagObj | null = null;
+
+  // alertMessage = input<AlertMessagObj | null>(
+  //   { message: '' },
+  //   { alias: 'alertMessage' },
+  // );
+
+  alertMessage = input<AlertMessagObj | null>();
+
   @Output() alertClosed = new EventEmitter<boolean>();
 
   showAlert: boolean = false;

@@ -1,10 +1,9 @@
 <div class="comp-container" role="alert">
   <div class="alert-content">
-    @if (showAlert){
-    <p [innerText]="alertMessage?.message"></p>
-    <p class="msg-id">Message ID: {{ uniqId }}</p>
-    <!-- <button (click)="hideAlert()"><span>Dismiss</span></button> -->
-
+    @if (showAlert) {
+      <p [innerText]="alertMessage()?.message"></p>
+      <p class="msg-id">Message ID: {{ uniqId }}</p>
+      <!-- <button (click)="hideAlert()"><span>Dismiss</span></button> -->
     }
     <!-- <ng-container
     >
