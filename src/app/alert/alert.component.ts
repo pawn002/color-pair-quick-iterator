@@ -21,14 +21,7 @@ export interface AlertMessagObj {
   standalone: true,
 })
 export class AlertComponent implements OnInit, OnChanges {
-  // @Input() alertMessage: AlertMessagObj | null = null;
-
-  // alertMessage = input<AlertMessagObj | null>(
-  //   { message: '' },
-  //   { alias: 'alertMessage' },
-  // );
-
-  alertMessage = input<AlertMessagObj | null>();
+  alertMessage = input<AlertMessagObj | null>(null);
 
   @Output() alertClosed = new EventEmitter<boolean>();
 
