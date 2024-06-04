@@ -6,11 +6,6 @@ const meta: Meta<ColorContrastComponent> = {
   title: 'App/Color Contrast',
   component: ColorContrastComponent,
   tags: ['autodocs'],
-  // render: (args: ColorContrastComponent) => ({
-  //   props: {
-  //     ...args,
-  //   },
-  // }),
   argTypes: {
     colorOne: {
       control: 'color',
@@ -29,13 +24,7 @@ export default meta;
 type Story = StoryObj<ColorContrastComponent>;
 
 // More on writing stories with args: https://storybook.js.org/docs/angular/writing-stories/args
-export const Typical: Story = {
-  args: {
-    colorOne: null,
-    colorTwo: null,
-    contrastType: null,
-  },
-};
+export const Typical: Story = {};
 
 export const APCA: Story = {
   args: {

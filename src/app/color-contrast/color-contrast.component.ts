@@ -5,7 +5,9 @@ import {
   OnChanges,
   Output,
   SimpleChanges,
+  effect,
   inject,
+  input,
 } from '@angular/core';
 import {
   ColorMetricsService,
@@ -25,9 +27,13 @@ export class ContrastObject {
   standalone: true,
 })
 export class ColorContrastComponent implements OnChanges {
-  @Input() colorOne: string | null = null;
-  @Input() colorTwo: string | null = null;
-  @Input() contrastType: ContrastType | 'apca object' | null = null;
+  colorOne = input<string>('');
+  colorTwo = input<string>('');
+  contrastType = input<ContrastType | 'apca object'>('apca');
+
+  // @Input() colorOne: string | null = null;
+  // @Input() colorTwo: string | null = null;
+  // @Input() contrastType: ContrastType | 'apca object' | null = null;
 
   @Output() contrast = new EventEmitter<ContrastObject>();
 
@@ -36,26 +42,31 @@ export class ColorContrastComponent implements OnChanges {
 
   contrastScore: number | null = null;
 
-  ngOnChanges(changes: SimpleChanges): void {
-    // console.log(changes);
+  constructor() {
+    effect(() => {
+      if (this.colorOne() && this.colorTwo() && this.contrastType) {
+        const isApcaLike =
+          this.contrastType() === 'apca object' || 'apca' ? true : false;
 
-    if (this.colorOne && this.colorTwo && this.contrastType) {
-      const score = this.cms.getContrast(
-        this.colorOne,
-        this.colorTwo,
-        this.contrastType === 'apca object' ? 'apca' : this.contrastType
-      );
+        const score = this.cms.getContrast(
+          this.colorOne(),
+          this.colorTwo(),
+          isApcaLike ? 'apca' : 'bpca',
+        );
 
-      this.contrastScore = score;
+        this.contrastScore = score;
 
-      if (score) {
-        this.contrastScore =
-          this.contrastType === 'apca object'
-            ? this.cus.getMinObjectDimension(score)
-            : this.contrastScore;
+        if (score) {
+          this.contrastScore =
+            this.contrastType() === 'apca object'
+              ? this.cus.getMinObjectDimension(score)
+              : this.contrastScore;
+        }
+      } else {
+        console.warn('contrast comp has incomplete bindings');
       }
-    } else {
-      console.warn('contrast comp has incomplete bindings');
-    }
+    });
   }
+
+  ngOnChanges(changes: SimpleChanges): void {}
 }

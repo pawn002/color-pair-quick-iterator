@@ -36,10 +36,10 @@ export class AppComponent {
   cus = inject(ColorUtilService);
 
   colorPickerOneSelectedColor: string | null = null;
-  colorPickerOneComparedColor: string | null = null;
+  colorPickerOneComparedColor: string = '';
 
   colorPickerTwoSelectedColor: string | null = null;
-  colorPickerTwoComparedColor: string | null = null;
+  colorPickerTwoComparedColor: string = '';
 
   contrastType: ContrastType | 'apca object' = 'apca';
 
@@ -60,7 +60,7 @@ export class AppComponent {
     }
   }
 
-  handleSliderInputInput(inputNumber: 'One' | 'Two', event: string | null) {
+  handleSliderInputInput(inputNumber: 'One' | 'Two', event: string) {
     if (inputNumber === 'One') {
       this.colorPickerOneComparedColor = event;
     }
