@@ -1,17 +1,8 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  input,
-  Output,
-  OnChanges,
-  SimpleChanges,
-  OnInit,
-} from '@angular/core';
-import { random, sample, times } from 'lodash';
+import { Component, EventEmitter, input, effect, Output } from '@angular/core';
+import { random, times } from 'lodash';
 
-export interface AlertMessagObj {
-  message: string;
+export class AlertMessagObj {
+  message: string = '';
 }
 
 @Component({
@@ -20,8 +11,15 @@ export interface AlertMessagObj {
   styleUrls: ['./alert.component.scss'],
   standalone: true,
 })
-export class AlertComponent implements OnInit, OnChanges {
-  alertMessage = input<AlertMessagObj | null>(null);
+export class AlertComponent {
+  /**
+   * 'Input' of type `AlertMessageObj`
+   *
+   * Part of Angular's transition away from `@Input()`
+   *
+   * Storybook incorrectly tracks `alertMessage` as a property with a type of `string.
+   */
+  alertMessage = input(new AlertMessagObj());
 
   @Output() alertClosed = new EventEmitter<boolean>();
 
@@ -43,21 +41,21 @@ export class AlertComponent implements OnInit, OnChanges {
     this.alertClosed.emit(true);
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.uniqId = this.generateRandomString(12);
+  constructor() {
+    effect(() => {
+      if (this.alertMessage().message) {
+        this.uniqId = this.generateRandomString(12);
 
-    this.showAlert = true;
+        this.showAlert = true;
 
-    if (this.timeout) {
-      clearTimeout(this.timeout);
-    }
+        if (this.timeout) {
+          clearTimeout(this.timeout);
+        }
 
-    this.timeout = setTimeout(() => {
-      this.showAlert = false;
-    }, 5000) as unknown as number;
-  }
-
-  ngOnInit(): void {
-    this.showAlert = false;
+        this.timeout = setTimeout(() => {
+          this.showAlert = false;
+        }, 5000) as unknown as number;
+      }
+    });
   }
 }

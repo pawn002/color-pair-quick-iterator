@@ -48,7 +48,7 @@ export class AppComponent {
   constantChroma: boolean = true;
   showGradient: boolean = true;
 
-  currentAlertMessage: AlertMessagObj | null = null;
+  currentAlertMessage: AlertMessagObj = new AlertMessagObj();
 
   handleColorInputInput(inputNumber: 'One' | 'Two', event: string) {
     if (inputNumber === 'One') {
@@ -80,7 +80,7 @@ export class AppComponent {
 
   handleColorPaletteButtonEvent(
     paletteChartNum: 'One' | 'Two',
-    event: TableColorCell
+    event: TableColorCell,
   ) {
     if (paletteChartNum === 'One') {
       this.colorPickerOneSelectedColor = event.color;
@@ -161,9 +161,8 @@ export class AppComponent {
   async setRandomColorPair(initialAppColors?: boolean) {
     const initColorPair = await this.cus.getRandomColorPair();
 
-    const randomColorPair = await this.cus.adjustColorPairForPresentation(
-      initColorPair
-    );
+    const randomColorPair =
+      await this.cus.adjustColorPairForPresentation(initColorPair);
 
     setTimeout(() => {
       this.colorPickerOneSelectedColor = randomColorPair[0];

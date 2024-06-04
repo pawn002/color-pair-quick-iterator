@@ -2,30 +2,6 @@
     "pipes": [],
     "interfaces": [
         {
-            "name": "AlertMessagObj",
-            "id": "interface-AlertMessagObj-b56505a6df143663bb926d0f40bd8c6ca30054f9847d06f90f6dc50299fe3a052accd56acd5f47649a41732ea15c0719f01beb5ed82990ef4d2dcc0b0e0ced70",
-            "file": "src/app/alert/alert.component.ts",
-            "deprecated": false,
-            "deprecationMessage": "",
-            "type": "interface",
-            "sourceCode": "import {\r\n  Component,\r\n  EventEmitter,\r\n  Input,\r\n  input,\r\n  Output,\r\n  OnChanges,\r\n  SimpleChanges,\r\n  OnInit,\r\n} from '@angular/core';\r\nimport { random, sample, times } from 'lodash';\r\n\r\nexport interface AlertMessagObj {\r\n  message: string;\r\n}\r\n\r\n@Component({\r\n  selector: 'app-alert',\r\n  templateUrl: './alert.component.html',\r\n  styleUrls: ['./alert.component.scss'],\r\n  standalone: true,\r\n})\r\nexport class AlertComponent implements OnInit, OnChanges {\r\n  alertMessage = input<AlertMessagObj | null>(null);\r\n\r\n  @Output() alertClosed = new EventEmitter<boolean>();\r\n\r\n  showAlert: boolean = false;\r\n\r\n  uniqId: string = '';\r\n\r\n  timeout: number = NaN;\r\n\r\n  generateRandomString(length: number) {\r\n    return times(length, () => random(35).toString(36)).join('');\r\n  }\r\n\r\n  hideAlert() {\r\n    this.showAlert = false;\r\n\r\n    this.uniqId = '';\r\n\r\n    this.alertClosed.emit(true);\r\n  }\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    this.uniqId = this.generateRandomString(12);\r\n\r\n    this.showAlert = true;\r\n\r\n    if (this.timeout) {\r\n      clearTimeout(this.timeout);\r\n    }\r\n\r\n    this.timeout = setTimeout(() => {\r\n      this.showAlert = false;\r\n    }, 5000) as unknown as number;\r\n  }\r\n\r\n  ngOnInit(): void {\r\n    this.showAlert = false;\r\n  }\r\n}\r\n",
-            "properties": [
-                {
-                    "name": "message",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "optional": false,
-                    "description": "",
-                    "line": 14
-                }
-            ],
-            "indexSignatures": [],
-            "kind": 171,
-            "methods": [],
-            "extends": []
-        },
-        {
             "name": "ColorMetaObj",
             "id": "interface-ColorMetaObj-235b64646799eccbc94f9d47895fb9af079fe6a4edbf5b31862e0a5154ed1a57d97867c559875771d3e2113fd452091467feb06abbdc4f9bbdcece0f30d42fcf",
             "file": "src/app/services/color-util.service.ts",
@@ -1276,6 +1252,34 @@
     "interceptors": [],
     "classes": [
         {
+            "name": "AlertMessagObj",
+            "id": "class-AlertMessagObj-f0c3e27e3d7f237b7e998b2226e961bec211e0429a95e19cd5d3aa4e6943aeb9b5052329410a7851acb567f29b1868d6df9c4c1d7386b693823c6dddd06913f4",
+            "file": "src/app/alert/alert.component.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "class",
+            "sourceCode": "import {\r\n  Component,\r\n  EventEmitter,\r\n  Input,\r\n  input,\r\n  Output,\r\n  OnChanges,\r\n  SimpleChanges,\r\n  OnInit,\r\n} from '@angular/core';\r\nimport { random, sample, times } from 'lodash';\r\n\r\nexport class AlertMessagObj {\r\n  message: string = '';\r\n}\r\n\r\n@Component({\r\n  selector: 'app-alert',\r\n  templateUrl: './alert.component.html',\r\n  styleUrls: ['./alert.component.scss'],\r\n  standalone: true,\r\n})\r\nexport class AlertComponent implements OnInit, OnChanges {\r\n  /**\r\n   * 'Input' of type `AlertMessageObj`\r\n   * Part of transition away from `@Input()`\r\n   *\r\n   * ---\r\n   * Storybook incorrectly tracks `alertMessage` as a property with a type of `string.\r\n   */\r\n  alertMessage = input(new AlertMessagObj());\r\n\r\n  @Output() alertClosed = new EventEmitter<boolean>();\r\n\r\n  showAlert: boolean = false;\r\n\r\n  uniqId: string = '';\r\n\r\n  timeout: number = NaN;\r\n\r\n  generateRandomString(length: number) {\r\n    return times(length, () => random(35).toString(36)).join('');\r\n  }\r\n\r\n  hideAlert() {\r\n    this.showAlert = false;\r\n\r\n    this.uniqId = '';\r\n\r\n    this.alertClosed.emit(true);\r\n  }\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    this.uniqId = this.generateRandomString(12);\r\n\r\n    this.showAlert = true;\r\n\r\n    if (this.timeout) {\r\n      clearTimeout(this.timeout);\r\n    }\r\n\r\n    this.timeout = setTimeout(() => {\r\n      this.showAlert = false;\r\n    }, 5000) as unknown as number;\r\n  }\r\n\r\n  ngOnInit(): void {\r\n    this.showAlert = false;\r\n  }\r\n}\r\n",
+            "properties": [
+                {
+                    "name": "message",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "optional": false,
+                    "description": "",
+                    "line": 14
+                }
+            ],
+            "methods": [],
+            "indexSignatures": [],
+            "extends": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "hostBindings": [],
+            "hostListeners": []
+        },
+        {
             "name": "ChromaMatchObject",
             "id": "class-ChromaMatchObject-235b64646799eccbc94f9d47895fb9af079fe6a4edbf5b31862e0a5154ed1a57d97867c559875771d3e2113fd452091467feb06abbdc4f9bbdcece0f30d42fcf",
             "file": "src/app/services/color-util.service.ts",
@@ -1598,7 +1602,7 @@
     "components": [
         {
             "name": "AlertComponent",
-            "id": "component-AlertComponent-b56505a6df143663bb926d0f40bd8c6ca30054f9847d06f90f6dc50299fe3a052accd56acd5f47649a41732ea15c0719f01beb5ed82990ef4d2dcc0b0e0ced70",
+            "id": "component-AlertComponent-f0c3e27e3d7f237b7e998b2226e961bec211e0429a95e19cd5d3aa4e6943aeb9b5052329410a7851acb567f29b1868d6df9c4c1d7386b693823c6dddd06913f4",
             "file": "src/app/alert/alert.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -1622,20 +1626,21 @@
                     "defaultValue": "new EventEmitter<boolean>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 26,
+                    "line": 33,
                     "type": "EventEmitter"
                 }
             ],
             "propertiesClass": [
                 {
                     "name": "alertMessage",
-                    "defaultValue": "input<AlertMessagObj | null>(null)",
+                    "defaultValue": "input(new AlertMessagObj())",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "",
                     "optional": false,
-                    "description": "",
-                    "line": 24
+                    "description": "<p>&#39;Input&#39; of type <code>AlertMessageObj</code>\nPart of transition away from <code>@Input()</code></p>\n<hr>\n<p>Storybook incorrectly tracks <code>alertMessage</code> as a property with a type of `string.</p>\n",
+                    "line": 31,
+                    "rawdescription": "\n\n'Input' of type `AlertMessageObj`\nPart of transition away from `@Input()`\n\n---\nStorybook incorrectly tracks `alertMessage` as a property with a type of `string.\n"
                 },
                 {
                     "name": "showAlert",
@@ -1645,7 +1650,7 @@
                     "type": "boolean",
                     "optional": false,
                     "description": "",
-                    "line": 28
+                    "line": 35
                 },
                 {
                     "name": "timeout",
@@ -1655,7 +1660,7 @@
                     "type": "number",
                     "optional": false,
                     "description": "",
-                    "line": 32
+                    "line": 39
                 },
                 {
                     "name": "uniqId",
@@ -1665,7 +1670,7 @@
                     "type": "string",
                     "optional": false,
                     "description": "",
-                    "line": 30
+                    "line": 37
                 }
             ],
             "methodsClass": [
@@ -1682,7 +1687,7 @@
                     "optional": false,
                     "returnType": "any",
                     "typeParameters": [],
-                    "line": 34,
+                    "line": 41,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -1703,7 +1708,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 38,
+                    "line": 45,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -1720,7 +1725,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 46,
+                    "line": 53,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -1741,7 +1746,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 60,
+                    "line": 67,
                     "deprecated": false,
                     "deprecationMessage": ""
                 }
@@ -1755,7 +1760,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {\r\n  Component,\r\n  EventEmitter,\r\n  Input,\r\n  input,\r\n  Output,\r\n  OnChanges,\r\n  SimpleChanges,\r\n  OnInit,\r\n} from '@angular/core';\r\nimport { random, sample, times } from 'lodash';\r\n\r\nexport interface AlertMessagObj {\r\n  message: string;\r\n}\r\n\r\n@Component({\r\n  selector: 'app-alert',\r\n  templateUrl: './alert.component.html',\r\n  styleUrls: ['./alert.component.scss'],\r\n  standalone: true,\r\n})\r\nexport class AlertComponent implements OnInit, OnChanges {\r\n  alertMessage = input<AlertMessagObj | null>(null);\r\n\r\n  @Output() alertClosed = new EventEmitter<boolean>();\r\n\r\n  showAlert: boolean = false;\r\n\r\n  uniqId: string = '';\r\n\r\n  timeout: number = NaN;\r\n\r\n  generateRandomString(length: number) {\r\n    return times(length, () => random(35).toString(36)).join('');\r\n  }\r\n\r\n  hideAlert() {\r\n    this.showAlert = false;\r\n\r\n    this.uniqId = '';\r\n\r\n    this.alertClosed.emit(true);\r\n  }\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    this.uniqId = this.generateRandomString(12);\r\n\r\n    this.showAlert = true;\r\n\r\n    if (this.timeout) {\r\n      clearTimeout(this.timeout);\r\n    }\r\n\r\n    this.timeout = setTimeout(() => {\r\n      this.showAlert = false;\r\n    }, 5000) as unknown as number;\r\n  }\r\n\r\n  ngOnInit(): void {\r\n    this.showAlert = false;\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  Component,\r\n  EventEmitter,\r\n  Input,\r\n  input,\r\n  Output,\r\n  OnChanges,\r\n  SimpleChanges,\r\n  OnInit,\r\n} from '@angular/core';\r\nimport { random, sample, times } from 'lodash';\r\n\r\nexport class AlertMessagObj {\r\n  message: string = '';\r\n}\r\n\r\n@Component({\r\n  selector: 'app-alert',\r\n  templateUrl: './alert.component.html',\r\n  styleUrls: ['./alert.component.scss'],\r\n  standalone: true,\r\n})\r\nexport class AlertComponent implements OnInit, OnChanges {\r\n  /**\r\n   * 'Input' of type `AlertMessageObj`\r\n   * Part of transition away from `@Input()`\r\n   *\r\n   * ---\r\n   * Storybook incorrectly tracks `alertMessage` as a property with a type of `string.\r\n   */\r\n  alertMessage = input(new AlertMessagObj());\r\n\r\n  @Output() alertClosed = new EventEmitter<boolean>();\r\n\r\n  showAlert: boolean = false;\r\n\r\n  uniqId: string = '';\r\n\r\n  timeout: number = NaN;\r\n\r\n  generateRandomString(length: number) {\r\n    return times(length, () => random(35).toString(36)).join('');\r\n  }\r\n\r\n  hideAlert() {\r\n    this.showAlert = false;\r\n\r\n    this.uniqId = '';\r\n\r\n    this.alertClosed.emit(true);\r\n  }\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    this.uniqId = this.generateRandomString(12);\r\n\r\n    this.showAlert = true;\r\n\r\n    if (this.timeout) {\r\n      clearTimeout(this.timeout);\r\n    }\r\n\r\n    this.timeout = setTimeout(() => {\r\n      this.showAlert = false;\r\n    }, 5000) as unknown as number;\r\n  }\r\n\r\n  ngOnInit(): void {\r\n    this.showAlert = false;\r\n  }\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
@@ -4103,14 +4108,14 @@
                 "type": "component",
                 "linktype": "component",
                 "name": "AlertComponent",
-                "coveragePercent": 0,
-                "coverageCount": "0/10",
+                "coveragePercent": 10,
+                "coverageCount": "1/10",
                 "status": "low"
             },
             {
                 "filePath": "src/app/alert/alert.component.ts",
-                "type": "interface",
-                "linktype": "interface",
+                "type": "class",
+                "linktype": "classe",
                 "name": "AlertMessagObj",
                 "coveragePercent": 0,
                 "coverageCount": "0/2",
