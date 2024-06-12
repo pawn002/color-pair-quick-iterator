@@ -10,7 +10,7 @@ const meta: Meta<ColorPickerComponent> = {
     comparedColor: {
       control: 'color',
     },
-    deltaColor: {
+    color: {
       control: 'color',
     },
   },

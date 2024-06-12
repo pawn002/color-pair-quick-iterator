@@ -19,7 +19,7 @@ import {
 export class ColorPickerComponent {
   inputId = input('fg-color');
   inputName = input('foreground color');
-  deltaColor = input<string | null>(null);
+  color = input<string | null>(null);
 
   @Output() selectedColor = new EventEmitter<string>();
 
@@ -27,11 +27,11 @@ export class ColorPickerComponent {
 
   uiComparedColor: string | null = null;
 
-  color: string | null = null;
+  uiColor: string | null = null;
 
   handleColorChange(inputColor: string) {
-    // update color
-    this.color = inputColor;
+    // update ui main color
+    this.uiColor = inputColor;
 
     // send out color for use in other comps
     this.selectedColor.emit(inputColor);
@@ -42,12 +42,12 @@ export class ColorPickerComponent {
 
     const selectedColor = inputElement.value;
 
-    this.resetComparedColor();
+    this.resetUiComparedColor();
 
     this.handleColorChange(selectedColor);
   }
 
-  resetComparedColor() {
+  resetUiComparedColor() {
     this.uiComparedColor = 'transparent';
   }
 
@@ -69,14 +69,14 @@ export class ColorPickerComponent {
     });
 
     effect(() => {
-      const colorFromParent = this.deltaColor();
+      const colorFromParent = this.color();
 
       if (colorFromParent) {
         this.handleColorChange(colorFromParent);
 
         this.updateInputValue(colorFromParent);
 
-        this.resetComparedColor();
+        this.resetUiComparedColor();
       }
     });
   }

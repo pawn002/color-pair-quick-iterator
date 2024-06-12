@@ -1329,12 +1329,12 @@
         },
         {
             "name": "ContrastObject",
-            "id": "class-ContrastObject-a1c07708aa6280fa54153310935f5bb5853ebd6b7296b9e11d11f7f002381543d56179d76bf716c46e6fcca3eb3778b57f46099c60709d6419ff0e808f681afd",
+            "id": "class-ContrastObject-9c5eddbaecadc9c1c1339059068dd774fd383e36026c87ebec209b6cd8ccde45b2ab3c6f5b2924ab87d4ddd6b80c5d64eed76b73cf08ba32b4ec6573ebe1761c",
             "file": "src/app/color-contrast/color-contrast.component.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "class",
-            "sourceCode": "import {\r\n  Component,\r\n  EventEmitter,\r\n  Input,\r\n  OnChanges,\r\n  Output,\r\n  SimpleChanges,\r\n  effect,\r\n  inject,\r\n  input,\r\n} from '@angular/core';\r\nimport {\r\n  ColorMetricsService,\r\n  ContrastType,\r\n} from '../services/color-metrics.service';\r\nimport { ColorUtilService } from '../services/color-util.service';\r\n\r\nexport class ContrastObject {\r\n  score: number | null = null;\r\n  type: ContrastType | null = null;\r\n}\r\n\r\n@Component({\r\n  selector: 'app-color-contrast',\r\n  templateUrl: './color-contrast.component.html',\r\n  styleUrls: ['./color-contrast.component.scss'],\r\n  standalone: true,\r\n})\r\nexport class ColorContrastComponent implements OnChanges {\r\n  colorOne = input<string>('');\r\n  colorTwo = input<string>('');\r\n  contrastType = input<ContrastType | 'apca object'>('apca');\r\n\r\n  // @Input() colorOne: string | null = null;\r\n  // @Input() colorTwo: string | null = null;\r\n  // @Input() contrastType: ContrastType | 'apca object' | null = null;\r\n\r\n  @Output() contrast = new EventEmitter<ContrastObject>();\r\n\r\n  cus = inject(ColorUtilService);\r\n  cms = inject(ColorMetricsService);\r\n\r\n  contrastScore: number | null = null;\r\n\r\n  constructor() {\r\n    effect(() => {\r\n      if (this.colorOne() && this.colorTwo() && this.contrastType) {\r\n        const isApcaLike =\r\n          this.contrastType() === 'apca object' || 'apca' ? true : false;\r\n\r\n        const score = this.cms.getContrast(\r\n          this.colorOne(),\r\n          this.colorTwo(),\r\n          isApcaLike ? 'apca' : 'bpca',\r\n        );\r\n\r\n        this.contrastScore = score;\r\n\r\n        if (score) {\r\n          this.contrastScore =\r\n            this.contrastType() === 'apca object'\r\n              ? this.cus.getMinObjectDimension(score)\r\n              : this.contrastScore;\r\n        }\r\n      } else {\r\n        console.warn('contrast comp has incomplete bindings');\r\n      }\r\n    });\r\n  }\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {}\r\n}\r\n",
+            "sourceCode": "import {\r\n  Component,\r\n  EventEmitter,\r\n  Input,\r\n  OnChanges,\r\n  Output,\r\n  SimpleChanges,\r\n  effect,\r\n  inject,\r\n  input,\r\n} from '@angular/core';\r\nimport {\r\n  ColorMetricsService,\r\n  ContrastType,\r\n} from '../services/color-metrics.service';\r\nimport { ColorUtilService } from '../services/color-util.service';\r\n\r\nexport class ContrastObject {\r\n  score: number | null = null;\r\n  type: ContrastType | null = null;\r\n}\r\n\r\n@Component({\r\n  selector: 'app-color-contrast',\r\n  templateUrl: './color-contrast.component.html',\r\n  styleUrls: ['./color-contrast.component.scss'],\r\n  standalone: true,\r\n})\r\nexport class ColorContrastComponent {\r\n  colorOne = input<string>('');\r\n  colorTwo = input<string>('');\r\n  contrastType = input<ContrastType | 'apca object'>('apca');\r\n\r\n  cus = inject(ColorUtilService);\r\n  cms = inject(ColorMetricsService);\r\n\r\n  contrastScore: number | null = null;\r\n\r\n  constructor() {\r\n    effect(() => {\r\n      if (this.colorOne() && this.colorTwo() && this.contrastType) {\r\n        const isApcaLike =\r\n          this.contrastType() === 'apca object' || 'apca' ? true : false;\r\n\r\n        const score = this.cms.getContrast(\r\n          this.colorOne(),\r\n          this.colorTwo(),\r\n          isApcaLike ? 'apca' : 'bpca',\r\n        );\r\n\r\n        this.contrastScore = score;\r\n\r\n        if (score) {\r\n          this.contrastScore =\r\n            this.contrastType() === 'apca object'\r\n              ? this.cus.getMinObjectDimension(score)\r\n              : this.contrastScore;\r\n        }\r\n      } else {\r\n        console.warn('contrast comp has incomplete bindings');\r\n      }\r\n    });\r\n  }\r\n}\r\n",
             "properties": [
                 {
                     "name": "score",
@@ -2404,7 +2404,7 @@
         },
         {
             "name": "ColorContrastComponent",
-            "id": "component-ColorContrastComponent-a1c07708aa6280fa54153310935f5bb5853ebd6b7296b9e11d11f7f002381543d56179d76bf716c46e6fcca3eb3778b57f46099c60709d6419ff0e808f681afd",
+            "id": "component-ColorContrastComponent-9c5eddbaecadc9c1c1339059068dd774fd383e36026c87ebec209b6cd8ccde45b2ab3c6f5b2924ab87d4ddd6b80c5d64eed76b73cf08ba32b4ec6573ebe1761c",
             "file": "src/app/color-contrast/color-contrast.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -2422,16 +2422,7 @@
             "viewProviders": [],
             "hostDirectives": [],
             "inputsClass": [],
-            "outputsClass": [
-                {
-                    "name": "contrast",
-                    "defaultValue": "new EventEmitter<ContrastObject>()",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "line": 38,
-                    "type": "EventEmitter"
-                }
-            ],
+            "outputsClass": [],
             "propertiesClass": [
                 {
                     "name": "cms",
@@ -2441,7 +2432,7 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 41
+                    "line": 35
                 },
                 {
                     "name": "colorOne",
@@ -2471,7 +2462,7 @@
                     "type": "number | null",
                     "optional": false,
                     "description": "",
-                    "line": 43
+                    "line": 37
                 },
                 {
                     "name": "contrastType",
@@ -2491,39 +2482,10 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 40
+                    "line": 34
                 }
             ],
-            "methodsClass": [
-                {
-                    "name": "ngOnChanges",
-                    "args": [
-                        {
-                            "name": "changes",
-                            "type": "SimpleChanges",
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 71,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "jsdoctags": [
-                        {
-                            "name": "changes",
-                            "type": "SimpleChanges",
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                }
-            ],
+            "methodsClass": [],
             "deprecated": false,
             "deprecationMessage": "",
             "hostBindings": [],
@@ -2533,7 +2495,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {\r\n  Component,\r\n  EventEmitter,\r\n  Input,\r\n  OnChanges,\r\n  Output,\r\n  SimpleChanges,\r\n  effect,\r\n  inject,\r\n  input,\r\n} from '@angular/core';\r\nimport {\r\n  ColorMetricsService,\r\n  ContrastType,\r\n} from '../services/color-metrics.service';\r\nimport { ColorUtilService } from '../services/color-util.service';\r\n\r\nexport class ContrastObject {\r\n  score: number | null = null;\r\n  type: ContrastType | null = null;\r\n}\r\n\r\n@Component({\r\n  selector: 'app-color-contrast',\r\n  templateUrl: './color-contrast.component.html',\r\n  styleUrls: ['./color-contrast.component.scss'],\r\n  standalone: true,\r\n})\r\nexport class ColorContrastComponent implements OnChanges {\r\n  colorOne = input<string>('');\r\n  colorTwo = input<string>('');\r\n  contrastType = input<ContrastType | 'apca object'>('apca');\r\n\r\n  // @Input() colorOne: string | null = null;\r\n  // @Input() colorTwo: string | null = null;\r\n  // @Input() contrastType: ContrastType | 'apca object' | null = null;\r\n\r\n  @Output() contrast = new EventEmitter<ContrastObject>();\r\n\r\n  cus = inject(ColorUtilService);\r\n  cms = inject(ColorMetricsService);\r\n\r\n  contrastScore: number | null = null;\r\n\r\n  constructor() {\r\n    effect(() => {\r\n      if (this.colorOne() && this.colorTwo() && this.contrastType) {\r\n        const isApcaLike =\r\n          this.contrastType() === 'apca object' || 'apca' ? true : false;\r\n\r\n        const score = this.cms.getContrast(\r\n          this.colorOne(),\r\n          this.colorTwo(),\r\n          isApcaLike ? 'apca' : 'bpca',\r\n        );\r\n\r\n        this.contrastScore = score;\r\n\r\n        if (score) {\r\n          this.contrastScore =\r\n            this.contrastType() === 'apca object'\r\n              ? this.cus.getMinObjectDimension(score)\r\n              : this.contrastScore;\r\n        }\r\n      } else {\r\n        console.warn('contrast comp has incomplete bindings');\r\n      }\r\n    });\r\n  }\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {}\r\n}\r\n",
+            "sourceCode": "import {\r\n  Component,\r\n  EventEmitter,\r\n  Input,\r\n  OnChanges,\r\n  Output,\r\n  SimpleChanges,\r\n  effect,\r\n  inject,\r\n  input,\r\n} from '@angular/core';\r\nimport {\r\n  ColorMetricsService,\r\n  ContrastType,\r\n} from '../services/color-metrics.service';\r\nimport { ColorUtilService } from '../services/color-util.service';\r\n\r\nexport class ContrastObject {\r\n  score: number | null = null;\r\n  type: ContrastType | null = null;\r\n}\r\n\r\n@Component({\r\n  selector: 'app-color-contrast',\r\n  templateUrl: './color-contrast.component.html',\r\n  styleUrls: ['./color-contrast.component.scss'],\r\n  standalone: true,\r\n})\r\nexport class ColorContrastComponent {\r\n  colorOne = input<string>('');\r\n  colorTwo = input<string>('');\r\n  contrastType = input<ContrastType | 'apca object'>('apca');\r\n\r\n  cus = inject(ColorUtilService);\r\n  cms = inject(ColorMetricsService);\r\n\r\n  contrastScore: number | null = null;\r\n\r\n  constructor() {\r\n    effect(() => {\r\n      if (this.colorOne() && this.colorTwo() && this.contrastType) {\r\n        const isApcaLike =\r\n          this.contrastType() === 'apca object' || 'apca' ? true : false;\r\n\r\n        const score = this.cms.getContrast(\r\n          this.colorOne(),\r\n          this.colorTwo(),\r\n          isApcaLike ? 'apca' : 'bpca',\r\n        );\r\n\r\n        this.contrastScore = score;\r\n\r\n        if (score) {\r\n          this.contrastScore =\r\n            this.contrastType() === 'apca object'\r\n              ? this.cus.getMinObjectDimension(score)\r\n              : this.contrastScore;\r\n        }\r\n      } else {\r\n        console.warn('contrast comp has incomplete bindings');\r\n      }\r\n    });\r\n  }\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
@@ -2548,17 +2510,14 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "args": [],
-                "line": 43
+                "line": 37
             },
             "extends": [],
-            "implements": [
-                "OnChanges"
-            ],
             "templateData": "<!-- This comp is for users with typical vision. The same information is delivered with better UX for a user who is blind in the Color Metadata section. -->\r\n<div class=\"comp-container\" aria-hidden=\"true\">\r\n  <div class=\"score-container\">\r\n    <label class=\"sr-only\" for=\"contrast-score\"\r\n      >Contrast Score for Selected Colors</label\r\n    >\r\n\r\n    <div id=\"contrast-score\" class=\"score\">\r\n      {{ contrastScore ? contrastScore : \"!\" }}\r\n      <!-- {{ contrastScore }} -->\r\n    </div>\r\n  </div>\r\n</div>\r\n"
         },
         {
             "name": "ColorPickerComponent",
-            "id": "component-ColorPickerComponent-168a8139d69aa3bc257b447cc220b33124c1005ac579b0e365a1a057306f995a9b10ca77bd501afb0d41e900d98236ded570bb3ac72fca72d0b0c6f5ed33e3bb",
+            "id": "component-ColorPickerComponent-bc3cffa4a98298bb741ddebdb33b1522e99ae28cc07d1f583baa951e0f09f3a89c79c1e00c0aa07ef49aaaf8c0dddffc87c42cf367aefa7500a0cea562370cc8",
             "file": "src/app/color-picker/color-picker.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -2575,64 +2534,77 @@
             ],
             "viewProviders": [],
             "hostDirectives": [],
-            "inputsClass": [
-                {
-                    "name": "comparedColor",
-                    "defaultValue": "null",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "line": 19,
-                    "type": "string | null",
-                    "decorators": []
-                },
-                {
-                    "name": "deltaColor",
-                    "defaultValue": "null",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "line": 20,
-                    "type": "string | null",
-                    "decorators": []
-                },
-                {
-                    "name": "inputId",
-                    "defaultValue": "'fg-color'",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "line": 17,
-                    "type": "string",
-                    "decorators": []
-                },
-                {
-                    "name": "inputName",
-                    "defaultValue": "'foreground color'",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "line": 18,
-                    "type": "string",
-                    "decorators": []
-                }
-            ],
+            "inputsClass": [],
             "outputsClass": [
                 {
                     "name": "selectedColor",
                     "defaultValue": "new EventEmitter<string>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 22,
+                    "line": 24,
                     "type": "EventEmitter"
                 }
             ],
             "propertiesClass": [
                 {
                     "name": "color",
+                    "defaultValue": "input<string | null>(null)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 22
+                },
+                {
+                    "name": "comparedColor",
+                    "defaultValue": "model<string | null>(null)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 26
+                },
+                {
+                    "name": "inputId",
+                    "defaultValue": "input('fg-color')",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 20
+                },
+                {
+                    "name": "inputName",
+                    "defaultValue": "input('foreground color')",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 21
+                },
+                {
+                    "name": "uiColor",
                     "defaultValue": "null",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "string | null",
                     "optional": false,
                     "description": "",
-                    "line": 24
+                    "line": 30
+                },
+                {
+                    "name": "uiComparedColor",
+                    "defaultValue": "null",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string | null",
+                    "optional": false,
+                    "description": "",
+                    "line": 28
                 }
             ],
             "methodsClass": [
@@ -2649,7 +2621,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 26,
+                    "line": 32,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2677,7 +2649,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 34,
+                    "line": 40,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2693,32 +2665,14 @@
                     ]
                 },
                 {
-                    "name": "ngOnChanges",
-                    "args": [
-                        {
-                            "name": "changes",
-                            "type": "SimpleChanges",
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
+                    "name": "resetUiComparedColor",
+                    "args": [],
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 57,
+                    "line": 50,
                     "deprecated": false,
-                    "deprecationMessage": "",
-                    "jsdoctags": [
-                        {
-                            "name": "changes",
-                            "type": "SimpleChanges",
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
+                    "deprecationMessage": ""
                 },
                 {
                     "name": "updateInputValue",
@@ -2733,7 +2687,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 45,
+                    "line": 54,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2758,7 +2712,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {\r\n  Component,\r\n  EventEmitter,\r\n  Input,\r\n  OnChanges,\r\n  Output,\r\n  SimpleChanges,\r\n} from '@angular/core';\r\n\r\n@Component({\r\n  selector: 'app-color-picker',\r\n  templateUrl: './color-picker.component.html',\r\n  styleUrls: ['./color-picker.component.scss'],\r\n  standalone: true,\r\n})\r\nexport class ColorPickerComponent implements OnChanges {\r\n  @Input() inputId: string = 'fg-color';\r\n  @Input() inputName: string = 'foreground color';\r\n  @Input() comparedColor: string | null = null;\r\n  @Input() deltaColor?: string | null = null;\r\n\r\n  @Output() selectedColor = new EventEmitter<string>();\r\n\r\n  color: string | null = null;\r\n\r\n  handleColorChange(inputColor: string) {\r\n    // update color\r\n    this.color = inputColor;\r\n\r\n    // send out color for use in other comps\r\n    this.selectedColor.emit(inputColor);\r\n  }\r\n\r\n  handleInputEvent(event: Event) {\r\n    const inputElement = event.target as HTMLInputElement;\r\n\r\n    const selectedColor = inputElement.value;\r\n\r\n    // reset compared color\r\n    this.comparedColor = 'transparent';\r\n\r\n    this.handleColorChange(selectedColor);\r\n  }\r\n\r\n  updateInputValue(color: string) {\r\n    const targetInput = document.getElementById(\r\n      this.inputId\r\n    ) as HTMLInputElement;\r\n\r\n    if (targetInput) {\r\n      targetInput.value = color;\r\n    } else {\r\n      console.error(`something went wrong in color picker comp.`);\r\n    }\r\n  }\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    if (this.deltaColor) {\r\n      this.handleColorChange(this.deltaColor);\r\n\r\n      this.updateInputValue(this.deltaColor);\r\n    }\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  Component,\r\n  effect,\r\n  EventEmitter,\r\n  Input,\r\n  input,\r\n  model,\r\n  OnChanges,\r\n  Output,\r\n  SimpleChanges,\r\n} from '@angular/core';\r\n\r\n@Component({\r\n  selector: 'app-color-picker',\r\n  templateUrl: './color-picker.component.html',\r\n  styleUrls: ['./color-picker.component.scss'],\r\n  standalone: true,\r\n})\r\nexport class ColorPickerComponent {\r\n  inputId = input('fg-color');\r\n  inputName = input('foreground color');\r\n  color = input<string | null>(null);\r\n\r\n  @Output() selectedColor = new EventEmitter<string>();\r\n\r\n  comparedColor = model<string | null>(null);\r\n\r\n  uiComparedColor: string | null = null;\r\n\r\n  uiColor: string | null = null;\r\n\r\n  handleColorChange(inputColor: string) {\r\n    // update ui main color\r\n    this.uiColor = inputColor;\r\n\r\n    // send out color for use in other comps\r\n    this.selectedColor.emit(inputColor);\r\n  }\r\n\r\n  handleInputEvent(event: Event) {\r\n    const inputElement = event.target as HTMLInputElement;\r\n\r\n    const selectedColor = inputElement.value;\r\n\r\n    this.resetUiComparedColor();\r\n\r\n    this.handleColorChange(selectedColor);\r\n  }\r\n\r\n  resetUiComparedColor() {\r\n    this.uiComparedColor = 'transparent';\r\n  }\r\n\r\n  updateInputValue(color: string) {\r\n    const targetInput = document.getElementById(\r\n      this.inputId(),\r\n    ) as HTMLInputElement;\r\n\r\n    if (targetInput) {\r\n      targetInput.value = color;\r\n    } else {\r\n      console.error(`something went wrong in color picker comp.`);\r\n    }\r\n  }\r\n\r\n  constructor() {\r\n    effect(() => {\r\n      this.uiComparedColor = this.comparedColor();\r\n    });\r\n\r\n    effect(() => {\r\n      const colorFromParent = this.color();\r\n\r\n      if (colorFromParent) {\r\n        this.handleColorChange(colorFromParent);\r\n\r\n        this.updateInputValue(colorFromParent);\r\n\r\n        this.resetUiComparedColor();\r\n      }\r\n    });\r\n  }\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
@@ -2767,11 +2721,16 @@
                 }
             ],
             "stylesData": "",
+            "constructorObj": {
+                "name": "constructor",
+                "description": "",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "args": [],
+                "line": 64
+            },
             "extends": [],
-            "implements": [
-                "OnChanges"
-            ],
-            "templateData": "<div class=\"comp-container\">\r\n  <label class=\"sr-only\" [for]=\"inputId\">Color Picker One</label>\r\n  <input\r\n    type=\"color\"\r\n    [id]=\"inputId\"\r\n    [name]=\"inputName\"\r\n    (input)=\"handleInputEvent($event)\"\r\n  />\r\n\r\n  <div\r\n    class=\"color-preview\"\r\n    [style.borderColor]=\"comparedColor\"\r\n    [style.backgroundColor]=\"color\"\r\n  ></div>\r\n</div>\r\n"
+            "templateData": "<div class=\"comp-container\">\r\n  <label class=\"sr-only\" [for]=\"inputId()\">Color Picker One</label>\r\n  <input\r\n    type=\"color\"\r\n    [id]=\"inputId()\"\r\n    [name]=\"inputName()\"\r\n    (input)=\"handleInputEvent($event)\"\r\n  />\r\n\r\n  <div\r\n    class=\"color-preview\"\r\n    [style.borderColor]=\"uiComparedColor\"\r\n    [style.backgroundColor]=\"uiColor\"\r\n  ></div>\r\n</div>\r\n"
         },
         {
             "name": "ColorSliderComponent",
@@ -4122,7 +4081,7 @@
                 "linktype": "component",
                 "name": "ColorContrastComponent",
                 "coveragePercent": 0,
-                "coverageCount": "0/10",
+                "coverageCount": "0/8",
                 "status": "low"
             },
             {
@@ -4140,7 +4099,7 @@
                 "linktype": "component",
                 "name": "ColorPickerComponent",
                 "coveragePercent": 0,
-                "coverageCount": "0/11",
+                "coverageCount": "0/13",
                 "status": "low"
             },
             {
