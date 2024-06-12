@@ -6,13 +6,11 @@ const meta: Meta<ColorPickerComponent> = {
   title: 'App/Color Picker',
   component: ColorPickerComponent,
   tags: ['autodocs'],
-  // render: (args: ColorPickerComponent) => ({
-  //   props: {
-  //     ...args,
-  //   },
-  // }),
   argTypes: {
     comparedColor: {
+      control: 'color',
+    },
+    deltaColor: {
       control: 'color',
     },
   },
@@ -25,5 +23,11 @@ type Story = StoryObj<ColorPickerComponent>;
 export const Typical: Story = {
   args: {
     comparedColor: '',
+  },
+};
+
+export const ColorSelected: Story = {
+  args: {
+    comparedColor: 'yellow',
   },
 };

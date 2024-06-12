@@ -1,7 +1,10 @@
 import {
   Component,
+  effect,
   EventEmitter,
   Input,
+  input,
+  model,
   OnChanges,
   Output,
   SimpleChanges,
@@ -13,13 +16,16 @@ import {
   styleUrls: ['./color-picker.component.scss'],
   standalone: true,
 })
-export class ColorPickerComponent implements OnChanges {
-  @Input() inputId: string = 'fg-color';
-  @Input() inputName: string = 'foreground color';
-  @Input() comparedColor: string | null = null;
-  @Input() deltaColor?: string | null = null;
+export class ColorPickerComponent {
+  inputId = input('fg-color');
+  inputName = input('foreground color');
+  deltaColor = input<string | null>(null);
 
   @Output() selectedColor = new EventEmitter<string>();
+
+  comparedColor = model<string | null>(null);
+
+  uiComparedColor: string | null = null;
 
   color: string | null = null;
 
@@ -36,15 +42,18 @@ export class ColorPickerComponent implements OnChanges {
 
     const selectedColor = inputElement.value;
 
-    // reset compared color
-    this.comparedColor = 'transparent';
+    this.resetComparedColor();
 
     this.handleColorChange(selectedColor);
   }
 
+  resetComparedColor() {
+    this.uiComparedColor = 'transparent';
+  }
+
   updateInputValue(color: string) {
     const targetInput = document.getElementById(
-      this.inputId
+      this.inputId(),
     ) as HTMLInputElement;
 
     if (targetInput) {
@@ -54,11 +63,21 @@ export class ColorPickerComponent implements OnChanges {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.deltaColor) {
-      this.handleColorChange(this.deltaColor);
+  constructor() {
+    effect(() => {
+      this.uiComparedColor = this.comparedColor();
+    });
 
-      this.updateInputValue(this.deltaColor);
-    }
+    effect(() => {
+      const colorFromParent = this.deltaColor();
+
+      if (colorFromParent) {
+        this.handleColorChange(colorFromParent);
+
+        this.updateInputValue(colorFromParent);
+
+        this.resetComparedColor();
+      }
+    });
   }
 }

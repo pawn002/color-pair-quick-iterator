@@ -1,15 +1,20 @@
 <div class="comp-container">
-  <label class="sr-only" [for]="inputId">Color Picker One</label>
+  <label class="sr-only" [for]="inputId()">Color Picker One</label>
   <input
     type="color"
-    [id]="inputId"
-    [name]="inputName"
+    [id]="inputId()"
+    [name]="inputName()"
     (input)="handleInputEvent($event)"
   />
 
+  <!-- <div
+    class="color-preview"
+    [style.borderColor]="comparedColor()"
+    [style.backgroundColor]="color"
+  ></div> -->
   <div
     class="color-preview"
-    [style.borderColor]="comparedColor"
+    [style.borderColor]="uiComparedColor"
     [style.backgroundColor]="color"
   ></div>
 </div>
