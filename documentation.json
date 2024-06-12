@@ -1253,12 +1253,12 @@
     "classes": [
         {
             "name": "AlertMessagObj",
-            "id": "class-AlertMessagObj-f0c3e27e3d7f237b7e998b2226e961bec211e0429a95e19cd5d3aa4e6943aeb9b5052329410a7851acb567f29b1868d6df9c4c1d7386b693823c6dddd06913f4",
+            "id": "class-AlertMessagObj-9a6a3f4a5bafafae491b0c398d02851928845cdaaac46697d44e969224602ef11697576082ee8d56d6227fd06c230d89299465b69128b85cafeb33d7b205c751",
             "file": "src/app/alert/alert.component.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "class",
-            "sourceCode": "import {\r\n  Component,\r\n  EventEmitter,\r\n  Input,\r\n  input,\r\n  Output,\r\n  OnChanges,\r\n  SimpleChanges,\r\n  OnInit,\r\n} from '@angular/core';\r\nimport { random, sample, times } from 'lodash';\r\n\r\nexport class AlertMessagObj {\r\n  message: string = '';\r\n}\r\n\r\n@Component({\r\n  selector: 'app-alert',\r\n  templateUrl: './alert.component.html',\r\n  styleUrls: ['./alert.component.scss'],\r\n  standalone: true,\r\n})\r\nexport class AlertComponent implements OnInit, OnChanges {\r\n  /**\r\n   * 'Input' of type `AlertMessageObj`\r\n   * Part of transition away from `@Input()`\r\n   *\r\n   * ---\r\n   * Storybook incorrectly tracks `alertMessage` as a property with a type of `string.\r\n   */\r\n  alertMessage = input(new AlertMessagObj());\r\n\r\n  @Output() alertClosed = new EventEmitter<boolean>();\r\n\r\n  showAlert: boolean = false;\r\n\r\n  uniqId: string = '';\r\n\r\n  timeout: number = NaN;\r\n\r\n  generateRandomString(length: number) {\r\n    return times(length, () => random(35).toString(36)).join('');\r\n  }\r\n\r\n  hideAlert() {\r\n    this.showAlert = false;\r\n\r\n    this.uniqId = '';\r\n\r\n    this.alertClosed.emit(true);\r\n  }\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    this.uniqId = this.generateRandomString(12);\r\n\r\n    this.showAlert = true;\r\n\r\n    if (this.timeout) {\r\n      clearTimeout(this.timeout);\r\n    }\r\n\r\n    this.timeout = setTimeout(() => {\r\n      this.showAlert = false;\r\n    }, 5000) as unknown as number;\r\n  }\r\n\r\n  ngOnInit(): void {\r\n    this.showAlert = false;\r\n  }\r\n}\r\n",
+            "sourceCode": "import { Component, EventEmitter, input, effect, Output } from '@angular/core';\r\nimport { random, times } from 'lodash';\r\n\r\nexport class AlertMessagObj {\r\n  message: string = '';\r\n}\r\n\r\n@Component({\r\n  selector: 'app-alert',\r\n  templateUrl: './alert.component.html',\r\n  styleUrls: ['./alert.component.scss'],\r\n  standalone: true,\r\n})\r\nexport class AlertComponent {\r\n  /**\r\n   * 'Input' of type `AlertMessageObj`\r\n   *\r\n   * Part of Angular's transition away from `@Input()`\r\n   *\r\n   * Storybook incorrectly tracks `alertMessage` as a property with a type of `string.\r\n   */\r\n  alertMessage = input(new AlertMessagObj());\r\n\r\n  @Output() alertClosed = new EventEmitter<boolean>();\r\n\r\n  showAlert: boolean = false;\r\n\r\n  uniqId: string = '';\r\n\r\n  timeout: number = NaN;\r\n\r\n  generateRandomString(length: number) {\r\n    return times(length, () => random(35).toString(36)).join('');\r\n  }\r\n\r\n  hideAlert() {\r\n    this.showAlert = false;\r\n\r\n    this.uniqId = '';\r\n\r\n    this.alertClosed.emit(true);\r\n  }\r\n\r\n  constructor() {\r\n    effect(() => {\r\n      if (this.alertMessage().message) {\r\n        this.uniqId = this.generateRandomString(12);\r\n\r\n        this.showAlert = true;\r\n\r\n        if (this.timeout) {\r\n          clearTimeout(this.timeout);\r\n        }\r\n\r\n        this.timeout = setTimeout(() => {\r\n          this.showAlert = false;\r\n        }, 5000) as unknown as number;\r\n      }\r\n    });\r\n  }\r\n}\r\n",
             "properties": [
                 {
                     "name": "message",
@@ -1268,7 +1268,7 @@
                     "type": "string",
                     "optional": false,
                     "description": "",
-                    "line": 14
+                    "line": 5
                 }
             ],
             "methods": [],
@@ -1329,12 +1329,12 @@
         },
         {
             "name": "ContrastObject",
-            "id": "class-ContrastObject-ea5fcea7de7b6c8b068c49b45059094df00af0f115eed7e440dca99bfbf8598c30c711f17cf68a38a13a83d09a34342cc1bb9720cd496fd75afe9cf96b20de75",
+            "id": "class-ContrastObject-a1c07708aa6280fa54153310935f5bb5853ebd6b7296b9e11d11f7f002381543d56179d76bf716c46e6fcca3eb3778b57f46099c60709d6419ff0e808f681afd",
             "file": "src/app/color-contrast/color-contrast.component.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "class",
-            "sourceCode": "import {\r\n  Component,\r\n  EventEmitter,\r\n  Input,\r\n  OnChanges,\r\n  Output,\r\n  SimpleChanges,\r\n  inject,\r\n} from '@angular/core';\r\nimport {\r\n  ColorMetricsService,\r\n  ContrastType,\r\n} from '../services/color-metrics.service';\r\nimport { ColorUtilService } from '../services/color-util.service';\r\n\r\nexport class ContrastObject {\r\n  score: number | null = null;\r\n  type: ContrastType | null = null;\r\n}\r\n\r\n@Component({\r\n  selector: 'app-color-contrast',\r\n  templateUrl: './color-contrast.component.html',\r\n  styleUrls: ['./color-contrast.component.scss'],\r\n  standalone: true,\r\n})\r\nexport class ColorContrastComponent implements OnChanges {\r\n  @Input() colorOne: string | null = null;\r\n  @Input() colorTwo: string | null = null;\r\n  @Input() contrastType: ContrastType | 'apca object' | null = null;\r\n\r\n  @Output() contrast = new EventEmitter<ContrastObject>();\r\n\r\n  cus = inject(ColorUtilService);\r\n  cms = inject(ColorMetricsService);\r\n\r\n  contrastScore: number | null = null;\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    // console.log(changes);\r\n\r\n    if (this.colorOne && this.colorTwo && this.contrastType) {\r\n      const score = this.cms.getContrast(\r\n        this.colorOne,\r\n        this.colorTwo,\r\n        this.contrastType === 'apca object' ? 'apca' : this.contrastType\r\n      );\r\n\r\n      this.contrastScore = score;\r\n\r\n      if (score) {\r\n        this.contrastScore =\r\n          this.contrastType === 'apca object'\r\n            ? this.cus.getMinObjectDimension(score)\r\n            : this.contrastScore;\r\n      }\r\n    } else {\r\n      console.warn('contrast comp has incomplete bindings');\r\n    }\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  Component,\r\n  EventEmitter,\r\n  Input,\r\n  OnChanges,\r\n  Output,\r\n  SimpleChanges,\r\n  effect,\r\n  inject,\r\n  input,\r\n} from '@angular/core';\r\nimport {\r\n  ColorMetricsService,\r\n  ContrastType,\r\n} from '../services/color-metrics.service';\r\nimport { ColorUtilService } from '../services/color-util.service';\r\n\r\nexport class ContrastObject {\r\n  score: number | null = null;\r\n  type: ContrastType | null = null;\r\n}\r\n\r\n@Component({\r\n  selector: 'app-color-contrast',\r\n  templateUrl: './color-contrast.component.html',\r\n  styleUrls: ['./color-contrast.component.scss'],\r\n  standalone: true,\r\n})\r\nexport class ColorContrastComponent implements OnChanges {\r\n  colorOne = input<string>('');\r\n  colorTwo = input<string>('');\r\n  contrastType = input<ContrastType | 'apca object'>('apca');\r\n\r\n  // @Input() colorOne: string | null = null;\r\n  // @Input() colorTwo: string | null = null;\r\n  // @Input() contrastType: ContrastType | 'apca object' | null = null;\r\n\r\n  @Output() contrast = new EventEmitter<ContrastObject>();\r\n\r\n  cus = inject(ColorUtilService);\r\n  cms = inject(ColorMetricsService);\r\n\r\n  contrastScore: number | null = null;\r\n\r\n  constructor() {\r\n    effect(() => {\r\n      if (this.colorOne() && this.colorTwo() && this.contrastType) {\r\n        const isApcaLike =\r\n          this.contrastType() === 'apca object' || 'apca' ? true : false;\r\n\r\n        const score = this.cms.getContrast(\r\n          this.colorOne(),\r\n          this.colorTwo(),\r\n          isApcaLike ? 'apca' : 'bpca',\r\n        );\r\n\r\n        this.contrastScore = score;\r\n\r\n        if (score) {\r\n          this.contrastScore =\r\n            this.contrastType() === 'apca object'\r\n              ? this.cus.getMinObjectDimension(score)\r\n              : this.contrastScore;\r\n        }\r\n      } else {\r\n        console.warn('contrast comp has incomplete bindings');\r\n      }\r\n    });\r\n  }\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {}\r\n}\r\n",
             "properties": [
                 {
                     "name": "score",
@@ -1344,7 +1344,7 @@
                     "type": "number | null",
                     "optional": false,
                     "description": "",
-                    "line": 17
+                    "line": 19
                 },
                 {
                     "name": "type",
@@ -1354,7 +1354,7 @@
                     "type": "ContrastType | null",
                     "optional": false,
                     "description": "",
-                    "line": 18
+                    "line": 20
                 }
             ],
             "methods": [],
@@ -1602,7 +1602,7 @@
     "components": [
         {
             "name": "AlertComponent",
-            "id": "component-AlertComponent-f0c3e27e3d7f237b7e998b2226e961bec211e0429a95e19cd5d3aa4e6943aeb9b5052329410a7851acb567f29b1868d6df9c4c1d7386b693823c6dddd06913f4",
+            "id": "component-AlertComponent-9a6a3f4a5bafafae491b0c398d02851928845cdaaac46697d44e969224602ef11697576082ee8d56d6227fd06c230d89299465b69128b85cafeb33d7b205c751",
             "file": "src/app/alert/alert.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -1626,7 +1626,7 @@
                     "defaultValue": "new EventEmitter<boolean>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 33,
+                    "line": 24,
                     "type": "EventEmitter"
                 }
             ],
@@ -1638,9 +1638,9 @@
                     "deprecationMessage": "",
                     "type": "",
                     "optional": false,
-                    "description": "<p>&#39;Input&#39; of type <code>AlertMessageObj</code>\nPart of transition away from <code>@Input()</code></p>\n<hr>\n<p>Storybook incorrectly tracks <code>alertMessage</code> as a property with a type of `string.</p>\n",
-                    "line": 31,
-                    "rawdescription": "\n\n'Input' of type `AlertMessageObj`\nPart of transition away from `@Input()`\n\n---\nStorybook incorrectly tracks `alertMessage` as a property with a type of `string.\n"
+                    "description": "<p>&#39;Input&#39; of type <code>AlertMessageObj</code></p>\n<p>Part of Angular&#39;s transition away from <code>@Input()</code></p>\n<p>Storybook incorrectly tracks <code>alertMessage</code> as a property with a type of `string.</p>\n",
+                    "line": 22,
+                    "rawdescription": "\n\n'Input' of type `AlertMessageObj`\n\nPart of Angular's transition away from `@Input()`\n\nStorybook incorrectly tracks `alertMessage` as a property with a type of `string.\n"
                 },
                 {
                     "name": "showAlert",
@@ -1650,7 +1650,7 @@
                     "type": "boolean",
                     "optional": false,
                     "description": "",
-                    "line": 35
+                    "line": 26
                 },
                 {
                     "name": "timeout",
@@ -1660,7 +1660,7 @@
                     "type": "number",
                     "optional": false,
                     "description": "",
-                    "line": 39
+                    "line": 30
                 },
                 {
                     "name": "uniqId",
@@ -1670,7 +1670,7 @@
                     "type": "string",
                     "optional": false,
                     "description": "",
-                    "line": 37
+                    "line": 28
                 }
             ],
             "methodsClass": [
@@ -1687,7 +1687,7 @@
                     "optional": false,
                     "returnType": "any",
                     "typeParameters": [],
-                    "line": 41,
+                    "line": 32,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -1708,45 +1708,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 45,
-                    "deprecated": false,
-                    "deprecationMessage": ""
-                },
-                {
-                    "name": "ngOnChanges",
-                    "args": [
-                        {
-                            "name": "changes",
-                            "type": "SimpleChanges",
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 53,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "jsdoctags": [
-                        {
-                            "name": "changes",
-                            "type": "SimpleChanges",
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "ngOnInit",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 67,
+                    "line": 36,
                     "deprecated": false,
                     "deprecationMessage": ""
                 }
@@ -1760,7 +1722,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {\r\n  Component,\r\n  EventEmitter,\r\n  Input,\r\n  input,\r\n  Output,\r\n  OnChanges,\r\n  SimpleChanges,\r\n  OnInit,\r\n} from '@angular/core';\r\nimport { random, sample, times } from 'lodash';\r\n\r\nexport class AlertMessagObj {\r\n  message: string = '';\r\n}\r\n\r\n@Component({\r\n  selector: 'app-alert',\r\n  templateUrl: './alert.component.html',\r\n  styleUrls: ['./alert.component.scss'],\r\n  standalone: true,\r\n})\r\nexport class AlertComponent implements OnInit, OnChanges {\r\n  /**\r\n   * 'Input' of type `AlertMessageObj`\r\n   * Part of transition away from `@Input()`\r\n   *\r\n   * ---\r\n   * Storybook incorrectly tracks `alertMessage` as a property with a type of `string.\r\n   */\r\n  alertMessage = input(new AlertMessagObj());\r\n\r\n  @Output() alertClosed = new EventEmitter<boolean>();\r\n\r\n  showAlert: boolean = false;\r\n\r\n  uniqId: string = '';\r\n\r\n  timeout: number = NaN;\r\n\r\n  generateRandomString(length: number) {\r\n    return times(length, () => random(35).toString(36)).join('');\r\n  }\r\n\r\n  hideAlert() {\r\n    this.showAlert = false;\r\n\r\n    this.uniqId = '';\r\n\r\n    this.alertClosed.emit(true);\r\n  }\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    this.uniqId = this.generateRandomString(12);\r\n\r\n    this.showAlert = true;\r\n\r\n    if (this.timeout) {\r\n      clearTimeout(this.timeout);\r\n    }\r\n\r\n    this.timeout = setTimeout(() => {\r\n      this.showAlert = false;\r\n    }, 5000) as unknown as number;\r\n  }\r\n\r\n  ngOnInit(): void {\r\n    this.showAlert = false;\r\n  }\r\n}\r\n",
+            "sourceCode": "import { Component, EventEmitter, input, effect, Output } from '@angular/core';\r\nimport { random, times } from 'lodash';\r\n\r\nexport class AlertMessagObj {\r\n  message: string = '';\r\n}\r\n\r\n@Component({\r\n  selector: 'app-alert',\r\n  templateUrl: './alert.component.html',\r\n  styleUrls: ['./alert.component.scss'],\r\n  standalone: true,\r\n})\r\nexport class AlertComponent {\r\n  /**\r\n   * 'Input' of type `AlertMessageObj`\r\n   *\r\n   * Part of Angular's transition away from `@Input()`\r\n   *\r\n   * Storybook incorrectly tracks `alertMessage` as a property with a type of `string.\r\n   */\r\n  alertMessage = input(new AlertMessagObj());\r\n\r\n  @Output() alertClosed = new EventEmitter<boolean>();\r\n\r\n  showAlert: boolean = false;\r\n\r\n  uniqId: string = '';\r\n\r\n  timeout: number = NaN;\r\n\r\n  generateRandomString(length: number) {\r\n    return times(length, () => random(35).toString(36)).join('');\r\n  }\r\n\r\n  hideAlert() {\r\n    this.showAlert = false;\r\n\r\n    this.uniqId = '';\r\n\r\n    this.alertClosed.emit(true);\r\n  }\r\n\r\n  constructor() {\r\n    effect(() => {\r\n      if (this.alertMessage().message) {\r\n        this.uniqId = this.generateRandomString(12);\r\n\r\n        this.showAlert = true;\r\n\r\n        if (this.timeout) {\r\n          clearTimeout(this.timeout);\r\n        }\r\n\r\n        this.timeout = setTimeout(() => {\r\n          this.showAlert = false;\r\n        }, 5000) as unknown as number;\r\n      }\r\n    });\r\n  }\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
@@ -1769,16 +1731,20 @@
                 }
             ],
             "stylesData": "",
+            "constructorObj": {
+                "name": "constructor",
+                "description": "",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "args": [],
+                "line": 42
+            },
             "extends": [],
-            "implements": [
-                "OnInit",
-                "OnChanges"
-            ],
-            "templateData": "<div class=\"comp-container\" role=\"alert\">\r\n  <div class=\"alert-content\">\r\n    @if (showAlert) {\r\n      <p [innerText]=\"alertMessage()?.message\"></p>\r\n      <p class=\"msg-id\">Message ID: {{ uniqId }}</p>\r\n      <!-- <button (click)=\"hideAlert()\"><span>Dismiss</span></button> -->\r\n    }\r\n    <!-- <ng-container\r\n    >\r\n    </ng-container> -->\r\n  </div>\r\n</div>\r\n"
+            "templateData": "<div class=\"comp-container\" role=\"alert\">\r\n  <div class=\"alert-content\">\r\n    @if (showAlert) {\r\n      <p [innerText]=\"alertMessage().message\"></p>\r\n      <p class=\"msg-id\">Message ID: {{ uniqId }}</p>\r\n      <!-- <button (click)=\"hideAlert()\"><span>Dismiss</span></button> -->\r\n    }\r\n    <!-- <ng-container\r\n    >\r\n    </ng-container> -->\r\n  </div>\r\n</div>\r\n"
         },
         {
             "name": "AppComponent",
-            "id": "component-AppComponent-3ce07a85dce9e6d3d247a167353fa96f8ff981f39258a464f34716fc8cb7ffbd3e0d1c8245572129986d695d3a585f51aa82eef46694ffbaac63658c2d1418d7",
+            "id": "component-AppComponent-982aeb3a409fa84349aa90708372cc703399e52ea3d0f267ecc0447bd0712abda48b62e1e299ab7da73ab741b3b07d5b4cfc90ccf0ee9a4ba84fefe7ae631e61",
             "file": "src/app/app.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -1798,10 +1764,10 @@
             "propertiesClass": [
                 {
                     "name": "colorPickerOneComparedColor",
-                    "defaultValue": "null",
+                    "defaultValue": "''",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "string | null",
+                    "type": "string",
                     "optional": false,
                     "description": "",
                     "line": 39
@@ -1818,10 +1784,10 @@
                 },
                 {
                     "name": "colorPickerTwoComparedColor",
-                    "defaultValue": "null",
+                    "defaultValue": "''",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "string | null",
+                    "type": "string",
                     "optional": false,
                     "description": "",
                     "line": 42
@@ -1858,10 +1824,10 @@
                 },
                 {
                     "name": "currentAlertMessage",
-                    "defaultValue": "null",
+                    "defaultValue": "new AlertMessagObj()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "AlertMessagObj | null",
+                    "type": "AlertMessagObj",
                     "optional": false,
                     "description": "",
                     "line": 51
@@ -1911,7 +1877,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 210,
+                    "line": 209,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2051,7 +2017,7 @@
                         },
                         {
                             "name": "event",
-                            "type": "string | null",
+                            "type": "string",
                             "deprecated": false,
                             "deprecationMessage": ""
                         }
@@ -2074,7 +2040,7 @@
                         },
                         {
                             "name": "event",
-                            "type": "string | null",
+                            "type": "string",
                             "deprecated": false,
                             "deprecationMessage": "",
                             "tagName": {
@@ -2089,7 +2055,7 @@
                     "optional": false,
                     "returnType": "any",
                     "typeParameters": [],
-                    "line": 186,
+                    "line": 185,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -2102,7 +2068,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 216,
+                    "line": 215,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2112,7 +2078,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 214,
+                    "line": 213,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2150,7 +2116,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 180,
+                    "line": 179,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2295,7 +2261,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, inject } from '@angular/core';\r\nimport { RouterOutlet } from '@angular/router';\r\n\r\nimport { ContrastType } from './services/color-metrics.service';\r\nimport { ColorUtilService } from './services/color-util.service';\r\nimport { CopyToClipboardEvent } from './copy-to-clipboard-button/copy-to-clipboard-button.component';\r\nimport { ResetObject } from './color-slider/color-slider.component';\r\nimport { AlertMessagObj } from './alert/alert.component';\r\nimport { TableColorCell } from './palette-table/palette-table.component';\r\n\r\nimport { AlertComponent } from './alert/alert.component';\r\nimport { ColorContrastComponent } from './color-contrast/color-contrast.component';\r\nimport { ColorPickerComponent } from './color-picker/color-picker.component';\r\nimport { ColorSliderComponent } from './color-slider/color-slider.component';\r\nimport { CopyToClipboardButtonComponent } from './copy-to-clipboard-button/copy-to-clipboard-button.component';\r\nimport { MetadataComponent } from './metadata/metadata.component';\r\nimport { PaletteTableComponent } from './palette-table/palette-table.component';\r\n\r\n@Component({\r\n  selector: 'app-root',\r\n  standalone: true,\r\n  imports: [\r\n    RouterOutlet,\r\n    AlertComponent,\r\n    ColorContrastComponent,\r\n    ColorPickerComponent,\r\n    ColorSliderComponent,\r\n    CopyToClipboardButtonComponent,\r\n    MetadataComponent,\r\n    PaletteTableComponent,\r\n  ],\r\n  templateUrl: './app.component.html',\r\n  styleUrl: './app.component.scss',\r\n})\r\nexport class AppComponent {\r\n  cus = inject(ColorUtilService);\r\n\r\n  colorPickerOneSelectedColor: string | null = null;\r\n  colorPickerOneComparedColor: string | null = null;\r\n\r\n  colorPickerTwoSelectedColor: string | null = null;\r\n  colorPickerTwoComparedColor: string | null = null;\r\n\r\n  contrastType: ContrastType | 'apca object' = 'apca';\r\n\r\n  resetSlider: ResetObject | null = null;\r\n\r\n  constantChroma: boolean = true;\r\n  showGradient: boolean = true;\r\n\r\n  currentAlertMessage: AlertMessagObj | null = null;\r\n\r\n  handleColorInputInput(inputNumber: 'One' | 'Two', event: string) {\r\n    if (inputNumber === 'One') {\r\n      this.colorPickerOneSelectedColor = event;\r\n    }\r\n\r\n    if (inputNumber === 'Two') {\r\n      this.colorPickerTwoSelectedColor = event;\r\n    }\r\n  }\r\n\r\n  handleSliderInputInput(inputNumber: 'One' | 'Two', event: string | null) {\r\n    if (inputNumber === 'One') {\r\n      this.colorPickerOneComparedColor = event;\r\n    }\r\n\r\n    if (inputNumber === 'Two') {\r\n      this.colorPickerTwoComparedColor = event;\r\n    }\r\n  }\r\n\r\n  handleCopyEvent(event: CopyToClipboardEvent) {\r\n    if (event.copied) {\r\n      this.alertUser({ message: `${event.color} copied to clipboard.` });\r\n    } else {\r\n      console.error(`color copy error.`);\r\n    }\r\n  }\r\n\r\n  handleColorPaletteButtonEvent(\r\n    paletteChartNum: 'One' | 'Two',\r\n    event: TableColorCell\r\n  ) {\r\n    if (paletteChartNum === 'One') {\r\n      this.colorPickerOneSelectedColor = event.color;\r\n    }\r\n\r\n    if (paletteChartNum === 'Two') {\r\n      this.colorPickerTwoSelectedColor = event.color;\r\n    }\r\n\r\n    this.alertUser({\r\n      message: `Color picker ${paletteChartNum} changed to ${event.color}`,\r\n    });\r\n  }\r\n\r\n  radioChange(changeTo: ContrastType | 'apca object') {\r\n    console.log(changeTo);\r\n    this.contrastType = changeTo;\r\n  }\r\n\r\n  toggleConstantChroma(event: Event) {\r\n    const inputElement = event.target as HTMLInputElement;\r\n    const checked = inputElement.checked;\r\n\r\n    this.constantChroma = checked ? true : false;\r\n\r\n    this.resetSliders();\r\n  }\r\n\r\n  toggleShowGradient(event: Event) {\r\n    const inputElement = event.target as HTMLInputElement;\r\n    const checked = inputElement.checked;\r\n\r\n    this.showGradient = checked ? true : false;\r\n  }\r\n\r\n  swapColors() {\r\n    const getColor = (type: 'fg' | 'bg'): string | null => {\r\n      let color: string | null = null;\r\n\r\n      switch (type) {\r\n        case 'fg':\r\n          color = this.colorPickerOneSelectedColor;\r\n\r\n          break;\r\n        case 'bg':\r\n          color = this.colorPickerTwoSelectedColor;\r\n\r\n          break;\r\n\r\n        default:\r\n          break;\r\n      }\r\n\r\n      return color;\r\n    };\r\n\r\n    const oldPairing = {\r\n      foreground: getColor('fg'),\r\n      background: getColor('bg'),\r\n    };\r\n\r\n    const newPairing = {\r\n      foreground: oldPairing.background,\r\n      background: oldPairing.foreground,\r\n    };\r\n\r\n    if (newPairing.foreground && newPairing.background) {\r\n      this.colorPickerOneSelectedColor = newPairing.foreground;\r\n\r\n      this.colorPickerTwoSelectedColor = newPairing.background;\r\n\r\n      this.alertUser({ message: 'Swapped foreground and background colors.' });\r\n    } else {\r\n      console.error('swapping colors went badly. . .');\r\n    }\r\n  }\r\n\r\n  async setRandomColorPair(initialAppColors?: boolean) {\r\n    const initColorPair = await this.cus.getRandomColorPair();\r\n\r\n    const randomColorPair = await this.cus.adjustColorPairForPresentation(\r\n      initColorPair\r\n    );\r\n\r\n    setTimeout(() => {\r\n      this.colorPickerOneSelectedColor = randomColorPair[0];\r\n      this.colorPickerTwoSelectedColor = randomColorPair[1];\r\n\r\n      if (!initialAppColors) {\r\n        this.alertUser({\r\n          message: `Random color pair generated: ${randomColorPair[0]}, and ${randomColorPair[1]}`,\r\n        });\r\n      }\r\n    }, 0);\r\n  }\r\n\r\n  resetSliders() {\r\n    this.resetSlider = { reset: true };\r\n\r\n    this.alertUser({ message: 'Resetted color sliders to initial states.' });\r\n  }\r\n\r\n  async matchChromas() {\r\n    if (this.colorPickerOneSelectedColor && this.colorPickerTwoSelectedColor) {\r\n      const matchedColors = await this.cus.matchChromas([\r\n        this.colorPickerOneSelectedColor,\r\n        this.colorPickerTwoSelectedColor,\r\n      ]);\r\n\r\n      if (\r\n        matchedColors.success &&\r\n        matchedColors.colors &&\r\n        matchedColors.chroma\r\n      ) {\r\n        this.colorPickerOneSelectedColor = matchedColors.colors[0];\r\n        this.colorPickerTwoSelectedColor = matchedColors.colors[1];\r\n\r\n        this.alertUser({\r\n          message: `Chroma matched foreground and background colors.`,\r\n        });\r\n      } else {\r\n        this.alertUser({ message: 'Unable to match  chroma across colors.' });\r\n      }\r\n    }\r\n  }\r\n\r\n  alertUser(message: AlertMessagObj) {\r\n    this.currentAlertMessage = message;\r\n  }\r\n\r\n  ngOnInit(): void {}\r\n\r\n  ngAfterViewInit(): void {\r\n    this.setRandomColorPair(true);\r\n  }\r\n}\r\n",
+            "sourceCode": "import { Component, inject } from '@angular/core';\r\nimport { RouterOutlet } from '@angular/router';\r\n\r\nimport { ContrastType } from './services/color-metrics.service';\r\nimport { ColorUtilService } from './services/color-util.service';\r\nimport { CopyToClipboardEvent } from './copy-to-clipboard-button/copy-to-clipboard-button.component';\r\nimport { ResetObject } from './color-slider/color-slider.component';\r\nimport { AlertMessagObj } from './alert/alert.component';\r\nimport { TableColorCell } from './palette-table/palette-table.component';\r\n\r\nimport { AlertComponent } from './alert/alert.component';\r\nimport { ColorContrastComponent } from './color-contrast/color-contrast.component';\r\nimport { ColorPickerComponent } from './color-picker/color-picker.component';\r\nimport { ColorSliderComponent } from './color-slider/color-slider.component';\r\nimport { CopyToClipboardButtonComponent } from './copy-to-clipboard-button/copy-to-clipboard-button.component';\r\nimport { MetadataComponent } from './metadata/metadata.component';\r\nimport { PaletteTableComponent } from './palette-table/palette-table.component';\r\n\r\n@Component({\r\n  selector: 'app-root',\r\n  standalone: true,\r\n  imports: [\r\n    RouterOutlet,\r\n    AlertComponent,\r\n    ColorContrastComponent,\r\n    ColorPickerComponent,\r\n    ColorSliderComponent,\r\n    CopyToClipboardButtonComponent,\r\n    MetadataComponent,\r\n    PaletteTableComponent,\r\n  ],\r\n  templateUrl: './app.component.html',\r\n  styleUrl: './app.component.scss',\r\n})\r\nexport class AppComponent {\r\n  cus = inject(ColorUtilService);\r\n\r\n  colorPickerOneSelectedColor: string | null = null;\r\n  colorPickerOneComparedColor: string = '';\r\n\r\n  colorPickerTwoSelectedColor: string | null = null;\r\n  colorPickerTwoComparedColor: string = '';\r\n\r\n  contrastType: ContrastType | 'apca object' = 'apca';\r\n\r\n  resetSlider: ResetObject | null = null;\r\n\r\n  constantChroma: boolean = true;\r\n  showGradient: boolean = true;\r\n\r\n  currentAlertMessage: AlertMessagObj = new AlertMessagObj();\r\n\r\n  handleColorInputInput(inputNumber: 'One' | 'Two', event: string) {\r\n    if (inputNumber === 'One') {\r\n      this.colorPickerOneSelectedColor = event;\r\n    }\r\n\r\n    if (inputNumber === 'Two') {\r\n      this.colorPickerTwoSelectedColor = event;\r\n    }\r\n  }\r\n\r\n  handleSliderInputInput(inputNumber: 'One' | 'Two', event: string) {\r\n    if (inputNumber === 'One') {\r\n      this.colorPickerOneComparedColor = event;\r\n    }\r\n\r\n    if (inputNumber === 'Two') {\r\n      this.colorPickerTwoComparedColor = event;\r\n    }\r\n  }\r\n\r\n  handleCopyEvent(event: CopyToClipboardEvent) {\r\n    if (event.copied) {\r\n      this.alertUser({ message: `${event.color} copied to clipboard.` });\r\n    } else {\r\n      console.error(`color copy error.`);\r\n    }\r\n  }\r\n\r\n  handleColorPaletteButtonEvent(\r\n    paletteChartNum: 'One' | 'Two',\r\n    event: TableColorCell,\r\n  ) {\r\n    if (paletteChartNum === 'One') {\r\n      this.colorPickerOneSelectedColor = event.color;\r\n    }\r\n\r\n    if (paletteChartNum === 'Two') {\r\n      this.colorPickerTwoSelectedColor = event.color;\r\n    }\r\n\r\n    this.alertUser({\r\n      message: `Color picker ${paletteChartNum} changed to ${event.color}`,\r\n    });\r\n  }\r\n\r\n  radioChange(changeTo: ContrastType | 'apca object') {\r\n    console.log(changeTo);\r\n    this.contrastType = changeTo;\r\n  }\r\n\r\n  toggleConstantChroma(event: Event) {\r\n    const inputElement = event.target as HTMLInputElement;\r\n    const checked = inputElement.checked;\r\n\r\n    this.constantChroma = checked ? true : false;\r\n\r\n    this.resetSliders();\r\n  }\r\n\r\n  toggleShowGradient(event: Event) {\r\n    const inputElement = event.target as HTMLInputElement;\r\n    const checked = inputElement.checked;\r\n\r\n    this.showGradient = checked ? true : false;\r\n  }\r\n\r\n  swapColors() {\r\n    const getColor = (type: 'fg' | 'bg'): string | null => {\r\n      let color: string | null = null;\r\n\r\n      switch (type) {\r\n        case 'fg':\r\n          color = this.colorPickerOneSelectedColor;\r\n\r\n          break;\r\n        case 'bg':\r\n          color = this.colorPickerTwoSelectedColor;\r\n\r\n          break;\r\n\r\n        default:\r\n          break;\r\n      }\r\n\r\n      return color;\r\n    };\r\n\r\n    const oldPairing = {\r\n      foreground: getColor('fg'),\r\n      background: getColor('bg'),\r\n    };\r\n\r\n    const newPairing = {\r\n      foreground: oldPairing.background,\r\n      background: oldPairing.foreground,\r\n    };\r\n\r\n    if (newPairing.foreground && newPairing.background) {\r\n      this.colorPickerOneSelectedColor = newPairing.foreground;\r\n\r\n      this.colorPickerTwoSelectedColor = newPairing.background;\r\n\r\n      this.alertUser({ message: 'Swapped foreground and background colors.' });\r\n    } else {\r\n      console.error('swapping colors went badly. . .');\r\n    }\r\n  }\r\n\r\n  async setRandomColorPair(initialAppColors?: boolean) {\r\n    const initColorPair = await this.cus.getRandomColorPair();\r\n\r\n    const randomColorPair =\r\n      await this.cus.adjustColorPairForPresentation(initColorPair);\r\n\r\n    setTimeout(() => {\r\n      this.colorPickerOneSelectedColor = randomColorPair[0];\r\n      this.colorPickerTwoSelectedColor = randomColorPair[1];\r\n\r\n      if (!initialAppColors) {\r\n        this.alertUser({\r\n          message: `Random color pair generated: ${randomColorPair[0]}, and ${randomColorPair[1]}`,\r\n        });\r\n      }\r\n    }, 0);\r\n  }\r\n\r\n  resetSliders() {\r\n    this.resetSlider = { reset: true };\r\n\r\n    this.alertUser({ message: 'Resetted color sliders to initial states.' });\r\n  }\r\n\r\n  async matchChromas() {\r\n    if (this.colorPickerOneSelectedColor && this.colorPickerTwoSelectedColor) {\r\n      const matchedColors = await this.cus.matchChromas([\r\n        this.colorPickerOneSelectedColor,\r\n        this.colorPickerTwoSelectedColor,\r\n      ]);\r\n\r\n      if (\r\n        matchedColors.success &&\r\n        matchedColors.colors &&\r\n        matchedColors.chroma\r\n      ) {\r\n        this.colorPickerOneSelectedColor = matchedColors.colors[0];\r\n        this.colorPickerTwoSelectedColor = matchedColors.colors[1];\r\n\r\n        this.alertUser({\r\n          message: `Chroma matched foreground and background colors.`,\r\n        });\r\n      } else {\r\n        this.alertUser({ message: 'Unable to match  chroma across colors.' });\r\n      }\r\n    }\r\n  }\r\n\r\n  alertUser(message: AlertMessagObj) {\r\n    this.currentAlertMessage = message;\r\n  }\r\n\r\n  ngOnInit(): void {}\r\n\r\n  ngAfterViewInit(): void {\r\n    this.setRandomColorPair(true);\r\n  }\r\n}\r\n",
             "styleUrl": "./app.component.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -2438,7 +2404,7 @@
         },
         {
             "name": "ColorContrastComponent",
-            "id": "component-ColorContrastComponent-ea5fcea7de7b6c8b068c49b45059094df00af0f115eed7e440dca99bfbf8598c30c711f17cf68a38a13a83d09a34342cc1bb9720cd496fd75afe9cf96b20de75",
+            "id": "component-ColorContrastComponent-a1c07708aa6280fa54153310935f5bb5853ebd6b7296b9e11d11f7f002381543d56179d76bf716c46e6fcca3eb3778b57f46099c60709d6419ff0e808f681afd",
             "file": "src/app/color-contrast/color-contrast.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -2455,42 +2421,14 @@
             ],
             "viewProviders": [],
             "hostDirectives": [],
-            "inputsClass": [
-                {
-                    "name": "colorOne",
-                    "defaultValue": "null",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "line": 28,
-                    "type": "string | null",
-                    "decorators": []
-                },
-                {
-                    "name": "colorTwo",
-                    "defaultValue": "null",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "line": 29,
-                    "type": "string | null",
-                    "decorators": []
-                },
-                {
-                    "name": "contrastType",
-                    "defaultValue": "null",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "line": 30,
-                    "type": "ContrastType | \"apca object\" | null",
-                    "decorators": []
-                }
-            ],
+            "inputsClass": [],
             "outputsClass": [
                 {
                     "name": "contrast",
                     "defaultValue": "new EventEmitter<ContrastObject>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 32,
+                    "line": 38,
                     "type": "EventEmitter"
                 }
             ],
@@ -2503,7 +2441,27 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 35
+                    "line": 41
+                },
+                {
+                    "name": "colorOne",
+                    "defaultValue": "input<string>('')",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 30
+                },
+                {
+                    "name": "colorTwo",
+                    "defaultValue": "input<string>('')",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 31
                 },
                 {
                     "name": "contrastScore",
@@ -2513,7 +2471,17 @@
                     "type": "number | null",
                     "optional": false,
                     "description": "",
-                    "line": 37
+                    "line": 43
+                },
+                {
+                    "name": "contrastType",
+                    "defaultValue": "input<ContrastType | 'apca object'>('apca')",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 32
                 },
                 {
                     "name": "cus",
@@ -2523,7 +2491,7 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 34
+                    "line": 40
                 }
             ],
             "methodsClass": [
@@ -2540,7 +2508,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 39,
+                    "line": 71,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2565,7 +2533,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {\r\n  Component,\r\n  EventEmitter,\r\n  Input,\r\n  OnChanges,\r\n  Output,\r\n  SimpleChanges,\r\n  inject,\r\n} from '@angular/core';\r\nimport {\r\n  ColorMetricsService,\r\n  ContrastType,\r\n} from '../services/color-metrics.service';\r\nimport { ColorUtilService } from '../services/color-util.service';\r\n\r\nexport class ContrastObject {\r\n  score: number | null = null;\r\n  type: ContrastType | null = null;\r\n}\r\n\r\n@Component({\r\n  selector: 'app-color-contrast',\r\n  templateUrl: './color-contrast.component.html',\r\n  styleUrls: ['./color-contrast.component.scss'],\r\n  standalone: true,\r\n})\r\nexport class ColorContrastComponent implements OnChanges {\r\n  @Input() colorOne: string | null = null;\r\n  @Input() colorTwo: string | null = null;\r\n  @Input() contrastType: ContrastType | 'apca object' | null = null;\r\n\r\n  @Output() contrast = new EventEmitter<ContrastObject>();\r\n\r\n  cus = inject(ColorUtilService);\r\n  cms = inject(ColorMetricsService);\r\n\r\n  contrastScore: number | null = null;\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    // console.log(changes);\r\n\r\n    if (this.colorOne && this.colorTwo && this.contrastType) {\r\n      const score = this.cms.getContrast(\r\n        this.colorOne,\r\n        this.colorTwo,\r\n        this.contrastType === 'apca object' ? 'apca' : this.contrastType\r\n      );\r\n\r\n      this.contrastScore = score;\r\n\r\n      if (score) {\r\n        this.contrastScore =\r\n          this.contrastType === 'apca object'\r\n            ? this.cus.getMinObjectDimension(score)\r\n            : this.contrastScore;\r\n      }\r\n    } else {\r\n      console.warn('contrast comp has incomplete bindings');\r\n    }\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  Component,\r\n  EventEmitter,\r\n  Input,\r\n  OnChanges,\r\n  Output,\r\n  SimpleChanges,\r\n  effect,\r\n  inject,\r\n  input,\r\n} from '@angular/core';\r\nimport {\r\n  ColorMetricsService,\r\n  ContrastType,\r\n} from '../services/color-metrics.service';\r\nimport { ColorUtilService } from '../services/color-util.service';\r\n\r\nexport class ContrastObject {\r\n  score: number | null = null;\r\n  type: ContrastType | null = null;\r\n}\r\n\r\n@Component({\r\n  selector: 'app-color-contrast',\r\n  templateUrl: './color-contrast.component.html',\r\n  styleUrls: ['./color-contrast.component.scss'],\r\n  standalone: true,\r\n})\r\nexport class ColorContrastComponent implements OnChanges {\r\n  colorOne = input<string>('');\r\n  colorTwo = input<string>('');\r\n  contrastType = input<ContrastType | 'apca object'>('apca');\r\n\r\n  // @Input() colorOne: string | null = null;\r\n  // @Input() colorTwo: string | null = null;\r\n  // @Input() contrastType: ContrastType | 'apca object' | null = null;\r\n\r\n  @Output() contrast = new EventEmitter<ContrastObject>();\r\n\r\n  cus = inject(ColorUtilService);\r\n  cms = inject(ColorMetricsService);\r\n\r\n  contrastScore: number | null = null;\r\n\r\n  constructor() {\r\n    effect(() => {\r\n      if (this.colorOne() && this.colorTwo() && this.contrastType) {\r\n        const isApcaLike =\r\n          this.contrastType() === 'apca object' || 'apca' ? true : false;\r\n\r\n        const score = this.cms.getContrast(\r\n          this.colorOne(),\r\n          this.colorTwo(),\r\n          isApcaLike ? 'apca' : 'bpca',\r\n        );\r\n\r\n        this.contrastScore = score;\r\n\r\n        if (score) {\r\n          this.contrastScore =\r\n            this.contrastType() === 'apca object'\r\n              ? this.cus.getMinObjectDimension(score)\r\n              : this.contrastScore;\r\n        }\r\n      } else {\r\n        console.warn('contrast comp has incomplete bindings');\r\n      }\r\n    });\r\n  }\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {}\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
@@ -2574,6 +2542,14 @@
                 }
             ],
             "stylesData": "",
+            "constructorObj": {
+                "name": "constructor",
+                "description": "",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "args": [],
+                "line": 43
+            },
             "extends": [],
             "implements": [
                 "OnChanges"
@@ -4108,8 +4084,8 @@
                 "type": "component",
                 "linktype": "component",
                 "name": "AlertComponent",
-                "coveragePercent": 10,
-                "coverageCount": "1/10",
+                "coveragePercent": 11,
+                "coverageCount": "1/9",
                 "status": "low"
             },
             {
@@ -4146,7 +4122,7 @@
                 "linktype": "component",
                 "name": "ColorContrastComponent",
                 "coveragePercent": 0,
-                "coverageCount": "0/9",
+                "coverageCount": "0/10",
                 "status": "low"
             },
             {

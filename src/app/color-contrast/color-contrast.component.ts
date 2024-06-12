@@ -26,16 +26,10 @@ export class ContrastObject {
   styleUrls: ['./color-contrast.component.scss'],
   standalone: true,
 })
-export class ColorContrastComponent implements OnChanges {
+export class ColorContrastComponent {
   colorOne = input<string>('');
   colorTwo = input<string>('');
   contrastType = input<ContrastType | 'apca object'>('apca');
-
-  // @Input() colorOne: string | null = null;
-  // @Input() colorTwo: string | null = null;
-  // @Input() contrastType: ContrastType | 'apca object' | null = null;
-
-  @Output() contrast = new EventEmitter<ContrastObject>();
 
   cus = inject(ColorUtilService);
   cms = inject(ColorMetricsService);
@@ -67,6 +61,4 @@ export class ColorContrastComponent implements OnChanges {
       }
     });
   }
-
-  ngOnChanges(changes: SimpleChanges): void {}
 }
