@@ -1,6 +1,7 @@
 import {
   Component,
   Input,
+  input,
   OnChanges,
   OnInit,
   Output,
@@ -22,10 +23,12 @@ export interface ResetObject {
   imports: [CommonModule],
   standalone: true,
 })
-export class ColorSliderComponent implements OnInit, OnChanges {
-  @Input() id: string | 'slider-0' = 'slider-0';
-  @Input() name: string | 'color-slider' = 'color-slider';
-  @Input() color: string | null = null;
+export class ColorSliderComponent implements OnChanges {
+  id = input<string | 'slider-0'>('slider-0');
+  name = input<string | 'color-slider'>('color-slider');
+  color = input<string | null>(null);
+
+  // @Input() color: string | null = null;
   @Input() constantChroma: boolean = false;
   @Input() showGradient: boolean = false;
   @Input() resetSlider: ResetObject | null = null;
@@ -33,7 +36,7 @@ export class ColorSliderComponent implements OnInit, OnChanges {
 
   cus = inject(ColorUtilService);
 
-  debug: boolean = false;
+  debug: boolean = true;
   devColorVariant: string | null = null;
 
   slideInterval: number | null = null;
@@ -42,22 +45,24 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   initValue: number | null = null;
   value: number | null = null;
 
+  constructor() {}
+
   getInitValue() {
     return this.initValue;
   }
 
   sendInitialLightVariant() {
     // Good UX to just send the input color?
-    this.colorVariant.emit(this.color);
+    this.colorVariant.emit(this.color());
 
     if (this.debug) {
-      this.devColorVariant = this.color;
+      this.devColorVariant = this.color();
     }
   }
 
   async getAndSetLightnessRange(
     color: string,
-    options?: { constantChroma: boolean }
+    options?: { constantChroma: boolean },
   ) {
     const rangeObject = await this.cus.getMinMaxLight(color);
 
@@ -94,10 +99,12 @@ export class ColorSliderComponent implements OnInit, OnChanges {
     if (inputElem) {
       const lightValue = parseFloat(inputElem.value);
 
-      if (this.color) {
+      const boundColor = this.color();
+
+      if (boundColor) {
         const lightnessVariant = this.cus.createSrgbColor(
-          this.color,
-          lightValue
+          boundColor,
+          lightValue,
         );
 
         if (this.debug) {
@@ -115,7 +122,7 @@ export class ColorSliderComponent implements OnInit, OnChanges {
 
   reset() {
     // TODO: Isn't there an angular way to do this?
-    const element = document.getElementById(this.id) as HTMLInputElement;
+    const element = document.getElementById(this.id()) as HTMLInputElement;
 
     if (this.initValue) {
       element.value = this.initValue.toString();
@@ -144,7 +151,7 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   redefineVariable(
     element: HTMLElement,
     variableName: string,
-    newValue: string
+    newValue: string,
   ) {
     element.style.setProperty(variableName, newValue);
   }
@@ -152,7 +159,7 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   redefineGradientStops(lightMin: number, lightMax: number) {
     if (this.color) {
       const targetElement = document.getElementById(
-        `cc-${this.id}`
+        `cc-${this.id}`,
       ) as HTMLElement;
 
       const stops = [
@@ -172,9 +179,17 @@ export class ColorSliderComponent implements OnInit, OnChanges {
         const targetLight = stopInterval * i + lightMin;
         targetLight;
 
-        const stopColor = this.cus.createSrgbColor(this.color, targetLight);
+        const boundColor = this.color();
 
-        stopVals.push(stopColor);
+        if (!boundColor) {
+          console.error(`no color bound to redefine gradient stops with. . .`);
+
+          break;
+        } else {
+          const stopColor = this.cus.createSrgbColor(boundColor, targetLight);
+
+          stopVals.push(stopColor);
+        }
       }
 
       // assign new stop values
@@ -194,11 +209,11 @@ export class ColorSliderComponent implements OnInit, OnChanges {
     }
   }
 
-  ngOnInit(): void {}
-
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.color) {
-      this.getAndSetLightnessRange(this.color, {
+    const boundColor = this.color();
+
+    if (boundColor) {
+      this.getAndSetLightnessRange(boundColor, {
         constantChroma: this.constantChroma,
       });
     } else {
