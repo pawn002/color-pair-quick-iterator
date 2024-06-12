@@ -21,9 +21,9 @@ export class ColorPickerComponent {
   inputName = input('foreground color');
   color = input<string | null>(null);
 
-  @Output() selectedColor = new EventEmitter<string>();
-
   comparedColor = model<string | null>(null);
+
+  @Output() selectedColor = new EventEmitter<string>();
 
   uiComparedColor: string | null = null;
 
