@@ -28,7 +28,8 @@ export class ColorSliderComponent implements OnChanges {
   name = input<string | 'color-slider'>('color-slider');
   color = input<string | null>(null);
 
-  @Input() constantChroma: boolean = false;
+  constantChroma = input<boolean>(false);
+
   @Input() showGradient: boolean = false;
   @Input() resetSlider: ResetObject | null = null;
   @Output() colorVariant = new EventEmitter<string | null>();
@@ -213,7 +214,7 @@ export class ColorSliderComponent implements OnChanges {
 
     if (boundColor) {
       this.getAndSetLightnessRange(boundColor, {
-        constantChroma: this.constantChroma,
+        constantChroma: this.constantChroma(),
       });
     } else {
       console.warn(`no color specified to comp`);
