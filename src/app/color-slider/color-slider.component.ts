@@ -28,7 +28,6 @@ export class ColorSliderComponent implements OnChanges {
   name = input<string | 'color-slider'>('color-slider');
   color = input<string | null>(null);
 
-  // @Input() color: string | null = null;
   @Input() constantChroma: boolean = false;
   @Input() showGradient: boolean = false;
   @Input() resetSlider: ResetObject | null = null;
