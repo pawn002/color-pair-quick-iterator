@@ -1,13 +1,10 @@
 import {
   Component,
-  Input,
   input,
-  OnChanges,
-  OnInit,
   Output,
   EventEmitter,
-  SimpleChanges,
   inject,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ColorUtilService } from '../services/color-util.service';
@@ -23,20 +20,19 @@ export interface ResetObject {
   imports: [CommonModule],
   standalone: true,
 })
-export class ColorSliderComponent implements OnChanges {
+export class ColorSliderComponent {
   id = input<string | 'slider-0'>('slider-0');
   name = input<string | 'color-slider'>('color-slider');
   color = input<string | null>(null);
-
   constantChroma = input<boolean>(false);
+  showGradient = input<boolean>(false);
+  resetSlider = input<ResetObject | null>(null);
+  debug = input<boolean>(false);
 
-  @Input() showGradient: boolean = false;
-  @Input() resetSlider: ResetObject | null = null;
   @Output() colorVariant = new EventEmitter<string | null>();
 
   cus = inject(ColorUtilService);
 
-  debug: boolean = true;
   devColorVariant: string | null = null;
 
   slideInterval: number | null = null;
@@ -45,7 +41,33 @@ export class ColorSliderComponent implements OnChanges {
   initValue: number | null = null;
   value: number | null = null;
 
-  constructor() {}
+  constructor() {
+    effect(() => {
+      const boundColor = this.color();
+      const showGradient = this.showGradient();
+      const resetSlider = this.resetSlider();
+
+      if (boundColor) {
+        this.getAndSetLightnessRange(boundColor, {
+          constantChroma: this.constantChroma(),
+        });
+      } else {
+        console.warn(`no color specified to comp`);
+      }
+
+      if (showGradient) {
+        this.gradient('on');
+      }
+
+      if (!showGradient) {
+        this.gradient('off');
+      }
+
+      if (resetSlider) {
+        this.reset();
+      }
+    });
+  }
 
   getInitValue() {
     return this.initValue;
@@ -55,7 +77,7 @@ export class ColorSliderComponent implements OnChanges {
     // Good UX to just send the input color?
     this.colorVariant.emit(this.color());
 
-    if (this.debug) {
+    if (this.debug()) {
       this.devColorVariant = this.color();
     }
   }
@@ -107,7 +129,7 @@ export class ColorSliderComponent implements OnChanges {
           lightValue,
         );
 
-        if (this.debug) {
+        if (this.debug()) {
           console.log(`slide modding ${this.color} to ${lightnessVariant}`);
 
           this.devColorVariant = lightnessVariant;
@@ -206,30 +228,6 @@ export class ColorSliderComponent implements OnChanges {
       }
     } else {
       console.log(`no color specified`);
-    }
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    const boundColor = this.color();
-
-    if (boundColor) {
-      this.getAndSetLightnessRange(boundColor, {
-        constantChroma: this.constantChroma(),
-      });
-    } else {
-      console.warn(`no color specified to comp`);
-    }
-
-    if (this.showGradient) {
-      this.gradient('on');
-    }
-
-    if (!this.showGradient) {
-      this.gradient('off');
-    }
-
-    if (this.resetSlider) {
-      this.reset();
     }
   }
 }

@@ -38,6 +38,8 @@ export const RgbGreen: Story = {
   args: {
     color: 'green',
     constantChroma: true,
+    showGradient: true,
+    debug: true,
   },
 };
 export const RgbBlue: Story = {
