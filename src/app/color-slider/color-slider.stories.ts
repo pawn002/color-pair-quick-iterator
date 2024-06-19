@@ -16,6 +16,9 @@ const meta: Meta<ColorSliderComponent> = {
     showGradient: {
       control: 'boolean',
     },
+    resetSlider: {
+      control: 'object',
+    },
     debug: {
       control: 'boolean',
     },
