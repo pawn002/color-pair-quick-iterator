@@ -20,6 +20,7 @@ export class ColorContrastComponent {
   colorOne = input<string>('');
   colorTwo = input<string>('');
   contrastType = input<ContrastType | 'apca object'>('apca');
+  debug = input<boolean>(false);
 
   cus = inject(ColorUtilService);
   cms = inject(ColorMetricsService);
@@ -31,6 +32,7 @@ export class ColorContrastComponent {
       const colorOne = this.colorOne();
       const colorTwo = this.colorTwo();
       const contrastType = this.contrastType();
+      const debug = this.debug();
 
       if (colorOne && colorTwo && contrastType) {
         const isApcaLike =
@@ -51,7 +53,9 @@ export class ColorContrastComponent {
               : this.contrastScore;
         }
       } else {
-        console.warn('contrast comp has incomplete bindings');
+        if (debug) {
+          console.warn('contrast comp has incomplete bindings');
+        }
       }
     });
   }
