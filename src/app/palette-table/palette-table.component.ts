@@ -30,6 +30,7 @@ export type TableData = Array<TableRow>;
 })
 export class PaletteTableComponent {
   color = input<string>('');
+  debug = input<boolean>(false);
 
   @Output() selectedColor = new EventEmitter<TableColorCell>();
 
@@ -77,7 +78,7 @@ export class PaletteTableComponent {
       : 'black';
   }
 
-  async getTableData(color: string | null) {
+  async getTableData(color: string) {
     if (color) {
       this.dataStruct = await this.cus.generateAllOklchVariants(
         color,
@@ -87,7 +88,9 @@ export class PaletteTableComponent {
 
       this.getTableColumnHeaders();
     } else {
-      console.warn(`no color for palette table`);
+      if (this.debug()) {
+        console.warn(`no color for palette table`);
+      }
     }
   }
 }
