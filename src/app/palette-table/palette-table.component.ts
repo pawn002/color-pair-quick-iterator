@@ -1,13 +1,10 @@
 import {
   Component,
-  OnInit,
-  OnChanges,
-  AfterViewInit,
-  Input,
-  SimpleChanges,
   Output,
   EventEmitter,
   inject,
+  input,
+  effect,
 } from '@angular/core';
 import { ColorUtilService } from '../services/color-util.service';
 
@@ -19,9 +16,6 @@ export class TableColorCell {
   deltaE: number | null = null;
   deltaLightness: number | null = null;
   deltaChroma: number | null = null;
-
-  // pContrast: number = NaN;
-  // wacg2Comp: number = NaN;
 }
 
 export type TableRow = Array<TableColorCell>;
@@ -34,8 +28,8 @@ export type TableData = Array<TableRow>;
   styleUrls: ['./palette-table.component.scss'],
   standalone: true,
 })
-export class PaletteTableComponent implements OnInit, OnChanges {
-  @Input() color: string | null = null;
+export class PaletteTableComponent {
+  color = input<string | null>(null);
 
   @Output() selectedColor = new EventEmitter<TableColorCell>();
 
@@ -48,6 +42,14 @@ export class PaletteTableComponent implements OnInit, OnChanges {
 
   // An array of arrays where each array is a 'row' of data, and objects are cells of data.
   dataStruct: TableData = [];
+
+  constructor() {
+    effect(() => {
+      const color = this.color();
+
+      this.getTableData(color);
+    });
+  }
 
   getTableColumnHeaders() {
     const headers = [];
@@ -66,9 +68,6 @@ export class PaletteTableComponent implements OnInit, OnChanges {
   selectColor(rowNum: number, columnNum: number) {
     const targetColor = this.dataStruct[rowNum][columnNum];
 
-    // console.log(rowNum, columnNum);
-    // console.log(targetColor.color);
-
     this.selectedColor.emit(targetColor);
   }
 
@@ -78,28 +77,17 @@ export class PaletteTableComponent implements OnInit, OnChanges {
       : 'black';
   }
 
-  async getTableData() {
-    if (this.color) {
+  async getTableData(color: string | null) {
+    if (color) {
       this.dataStruct = await this.cus.generateAllOklchVariants(
-        this.color,
+        color,
         this.lightSteps,
-        this.chromaSteps
+        this.chromaSteps,
       );
 
       this.getTableColumnHeaders();
     } else {
       console.warn(`no color for palette table`);
     }
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    // console.log(`-----OnChanges`);
-
-    this.getTableData();
-  }
-
-  ngOnInit(): void {
-    // console.log(`-----OnInit`);
-    // this.getTableData();
   }
 }
