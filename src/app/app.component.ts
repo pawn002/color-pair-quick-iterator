@@ -35,10 +35,10 @@ import { PaletteTableComponent } from './palette-table/palette-table.component';
 export class AppComponent {
   cus = inject(ColorUtilService);
 
-  colorPickerOneSelectedColor: string | null = null;
+  colorPickerOneSelectedColor: string = '';
   colorPickerOneComparedColor: string = '';
 
-  colorPickerTwoSelectedColor: string | null = null;
+  colorPickerTwoSelectedColor: string = '';
   colorPickerTwoComparedColor: string = '';
 
   contrastType: ContrastType | 'apca object' = 'apca';
@@ -60,12 +60,12 @@ export class AppComponent {
     }
   }
 
-  handleSliderInputInput(inputNumber: 'One' | 'Two', event: string) {
-    if (inputNumber === 'One') {
+  handleSliderInputInput(inputNumber: 'One' | 'Two', event: string | null) {
+    if (inputNumber === 'One' && event) {
       this.colorPickerOneComparedColor = event;
     }
 
-    if (inputNumber === 'Two') {
+    if (inputNumber === 'Two' && event) {
       this.colorPickerTwoComparedColor = event;
     }
   }
