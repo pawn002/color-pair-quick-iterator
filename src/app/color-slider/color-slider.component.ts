@@ -63,7 +63,7 @@ export class ColorSliderComponent {
         this.gradient('off');
       }
 
-      if (resetSlider) {
+      if (resetSlider && this.initValue) {
         this.reset();
       }
     });
@@ -149,7 +149,7 @@ export class ColorSliderComponent {
     if (this.initValue) {
       element.value = this.initValue.toString();
     } else {
-      console.error(`trouble resetting slider`);
+      console.error(`trouble resetting slider, initValue is ${this.initValue}`);
     }
   }
 
