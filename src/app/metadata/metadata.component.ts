@@ -1,11 +1,4 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  effect,
-  inject,
-  input,
-} from '@angular/core';
+import { Component, effect, inject, input } from '@angular/core';
 import { ColorUtilService, ColorMetaObj } from '../services/color-util.service';
 import { ColorMetricsService } from '../services/color-metrics.service';
 
@@ -27,10 +20,9 @@ export class SuccessesObj {
   styleUrls: ['./metadata.component.scss'],
   standalone: true,
 })
-export class MetadataComponent implements OnChanges {
+export class MetadataComponent {
   colorOne = input<string | null>(null);
   colorTwo = input<string | null>(null);
-  // @Input() colorTwo: string | null = null;
 
   cus = inject(ColorUtilService);
   cms = inject(ColorMetricsService);
@@ -118,6 +110,4 @@ export class MetadataComponent implements OnChanges {
       console.warn('no colors for successes');
     }
   }
-
-  ngOnChanges() {}
 }
