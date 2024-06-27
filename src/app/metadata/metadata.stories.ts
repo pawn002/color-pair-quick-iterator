@@ -6,11 +6,6 @@ const meta: Meta<MetadataComponent> = {
   title: 'App/Metadata Readout',
   component: MetadataComponent,
   tags: ['autodocs'],
-  render: (args: MetadataComponent) => ({
-    props: {
-      ...args,
-    },
-  }),
   argTypes: {
     colorOne: {
       control: 'color',
