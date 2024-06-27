@@ -6,6 +6,11 @@ const meta: Meta<ColorSliderComponent> = {
   title: 'App/Color Slider',
   component: ColorSliderComponent,
   tags: ['autodocs'],
+  // render: (args: ColorSliderComponent) => ({
+  //   props: {
+  //     ...args,
+  //   },
+  // }),
   argTypes: {
     color: {
       control: 'color',
