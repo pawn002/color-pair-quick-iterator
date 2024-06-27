@@ -47,7 +47,7 @@
         [inputName]="'Foreground Color'"
         [comparedColor]="colorPickerOneComparedColor"
         (selectedColor)="handleColorInputInput('One', $event)"
-        [comparedColor]="colorPickerOneSelectedColor"
+        [color]="colorPickerOneSelectedColor"
       ></app-color-picker>
       <app-color-slider
         [id]="'slider-0'"
@@ -82,7 +82,7 @@
         [inputId]="'cp-1'"
         [inputName]="'Background Color'"
         [comparedColor]="colorPickerTwoComparedColor"
-        [comparedColor]="colorPickerTwoSelectedColor"
+        [color]="colorPickerTwoSelectedColor"
         (selectedColor)="handleColorInputInput('Two', $event)"
       ></app-color-picker>
       <app-color-slider

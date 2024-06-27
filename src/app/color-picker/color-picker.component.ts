@@ -17,6 +17,7 @@ export class ColorPickerComponent {
   inputId = input<string>('fg-color');
   inputName = input<string>('foreground color');
   color = input<string>('');
+  debug = input<boolean>(false);
 
   comparedColor = model<string>('');
 
@@ -76,6 +77,10 @@ export class ColorPickerComponent {
         this.updateInputValue(colorFromParent);
 
         this.resetUiComparedColor();
+      } else {
+        if (this.debug()) {
+          console.warn('no color from parent');
+        }
       }
     });
   }
