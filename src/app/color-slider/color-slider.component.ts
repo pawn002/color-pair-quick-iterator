@@ -9,6 +9,10 @@ import {
 import { CommonModule } from '@angular/common';
 import { ColorUtilService } from '../services/color-util.service';
 
+export interface ResetObject {
+  reset: true;
+}
+
 @Component({
   selector: 'app-color-slider',
   templateUrl: './color-slider.component.html',
@@ -22,7 +26,7 @@ export class ColorSliderComponent {
   color = input<string | null>(null);
   constantChroma = input<boolean>(false);
   showGradient = input<boolean>(false);
-  resetSlider = input<Symbol>(Symbol());
+  resetSlider = input<ResetObject | null>(null);
   debug = input<boolean>(false);
 
   @Output() colorVariant = new EventEmitter<string | null>();
@@ -40,6 +44,8 @@ export class ColorSliderComponent {
   constructor() {
     effect(() => {
       const boundColor = this.color();
+      const showGradient = this.showGradient();
+      const resetSlider = this.resetSlider();
 
       if (boundColor) {
         this.getAndSetLightnessRange(boundColor, {
@@ -48,10 +54,6 @@ export class ColorSliderComponent {
       } else {
         console.warn(`no color specified to comp`);
       }
-    });
-
-    effect(() => {
-      const showGradient = this.showGradient();
 
       if (showGradient) {
         this.gradient('on');
@@ -60,10 +62,6 @@ export class ColorSliderComponent {
       if (!showGradient) {
         this.gradient('off');
       }
-    });
-
-    effect(() => {
-      const resetSlider = this.resetSlider();
 
       if (resetSlider) {
         this.reset();
