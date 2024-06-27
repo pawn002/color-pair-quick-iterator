@@ -35,11 +35,11 @@ import { PaletteTableComponent } from './palette-table/palette-table.component';
 export class AppComponent {
   cus = inject(ColorUtilService);
 
-  colorPickerOneSelectedColor: string | null = null;
-  colorPickerOneComparedColor: string | null = null;
+  colorPickerOneSelectedColor: string = '';
+  colorPickerOneComparedColor: string = '';
 
-  colorPickerTwoSelectedColor: string | null = null;
-  colorPickerTwoComparedColor: string | null = null;
+  colorPickerTwoSelectedColor: string = '';
+  colorPickerTwoComparedColor: string = '';
 
   contrastType: ContrastType | 'apca object' = 'apca';
 
@@ -48,7 +48,7 @@ export class AppComponent {
   constantChroma: boolean = true;
   showGradient: boolean = true;
 
-  currentAlertMessage: AlertMessagObj | null = null;
+  currentAlertMessage: AlertMessagObj = new AlertMessagObj();
 
   handleColorInputInput(inputNumber: 'One' | 'Two', event: string) {
     if (inputNumber === 'One') {
@@ -61,11 +61,11 @@ export class AppComponent {
   }
 
   handleSliderInputInput(inputNumber: 'One' | 'Two', event: string | null) {
-    if (inputNumber === 'One') {
+    if (inputNumber === 'One' && event) {
       this.colorPickerOneComparedColor = event;
     }
 
-    if (inputNumber === 'Two') {
+    if (inputNumber === 'Two' && event) {
       this.colorPickerTwoComparedColor = event;
     }
   }
@@ -80,7 +80,7 @@ export class AppComponent {
 
   handleColorPaletteButtonEvent(
     paletteChartNum: 'One' | 'Two',
-    event: TableColorCell
+    event: TableColorCell,
   ) {
     if (paletteChartNum === 'One') {
       this.colorPickerOneSelectedColor = event.color;
@@ -161,9 +161,8 @@ export class AppComponent {
   async setRandomColorPair(initialAppColors?: boolean) {
     const initColorPair = await this.cus.getRandomColorPair();
 
-    const randomColorPair = await this.cus.adjustColorPairForPresentation(
-      initColorPair
-    );
+    const randomColorPair =
+      await this.cus.adjustColorPairForPresentation(initColorPair);
 
     setTimeout(() => {
       this.colorPickerOneSelectedColor = randomColorPair[0];

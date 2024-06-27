@@ -1,16 +1,8 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  OnChanges,
-  SimpleChanges,
-  OnInit,
-} from '@angular/core';
-import { random, sample, times } from 'lodash';
+import { Component, EventEmitter, input, effect, Output } from '@angular/core';
+import { random, times } from 'lodash';
 
-export interface AlertMessagObj {
-  message: string;
+export class AlertMessagObj {
+  message: string = '';
 }
 
 @Component({
@@ -19,8 +11,9 @@ export interface AlertMessagObj {
   styleUrls: ['./alert.component.scss'],
   standalone: true,
 })
-export class AlertComponent implements OnInit, OnChanges {
-  @Input() alertMessage: AlertMessagObj | null = null;
+export class AlertComponent {
+  alertMessage = input<AlertMessagObj>(new AlertMessagObj());
+
   @Output() alertClosed = new EventEmitter<boolean>();
 
   showAlert: boolean = false;
@@ -41,21 +34,23 @@ export class AlertComponent implements OnInit, OnChanges {
     this.alertClosed.emit(true);
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.uniqId = this.generateRandomString(12);
+  constructor() {
+    effect(() => {
+      const alertMessage = this.alertMessage();
 
-    this.showAlert = true;
+      if (alertMessage.message) {
+        this.uniqId = this.generateRandomString(12);
 
-    if (this.timeout) {
-      clearTimeout(this.timeout);
-    }
+        this.showAlert = true;
 
-    this.timeout = setTimeout(() => {
-      this.showAlert = false;
-    }, 5000) as unknown as number;
-  }
+        if (this.timeout) {
+          clearTimeout(this.timeout);
+        }
 
-  ngOnInit(): void {
-    this.showAlert = false;
+        this.timeout = setTimeout(() => {
+          this.showAlert = false;
+        }, 5000) as unknown as number;
+      }
+    });
   }
 }

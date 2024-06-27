@@ -6,14 +6,26 @@ const meta: Meta<ColorSliderComponent> = {
   title: 'App/Color Slider',
   component: ColorSliderComponent,
   tags: ['autodocs'],
-  render: (args: ColorSliderComponent) => ({
-    props: {
-      ...args,
-    },
-  }),
+  // render: (args: ColorSliderComponent) => ({
+  //   props: {
+  //     ...args,
+  //   },
+  // }),
   argTypes: {
     color: {
       control: 'color',
+    },
+    constantChroma: {
+      control: 'boolean',
+    },
+    showGradient: {
+      control: 'boolean',
+    },
+    resetSlider: {
+      control: 'object',
+    },
+    debug: {
+      control: 'boolean',
     },
   },
 };
@@ -23,21 +35,22 @@ type Story = StoryObj<ColorSliderComponent>;
 
 // More on writing stories with args: https://storybook.js.org/docs/angular/writing-stories/args
 export const Typical: Story = {
-  args: {
-    color: 'coral',
-  },
+  args: {},
 };
 
 export const RgbRed: Story = {
   args: {
     color: 'red',
     constantChroma: true,
+    showGradient: true,
   },
 };
 export const RgbGreen: Story = {
   args: {
     color: 'green',
     constantChroma: true,
+    showGradient: true,
+    debug: true,
   },
 };
 export const RgbBlue: Story = {
@@ -50,6 +63,7 @@ export const RgbBlue: Story = {
 export const NoHueColor: Story = {
   args: {
     color: 'gray',
-    // showGradient: true,
+    showGradient: true,
+    debug: true,
   },
 };

@@ -1,8 +1,8 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, input } from '@angular/core';
 
 export class CopyToClipboardEvent {
   copied: boolean = false;
-  color: string | null = null;
+  color: string = '';
 }
 
 @Component({
@@ -12,12 +12,16 @@ export class CopyToClipboardEvent {
   standalone: true,
 })
 export class CopyToClipboardButtonComponent {
-  @Input() color: string | null = null;
+  color = input<string>('');
+  debug = input<boolean>(true);
+
   @Output() copyEvent = new EventEmitter<CopyToClipboardEvent>();
 
   async copyToClipboard(): Promise<void> {
-    if (this.color) {
-      const colorSansHex = this.color.replace('#', '');
+    const color = this.color();
+
+    if (color) {
+      const colorSansHex = color.replace('#', '');
 
       try {
         await navigator.clipboard.writeText(colorSansHex);
@@ -27,7 +31,9 @@ export class CopyToClipboardButtonComponent {
           color: colorSansHex,
         });
 
-        // console.log(this.color, 'copied to clipboard');
+        if (this.debug()) {
+          console.log(color, 'copied to clipboard');
+        }
       } catch (err) {
         this.copyEvent.emit({
           copied: false,

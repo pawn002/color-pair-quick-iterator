@@ -6,15 +6,11 @@ const meta: Meta<AlertComponent> = {
   title: 'App/Alert',
   component: AlertComponent,
   tags: ['autodocs'],
-  render: (args: AlertComponent) => ({
-    props: {
-      ...args,
-    },
-  }),
   argTypes: {},
 };
 
 export default meta;
+
 type Story = StoryObj<AlertComponent>;
 
 // More on writing stories with args: https://storybook.js.org/docs/angular/writing-stories/args
@@ -26,6 +22,14 @@ export const ColorCopied: Story = {
   args: {
     alertMessage: {
       message: 'Color One Variant, #ffe1df, copied to clipboard.',
+    },
+  },
+};
+
+export const AppWarning: Story = {
+  args: {
+    alertMessage: {
+      message: 'Warning',
     },
   },
 };

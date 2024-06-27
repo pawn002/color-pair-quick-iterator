@@ -1,12 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
-  inject,
-} from '@angular/core';
+import { Component, effect, inject, input } from '@angular/core';
 import {
   ColorMetricsService,
   ContrastType,
@@ -14,7 +6,7 @@ import {
 import { ColorUtilService } from '../services/color-util.service';
 
 export class ContrastObject {
-  score: number | null = null;
+  score: number = NaN;
   type: ContrastType | null = null;
 }
 
@@ -24,38 +16,47 @@ export class ContrastObject {
   styleUrls: ['./color-contrast.component.scss'],
   standalone: true,
 })
-export class ColorContrastComponent implements OnChanges {
-  @Input() colorOne: string | null = null;
-  @Input() colorTwo: string | null = null;
-  @Input() contrastType: ContrastType | 'apca object' | null = null;
-
-  @Output() contrast = new EventEmitter<ContrastObject>();
+export class ColorContrastComponent {
+  colorOne = input<string>('');
+  colorTwo = input<string>('');
+  contrastType = input<ContrastType | 'apca object'>('apca');
+  debug = input<boolean>(false);
 
   cus = inject(ColorUtilService);
   cms = inject(ColorMetricsService);
 
-  contrastScore: number | null = null;
+  contrastScore: number = NaN;
 
-  ngOnChanges(changes: SimpleChanges): void {
-    // console.log(changes);
+  constructor() {
+    effect(() => {
+      const colorOne = this.colorOne();
+      const colorTwo = this.colorTwo();
+      const contrastType = this.contrastType();
+      const debug = this.debug();
 
-    if (this.colorOne && this.colorTwo && this.contrastType) {
-      const score = this.cms.getContrast(
-        this.colorOne,
-        this.colorTwo,
-        this.contrastType === 'apca object' ? 'apca' : this.contrastType
-      );
+      if (colorOne && colorTwo && contrastType) {
+        const isApcaLike =
+          contrastType === 'apca object' || 'apca' ? true : false;
 
-      this.contrastScore = score;
+        const score = this.cms.getContrast(
+          colorOne,
+          colorTwo,
+          isApcaLike ? 'apca' : 'bpca',
+        );
 
-      if (score) {
-        this.contrastScore =
-          this.contrastType === 'apca object'
-            ? this.cus.getMinObjectDimension(score)
-            : this.contrastScore;
+        this.contrastScore = !score ? NaN : score;
+
+        if (score) {
+          this.contrastScore =
+            contrastType === 'apca object'
+              ? this.cus.getMinObjectDimension(score)
+              : this.contrastScore;
+        }
+      } else {
+        if (debug) {
+          console.warn('contrast comp has incomplete bindings');
+        }
       }
-    } else {
-      console.warn('contrast comp has incomplete bindings');
-    }
+    });
   }
 }

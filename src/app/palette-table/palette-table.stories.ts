@@ -6,11 +6,6 @@ const meta: Meta<PaletteTableComponent> = {
   title: 'App/Palette Table',
   component: PaletteTableComponent,
   tags: ['autodocs'],
-  render: (args: PaletteTableComponent) => ({
-    props: {
-      ...args,
-    },
-  }),
   argTypes: {
     color: {
       control: 'color',

@@ -16,7 +16,7 @@ export type ColorCoordArray = [number, number, number];
 export class ChromaMatchObject {
   success: boolean = false;
   colors: ColorPair | null = null;
-  chroma: number | null = null;
+  chroma: number = NaN;
 }
 
 export interface MinMaxLightObject {
@@ -158,7 +158,7 @@ export class ColorUtilService {
   }
 
   filterOutOfGamutVariants(
-    variants: Array<ColorCoordArray> | null
+    variants: Array<ColorCoordArray> | null,
   ): Promise<Array<ColorCoordArray>> {
     return new Promise(async (resolve, reject) => {
       if (!variants) {
@@ -193,7 +193,7 @@ export class ColorUtilService {
     const initVariantCollection = this.createVariants(color);
 
     const variantCollection = await this.filterOutOfGamutVariants(
-      initVariantCollection
+      initVariantCollection,
     );
 
     const parsedColor = this.parseColor(color);
@@ -291,7 +291,7 @@ export class ColorUtilService {
         (colorOneMinMaxLightObj.lightMax - colorOneMinMaxLightObj.lightMin) / 2;
 
       const oklchColorOne = new Color('srgb', parsedColorOne.coords).to(
-        'oklch'
+        'oklch',
       );
 
       const adjColorOne = new Color('oklch', [
@@ -311,23 +311,19 @@ export class ColorUtilService {
   }
 
   async matchChromas(colorpair: ColorPair): Promise<ChromaMatchObject> {
-    let pair: ChromaMatchObject = {
-      success: false,
-      colors: null,
-      chroma: null,
-    };
+    let pair: ChromaMatchObject = new ChromaMatchObject();
 
     const colorOneParsed = this.parseColor(colorpair[0]);
     const colorTwoParsed = this.parseColor(colorpair[1]);
 
     if (colorOneParsed && colorTwoParsed) {
       const colorOneOklch = new Color('srgb', colorOneParsed.coords).to(
-        'oklch'
+        'oklch',
       );
       const colorOneChroma = colorOneOklch.coords[1];
 
       const colorTwoOklch = new Color('srgb', colorTwoParsed.coords).to(
-        'oklch'
+        'oklch',
       );
       const colorTwoChroma = colorTwoOklch.coords[1];
 
@@ -457,7 +453,7 @@ export class ColorUtilService {
         chroma: lchColor.coords[1].toFixed(2),
         hue: lchColor.coords[2].toFixed(2),
         saturation: ((lchColor.coords[1] / lchColor.coords[0]) * 100).toFixed(
-          2
+          2,
         ),
       };
     }
@@ -496,7 +492,7 @@ export class ColorUtilService {
   generateAllOklchVariants(
     color: string,
     lightSteps: number,
-    chromaSteps: number
+    chromaSteps: number,
   ): Promise<TableData> {
     return new Promise((resolve, reject) => {
       const parsedColor = this.parseColor(color);
@@ -579,7 +575,7 @@ export class ColorUtilService {
 
             const colorVal = variantColorinGamut
               ? variantColor.to('srgb').toString({ format: 'hex' })
-              : null;
+              : '';
 
             const deltaE = colorVal ? this.calcDeltaE(colorVal, color) : null;
 
@@ -596,11 +592,9 @@ export class ColorUtilService {
               lightness: targetLightness,
               chroma: targetChroma,
               hue: colorHue,
-              deltaE: deltaE,
-              deltaChroma: dChroma,
-              deltaLightness: dLight,
-              // wacg2Comp: NaN,
-              // pContrast: NaN,
+              deltaE: !deltaE ? NaN : deltaE,
+              deltaChroma: !dChroma ? NaN : dChroma,
+              deltaLightness: !dLight ? NaN : dLight,
             };
 
             variantRow.push(variantObj);

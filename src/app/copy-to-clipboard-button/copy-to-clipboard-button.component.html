@@ -1,5 +1,5 @@
 <div class="comp-container">
-  <button [disabled]="!color" [id]="'ctc-0'" (click)="copyToClipboard()">
+  <button [disabled]="!color()" [id]="'ctc-0'" (click)="copyToClipboard()">
     <span class="sr-only"> Copy current variant to Clipboard </span>
     <div class="svg-container">
       <svg

@@ -6,14 +6,12 @@ const meta: Meta<CopyToClipboardButtonComponent> = {
   title: 'App/Copy to Clipboard Button',
   component: CopyToClipboardButtonComponent,
   tags: ['autodocs'],
-  render: (args: CopyToClipboardButtonComponent) => ({
-    props: {
-      ...args,
-    },
-  }),
   argTypes: {
     color: {
       control: 'color',
+    },
+    debug: {
+      control: 'boolean',
     },
   },
 };
@@ -23,13 +21,12 @@ type Story = StoryObj<CopyToClipboardButtonComponent>;
 
 // More on writing stories with args: https://storybook.js.org/docs/angular/writing-stories/args
 export const Typical: Story = {
-  args: {
-    color: null,
-  },
+  args: {},
 };
 
 export const SomethingToCopy: Story = {
   args: {
     color: 'red',
+    debug: true,
   },
 };

@@ -1,12 +1,10 @@
 import {
   Component,
-  Input,
-  OnChanges,
-  OnInit,
+  input,
   Output,
   EventEmitter,
-  SimpleChanges,
   inject,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ColorUtilService } from '../services/color-util.service';
@@ -22,42 +20,72 @@ export interface ResetObject {
   imports: [CommonModule],
   standalone: true,
 })
-export class ColorSliderComponent implements OnInit, OnChanges {
-  @Input() id: string | 'slider-0' = 'slider-0';
-  @Input() name: string | 'color-slider' = 'color-slider';
-  @Input() color: string | null = null;
-  @Input() constantChroma: boolean = false;
-  @Input() showGradient: boolean = false;
-  @Input() resetSlider: ResetObject | null = null;
+export class ColorSliderComponent {
+  id = input<string | 'slider-0'>('slider-0');
+  name = input<string | 'color-slider'>('color-slider');
+  color = input<string>('');
+  constantChroma = input<boolean>(false);
+  showGradient = input<boolean>(false);
+  resetSlider = input<ResetObject | null>(null);
+  debug = input<boolean>(false);
+
   @Output() colorVariant = new EventEmitter<string | null>();
 
   cus = inject(ColorUtilService);
 
-  debug: boolean = false;
-  devColorVariant: string | null = null;
+  devColorVariant: string = '';
 
-  slideInterval: number | null = null;
-  slideMin: number | null = null;
-  slideMax: number | null = null;
-  initValue: number | null = null;
-  value: number | null = null;
+  slideInterval: number = NaN;
+  slideMin: number = NaN;
+  slideMax: number = NaN;
+  initValue: number = NaN;
+  value: number = NaN;
 
-  getInitValue() {
-    return this.initValue;
+  constructor() {
+    effect(() => {
+      const boundColor = this.color();
+      const showGradient = this.showGradient();
+      const resetSlider = this.resetSlider();
+      const debug = this.debug();
+
+      if (boundColor) {
+        this.getAndSetLightnessRange(boundColor, {
+          constantChroma: this.constantChroma(),
+        });
+      } else {
+        if (debug) {
+          console.warn(`no color specified to comp`);
+        }
+      }
+
+      if (showGradient) {
+        this.gradient('on');
+      }
+
+      if (!showGradient) {
+        this.gradient('off');
+      }
+
+      if (resetSlider && this.initValue) {
+        this.reset();
+      }
+    });
   }
 
   sendInitialLightVariant() {
-    // Good UX to just send the input color?
-    this.colorVariant.emit(this.color);
+    const color = this.color();
 
-    if (this.debug) {
-      this.devColorVariant = this.color;
+    // Good UX to just send the input color?
+    this.colorVariant.emit(color);
+
+    if (this.debug()) {
+      this.devColorVariant = color;
     }
   }
 
   async getAndSetLightnessRange(
     color: string,
-    options?: { constantChroma: boolean }
+    options?: { constantChroma: boolean },
   ) {
     const rangeObject = await this.cus.getMinMaxLight(color);
 
@@ -94,16 +122,18 @@ export class ColorSliderComponent implements OnInit, OnChanges {
     if (inputElem) {
       const lightValue = parseFloat(inputElem.value);
 
-      if (this.color) {
+      const boundColor = this.color();
+
+      if (boundColor) {
         const lightnessVariant = this.cus.createSrgbColor(
-          this.color,
-          lightValue
+          boundColor,
+          lightValue,
         );
 
-        if (this.debug) {
+        if (this.debug()) {
           console.log(`slide modding ${this.color} to ${lightnessVariant}`);
 
-          this.devColorVariant = lightnessVariant;
+          this.devColorVariant = !lightnessVariant ? '' : lightnessVariant;
         }
 
         this.colorVariant.emit(lightnessVariant);
@@ -115,12 +145,12 @@ export class ColorSliderComponent implements OnInit, OnChanges {
 
   reset() {
     // TODO: Isn't there an angular way to do this?
-    const element = document.getElementById(this.id) as HTMLInputElement;
+    const element = document.getElementById(this.id()) as HTMLInputElement;
 
     if (this.initValue) {
       element.value = this.initValue.toString();
     } else {
-      console.error(`trouble resetting slider`);
+      console.error(`trouble resetting slider, initValue is ${this.initValue}`);
     }
   }
 
@@ -144,15 +174,15 @@ export class ColorSliderComponent implements OnInit, OnChanges {
   redefineVariable(
     element: HTMLElement,
     variableName: string,
-    newValue: string
+    newValue: string,
   ) {
     element.style.setProperty(variableName, newValue);
   }
 
   redefineGradientStops(lightMin: number, lightMax: number) {
-    if (this.color) {
+    if (this.color()) {
       const targetElement = document.getElementById(
-        `cc-${this.id}`
+        `cc-${this.id}`,
       ) as HTMLElement;
 
       const stops = [
@@ -172,9 +202,17 @@ export class ColorSliderComponent implements OnInit, OnChanges {
         const targetLight = stopInterval * i + lightMin;
         targetLight;
 
-        const stopColor = this.cus.createSrgbColor(this.color, targetLight);
+        const boundColor = this.color();
 
-        stopVals.push(stopColor);
+        if (!boundColor) {
+          console.error(`no color bound to redefine gradient stops with. . .`);
+
+          break;
+        } else {
+          const stopColor = this.cus.createSrgbColor(boundColor, targetLight);
+
+          stopVals.push(stopColor);
+        }
       }
 
       // assign new stop values
@@ -191,30 +229,6 @@ export class ColorSliderComponent implements OnInit, OnChanges {
       }
     } else {
       console.log(`no color specified`);
-    }
-  }
-
-  ngOnInit(): void {}
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.color) {
-      this.getAndSetLightnessRange(this.color, {
-        constantChroma: this.constantChroma,
-      });
-    } else {
-      console.warn(`no color specified to comp`);
-    }
-
-    if (this.showGradient) {
-      this.gradient('on');
-    }
-
-    if (!this.showGradient) {
-      this.gradient('off');
-    }
-
-    if (this.resetSlider) {
-      this.reset();
     }
   }
 }
