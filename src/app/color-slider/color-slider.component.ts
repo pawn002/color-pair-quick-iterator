@@ -46,13 +46,16 @@ export class ColorSliderComponent {
       const boundColor = this.color();
       const showGradient = this.showGradient();
       const resetSlider = this.resetSlider();
+      const debug = this.debug();
 
       if (boundColor) {
         this.getAndSetLightnessRange(boundColor, {
           constantChroma: this.constantChroma(),
         });
       } else {
-        console.warn(`no color specified to comp`);
+        if (debug) {
+          console.warn(`no color specified to comp`);
+        }
       }
 
       if (showGradient) {
