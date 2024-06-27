@@ -144,8 +144,10 @@ export class ColorSliderComponent {
   }
 
   reset() {
+    const compId = this.id();
+
     // TODO: Isn't there an angular way to do this?
-    const element = document.getElementById(this.id()) as HTMLInputElement;
+    const element = document.getElementById(compId) as HTMLInputElement;
 
     if (this.initValue) {
       element.value = this.initValue.toString();
@@ -155,8 +157,10 @@ export class ColorSliderComponent {
   }
 
   gradient(val: 'on' | 'off') {
+    const compId = this.id();
+
     // TODO: Anguar way to do this?
-    const targetElem = document.getElementById(`cc-${this.id}`) as HTMLElement;
+    const targetElem = document.getElementById(`cc-${compId}`) as HTMLElement;
 
     if (targetElem) {
       if (val === 'on') {
@@ -180,9 +184,11 @@ export class ColorSliderComponent {
   }
 
   redefineGradientStops(lightMin: number, lightMax: number) {
+    const compId = this.id();
+
     if (this.color()) {
       const targetElement = document.getElementById(
-        `cc-${this.id}`,
+        `cc-${compId}`,
       ) as HTMLElement;
 
       const stops = [
