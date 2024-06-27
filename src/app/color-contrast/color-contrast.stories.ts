@@ -39,6 +39,7 @@ export const WCAGEnhanced: Story = {
     colorOne: 'white',
     colorTwo: 'black',
     contrastType: 'bpca',
+    debug: true,
   },
 };
 

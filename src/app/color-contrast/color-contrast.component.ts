@@ -35,8 +35,7 @@ export class ColorContrastComponent {
       const debug = this.debug();
 
       if (colorOne && colorTwo && contrastType) {
-        const isApcaLike =
-          contrastType === 'apca object' || 'apca' ? true : false;
+        const isApcaLike = contrastType.search('apca') > -1 ? true : false;
 
         const score = this.cms.getContrast(
           colorOne,
