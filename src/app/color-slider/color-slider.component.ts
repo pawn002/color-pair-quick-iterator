@@ -35,11 +35,11 @@ export class ColorSliderComponent {
 
   devColorVariant: string = '';
 
-  slideInterval: number | null = null;
-  slideMin: number | null = null;
-  slideMax: number | null = null;
-  initValue: number | null = null;
-  value: number | null = null;
+  slideInterval: number = NaN;
+  slideMin: number = NaN;
+  slideMax: number = NaN;
+  initValue: number = NaN;
+  value: number = NaN;
 
   constructor() {
     effect(() => {

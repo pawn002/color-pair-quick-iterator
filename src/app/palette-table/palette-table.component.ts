@@ -13,9 +13,9 @@ export class TableColorCell {
   lightness: number = NaN;
   chroma: number = NaN;
   hue: number = NaN;
-  deltaE: number | null = null;
-  deltaLightness: number | null = null;
-  deltaChroma: number | null = null;
+  deltaE: number = NaN;
+  deltaLightness: number = NaN;
+  deltaChroma: number = NaN;
 }
 
 export type TableRow = Array<TableColorCell>;

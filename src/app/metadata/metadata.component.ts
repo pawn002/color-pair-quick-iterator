@@ -3,10 +3,10 @@ import { ColorUtilService, ColorMetaObj } from '../services/color-util.service';
 import { ColorMetricsService } from '../services/color-metrics.service';
 
 export class DifferencesDataObj {
-  deltaE: number | null = null;
-  wcag2Old: number | null = null;
-  wcag2New: number | null = null;
-  apca: number | null = null;
+  deltaE: number = NaN;
+  wcag2Old: number = NaN;
+  wcag2New: number = NaN;
+  apca: number = NaN;
 }
 export class SuccessesObj {
   text: 'pass' | 'fail' | null = null;
@@ -27,12 +27,7 @@ export class MetadataComponent {
   cus = inject(ColorUtilService);
   cms = inject(ColorMetricsService);
 
-  differences: DifferencesDataObj = {
-    deltaE: null,
-    wcag2Old: null,
-    wcag2New: null,
-    apca: NaN,
-  };
+  differences: DifferencesDataObj = new DifferencesDataObj();
 
   successes: SuccessesObj = {
     text: null,
@@ -71,13 +66,18 @@ export class MetadataComponent {
 
   getColorDifference(colOne: string | null, colTwo: string | null) {
     if (colOne && colTwo) {
-      this.differences.deltaE = this.cus.calcDeltaE(colOne, colTwo);
+      const deltaE = this.cus.calcDeltaE(colOne, colTwo);
+      const wcag2New = this.cms.getContrast(colOne, colTwo, 'bpca');
+      const wcag2Old = this.cus.calcWcag2(colOne, colTwo);
+      const apca = this.cms.getContrast(colOne, colTwo, 'apca');
 
-      this.differences.wcag2New = this.cms.getContrast(colOne, colTwo, 'bpca');
+      this.differences.deltaE = !deltaE ? NaN : deltaE;
 
-      this.differences.wcag2Old = this.cus.calcWcag2(colOne, colTwo);
+      this.differences.wcag2New = !wcag2New ? NaN : wcag2New;
 
-      this.differences.apca = this.cms.getContrast(colOne, colTwo, 'apca');
+      this.differences.wcag2Old = !wcag2Old ? NaN : wcag2Old;
+
+      this.differences.apca = !apca ? NaN : apca;
     } else {
       console.warn(`failed to get color differences`);
     }

@@ -6,7 +6,7 @@ import {
 import { ColorUtilService } from '../services/color-util.service';
 
 export class ContrastObject {
-  score: number | null = null;
+  score: number = NaN;
   type: ContrastType | null = null;
 }
 
@@ -24,7 +24,7 @@ export class ColorContrastComponent {
   cus = inject(ColorUtilService);
   cms = inject(ColorMetricsService);
 
-  contrastScore: number | null = null;
+  contrastScore: number = NaN;
 
   constructor() {
     effect(() => {
@@ -42,7 +42,7 @@ export class ColorContrastComponent {
           isApcaLike ? 'apca' : 'bpca',
         );
 
-        this.contrastScore = score;
+        this.contrastScore = !score ? NaN : score;
 
         if (score) {
           this.contrastScore =

@@ -16,7 +16,7 @@ export type ColorCoordArray = [number, number, number];
 export class ChromaMatchObject {
   success: boolean = false;
   colors: ColorPair | null = null;
-  chroma: number | null = null;
+  chroma: number = NaN;
 }
 
 export interface MinMaxLightObject {
@@ -311,11 +311,7 @@ export class ColorUtilService {
   }
 
   async matchChromas(colorpair: ColorPair): Promise<ChromaMatchObject> {
-    let pair: ChromaMatchObject = {
-      success: false,
-      colors: null,
-      chroma: null,
-    };
+    let pair: ChromaMatchObject = new ChromaMatchObject();
 
     const colorOneParsed = this.parseColor(colorpair[0]);
     const colorTwoParsed = this.parseColor(colorpair[1]);
@@ -596,9 +592,9 @@ export class ColorUtilService {
               lightness: targetLightness,
               chroma: targetChroma,
               hue: colorHue,
-              deltaE: deltaE,
-              deltaChroma: dChroma,
-              deltaLightness: dLight,
+              deltaE: !deltaE ? NaN : deltaE,
+              deltaChroma: !dChroma ? NaN : dChroma,
+              deltaLightness: !dLight ? NaN : dLight,
             };
 
             variantRow.push(variantObj);
