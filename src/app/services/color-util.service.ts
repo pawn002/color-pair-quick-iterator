@@ -158,7 +158,7 @@ export class ColorUtilService {
   }
 
   filterOutOfGamutVariants(
-    variants: Array<ColorCoordArray> | null
+    variants: Array<ColorCoordArray> | null,
   ): Promise<Array<ColorCoordArray>> {
     return new Promise(async (resolve, reject) => {
       if (!variants) {
@@ -193,7 +193,7 @@ export class ColorUtilService {
     const initVariantCollection = this.createVariants(color);
 
     const variantCollection = await this.filterOutOfGamutVariants(
-      initVariantCollection
+      initVariantCollection,
     );
 
     const parsedColor = this.parseColor(color);
@@ -291,7 +291,7 @@ export class ColorUtilService {
         (colorOneMinMaxLightObj.lightMax - colorOneMinMaxLightObj.lightMin) / 2;
 
       const oklchColorOne = new Color('srgb', parsedColorOne.coords).to(
-        'oklch'
+        'oklch',
       );
 
       const adjColorOne = new Color('oklch', [
@@ -322,12 +322,12 @@ export class ColorUtilService {
 
     if (colorOneParsed && colorTwoParsed) {
       const colorOneOklch = new Color('srgb', colorOneParsed.coords).to(
-        'oklch'
+        'oklch',
       );
       const colorOneChroma = colorOneOklch.coords[1];
 
       const colorTwoOklch = new Color('srgb', colorTwoParsed.coords).to(
-        'oklch'
+        'oklch',
       );
       const colorTwoChroma = colorTwoOklch.coords[1];
 
@@ -457,7 +457,7 @@ export class ColorUtilService {
         chroma: lchColor.coords[1].toFixed(2),
         hue: lchColor.coords[2].toFixed(2),
         saturation: ((lchColor.coords[1] / lchColor.coords[0]) * 100).toFixed(
-          2
+          2,
         ),
       };
     }
@@ -496,7 +496,7 @@ export class ColorUtilService {
   generateAllOklchVariants(
     color: string,
     lightSteps: number,
-    chromaSteps: number
+    chromaSteps: number,
   ): Promise<TableData> {
     return new Promise((resolve, reject) => {
       const parsedColor = this.parseColor(color);
@@ -579,7 +579,7 @@ export class ColorUtilService {
 
             const colorVal = variantColorinGamut
               ? variantColor.to('srgb').toString({ format: 'hex' })
-              : null;
+              : '';
 
             const deltaE = colorVal ? this.calcDeltaE(colorVal, color) : null;
 
@@ -599,8 +599,6 @@ export class ColorUtilService {
               deltaE: deltaE,
               deltaChroma: dChroma,
               deltaLightness: dLight,
-              // wacg2Comp: NaN,
-              // pContrast: NaN,
             };
 
             variantRow.push(variantObj);

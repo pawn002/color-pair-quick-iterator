@@ -9,7 +9,7 @@ import {
 import { ColorUtilService } from '../services/color-util.service';
 
 export class TableColorCell {
-  color: string | null = null;
+  color: string = '';
   lightness: number = NaN;
   chroma: number = NaN;
   hue: number = NaN;
@@ -29,7 +29,7 @@ export type TableData = Array<TableRow>;
   standalone: true,
 })
 export class PaletteTableComponent {
-  color = input<string | null>(null);
+  color = input<string>('');
 
   @Output() selectedColor = new EventEmitter<TableColorCell>();
 

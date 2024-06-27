@@ -1,14 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
-  effect,
-  inject,
-  input,
-} from '@angular/core';
+import { Component, effect, inject, input } from '@angular/core';
 import {
   ColorMetricsService,
   ContrastType,
@@ -38,13 +28,17 @@ export class ColorContrastComponent {
 
   constructor() {
     effect(() => {
-      if (this.colorOne() && this.colorTwo() && this.contrastType) {
+      const colorOne = this.colorOne();
+      const colorTwo = this.colorTwo();
+      const contrastType = this.contrastType();
+
+      if (colorOne && colorTwo && contrastType) {
         const isApcaLike =
-          this.contrastType() === 'apca object' || 'apca' ? true : false;
+          contrastType === 'apca object' || 'apca' ? true : false;
 
         const score = this.cms.getContrast(
-          this.colorOne(),
-          this.colorTwo(),
+          colorOne,
+          colorTwo,
           isApcaLike ? 'apca' : 'bpca',
         );
 
@@ -52,7 +46,7 @@ export class ColorContrastComponent {
 
         if (score) {
           this.contrastScore =
-            this.contrastType() === 'apca object'
+            contrastType === 'apca object'
               ? this.cus.getMinObjectDimension(score)
               : this.contrastScore;
         }

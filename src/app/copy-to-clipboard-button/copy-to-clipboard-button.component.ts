@@ -1,8 +1,8 @@
-import { Component, Input, Output, EventEmitter, input } from '@angular/core';
+import { Component, Output, EventEmitter, input } from '@angular/core';
 
 export class CopyToClipboardEvent {
   copied: boolean = false;
-  color: string | null = null;
+  color: string = '';
 }
 
 @Component({
@@ -12,7 +12,7 @@ export class CopyToClipboardEvent {
   standalone: true,
 })
 export class CopyToClipboardButtonComponent {
-  color = input<string | null>(null);
+  color = input<string>('');
   debug = input<boolean>(true);
 
   @Output() copyEvent = new EventEmitter<CopyToClipboardEvent>();

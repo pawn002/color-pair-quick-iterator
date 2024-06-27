@@ -23,7 +23,7 @@ export interface ResetObject {
 export class ColorSliderComponent {
   id = input<string | 'slider-0'>('slider-0');
   name = input<string | 'color-slider'>('color-slider');
-  color = input<string | null>(null);
+  color = input<string>('');
   constantChroma = input<boolean>(false);
   showGradient = input<boolean>(false);
   resetSlider = input<ResetObject | null>(null);
@@ -33,7 +33,7 @@ export class ColorSliderComponent {
 
   cus = inject(ColorUtilService);
 
-  devColorVariant: string | null = null;
+  devColorVariant: string = '';
 
   slideInterval: number | null = null;
   slideMin: number | null = null;
@@ -69,16 +69,14 @@ export class ColorSliderComponent {
     });
   }
 
-  getInitValue() {
-    return this.initValue;
-  }
-
   sendInitialLightVariant() {
+    const color = this.color();
+
     // Good UX to just send the input color?
-    this.colorVariant.emit(this.color());
+    this.colorVariant.emit(color);
 
     if (this.debug()) {
-      this.devColorVariant = this.color();
+      this.devColorVariant = color;
     }
   }
 
@@ -132,7 +130,7 @@ export class ColorSliderComponent {
         if (this.debug()) {
           console.log(`slide modding ${this.color} to ${lightnessVariant}`);
 
-          this.devColorVariant = lightnessVariant;
+          this.devColorVariant = !lightnessVariant ? '' : lightnessVariant;
         }
 
         this.colorVariant.emit(lightnessVariant);
@@ -179,7 +177,7 @@ export class ColorSliderComponent {
   }
 
   redefineGradientStops(lightMin: number, lightMax: number) {
-    if (this.color) {
+    if (this.color()) {
       const targetElement = document.getElementById(
         `cc-${this.id}`,
       ) as HTMLElement;

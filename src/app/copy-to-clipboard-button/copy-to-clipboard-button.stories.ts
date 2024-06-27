@@ -21,9 +21,7 @@ type Story = StoryObj<CopyToClipboardButtonComponent>;
 
 // More on writing stories with args: https://storybook.js.org/docs/angular/writing-stories/args
 export const Typical: Story = {
-  args: {
-    color: null,
-  },
+  args: {},
 };
 
 export const SomethingToCopy: Story = {

@@ -21,8 +21,8 @@ export class SuccessesObj {
   standalone: true,
 })
 export class MetadataComponent {
-  colorOne = input<string | null>(null);
-  colorTwo = input<string | null>(null);
+  colorOne = input<string>('');
+  colorTwo = input<string>('');
 
   cus = inject(ColorUtilService);
   cms = inject(ColorMetricsService);

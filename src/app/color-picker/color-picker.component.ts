@@ -2,12 +2,9 @@ import {
   Component,
   effect,
   EventEmitter,
-  Input,
   input,
   model,
-  OnChanges,
   Output,
-  SimpleChanges,
 } from '@angular/core';
 
 @Component({
@@ -17,17 +14,17 @@ import {
   standalone: true,
 })
 export class ColorPickerComponent {
-  inputId = input('fg-color');
-  inputName = input('foreground color');
-  color = input<string | null>(null);
+  inputId = input<string>('fg-color');
+  inputName = input<string>('foreground color');
+  color = input<string>('');
 
-  comparedColor = model<string | null>(null);
+  comparedColor = model<string>('');
 
   @Output() selectedColor = new EventEmitter<string>();
 
-  uiComparedColor: string | null = null;
+  uiComparedColor: string = '';
 
-  uiColor: string | null = null;
+  uiColor: string = '';
 
   handleColorChange(inputColor: string) {
     // update ui main color
@@ -65,7 +62,9 @@ export class ColorPickerComponent {
 
   constructor() {
     effect(() => {
-      this.uiComparedColor = this.comparedColor();
+      const comparedColor = this.comparedColor();
+
+      this.uiComparedColor = comparedColor;
     });
 
     effect(() => {

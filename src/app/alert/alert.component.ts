@@ -12,14 +12,7 @@ export class AlertMessagObj {
   standalone: true,
 })
 export class AlertComponent {
-  /**
-   * 'Input' of type `AlertMessageObj`
-   *
-   * Part of Angular's transition away from `@Input()`
-   *
-   * Storybook incorrectly tracks `alertMessage` as a property with a type of `string.
-   */
-  alertMessage = input(new AlertMessagObj());
+  alertMessage = input<AlertMessagObj>(new AlertMessagObj());
 
   @Output() alertClosed = new EventEmitter<boolean>();
 
@@ -43,7 +36,9 @@ export class AlertComponent {
 
   constructor() {
     effect(() => {
-      if (this.alertMessage().message) {
+      const alertMessage = this.alertMessage();
+
+      if (alertMessage.message) {
         this.uniqId = this.generateRandomString(12);
 
         this.showAlert = true;
