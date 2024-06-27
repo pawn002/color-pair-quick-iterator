@@ -23,6 +23,7 @@ export class SuccessesObj {
 export class MetadataComponent {
   colorOne = input<string>('');
   colorTwo = input<string>('');
+  debug = input<boolean>(false);
 
   cus = inject(ColorUtilService);
   cms = inject(ColorMetricsService);
@@ -60,7 +61,9 @@ export class MetadataComponent {
         this.colorTwoMeta = this.cus.getColorMeta(colTwo);
       }
     } else {
-      console.warn(`failed to get color meta`);
+      if (this.debug()) {
+        console.warn(`failed to get color meta`);
+      }
     }
   }
 
@@ -79,7 +82,9 @@ export class MetadataComponent {
 
       this.differences.apca = !apca ? NaN : apca;
     } else {
-      console.warn(`failed to get color differences`);
+      if (this.debug()) {
+        console.warn(`failed to get color differences`);
+      }
     }
   }
 
@@ -101,13 +106,19 @@ export class MetadataComponent {
             ? 'invisible'
             : minDimension;
         } else {
-          console.warn(`something wonky with calculating scores`);
+          if (this.debug()) {
+            console.warn(`something wonky with calculating scores`);
+          }
         }
       } else {
-        console.warn(`trouble getting scores`);
+        if (this.debug()) {
+          console.warn(`trouble getting scores`);
+        }
       }
     } else {
-      console.warn('no colors for successes');
+      if (this.debug()) {
+        console.warn('no colors for successes');
+      }
     }
   }
 }
