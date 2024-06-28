@@ -44,12 +44,6 @@ hr {
   border-right: none;
 }
 
-details {
-  summary {
-    cursor: default;
-  }
-}
-
 sup {
   color: var(--min-body-text-black) !important;
   font-weight: 400 !important;
@@ -149,12 +143,13 @@ details > summary {
   margin-bottom: 0.3em;
   max-width: unset;
   text-align: center;
-  cursor: pointer;
 }
 
 button,
-input {
+input,
+summary {
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 strong {
