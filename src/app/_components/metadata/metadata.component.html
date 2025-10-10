@@ -1,0 +1,137 @@
+<div class="comp-container">
+  <div>
+    <h3>Successes and Minimums</h3>
+    <table>
+      <caption class="sr-only">
+        Various pass, fails or minimum dimensions related to visual elements.
+      </caption>
+      <thead class="sr-only">
+        <tr>
+          <th>Criteria</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Text</td>
+          <td>{{ successes().text }}</td>
+        </tr>
+        <tr>
+          <td>Large Text</td>
+          <td>{{ successes().largeText }}</td>
+        </tr>
+        <tr>
+          <td>
+            <cite><a href="#notes-object">Object</a></cite>
+          </td>
+          <td>{{ successes().objectMinDimension }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div>
+    <h3>Differences</h3>
+    <table>
+      <caption class="sr-only">
+        Differences between Foreground Color and Background Color.
+      </caption>
+      <thead class="sr-only">
+        <tr>
+          <th>Measurement</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Delta E</td>
+          <td>{{ differences().deltaE }}</td>
+        </tr>
+        <tr>
+          <td>
+            <cite><a href="#notes-perceptual-contrast"> Perceptual contrast</a></cite>
+          </td>
+          <td>{{ differences().apca }}</td>
+        </tr>
+        <tr>
+          <td>
+            <cite><a href="#notes-wcag2-compat"> WCAG 2 compatible</a></cite>
+          </td>
+          <td>{{ differences().wcag2New }}</td>
+        </tr>
+        <tr>
+          <td>
+            <cite><a href="#notes-wcag2">WCAG 2</a></cite>
+          </td>
+          <td>{{ differences().wcag2Old }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div>
+    <h3>Foreground Color</h3>
+    <table>
+      <caption class="sr-only">
+        Foreground Color Metadata
+      </caption>
+      <thead class="sr-only">
+        <tr>
+          <th>Measurement</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Saturation</td>
+          <td>{{ colorOneMeta()?.saturation }}</td>
+        </tr>
+        <tr>
+          <td>Lightness</td>
+          <td>{{ colorOneMeta()?.lightness }}</td>
+        </tr>
+        <tr>
+          <td>Chroma</td>
+          <td>{{ colorOneMeta()?.chroma }}</td>
+        </tr>
+        <tr>
+          <td>Hue</td>
+          <td>{{ colorOneMeta()?.hue }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div>
+    <h3>Background Color</h3>
+    <table>
+      <caption class="sr-only">
+        Background Color Metadata
+      </caption>
+      <thead class="sr-only">
+        <tr>
+          <th>Measurement</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Saturation</td>
+          <td>{{ colorTwoMeta()?.saturation }}</td>
+        </tr>
+        <tr>
+          <td>Lightness</td>
+          <td>{{ colorTwoMeta()?.lightness }}</td>
+        </tr>
+        <tr>
+          <td>Chroma</td>
+          <td>{{ colorTwoMeta()?.chroma }}</td>
+        </tr>
+        <tr>
+          <td>Hue</td>
+          <td>{{ colorTwoMeta()?.hue }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

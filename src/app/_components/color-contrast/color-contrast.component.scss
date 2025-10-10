@@ -1,0 +1,16 @@
+.comp-container {
+  padding: 0.5em 0.25ch;
+  border: var(--min-body-text-black) solid 3px;
+
+  .score-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .score {
+      color: var(--ideal-body-text-black);
+      font-weight: 600;
+      font-family: var(--mono-font);
+    }
+  }
+}

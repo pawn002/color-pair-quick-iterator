@@ -1,0 +1,32 @@
+.comp-container {
+  display: inline-block;
+  position: relative;
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 5px 5px 0;
+    width: 50px;
+    height: 50px;
+    padding: 0.25rem;
+    border: transparent 2px solid;
+    background-color: var(--app-white);
+    min-width: var(--min-hit-dimension-aaa);
+    min-height: var(--min-hit-dimension-aaa);
+
+    &:hover {
+      box-shadow: 0 4px 0 0 var(--ui-shadow-color);
+    }
+
+    .svg-container {
+      width: 22px;
+      height: auto;
+
+      svg {
+        fill: var(--app-black);
+        display: block;
+      }
+    }
+  }
+}

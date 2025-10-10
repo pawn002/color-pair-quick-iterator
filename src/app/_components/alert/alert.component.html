@@ -1,0 +1,8 @@
+<div class="comp-container" role="alert">
+  <div class="alert-content">
+    @if (showAlert()) {
+      <p [innerText]="alertMessage().message"></p>
+      <p class="msg-id">Message ID: {{ uniqId() }}</p>
+    }
+  </div>
+</div>

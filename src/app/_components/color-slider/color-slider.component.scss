@@ -1,0 +1,79 @@
+.comp-container {
+  --default-background: var(--app-white);
+  --grad-stop-0: black;
+  --grad-stop-1: rgb(8.6104% 8.6104% 8.6104%);
+  --grad-stop-2: rgb(28.06% 28.06% 28.06%);
+  --grad-stop-3: rgb(50.211% 50.211% 50.211%);
+  --grad-stop-4: rgb(74.321% 74.321% 74.321%);
+  --grad-stop-5: white;
+  --gradient-background: linear-gradient(
+    to right,
+    black,
+    var(--grad-stop-0) calc((var(--min-hit-dimension-aaa) / 2) + 8px),
+    var(--grad-stop-1),
+    var(--grad-stop-2),
+    var(--grad-stop-3),
+    var(--grad-stop-4),
+    var(--grad-stop-5) calc(100% - (var(--min-hit-dimension-aaa) / 2) - 8px),
+    white
+  );
+
+  box-sizing: border-box;
+  display: flex;
+
+  /* gives input more room on left and right ends to be hit more successfully */
+  padding: 0 calc(var(--min-hit-dimension-aaa) / 2);
+  border: 2px solid var(--app-white);
+  border-left: none;
+  border-right: none;
+  align-items: center;
+  background: var(--default-background);
+
+  &:hover {
+    box-shadow: 0 4px 0 0 var(--ui-shadow-color);
+  }
+
+  input {
+    flex-grow: 1;
+    width: 100%;
+    height: 46px;
+    min-height: var(--min-hit-dimension-aaa);
+    margin: 0;
+    background: var(--default-background);
+    background-color: red;
+  }
+
+  .special-case {
+    display: flex;
+    flex-grow: 1;
+    height: 46px;
+    min-height: var(--min-hit-dimension-aaa);
+    align-items: center;
+
+    /* TODO: what do custom input text need to be? <p>? */
+    div {
+      font-family: var(--mono-font);
+      font-size: var(--min-body-text-size);
+      font-weight: 400;
+    }
+  }
+}
+
+.dev-overlay {
+  display: none;
+  position: absolute;
+  gap: 1rem;
+  right: 0;
+  bottom: 0;
+
+  &.active {
+    display: flex;
+  }
+
+  .light-variant-chip {
+    border-radius: 100%;
+    width: 15px;
+    height: 15px;
+    border: 15px solid var(--app-black);
+  }
+}
