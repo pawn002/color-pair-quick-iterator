@@ -42,16 +42,33 @@ Components live in `src/app/_components/` with co-located files:
 - **bridge-pca** - WCAG ratio approximation (partial implementation in BpcaService due to dependency issues)
 - **d3** - Scale utilities for contrast-to-size mapping
 
+## TypeScript Best Practices
+
+- Use strict type checking
+- Prefer type inference when the type is obvious
+- Avoid the `any` type; use `unknown` when type is uncertain
+
 ## Angular 20 Conventions
 
 This project follows modern Angular patterns:
 
-- **Standalone components** - No NgModules; do not add `standalone: true` to decorators
-- **Signals** - Use `signal()`, `computed()`, `input()`, `output()` for state
+- **Standalone components** - No NgModules; do not set `standalone: true` in decorators (it's the default)
+- **Signals** - Use `signal()`, `computed()` for state; use `update()` or `set()` (not `mutate`)
+- **Inputs/Outputs** - Use `input()` and `output()` functions instead of decorators
 - **Native control flow** - Use `@if`, `@for`, `@switch` instead of structural directives
 - **OnPush change detection** - Set `changeDetection: ChangeDetectionStrategy.OnPush`
 - **inject()** - Use function injection instead of constructor injection
 - **host bindings** - Use `host` object in decorators instead of `@HostBinding`/`@HostListener`
+- **Images** - Use `NgOptimizedImage` for static images (not for inline base64)
+- **Forms** - Prefer Reactive forms over Template-driven forms
+- **Bindings** - Use `class` and `style` bindings instead of `ngClass`/`ngStyle`
+- **Observables** - Use the async pipe in templates to handle observables
+
+## Services
+
+- Design services around a single responsibility
+- Use `providedIn: 'root'` for singleton services
+- Use `inject()` function instead of constructor injection
 
 ## Formatting
 
