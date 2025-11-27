@@ -100,4 +100,12 @@ We welcome contributions! Please read the [Contributing Guidelines](./contributi
 
 ## License
 
-This project is open source. Please refer to the LICENSE file in the root directory for details.
+This project is licensed under the **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0)**.
+
+This means:
+- ✅ You may use, modify, and build upon this work non-commercially
+- ✅ You must give appropriate credit to the original author
+- ✅ Derivative works must be licensed under the same terms
+- ❌ Commercial use is not permitted without explicit permission
+
+See the [LICENSE](../LICENSE) file for full details or visit [creativecommons.org/licenses/by-nc-sa/4.0/](https://creativecommons.org/licenses/by-nc-sa/4.0/).

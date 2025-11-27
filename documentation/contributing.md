@@ -756,7 +756,19 @@ chore(deps): update Angular to 20.3.4
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the same license as the project.
+This project is licensed under the **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0)**.
+
+By contributing to this project, you agree that:
+
+1. Your contributions will be licensed under the same CC BY-NC-SA 4.0 license
+2. You have the right to submit the contributions under this license
+3. Your contributions may be used, modified, and distributed non-commercially by others
+4. All derivative works must maintain the same license terms
+5. You will be credited as a contributor to the project
+
+**Important**: This is **not an open source license**. Commercial use of this project or derivative works is prohibited without explicit written permission from the project owner.
+
+For full license details, see the [LICENSE](../LICENSE) file or visit [creativecommons.org/licenses/by-nc-sa/4.0/](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
 ---
 
