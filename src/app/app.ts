@@ -1,4 +1,5 @@
-import { Component, signal, inject, AfterViewInit } from '@angular/core';
+import { Component, signal, inject, AfterViewInit, effect } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { ContrastType } from './services/color-metrics.service';
 import { ColorUtilService } from './services/color-util.service';
@@ -31,6 +32,8 @@ import { PaletteTableComponent } from './_components/palette-table/palette-table
 })
 export class App implements AfterViewInit {
   cus = inject(ColorUtilService);
+  router = inject(Router);
+  route = inject(ActivatedRoute);
 
   colorPickerOneSelectedColor = signal<string>('');
   colorPickerOneComparedColor = signal<string>('');
@@ -46,6 +49,23 @@ export class App implements AfterViewInit {
   showGradient = signal<boolean>(true);
 
   currentAlertMessage = signal<AlertMessagObj>(new AlertMessagObj());
+
+  private isInitializing = true;
+
+  constructor() {
+    // Update URL when state changes
+    effect(() => {
+      if (this.isInitializing) return;
+
+      const fg = this.colorPickerOneSelectedColor();
+      const bg = this.colorPickerTwoSelectedColor();
+      const type = this.contrastType();
+      const chroma = this.constantChroma();
+      const gradient = this.showGradient();
+
+      this.updateUrl(fg, bg, type, chroma, gradient);
+    });
+  }
 
   handleColorInputInput(inputNumber: 'One' | 'Two', event: string) {
     if (inputNumber === 'One') {
@@ -199,7 +219,75 @@ export class App implements AfterViewInit {
     this.currentAlertMessage.set(message);
   }
 
+  private updateUrl(
+    fg: string,
+    bg: string,
+    type: ContrastType | 'apca object',
+    chroma: boolean,
+    gradient: boolean
+  ): void {
+    const queryParams: Record<string, string> = {};
+
+    if (fg) queryParams['fg'] = fg;
+    if (bg) queryParams['bg'] = bg;
+    if (type !== 'apca') queryParams['type'] = type;
+    if (!chroma) queryParams['chroma'] = 'false';
+    if (!gradient) queryParams['gradient'] = 'false';
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+  }
+
+  private loadStateFromUrl(): boolean {
+    const params = this.route.snapshot.queryParamMap;
+
+    const fg = params.get('fg');
+    const bg = params.get('bg');
+    const type = params.get('type') as ContrastType | 'apca object' | null;
+    const chroma = params.get('chroma');
+    const gradient = params.get('gradient');
+
+    let hasUrlState = false;
+
+    if (fg) {
+      this.colorPickerOneSelectedColor.set(fg);
+      hasUrlState = true;
+    }
+
+    if (bg) {
+      this.colorPickerTwoSelectedColor.set(bg);
+      hasUrlState = true;
+    }
+
+    if (type && (type === 'apca' || type === 'bpca' || type === 'apca object')) {
+      this.contrastType.set(type);
+    }
+
+    if (chroma !== null) {
+      this.constantChroma.set(chroma !== 'false');
+    }
+
+    if (gradient !== null) {
+      this.showGradient.set(gradient !== 'false');
+    }
+
+    return hasUrlState;
+  }
+
   ngAfterViewInit(): void {
-    this.setRandomColorPair(true);
+    const hasUrlState = this.loadStateFromUrl();
+
+    if (!hasUrlState) {
+      this.setRandomColorPair(true);
+    }
+
+    // Allow URL updates after initial load
+    setTimeout(() => {
+      this.isInitializing = false;
+    }, 100);
   }
 }
