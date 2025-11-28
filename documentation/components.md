@@ -244,9 +244,33 @@ contrastScore = signal<string | number | null>(null);
 />
 ```
 
+#### Contrast Type Modes
+
+The component supports three contrast display modes via `contrastType` input:
+
+1. **'apca'** - Displays APCA Lc score as a number (e.g., "75")
+   ```typescript
+   [contrastType]="'apca'"
+   // Displays: 75
+   ```
+
+2. **'bpca'** - Displays WCAG 2.x compatible ratio (e.g., "4.5")
+   ```typescript
+   [contrastType]="'bpca'"
+   // Displays: 4.5
+   ```
+
+3. **'apca object'** - Displays minimum object dimension in pixels
+   ```typescript
+   [contrastType]="'apca object'"
+   // Displays: 2 (minimum 2px object size for this contrast)
+   ```
+   
+   This mode uses `ColorUtilService.getMinObjectDimension()` to convert APCA scores to minimum object sizes based on a D3 scale mapping.
+
 #### Contrast Score Interpretation
 
-**APCA Scores**:
+**APCA Scores** (when `contrastType === 'apca'`):
 - 90+: Maximum text readability
 - 75+: Body text
 - 60+: Large text
@@ -254,6 +278,11 @@ contrastScore = signal<string | number | null>(null);
 - 30+: Non-text UI elements
 - 15+: Disabled elements
 - <15: Insufficient contrast
+
+**Minimum Object Dimensions** (when `contrastType === 'apca object'`):
+- Calculated from APCA score using perceptual scale
+- Lower scores = larger minimum size required
+- NaN if contrast too low for any size object
 
 ---
 

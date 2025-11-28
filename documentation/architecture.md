@@ -293,16 +293,196 @@ Components should use OnPush change detection:
 
 With signals, OnPush works automatically because Angular knows when signals change.
 
+## URL State Management
+
+The application implements **query parameter-based URL state management** using Angular's `Location` service (not Router). This allows users to share URLs that restore exact application state.
+
+### Implementation Pattern
+
+**Location**: `src/app/app.ts`
+
+The app uses the `Location` service from `@angular/common` instead of Angular Router:
+
+```typescript
+import { Location } from '@angular/common';
+
+export class App {
+  location = inject(Location);
+  
+  private isInitializing = signal(true);  // Prevents effect during init
+  
+  constructor() {
+    effect(() => {
+      if (this.isInitializing()) return;
+      
+      const fg = this.colorPickerOneSelectedColor();
+      const bg = this.colorPickerTwoSelectedColor();
+      const type = this.contrastType();
+      const chroma = this.constantChroma();
+      const gradient = this.showGradient();
+      
+      this.updateUrl(fg, bg, type, chroma, gradient);
+    });
+  }
+}
+```
+
+### Query Parameters
+
+The following state is persisted in URL query parameters:
+
+| Parameter | Type | Description | Default | When Included |
+|-----------|------|-------------|---------|---------------|
+| `fg` | string | Foreground color (hex) | none | Always if set |
+| `bg` | string | Background color (hex) | none | Always if set |
+| `type` | string | Contrast algorithm | `'apca'` | Only if not 'apca' |
+| `chroma` | string | Constant chroma enabled | `true` | Only if `false` |
+| `gradient` | string | Show gradient enabled | `true` | Only if `false` |
+
+**Example URL**:
+```
+https://example.com/?fg=%23ff5733&bg=%23e0e0e0&type=bpca&chroma=false
+```
+
+### URL Update Flow
+
+```
+User Interaction (change color, toggle setting)
+         ↓
+Signal update (colorPickerOneSelectedColor.set('#ff5733'))
+         ↓
+Effect triggers (observes signal changes)
+         ↓
+updateUrl() called with current state
+         ↓
+URLSearchParams constructed
+         ↓
+Location.replaceState() updates browser URL (no navigation)
+         ↓
+URL updated in address bar (no page reload)
+```
+
+### URL Load Flow
+
+```
+User navigates to URL with query parameters
+         ↓
+ngAfterViewInit() lifecycle hook
+         ↓
+loadStateFromUrl() reads window.location.search
+         ↓
+URLSearchParams parses query string
+         ↓
+Signals updated with parsed values
+         ↓
+If no URL state: generate random color pair
+         ↓
+setTimeout() sets isInitializing to false
+         ↓
+Effect starts observing and updating URL
+```
+
+### Implementation Details
+
+**updateUrl() method** (`app.ts:234-250`):
+```typescript
+private updateUrl(
+  fg: string,
+  bg: string,
+  type: ContrastType | 'apca object',
+  chroma: boolean,
+  gradient: boolean,
+): void {
+  const params = new URLSearchParams();
+  
+  if (fg) params.set('fg', fg);
+  if (bg) params.set('bg', bg);
+  if (type !== 'apca') params.set('type', type);
+  if (!chroma) params.set('chroma', 'false');
+  if (!gradient) params.set('gradient', 'false');
+  
+  const queryString = params.toString();
+  const newUrl = queryString ? `?${queryString}` : '/';
+  
+  this.location.replaceState(newUrl);
+}
+```
+
+**loadStateFromUrl() method** (`app.ts:252-279`):
+```typescript
+private loadStateFromUrl(): boolean {
+  const urlParams = new URLSearchParams(window.location.search);
+  
+  const fg = urlParams.get('fg');
+  const bg = urlParams.get('bg');
+  // ... read all parameters
+  
+  if (fg) {
+    this.colorPickerOneSelectedColor.set(fg);
+    hasUrlState = true;
+  }
+  // ... set all signals
+  
+  return hasUrlState;
+}
+```
+
+### Why Location Service Instead of Router?
+
+The application uses `Location` service rather than Angular Router for several reasons:
+
+1. **Single-page app**: No need for multiple routes or views
+2. **State synchronization**: URL parameters map directly to component state
+3. **Simpler implementation**: No route configuration needed
+4. **Fine-grained control**: Direct manipulation of query parameters
+5. **No navigation**: `replaceState()` updates URL without triggering navigation
+
+### Initialization Pattern with Signals
+
+**Critical Pattern**: `isInitializing` must be a **signal** to work with effects:
+
+```typescript
+// ✅ CORRECT - Signal-based flag
+private isInitializing = signal(true);
+
+constructor() {
+  effect(() => {
+    if (this.isInitializing()) return;  // Effect re-runs when this changes
+    // ... update URL
+  });
+}
+
+// ❌ INCORRECT - Boolean flag
+private isInitializing = true;  // Effect won't re-run when this changes!
+```
+
+**Why**: Effects only re-run when signals they read change. A regular boolean won't trigger effect re-execution.
+
+### Shareable URLs
+
+Users can share URLs with state:
+```
+https://pawn002.github.io/color-pair-quick-iterator/?fg=%232d5a3f&bg=%23f4f7f5
+```
+
+When another user visits this URL:
+1. App loads with the specified colors
+2. Contrast is calculated automatically
+3. All UI reflects the shared state
+4. User can modify and generate new shareable URLs
+
 ## Routing
 
 **Current Status**: No routing implemented
 
-The application is a **single-page app (SPA)** without multiple routes. All functionality is on one page.
+The application is a **single-page app (SPA)** without multiple routes or views. All functionality is on one page with URL state management via query parameters.
 
-**Future Consideration**: If routing is needed:
-- Use Angular Router with standalone components
-- Consider route-level lazy loading
-- Use route guards for state management
+**No Router Configuration**: The router is configured with an empty routes array in `app.config.ts`:
+```typescript
+provideRouter([], withComponentInputBinding())
+```
+
+This provides router infrastructure (needed for Location service) without defining any routes.
 
 ## Build and Deployment Architecture
 

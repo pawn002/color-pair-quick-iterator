@@ -25,6 +25,7 @@ High-level architecture overview covering:
 - Architectural patterns and decisions
 - Data flow and state management
 - Module and component hierarchy
+- URL state management with Location service
 
 ### 3. [Services](./services.md)
 Detailed documentation for core services:
@@ -86,6 +87,7 @@ npm run storybook      # Launch Storybook on port 6006
 2. **Perceptual Accuracy**: Use modern perceptual color contrast algorithms (APCA) for better accessibility assessment
 3. **Developer Experience**: Provide intuitive tools for exploring color accessibility
 4. **Education**: Help users understand the relationship between color contrast and accessibility
+5. **Shareable Results**: URL-based state management allows sharing specific color combinations
 
 ## Getting Help
 

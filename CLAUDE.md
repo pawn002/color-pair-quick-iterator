@@ -21,6 +21,19 @@ npm run storybook  # Launch Storybook on port 6006
 
 ## Architecture
 
+### URL State Management
+
+The app uses Angular's `Location` service (not Router) for query parameter-based state persistence:
+
+- **Query parameters**: `fg` (foreground), `bg` (background), `type`, `chroma`, `gradient`
+- **State synchronization**: Effect in `app.ts` updates URL when signals change
+- **Initial load**: Restores state from URL or generates random colors
+- **Shareable URLs**: Users can share URLs that restore exact app state
+
+**Key pattern**: Use `signal()` for `isInitializing` flag to enable effect re-runs.
+
+See `documentation/architecture.md` for detailed implementation.
+
 ### Core Services (`src/app/services/`)
 
 - **ColorUtilService** - Color manipulation using colorjs.io in OKLCH color space. Handles color parsing, gamut mapping, variant generation, and chroma matching.
@@ -52,17 +65,39 @@ Components live in `src/app/_components/` with co-located files:
 
 This project follows modern Angular patterns:
 
-- **Standalone components** - No NgModules; do not set `standalone: true` in decorators (it's the default)
-- **Signals** - Use `signal()`, `computed()` for state; use `update()` or `set()` (not `mutate`)
-- **Inputs/Outputs** - Use `input()` and `output()` functions instead of decorators
-- **Native control flow** - Use `@if`, `@for`, `@switch` instead of structural directives
+### Components and Modules
+- **Standalone components** - No NgModules; do NOT set `standalone: true` in decorators (it's the default)
 - **OnPush change detection** - Set `changeDetection: ChangeDetectionStrategy.OnPush`
-- **inject()** - Use function injection instead of constructor injection
-- **host bindings** - Use `host` object in decorators instead of `@HostBinding`/`@HostListener`
+
+### Signals and Reactivity
+- **Signals** - Use `signal()`, `computed()` for state; use `update()` or `set()` (not `mutate()`)
+- **Computed values** - Use `computed()` for derived state (prefer over getters)
+- **Effects** - Use `effect()` for reactive side effects (DOM updates, logging, etc.)
+
+### Component APIs
+- **Inputs** - Use `input()` and `input.required()` functions instead of `@Input()` decorator
+- **Outputs** - Use `output()` function instead of `@Output()` decorator
+- **Two-way binding** - Use `model()` function for two-way binding (replaces `[(ngModel)]` pattern)
+- **View queries** - Use `viewChild()`, `viewChildren()`, `contentChild()`, `contentChildren()` instead of decorators
+
+### Template Syntax
+- **Native control flow** - Use `@if`, `@for`, `@switch` instead of `*ngIf`, `*ngFor`, `*ngSwitch`
+- **Bindings** - Use `[class]` and `[style]` bindings instead of `ngClass`/`ngStyle`
 - **Images** - Use `NgOptimizedImage` for static images (not for inline base64)
-- **Forms** - Prefer Reactive forms over Template-driven forms
-- **Bindings** - Use `class` and `style` bindings instead of `ngClass`/`ngStyle`
 - **Observables** - Use the async pipe in templates to handle observables
+
+### Dependency Injection
+- **inject()** - Use `inject()` function instead of constructor injection
+- **Services** - Use `providedIn: 'root'` for singleton services
+
+### Forms
+- **Reactive forms** - Prefer Reactive forms over Template-driven forms
+
+### Host Bindings
+- **host object** - Use `host` object in decorators instead of `@HostBinding`/`@HostListener`
+
+### Change Detection
+- **Zoneless mode** - App uses `provideZonelessChangeDetection()` for better performance
 
 ## Services
 
