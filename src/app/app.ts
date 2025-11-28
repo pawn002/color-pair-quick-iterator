@@ -1,5 +1,5 @@
-import { Component, signal, inject, AfterViewInit, effect } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, signal, inject, AfterViewInit, effect, untracked } from '@angular/core';
+import { Location } from '@angular/common';
 
 import { ContrastType } from './services/color-metrics.service';
 import { ColorUtilService } from './services/color-util.service';
@@ -32,8 +32,7 @@ import { PaletteTableComponent } from './_components/palette-table/palette-table
 })
 export class App implements AfterViewInit {
   cus = inject(ColorUtilService);
-  router = inject(Router);
-  route = inject(ActivatedRoute);
+  location = inject(Location);
 
   colorPickerOneSelectedColor = signal<string>('');
   colorPickerOneComparedColor = signal<string>('');
@@ -50,12 +49,12 @@ export class App implements AfterViewInit {
 
   currentAlertMessage = signal<AlertMessagObj>(new AlertMessagObj());
 
-  private isInitializing = true;
+  private isInitializing = signal(true);
 
   constructor() {
     // Update URL when state changes
     effect(() => {
-      if (this.isInitializing) return;
+      if (this.isInitializing()) return;
 
       const fg = this.colorPickerOneSelectedColor();
       const bg = this.colorPickerTwoSelectedColor();
@@ -224,32 +223,30 @@ export class App implements AfterViewInit {
     bg: string,
     type: ContrastType | 'apca object',
     chroma: boolean,
-    gradient: boolean
+    gradient: boolean,
   ): void {
-    const queryParams: Record<string, string> = {};
+    const params = new URLSearchParams();
 
-    if (fg) queryParams['fg'] = fg;
-    if (bg) queryParams['bg'] = bg;
-    if (type !== 'apca') queryParams['type'] = type;
-    if (!chroma) queryParams['chroma'] = 'false';
-    if (!gradient) queryParams['gradient'] = 'false';
+    if (fg) params.set('fg', fg);
+    if (bg) params.set('bg', bg);
+    if (type !== 'apca') params.set('type', type);
+    if (!chroma) params.set('chroma', 'false');
+    if (!gradient) params.set('gradient', 'false');
 
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams,
-      queryParamsHandling: 'merge',
-      replaceUrl: true,
-    });
+    const queryString = params.toString();
+    const newUrl = queryString ? `?${queryString}` : '/';
+
+    this.location.replaceState(newUrl);
   }
 
   private loadStateFromUrl(): boolean {
-    const params = this.route.snapshot.queryParamMap;
+    const urlParams = new URLSearchParams(window.location.search);
 
-    const fg = params.get('fg');
-    const bg = params.get('bg');
-    const type = params.get('type') as ContrastType | 'apca object' | null;
-    const chroma = params.get('chroma');
-    const gradient = params.get('gradient');
+    const fg = urlParams.get('fg');
+    const bg = urlParams.get('bg');
+    const type = urlParams.get('type') as ContrastType | 'apca object' | null;
+    const chroma = urlParams.get('chroma');
+    const gradient = urlParams.get('gradient');
 
     let hasUrlState = false;
 
@@ -285,9 +282,10 @@ export class App implements AfterViewInit {
       this.setRandomColorPair(true);
     }
 
-    // Allow URL updates after initial load
+    // Defer setting isInitializing to false until after the current call stack completes.
+    // This ensures the initial state is loaded before the effect starts updating the URL.
     setTimeout(() => {
-      this.isInitializing = false;
-    }, 100);
+      this.isInitializing.set(false);
+    });
   }
 }
