@@ -1,69 +1,124 @@
 # Color Pair Quick Iterator
 
-_This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.4._
+An Angular 20 application for exploring and iterating on accessible color pairs using perceptual color contrast algorithms (APCA and Bridge-PCA).
 
-This repo contains the the files for inclusive design tool, Color Pair Quick Iterator (CPQI).
+**Live Application**: https://pawn002.github.io/color-pair-quick-iterator/
 
-CPQI is meant to be used in conjunction with design tools to quick check and iterate on colors pairs for inclusive contrast.
+## Features
+
+- **Perceptual Contrast**: Uses APCA (Accessible Perceptual Contrast Algorithm) for accurate accessibility assessment
+- **WCAG Compatibility**: Bridge-PCA provides WCAG 2.x ratio equivalents
+- **Color Space**: Works in OKLCH color space for perceptually uniform adjustments
+- **Interactive Sliders**: Adjust lightness while maintaining chroma for fine-tuned color exploration
+- **Color Palettes**: Generate tables of color variants with different lightness and chroma values
+- **Shareable URLs**: State is persisted in URL query parameters for easy sharing
+
+## Quick Start
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm start
+
+# Run tests
+npm test
+
+# Launch Storybook
+npm run storybook
+
+# Build for production
+npm run build
+```
+
+Visit `http://localhost:4200` after starting the development server.
+
+## Documentation
+
+Comprehensive documentation is available in the [`documentation/`](./documentation) directory:
+
+- **[Getting Started](./documentation/getting-started.md)** - Setup and installation
+- **[Architecture](./documentation/architecture.md)** - Project structure, patterns, and URL state management
+- **[Components](./documentation/components.md)** - Component API reference
+- **[Services](./documentation/services.md)** - Service documentation and color algorithms
+- **[Contributing](./documentation/contributing.md)** - Code style and contribution guidelines
+- **[Testing](./documentation/testing.md)** - Testing strategies
+- **[Deployment](./documentation/deployment.md)** - Build and deployment process
+
+For AI-assisted development, see [CLAUDE.md](./CLAUDE.md) for project-specific guidance.
+
+## Technology Stack
+
+- **Angular 20.3.4** - Modern Angular with signals and standalone components
+- **TypeScript 5.9.2** - Strict type checking
+- **colorjs.io** - Color space conversions in OKLCH
+- **apca-w3** - APCA contrast algorithm
+- **bridge-pca** - WCAG 2.x compatibility layer
+- **Storybook** - Component documentation
+
+See [Architecture Overview](./documentation/architecture.md) for details.
+
+## Key Concepts
+
+### OKLCH Color Space
+
+All color manipulation uses OKLCH (Oklab Lightness Chroma Hue) for perceptually uniform adjustments. This ensures that equal changes in values produce equal perceptual differences.
+
+### APCA vs WCAG 2.x
+
+The app supports both modern APCA contrast scores and traditional WCAG 2.x ratios via Bridge-PCA. Learn more about contrast algorithms in the [Services Documentation](./documentation/services.md).
+
+### URL State Management
+
+The app uses Angular's `Location` service to persist state in query parameters (`fg`, `bg`, `type`, `chroma`, `gradient`). Share URLs to reproduce exact color combinations. See [Architecture - URL State Management](./documentation/architecture.md#url-state-management).
+
+## Project Structure
+
+```
+src/app/
+├── _components/          # UI components (color picker, slider, contrast, etc.)
+├── services/            # Business logic (ColorUtil, ColorMetrics, Bpca)
+├── app.ts               # Root component with state management
+└── app.config.ts        # Application configuration
+```
+
+See [Architecture Documentation](./documentation/architecture.md) for complete structure.
+
+## Contributing
+
+Contributions are welcome! Please read the [Contributing Guide](./documentation/contributing.md) for:
+- Angular 20 conventions (signals, standalone components, zoneless mode)
+- Code style and formatting (Prettier configuration)
+- Component and service patterns
+- Testing requirements
+
+## License
+
+**Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)**
+
+- ✅ Use, modify, and build upon this work non-commercially
+- ✅ Give appropriate credit to the original author
+- ✅ Share derivative works under the same license
+- ❌ Commercial use requires explicit permission
+
+See [LICENSE](./LICENSE) for full details.
 
 ## Useful Links
 
-- [Current Tool](https://pawn002.github.io/color-pair-quick-iterator/)
-- [Myndex APCA Tool](https://apcacontrast.com/)
-- [Myndex BPCA](https://github.com/Myndex/bridge-pca)
+- **Live Application**: https://pawn002.github.io/color-pair-quick-iterator/
+- **Myndex APCA Tool**: https://apcacontrast.com/
+- **APCA Repository**: https://github.com/Myndex/apca-w3
+- **Bridge-PCA Repository**: https://github.com/Myndex/bridge-pca
+- **OKLCH Color Space**: https://oklch.com/
+- **colorjs.io Documentation**: https://colorjs.io/
 
-## Development server
+## Acknowledgments
 
-To start a local development server, run:
+Built with modern perceptual contrast algorithms developed by Andrew Somers (Myndex):
+- APCA (Accessible Perceptual Contrast Algorithm)
+- Bridge-PCA (WCAG 2.x compatibility layer)
 
-```bash
-ng serve
-```
+---
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+_Generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.4_
