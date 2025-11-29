@@ -163,10 +163,16 @@ export class ColorSliderComponent {
     // TODO: Isn't there an angular way to do this?
     const element = document.getElementById(compId) as HTMLInputElement;
 
-    if (this.initValue) {
-      element.value = this.initValue.toString();
+    if (!element) {
+      console.error(`no element found with id: ${compId}`);
+      return;
+    }
+
+    const initVal = this.initValue();
+    if (!isNaN(initVal)) {
+      element.value = initVal.toString();
     } else {
-      console.error(`trouble resetting slider, initValue is ${this.initValue}`);
+      console.error(`trouble resetting slider, initValue is ${initVal}`);
     }
   }
 

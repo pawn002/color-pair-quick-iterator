@@ -152,13 +152,17 @@ describe('ColorPickerComponent', () => {
       const input = document.createElement('input');
       input.id = 'test-input';
       input.type = 'color';
+      input.value = '#000000';
       document.body.appendChild(input);
 
       fixture.componentRef.setInput('inputId', 'test-input');
       fixture.detectChanges();
 
       component.updateInputValue('#ff5733');
-      expect(input.value).toBe('#ff5733');
+
+      // Need to query the element again after update
+      const updatedInput = document.getElementById('test-input') as HTMLInputElement;
+      expect(updatedInput.value).toBe('#ff5733');
 
       document.body.removeChild(input);
     });

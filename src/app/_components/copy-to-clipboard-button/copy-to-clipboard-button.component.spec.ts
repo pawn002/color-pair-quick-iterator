@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CopyToClipboardButtonComponent, CopyToClipboardEvent } from './copy-to-clipboard-button.component';
+import {
+  CopyToClipboardButtonComponent,
+  CopyToClipboardEvent,
+} from './copy-to-clipboard-button.component';
 
 describe('CopyToClipboardButtonComponent', () => {
   let component: CopyToClipboardButtonComponent;
@@ -59,7 +62,7 @@ describe('CopyToClipboardButtonComponent', () => {
       fixture.detectChanges();
 
       spyOn(navigator.clipboard, 'writeText').and.returnValue(
-        Promise.reject(new Error('Copy failed'))
+        Promise.reject(new Error('Copy failed')),
       );
 
       component.copyEvent.subscribe((event: CopyToClipboardEvent) => {
@@ -78,7 +81,7 @@ describe('CopyToClipboardButtonComponent', () => {
       fixture.detectChanges();
 
       const writeTextSpy = spyOn(navigator.clipboard, 'writeText').and.returnValue(
-        Promise.resolve()
+        Promise.resolve(),
       );
 
       await component.copyToClipboard();
@@ -91,7 +94,7 @@ describe('CopyToClipboardButtonComponent', () => {
       fixture.detectChanges();
 
       const writeTextSpy = spyOn(navigator.clipboard, 'writeText').and.returnValue(
-        Promise.resolve()
+        Promise.resolve(),
       );
 
       await component.copyToClipboard();
@@ -168,9 +171,7 @@ describe('CopyToClipboardButtonComponent', () => {
       fixture.componentRef.setInput('color', '#ff5733');
       fixture.detectChanges();
 
-      spyOn(navigator.clipboard, 'writeText').and.returnValue(
-        Promise.reject(new Error('Failed'))
-      );
+      spyOn(navigator.clipboard, 'writeText').and.returnValue(Promise.reject(new Error('Failed')));
 
       const emitSpy = jasmine.createSpy('copyEvent');
       component.copyEvent.subscribe(emitSpy);
@@ -190,7 +191,7 @@ describe('CopyToClipboardButtonComponent', () => {
       fixture.detectChanges();
 
       const writeTextSpy = spyOn(navigator.clipboard, 'writeText').and.returnValue(
-        Promise.resolve()
+        Promise.resolve(),
       );
 
       await component.copyToClipboard();
@@ -203,7 +204,7 @@ describe('CopyToClipboardButtonComponent', () => {
       fixture.detectChanges();
 
       const writeTextSpy = spyOn(navigator.clipboard, 'writeText').and.returnValue(
-        Promise.resolve()
+        Promise.resolve(),
       );
 
       await component.copyToClipboard();
@@ -216,7 +217,7 @@ describe('CopyToClipboardButtonComponent', () => {
       fixture.detectChanges();
 
       const writeTextSpy = spyOn(navigator.clipboard, 'writeText').and.returnValue(
-        Promise.resolve()
+        Promise.resolve(),
       );
 
       await component.copyToClipboard();
@@ -231,11 +232,15 @@ describe('CopyToClipboardButtonComponent', () => {
       expect(button).toBeTruthy();
     });
 
-    it('should call copyToClipboard on button click', () => {
+    it('should call copyToClipboard on button click', async () => {
       spyOn(component, 'copyToClipboard');
-      const button = fixture.nativeElement.querySelector('button');
+      fixture.componentRef.setInput('color', '#ff5733');
+      fixture.detectChanges();
 
+      const button = fixture.nativeElement.querySelector('button');
       button.click();
+      fixture.detectChanges();
+      await fixture.whenStable();
 
       expect(component.copyToClipboard).toHaveBeenCalled();
     });

@@ -296,8 +296,28 @@ describe('PaletteTableComponent', () => {
     });
 
     it('should update table when color changes', async () => {
-      const mockData1 = [[{ color: '#ff5733' } as TableColorCell]];
-      const mockData2 = [[{ color: '#0000ff' } as TableColorCell]];
+      const mockData1 = [
+        [
+          {
+            color: '#ff5733',
+            lightness: 0.5,
+            chroma: 0.1,
+            hue: 20,
+            deltaE: 0,
+          } as TableColorCell,
+        ],
+      ];
+      const mockData2 = [
+        [
+          {
+            color: '#0000ff',
+            lightness: 0.3,
+            chroma: 0.2,
+            hue: 240,
+            deltaE: 50,
+          } as TableColorCell,
+        ],
+      ];
 
       spyOn(colorUtilService, 'generateAllOklchVariants').and.returnValues(
         Promise.resolve(mockData1),
