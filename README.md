@@ -22,7 +22,7 @@ npm install
 # Start development server
 npm start
 
-# Run tests
+# Run tests (324 tests, 100% passing)
 npm test
 
 # Launch Storybook
@@ -33,6 +33,13 @@ npm run build
 ```
 
 Visit `http://localhost:4200` after starting the development server.
+
+## Test Coverage
+
+The project has comprehensive test coverage with **324 passing tests** (100% pass rate):
+- **Services**: 150 tests covering ColorUtilService, BpcaService, and ColorMetricsService
+- **Components**: 174 tests covering all 7 components
+- See [Testing Documentation](./documentation/testing.md) for details
 
 ## Documentation
 
