@@ -10,6 +10,7 @@
 
   h2 {
     text-align: center;
+    margin-bottom: 1.1em;
   }
 
   h3 {
@@ -135,10 +136,6 @@
     justify-content: center;
     align-items: center;
 
-    h2 {
-      margin-bottom: 1.1em;
-    }
-
     input {
       --visual-padding: 28px;
 
@@ -192,16 +189,9 @@
   }
 
   .metadata {
-    h2 {
-      margin-bottom: 1.1em;
-    }
   }
 
   .instructions {
-    h2 {
-      margin-bottom: 1.1em;
-    }
-
     p {
       margin: 0 0 1em;
     }
@@ -219,10 +209,6 @@
   }
 
   .notes {
-    h2 {
-      margin-bottom: 1.1em;
-    }
-
     p {
       margin: 0 0 1em;
     }
@@ -243,10 +229,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    h2 {
-      margin-bottom: 1.1em;
-    }
   }
 
   .alert {
