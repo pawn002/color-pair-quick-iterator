@@ -4,7 +4,7 @@ import { to } from 'colorjs.io/fn';
 // import { ColorConstructor } from 'colorjs.io/types/src/color';
 import { ColorConstructor } from 'colorjs.io';
 import { scaleLinear, sort } from 'd3';
-import { random, reverse, uniqBy, uniq } from 'lodash';
+import { random, reverse, uniqBy, uniq } from 'lodash-es';
 import { TableColorCell, TableData } from '../_components/palette-table/palette-table.component';
 
 export type ColorPair = [string, string];
@@ -148,7 +148,7 @@ export class ColorUtilService {
   }
 
   filterOutOfGamutVariants(
-    variants: Array<ColorCoordArray> | null
+    variants: Array<ColorCoordArray> | null,
   ): Promise<Array<ColorCoordArray>> {
     return new Promise(async (resolve, reject) => {
       if (!variants) {
@@ -454,7 +454,7 @@ export class ColorUtilService {
   generateAllOklchVariants(
     color: string,
     lightSteps: number,
-    chromaSteps: number
+    chromaSteps: number,
   ): Promise<TableData> {
     return new Promise((resolve, reject) => {
       const parsedColor = this.parseColor(color);
