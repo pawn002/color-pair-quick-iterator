@@ -193,7 +193,7 @@ npm test
 
 This launches the Karma test runner with Chrome browser.
 
-**Note**: Currently, no test files exist in the project. See [Testing Guide](./testing.md) for information on writing tests.
+**Test Coverage**: The project has 324 passing tests (100% pass rate). See [Testing Guide](./testing.md) for details.
 
 ### Formatting Code
 
