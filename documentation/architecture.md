@@ -518,6 +518,7 @@ See [Deployment Guide](./deployment.md) for details.
 
 **Framework**:
 - `@angular/core`, `@angular/common`, `@angular/forms`, `@angular/router` (^20.3.0)
+- `@angular/cli`, `@angular/build` (^20.3.4)
 
 **Color Science**:
 - `colorjs.io` (^0.5.2) - Color space conversions and manipulation

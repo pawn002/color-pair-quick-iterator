@@ -74,12 +74,15 @@ npm run storybook      # Launch Storybook on port 6006
 
 ### Key Technologies
 
-- **Angular 20.3.4** - Modern Angular framework with signals and standalone components
+- **Angular 20.3.0** - Modern Angular framework with signals and standalone components
+- **Angular CLI 20.3.4** - Build tooling and development server
 - **TypeScript 5.9.2** - Strict type checking enabled
-- **colorjs.io** - Color space conversions and manipulation in OKLCH
-- **apca-w3** - APCA contrast calculation algorithm
-- **bridge-pca** - WCAG 2.x ratio approximation
-- **Storybook** - Component documentation and visual testing
+- **colorjs.io 0.5.2** - Color space conversions and manipulation in OKLCH
+- **apca-w3 0.1.9** - APCA contrast calculation algorithm
+- **bridge-pca 0.1.6** - WCAG 2.x ratio approximation (partial implementation)
+- **d3 7.9.0** - Scale utilities for contrast-to-size mapping
+- **lodash-es 4.17.21** - Utility functions (ESM-compatible)
+- **Storybook 9.1.10** - Component documentation and visual testing
 
 ## Project Goals
 

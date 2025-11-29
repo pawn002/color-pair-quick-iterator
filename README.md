@@ -50,12 +50,14 @@ For AI-assisted development, see [CLAUDE.md](./CLAUDE.md) for project-specific g
 
 ## Technology Stack
 
-- **Angular 20.3.4** - Modern Angular with signals and standalone components
+- **Angular 20.3.0** - Modern Angular with signals and standalone components
+- **Angular CLI 20.3.4** - Build tooling and development server
 - **TypeScript 5.9.2** - Strict type checking
-- **colorjs.io** - Color space conversions in OKLCH
-- **apca-w3** - APCA contrast algorithm
-- **bridge-pca** - WCAG 2.x compatibility layer
-- **Storybook** - Component documentation
+- **colorjs.io 0.5.2** - Color space conversions in OKLCH
+- **apca-w3 0.1.9** - APCA contrast algorithm
+- **bridge-pca 0.1.6** - WCAG 2.x compatibility layer (partial implementation)
+- **d3 7.9.0** - Scale utilities for contrast-to-size mapping
+- **Storybook 9.1.10** - Component documentation
 
 See [Architecture Overview](./documentation/architecture.md) for details.
 
@@ -121,4 +123,13 @@ Built with modern perceptual contrast algorithms developed by Andrew Somers (Myn
 
 ---
 
-_Generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.4_
+## Recent Updates
+
+- **2025-01**: Increased component style budget to 6kB, optimized app.scss
+- **2025-01**: Migrated from lodash to lodash-es for ESM compatibility
+- **2025-01**: Changed baseHref to portable default, added build:gh-pages script
+- **2025-01**: Comprehensive documentation update
+
+---
+
+_Built with [Angular CLI](https://github.com/angular/angular-cli) version 20.3.4_

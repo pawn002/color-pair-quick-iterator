@@ -60,14 +60,20 @@ The build uses production configuration defined in `angular.json`:
 ```json
 {
   "production": {
-    "optimization": true,
-    "outputHashing": "all",
-    "sourceMap": false,
-    "namedChunks": false,
-    "extractLicenses": true,
-    "vendorChunk": false,
-    "buildOptimizer": true,
-    "baseHref": "/"
+    "baseHref": "/",
+    "budgets": [
+      {
+        "type": "initial",
+        "maximumWarning": "500kB",
+        "maximumError": "1MB"
+      },
+      {
+        "type": "anyComponentStyle",
+        "maximumWarning": "6kB",
+        "maximumError": "8kB"
+      }
+    ],
+    "outputHashing": "all"
   }
 }
 ```
@@ -171,20 +177,26 @@ After deployment, test:
 
 ### Base Href
 
-The `baseHref` setting defines the base path for the application:
+The `baseHref` setting defines the base path for the application.
 
-```json
-"baseHref": "/"
-```
+The project is configured with a portable default of `"/"` in `angular.json`, which works for deployment to any server at the root domain.
 
-The default value of `"/"` allows the application to be deployed to any server, whether at the root or in a subdirectory.
-
-**For GitHub Pages subdirectory deployment**: Override the base href at build time:
+**For this repository's GitHub Pages deployment**: Use the `build:gh-pages` script which sets the correct base href:
 ```bash
-ng build --base-href="/your-repo-name/"
+npm run build:gh-pages
+# Runs: ng build --base-href=/color-pair-quick-iterator/
 ```
 
-**For root domain deployment**: Use the default `"/"` value (no override needed).
+**For general production builds** (root domain or other servers): Use the standard build command:
+```bash
+npm run build
+# Uses default baseHref: "/"
+```
+
+**For custom subdirectory deployment**: Override the base href at build time:
+```bash
+ng build --base-href="/your-custom-path/"
+```
 
 ### Output Path
 
@@ -209,7 +221,7 @@ Angular enforces bundle size limits:
   },
   {
     "type": "anyComponentStyle",
-    "maximumWarning": "4kB",
+    "maximumWarning": "6kB",
     "maximumError": "8kB"
   }
 ]
