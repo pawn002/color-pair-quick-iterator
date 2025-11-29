@@ -10,6 +10,14 @@ Color Pair Quick Iterator (CQPI) is an Angular 20 application for exploring and 
 
 - Automatically use context7 for code generation and library documentation.
 
+## Documentation Updates
+
+When the user requests that the project's documentation be updated:
+
+1. **Review and update all files in `documentation/`** - Ensure all markdown files reflect current implementation
+2. **Update `README.md`** - Keep the main README in sync with detailed documentation
+3. **Maintain consistency** - Ensure terminology, examples, and references are consistent across all documentation files
+
 ## Commands
 
 ```bash
