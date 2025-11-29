@@ -23,8 +23,14 @@ The application is deployed to **GitHub Pages** as a static website. The product
 
 ### Building for Production
 
+For general production builds (works on any server):
 ```bash
 npm run build
+```
+
+For this repository's GitHub Pages deployment:
+```bash
+npm run build:gh-pages
 ```
 
 This command:
@@ -61,7 +67,7 @@ The build uses production configuration defined in `angular.json`:
     "extractLicenses": true,
     "vendorChunk": false,
     "buildOptimizer": true,
-    "baseHref": "/color-pair-quick-iterator/"
+    "baseHref": "/"
   }
 }
 ```
@@ -95,7 +101,7 @@ The project is configured for GitHub Pages deployment:
 ```json
 {
   "production": {
-    "baseHref": "/color-pair-quick-iterator/",
+    "baseHref": "/",
     "outputPath": "docs"
   }
 }
@@ -113,6 +119,13 @@ GitHub Pages automatically deploys when changes are pushed to the `/docs` direct
 ### Deployment Steps
 
 1. **Build the application**:
+   
+   For the current GitHub Pages repository (pawn002/color-pair-quick-iterator):
+   ```bash
+   npm run build:gh-pages
+   ```
+   
+   For deployment to a root domain or other server:
    ```bash
    npm run build
    ```
@@ -158,15 +171,20 @@ After deployment, test:
 
 ### Base Href
 
-The `baseHref` setting is crucial for GitHub Pages subdirectory deployment:
+The `baseHref` setting defines the base path for the application:
 
 ```json
-"baseHref": "/color-pair-quick-iterator/"
+"baseHref": "/"
 ```
 
-This ensures all asset paths are correct when deployed to a subdirectory.
+The default value of `"/"` allows the application to be deployed to any server, whether at the root or in a subdirectory.
 
-**Important**: If deploying to a root domain or different subdirectory, update this value.
+**For GitHub Pages subdirectory deployment**: Override the base href at build time:
+```bash
+ng build --base-href="/your-repo-name/"
+```
+
+**For root domain deployment**: Use the default `"/"` value (no override needed).
 
 ### Output Path
 
@@ -312,15 +330,16 @@ git push origin v1.0.1
 
 **Problem**: JavaScript/CSS files return 404
 
-**Solution**: Verify `baseHref` is correct:
+**Solution**: Verify `baseHref` matches your deployment environment:
 ```bash
 grep baseHref docs/index.html
-# Should show: <base href="/color-pair-quick-iterator/">
+# For root deployment: <base href="/">
+# For subdirectory: <base href="/subdirectory-name/">
 ```
 
-If incorrect, rebuild with correct base href:
+If deploying to a GitHub Pages subdirectory, rebuild with the correct base href:
 ```bash
-ng build --base-href="/color-pair-quick-iterator/"
+ng build --base-href="/your-repo-name/"
 ```
 
 #### 2. Blank Page After Deployment

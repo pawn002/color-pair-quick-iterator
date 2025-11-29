@@ -30,7 +30,7 @@
           },
           "configurations": {
             "production": {
-              "baseHref": "https://pawn002.github.io/color-pair-quick-iterator/",
+              "baseHref": "/",
               "budgets": [
                 {
                   "type": "initial",

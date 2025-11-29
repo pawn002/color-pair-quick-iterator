@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:gh-pages": "ng build --base-href=/color-pair-quick-iterator/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "storybook": "ng run cqpi-ng-20-holding:storybook",
