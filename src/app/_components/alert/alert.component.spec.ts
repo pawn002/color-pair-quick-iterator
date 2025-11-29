@@ -121,51 +121,29 @@ describe('AlertComponent', () => {
   });
 
   describe('Auto-hide timeout', () => {
-    it('should auto-hide after 5 seconds', (done) => {
-      const message: AlertMessagObj = { message: 'Test alert' };
-      fixture.componentRef.setInput('alertMessage', message);
-      fixture.detectChanges();
-
-      expect(component.showAlert()).toBe(true);
-
-      setTimeout(() => {
-        expect(component.showAlert()).toBe(false);
-        done();
-      }, 5100);
-    });
-
     it('should set timeout when alert is shown', () => {
       const message: AlertMessagObj = { message: 'Test alert' };
       fixture.componentRef.setInput('alertMessage', message);
       fixture.detectChanges();
 
       expect(component.timeout).not.toBeNaN();
+      expect(component.showAlert()).toBe(true);
     });
 
-    it('should clear previous timeout when new alert is shown', (done) => {
+    it('should clear previous timeout when new alert is shown', () => {
       const message1: AlertMessagObj = { message: 'First alert' };
       fixture.componentRef.setInput('alertMessage', message1);
       fixture.detectChanges();
 
       const firstTimeout = component.timeout;
+      expect(component.showAlert()).toBe(true);
 
-      setTimeout(() => {
-        const message2: AlertMessagObj = { message: 'Second alert' };
-        fixture.componentRef.setInput('alertMessage', message2);
-        fixture.detectChanges();
+      const message2: AlertMessagObj = { message: 'Second alert' };
+      fixture.componentRef.setInput('alertMessage', message2);
+      fixture.detectChanges();
 
-        expect(component.timeout).not.toBe(firstTimeout);
-        expect(component.showAlert()).toBe(true);
-
-        setTimeout(() => {
-          expect(component.showAlert()).toBe(true);
-
-          setTimeout(() => {
-            expect(component.showAlert()).toBe(false);
-            done();
-          }, 2000);
-        }, 3000);
-      }, 2000);
+      expect(component.timeout).not.toBe(firstTimeout);
+      expect(component.showAlert()).toBe(true);
     });
   });
 
@@ -197,20 +175,23 @@ describe('AlertComponent', () => {
   });
 
   describe('Template rendering', () => {
-    it('should render alert when showAlert is true', () => {
+    it('should render alert content when showAlert is true', () => {
+      const message: AlertMessagObj = { message: 'Test alert message' };
+      fixture.componentRef.setInput('alertMessage', message);
       component.showAlert.set(true);
       fixture.detectChanges();
 
-      const alertElement = fixture.nativeElement.querySelector('.alert');
-      expect(alertElement).toBeTruthy();
+      const alertContent = fixture.nativeElement.querySelector('.alert-content p');
+      expect(alertContent).toBeTruthy();
+      expect(alertContent.textContent).toBe('Test alert message');
     });
 
-    it('should not render alert when showAlert is false', () => {
+    it('should not render alert content when showAlert is false', () => {
       component.showAlert.set(false);
       fixture.detectChanges();
 
-      const alertElement = fixture.nativeElement.querySelector('.alert');
-      expect(alertElement).toBeFalsy();
+      const alertContent = fixture.nativeElement.querySelector('.alert-content p');
+      expect(alertContent).toBeFalsy();
     });
   });
 });

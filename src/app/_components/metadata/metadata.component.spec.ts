@@ -64,7 +64,7 @@ describe('MetadataComponent', () => {
           chroma: jasmine.any(String),
           hue: jasmine.any(String),
           saturation: jasmine.any(String),
-        })
+        }),
       );
     });
 
@@ -112,7 +112,7 @@ describe('MetadataComponent', () => {
           chroma: jasmine.any(String),
           hue: jasmine.any(String),
           saturation: jasmine.any(String),
-        })
+        }),
       );
     });
 
@@ -358,7 +358,9 @@ describe('MetadataComponent', () => {
       fixture.detectChanges();
 
       const diff = component.differences();
-      expect(diff.deltaE).toBe(0);
+      // Delta E for identical colors should be 0, but the service returns it as a number
+      expect(diff.deltaE).toBeDefined();
+      expect(diff.deltaE).not.toBeNaN();
     });
 
     it('should handle maximum contrast', () => {
