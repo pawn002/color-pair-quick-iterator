@@ -152,6 +152,48 @@ describe('ColorContrastComponent', () => {
     });
   });
 
+  describe('Contrast calculation with Delta E type', () => {
+    it('should calculate Delta E for black on white', () => {
+      fixture.componentRef.setInput('colorOne', '#000000');
+      fixture.componentRef.setInput('colorTwo', '#ffffff');
+      fixture.componentRef.setInput('contrastType', 'deltaE');
+      fixture.detectChanges();
+
+      expect(component.contrastScore()).not.toBeNaN();
+      expect(component.contrastScore()).toBeGreaterThan(0);
+    });
+
+    it('should calculate Delta E for colored pair', () => {
+      fixture.componentRef.setInput('colorOne', '#ff5733');
+      fixture.componentRef.setInput('colorTwo', '#e0e0e0');
+      fixture.componentRef.setInput('contrastType', 'deltaE');
+      fixture.detectChanges();
+
+      expect(component.contrastScore()).not.toBeNaN();
+    });
+
+    it('should use ColorMetricsService.getContrast with deltaE type', () => {
+      spyOn(colorMetricsService, 'getContrast').and.returnValue(100);
+
+      fixture.componentRef.setInput('colorOne', '#000000');
+      fixture.componentRef.setInput('colorTwo', '#ffffff');
+      fixture.componentRef.setInput('contrastType', 'deltaE');
+      fixture.detectChanges();
+
+      expect(colorMetricsService.getContrast).toHaveBeenCalledWith('#000000', '#ffffff', 'deltaE');
+      expect(component.contrastScore()).toBe(100);
+    });
+
+    it('should return 0 for identical colors', () => {
+      fixture.componentRef.setInput('colorOne', '#808080');
+      fixture.componentRef.setInput('colorTwo', '#808080');
+      fixture.componentRef.setInput('contrastType', 'deltaE');
+      fixture.detectChanges();
+
+      expect(component.contrastScore()).toBe(0);
+    });
+  });
+
   describe('Effect behavior', () => {
     it('should return early when colorOne is missing', () => {
       spyOn(console, 'warn');
@@ -231,6 +273,17 @@ describe('ColorContrastComponent', () => {
       fixture.detectChanges();
 
       expect(colorMetricsService.getContrast).toHaveBeenCalledWith('#000000', '#ffffff', 'bpca');
+    });
+
+    it('should detect Delta E type correctly', () => {
+      spyOn(colorMetricsService, 'getContrast').and.returnValue(100);
+
+      fixture.componentRef.setInput('colorOne', '#000000');
+      fixture.componentRef.setInput('colorTwo', '#ffffff');
+      fixture.componentRef.setInput('contrastType', 'deltaE');
+      fixture.detectChanges();
+
+      expect(colorMetricsService.getContrast).toHaveBeenCalledWith('#000000', '#ffffff', 'deltaE');
     });
   });
 
