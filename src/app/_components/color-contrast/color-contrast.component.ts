@@ -57,7 +57,7 @@ export class ColorContrastComponent {
         return;
       }
 
-      this.contrastScore.set(!score ? NaN : score);
+      this.contrastScore.set(score === null || score === undefined ? NaN : score);
     });
   }
 }
