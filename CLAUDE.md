@@ -10,6 +10,54 @@ Color Pair Quick Iterator (CQPI) is an Angular 20 application for exploring and 
 
 - Automatically use context7 for code generation and library documentation.
 
+## Testing Requirements
+
+**CRITICAL**: When modifying or adding code, ALWAYS update the corresponding test files.
+
+### Test File Locations
+
+- **Services**: `src/app/services/*.spec.ts` - Test files co-located with service files
+- **Components**: `src/app/_components/*/component-name.component.spec.ts` - Test files co-located with components
+
+### When to Update Tests
+
+1. **Adding new features**: Create comprehensive tests covering the new functionality
+2. **Modifying existing code**: Update related tests to reflect changes
+3. **Adding new parameters or types**: Add test cases for all new values/types
+4. **Changing service methods**: Update service tests and component tests that use those services
+
+### What to Test
+
+- **Services**:
+  - Each public method with various inputs
+  - Edge cases (null, undefined, empty strings, boundary values)
+  - Integration with other services
+  - Error handling
+
+- **Components**:
+  - Input/output behavior
+  - User interactions and event handling
+  - Integration with services (use spies)
+  - Component state changes
+  - Edge cases and error states
+
+### Testing Workflow
+
+1. Make code changes
+2. Update/add corresponding tests
+3. Run `npm run build` to verify TypeScript compilation
+4. If possible, run `npm test` (requires headless browser in CI/CD)
+5. Commit both implementation and test changes together
+
+### Test Coverage Examples
+
+When adding a new option to a type union (e.g., adding 'deltaE' to ContrastType):
+- Update the type definition
+- Add tests in the service that handles the type
+- Add tests in components that consume the type
+- Add integration tests that verify the new option produces expected results
+- Add edge case tests (e.g., null handling, identical inputs)
+
 ## Documentation Updates
 
 When the user requests that the project's documentation be updated:
