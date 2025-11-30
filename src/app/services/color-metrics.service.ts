@@ -11,7 +11,7 @@ export interface NumberKeyLookup {
   [key: number]: number;
 }
 
-export type ContrastType = 'apca' | 'bpca';
+export type ContrastType = 'apca' | 'bpca' | 'deltaE';
 @Injectable({
   providedIn: 'root',
 })
@@ -30,6 +30,12 @@ export class ColorMetricsService {
     contrastType: ContrastType
   ): number | null {
     let score: number | null = null;
+
+    if (contrastType === 'deltaE') {
+      // Handle Delta E separately as it doesn't use APCA
+      score = this.cus.calcDeltaE(colorOne, colorTwo);
+      return score;
+    }
 
     const contrast = this.calcRawApcaContrast(colorOne, colorTwo);
 

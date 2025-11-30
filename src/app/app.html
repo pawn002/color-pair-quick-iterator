@@ -299,6 +299,22 @@
                 [checked]="contrastType() === 'apca object'"
               />
             </div>
+            <div class="radio-group">
+              <label for="ct-deltaE"
+                >Delta E
+                <span class="sr-only"
+                  >; this affects a visual element not percievable to screenreaders for good UX—same
+                  value is obtainable on Color Metadata section under Differences.</span
+                >
+              </label>
+              <input
+                type="radio"
+                name="contrastType"
+                id="ct-deltaE"
+                (change)="radioChange('deltaE')"
+                [checked]="contrastType() === 'deltaE'"
+              />
+            </div>
           </div>
         </div>
 

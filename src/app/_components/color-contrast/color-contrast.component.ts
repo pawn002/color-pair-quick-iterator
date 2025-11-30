@@ -39,9 +39,17 @@ export class ColorContrastComponent {
         return;
       }
 
-      const isApcaLike = contrastType.search('apca') > -1 ? true : false;
+      // Determine the actual contrast type to use for calculation
+      let calcType: ContrastType;
+      if (contrastType === 'apca object') {
+        calcType = 'apca';
+      } else if (contrastType === 'deltaE') {
+        calcType = 'deltaE';
+      } else {
+        calcType = contrastType;
+      }
 
-      const score = this.cms.getContrast(colorOne, colorTwo, isApcaLike ? 'apca' : 'bpca');
+      const score = this.cms.getContrast(colorOne, colorTwo, calcType);
 
       if (score && contrastType === 'apca object') {
         this.contrastScore.set(this.cus.getMinObjectDimension(score));
