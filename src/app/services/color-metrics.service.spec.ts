@@ -59,6 +59,37 @@ describe('ColorMetricsService', () => {
       const result = service.getContrast('#808080', '#808080', 'apca');
       expect(result).toBe(0);
     });
+
+    it('should return Delta E value when type is deltaE', () => {
+      const result = service.getContrast('#000000', '#ffffff', 'deltaE');
+      expect(result).not.toBeNull();
+      expect(typeof result).toBe('number');
+    });
+
+    it('should use ColorUtilService.calcDeltaE for deltaE type', () => {
+      spyOn(colorUtilService, 'calcDeltaE').and.returnValue(100);
+      const result = service.getContrast('#000000', '#ffffff', 'deltaE');
+      expect(colorUtilService.calcDeltaE).toHaveBeenCalledWith('#000000', '#ffffff');
+      expect(result).toBe(100);
+    });
+
+    it('should handle deltaE for identical colors', () => {
+      const result = service.getContrast('#808080', '#808080', 'deltaE');
+      expect(result).not.toBeNull();
+      expect(result).toBe(0);
+    });
+
+    it('should handle deltaE for colored pairs', () => {
+      const result = service.getContrast('#ff5733', '#e0e0e0', 'deltaE');
+      expect(result).not.toBeNull();
+      expect(typeof result).toBe('number');
+    });
+
+    it('should return null when calcDeltaE returns null', () => {
+      spyOn(colorUtilService, 'calcDeltaE').and.returnValue(null);
+      const result = service.getContrast('#000000', '#ffffff', 'deltaE');
+      expect(result).toBeNull();
+    });
   });
 
   describe('calcRawApcaContrast', () => {
@@ -182,6 +213,19 @@ describe('ColorMetricsService', () => {
       expect(apcaResult).not.toBe(bpcaResult);
     });
 
+    it('should produce different results for APCA vs BPCA vs Delta E', () => {
+      const apcaResult = service.getContrast('#000000', '#ffffff', 'apca');
+      const bpcaResult = service.getContrast('#000000', '#ffffff', 'bpca');
+      const deltaEResult = service.getContrast('#000000', '#ffffff', 'deltaE');
+
+      expect(apcaResult).not.toBeNull();
+      expect(bpcaResult).not.toBeNull();
+      expect(deltaEResult).not.toBeNull();
+      expect(apcaResult).not.toBe(bpcaResult);
+      expect(apcaResult).not.toBe(deltaEResult);
+      expect(bpcaResult).not.toBe(deltaEResult);
+    });
+
     it('should handle various color combinations', () => {
       const testPairs = [
         ['#000000', '#ffffff'],
@@ -194,8 +238,10 @@ describe('ColorMetricsService', () => {
       testPairs.forEach((pair) => {
         const apcaResult = service.getContrast(pair[0], pair[1], 'apca');
         const bpcaResult = service.getContrast(pair[0], pair[1], 'bpca');
+        const deltaEResult = service.getContrast(pair[0], pair[1], 'deltaE');
         expect(apcaResult).not.toBeNull();
         expect(bpcaResult).not.toBeNull();
+        expect(deltaEResult).not.toBeNull();
       });
     });
 

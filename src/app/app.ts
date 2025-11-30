@@ -260,7 +260,7 @@ export class App implements AfterViewInit {
       hasUrlState = true;
     }
 
-    if (type && (type === 'apca' || type === 'bpca' || type === 'apca object')) {
+    if (type && (type === 'apca' || type === 'bpca' || type === 'apca object' || type === 'deltaE')) {
       this.contrastType.set(type);
     }
 
