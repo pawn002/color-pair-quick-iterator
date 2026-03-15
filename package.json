@@ -6,6 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "build:gh-pages": "ng build --base-href=/color-pair-quick-iterator/",
+    "deploy:gh-pages": "npm run build:gh-pages && git add docs/ && git commit -m \"build: update GitHub Pages deployment with latest changes\" && git push",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "storybook": "ng run cqpi-ng-20-holding:storybook",
