@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 
 import { calcAPCA, sRGBtoY } from 'apca-w3';
+import { calculateContrast } from '@pawn002/okca';
 
 import { scaleLinear } from 'd3';
 
@@ -11,7 +12,7 @@ export interface NumberKeyLookup {
   [key: number]: number;
 }
 
-export type ContrastType = 'apca' | 'bpca' | 'deltaE';
+export type ContrastType = 'apca' | 'bpca' | 'deltaE' | 'okca';
 @Injectable({
   providedIn: 'root',
 })
@@ -35,6 +36,10 @@ export class ColorMetricsService {
       // Handle Delta E separately as it doesn't use APCA
       score = this.cus.calcDeltaE(colorOne, colorTwo);
       return score;
+    }
+
+    if (contrastType === 'okca') {
+      return calculateContrast(colorOne, colorTwo);
     }
 
     const contrast = this.calcRawApcaContrast(colorOne, colorTwo);

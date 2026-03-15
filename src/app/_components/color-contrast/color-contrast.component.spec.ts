@@ -53,7 +53,7 @@ describe('ColorContrastComponent', () => {
     it('should have default values', () => {
       expect(component.colorOne()).toBe('');
       expect(component.colorTwo()).toBe('');
-      expect(component.contrastType()).toBe('apca');
+      expect(component.contrastType()).toBe('okca');
       expect(component.debug()).toBe(false);
     });
   });
@@ -149,6 +149,49 @@ describe('ColorContrastComponent', () => {
 
       expect(colorUtilService.getMinObjectDimension).toHaveBeenCalledWith(60);
       expect(component.contrastScore()).toBe(2.5);
+    });
+  });
+
+  describe('Contrast calculation with OKCA type', () => {
+    it('should calculate OKCA contrast for black on white', () => {
+      fixture.componentRef.setInput('colorOne', '#000000');
+      fixture.componentRef.setInput('colorTwo', '#ffffff');
+      fixture.componentRef.setInput('contrastType', 'okca');
+      fixture.detectChanges();
+
+      expect(component.contrastScore()).not.toBeNaN();
+      expect(component.contrastScore()).toBeGreaterThanOrEqual(20);
+    });
+
+    it('should calculate OKCA contrast for colored pair', () => {
+      fixture.componentRef.setInput('colorOne', '#ff5733');
+      fixture.componentRef.setInput('colorTwo', '#e0e0e0');
+      fixture.componentRef.setInput('contrastType', 'okca');
+      fixture.detectChanges();
+
+      expect(component.contrastScore()).not.toBeNaN();
+      expect(component.contrastScore()).toBeGreaterThanOrEqual(1);
+    });
+
+    it('should use ColorMetricsService.getContrast with okca type', () => {
+      spyOn(colorMetricsService, 'getContrast').and.returnValue(15);
+
+      fixture.componentRef.setInput('colorOne', '#000000');
+      fixture.componentRef.setInput('colorTwo', '#ffffff');
+      fixture.componentRef.setInput('contrastType', 'okca');
+      fixture.detectChanges();
+
+      expect(colorMetricsService.getContrast).toHaveBeenCalledWith('#000000', '#ffffff', 'okca');
+      expect(component.contrastScore()).toBe(15);
+    });
+
+    it('should return 1 for identical colors', () => {
+      fixture.componentRef.setInput('colorOne', '#808080');
+      fixture.componentRef.setInput('colorTwo', '#808080');
+      fixture.componentRef.setInput('contrastType', 'okca');
+      fixture.detectChanges();
+
+      expect(component.contrastScore()).toBe(1);
     });
   });
 
@@ -284,6 +327,17 @@ describe('ColorContrastComponent', () => {
       fixture.detectChanges();
 
       expect(colorMetricsService.getContrast).toHaveBeenCalledWith('#000000', '#ffffff', 'deltaE');
+    });
+
+    it('should detect OKCA type correctly', () => {
+      spyOn(colorMetricsService, 'getContrast').and.returnValue(21);
+
+      fixture.componentRef.setInput('colorOne', '#000000');
+      fixture.componentRef.setInput('colorTwo', '#ffffff');
+      fixture.componentRef.setInput('contrastType', 'okca');
+      fixture.detectChanges();
+
+      expect(colorMetricsService.getContrast).toHaveBeenCalledWith('#000000', '#ffffff', 'okca');
     });
   });
 

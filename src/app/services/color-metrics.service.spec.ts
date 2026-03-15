@@ -90,6 +90,33 @@ describe('ColorMetricsService', () => {
       const result = service.getContrast('#000000', '#ffffff', 'deltaE');
       expect(result).toBeNull();
     });
+
+    it('should return OKCA contrast when type is okca', () => {
+      const result = service.getContrast('#000000', '#ffffff', 'okca');
+      expect(result).not.toBeNull();
+      expect(typeof result).toBe('number');
+    });
+
+    it('should return ~21 for black on white with okca', () => {
+      const result = service.getContrast('#000000', '#ffffff', 'okca');
+      expect(result).not.toBeNull();
+      expect(result!).toBeGreaterThanOrEqual(20);
+      expect(result!).toBeLessThanOrEqual(21);
+    });
+
+    it('should return 1 for identical colors with okca', () => {
+      const result = service.getContrast('#808080', '#808080', 'okca');
+      expect(result).not.toBeNull();
+      expect(result!).toBe(1);
+    });
+
+    it('should handle colored pairs with okca', () => {
+      const result = service.getContrast('#ff5733', '#e0e0e0', 'okca');
+      expect(result).not.toBeNull();
+      expect(typeof result).toBe('number');
+      expect(result!).toBeGreaterThanOrEqual(1);
+      expect(result!).toBeLessThanOrEqual(21);
+    });
   });
 
   describe('calcRawApcaContrast', () => {
@@ -226,6 +253,15 @@ describe('ColorMetricsService', () => {
       expect(bpcaResult).not.toBe(deltaEResult);
     });
 
+    it('should produce different results for OKCA vs APCA', () => {
+      const okcaResult = service.getContrast('#000000', '#ffffff', 'okca');
+      const apcaResult = service.getContrast('#000000', '#ffffff', 'apca');
+
+      expect(okcaResult).not.toBeNull();
+      expect(apcaResult).not.toBeNull();
+      expect(okcaResult).not.toBe(apcaResult);
+    });
+
     it('should handle various color combinations', () => {
       const testPairs = [
         ['#000000', '#ffffff'],
@@ -239,9 +275,11 @@ describe('ColorMetricsService', () => {
         const apcaResult = service.getContrast(pair[0], pair[1], 'apca');
         const bpcaResult = service.getContrast(pair[0], pair[1], 'bpca');
         const deltaEResult = service.getContrast(pair[0], pair[1], 'deltaE');
+        const okcaResult = service.getContrast(pair[0], pair[1], 'okca');
         expect(apcaResult).not.toBeNull();
         expect(bpcaResult).not.toBeNull();
         expect(deltaEResult).not.toBeNull();
+        expect(okcaResult).not.toBeNull();
       });
     });
 

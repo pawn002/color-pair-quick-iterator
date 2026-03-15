@@ -33,6 +33,7 @@
     "@angular/router": "^20.3.0",
     "@fontsource-variable/source-code-pro": "^5.2.7",
     "@fontsource/atkinson-hyperlegible": "^5.2.8",
+    "@pawn002/okca": "^0.1.0",
     "apca-w3": "^0.1.9",
     "bridge-pca": "^0.1.6",
     "colorjs.io": "^0.5.2",

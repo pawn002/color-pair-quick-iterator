@@ -19,7 +19,7 @@ export class ColorContrastComponent {
 
   colorOne = input<string>('');
   colorTwo = input<string>('');
-  contrastType = input<ContrastType | 'apca object'>('apca');
+  contrastType = input<ContrastType | 'apca object'>('okca');
   debug = input<boolean>(false);
 
   contrastScore = signal<number>(NaN);

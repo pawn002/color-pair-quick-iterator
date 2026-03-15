@@ -40,7 +40,7 @@ export class App implements AfterViewInit {
   colorPickerTwoSelectedColor = signal<string>('');
   colorPickerTwoComparedColor = signal<string>('');
 
-  contrastType = signal<ContrastType | 'apca object'>('apca');
+  contrastType = signal<ContrastType | 'apca object'>('okca');
 
   resetSlider: ResetObject | null = null;
 
@@ -229,7 +229,7 @@ export class App implements AfterViewInit {
 
     if (fg) params.set('fg', fg);
     if (bg) params.set('bg', bg);
-    if (type !== 'apca') params.set('type', type);
+    if (type !== 'okca') params.set('type', type);
     if (!chroma) params.set('chroma', 'false');
     if (!gradient) params.set('gradient', 'false');
 
@@ -260,7 +260,7 @@ export class App implements AfterViewInit {
       hasUrlState = true;
     }
 
-    if (type && (type === 'apca' || type === 'bpca' || type === 'apca object' || type === 'deltaE')) {
+    if (type && (type === 'apca' || type === 'bpca' || type === 'apca object' || type === 'deltaE' || type === 'okca')) {
       this.contrastType.set(type);
     }
 

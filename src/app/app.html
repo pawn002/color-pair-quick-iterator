@@ -254,6 +254,21 @@
 
           <div class="radio-section">
             <div class="radio-group">
+              <label for="ct-okca"
+                >OKCA<span class="sr-only"
+                  >; this affects a visual element not percievable to screenreaders for good UX—same
+                  value is obtainable on Color Metadata section under Differences.</span
+                >
+              </label>
+              <input
+                type="radio"
+                name="contrastType"
+                id="ct-okca"
+                (change)="radioChange('okca')"
+                [checked]="contrastType() === 'okca'"
+              />
+            </div>
+            <div class="radio-group">
               <label for="ct-apca"
                 >Perceptual<span class="sr-only"
                   >; this affects a visual element not percievable to screenreaders for good UX—same
