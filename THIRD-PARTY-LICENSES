@@ -1,0 +1,110 @@
+THIRD-PARTY SOFTWARE NOTICES AND INFORMATION
+
+This project incorporates material from the projects listed below.
+
+=======================================================================
+
+1. apca-w3 (https://github.com/Myndex/apca-w3)
+
+Copyright © 2019-2022 by Andrew Somers and/or Myndex™. All Rights Reserved.
+
+Licensed to the W3.org under their cooperative license agreement for use
+with WCAG accessibility guidelines for web-delivered and web-based content
+only.
+
+W3C Software and Document Notice and License:
+
+By obtaining and/or copying this work, you (the licensee) agree that you
+have read, understood, and will comply with the following terms and
+conditions.
+
+Permission to copy, modify, and distribute this work, with or without
+modification, for any purpose and without fee or royalty is hereby
+granted, provided that you include the following on ALL copies of the
+work or portions thereof, including modifications:
+
+- The full text of this NOTICE in a location viewable to users of the
+  redistributed or derivative work.
+- Any pre-existing intellectual property disclaimers, notices, or terms
+  and conditions. If none exist, the W3C Software and Document Short
+  Notice should be included.
+- Notice of any changes or modifications, through a copyright statement
+  on the new code or document such as "This software or document includes
+  material copied from or derived from apca-w3
+  (https://github.com/Myndex/apca-w3). Copyright © 2019-2022 W3C®
+  (MIT, ERCIM, Keio, Beihang)."
+
+THIS WORK IS PROVIDED "AS IS," AND COPYRIGHT HOLDERS MAKE NO
+REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO, WARRANTIES OF MERCHANTABILITY OR FITNESS FOR ANY PARTICULAR
+PURPOSE OR THAT THE USE OF THE SOFTWARE OR DOCUMENT WILL NOT INFRINGE
+ANY THIRD PARTY PATENTS, COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS.
+
+COPYRIGHT HOLDERS WILL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL
+OR CONSEQUENTIAL DAMAGES ARISING OUT OF ANY USE OF THE SOFTWARE OR
+DOCUMENT.
+
+The name and trademarks of copyright holders may NOT be used in
+advertising or publicity pertaining to the work without specific, written
+prior permission. Title to copyright in this work will at all times
+remain with copyright holders.
+
+This software includes material copied from or derived from apca-w3
+(https://github.com/Myndex/apca-w3). Copyright © 2019-2022 W3C®
+(MIT, ERCIM, Keio, Beihang).
+
+=======================================================================
+
+2. bridge-pca (https://github.com/Myndex/bridge-pca)
+
+Copyright © 2019-2022 by Myndex Research and Andrew Somers. All Rights
+Reserved.
+
+Licensed for non-commercial use only, without alteration or modification,
+for predicting contrast for web-based content in support of WCAG
+accessibility guidelines.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+
+COPYRIGHT HOLDERS WILL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL
+OR CONSEQUENTIAL DAMAGES ARISING OUT OF ANY USE OF THE SOFTWARE OR
+DOCUMENT.
+
+The name and trademarks of copyright holders may NOT be used in
+advertising or publicity pertaining to the work without specific, written
+prior permission. Title to copyright in this work will at all times
+remain with copyright holders.
+
+=======================================================================
+
+3. @pawn002/okca (https://github.com/pawn002/okca)
+
+MIT License
+
+=======================================================================
+
+4. colorjs.io (https://github.com/LeaVerou/color.js)
+
+MIT License
+
+Copyright (c) 2021 Lea Verou, Chris Lilley
+
+=======================================================================
+
+5. d3 (https://github.com/d3/d3)
+
+Copyright 2010-2023 Mike Bostock
+
+ISC License
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+=======================================================================
