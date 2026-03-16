@@ -66,12 +66,8 @@ describe('PaletteTableComponent', () => {
   });
 
   describe('Constants', () => {
-    it('should have correct lightSteps', () => {
-      expect(component.lightSteps).toBe(5);
-    });
-
-    it('should have correct chromaSteps', () => {
-      expect(component.chromaSteps).toBe(14);
+    it('should have correct minDelta', () => {
+      expect(component.minDelta).toBe(11);
     });
   });
 
@@ -84,39 +80,6 @@ describe('PaletteTableComponent', () => {
       const mockData = [[{ color: '#ff5733' } as TableColorCell]];
       component.dataStruct.set(mockData);
       expect(component.dataStruct()).toEqual(mockData);
-    });
-  });
-
-  describe('tableHeaders computed signal', () => {
-    it('should return empty array when dataStruct is empty', () => {
-      component.dataStruct.set([]);
-      expect(component.tableHeaders()).toEqual([]);
-    });
-
-    it('should return chroma values from first row', () => {
-      const mockData = [
-        [
-          { chroma: 0.1 } as TableColorCell,
-          { chroma: 0.2 } as TableColorCell,
-          { chroma: 0.3 } as TableColorCell,
-        ],
-      ];
-
-      component.dataStruct.set(mockData);
-      expect(component.tableHeaders()).toEqual([0.1, 0.2, 0.3]);
-    });
-
-    it('should update when dataStruct changes', () => {
-      const mockData1 = [[{ chroma: 0.1 } as TableColorCell]];
-      const mockData2 = [[{ chroma: 0.2 } as TableColorCell]];
-
-      component.dataStruct.set(mockData1);
-      const headers1 = component.tableHeaders();
-
-      component.dataStruct.set(mockData2);
-      const headers2 = component.tableHeaders();
-
-      expect(headers1).not.toEqual(headers2);
     });
   });
 
@@ -214,7 +177,7 @@ describe('PaletteTableComponent', () => {
   });
 
   describe('getTableData', () => {
-    it('should fetch table data for valid color', async () => {
+    it('should fetch table data for valid color', () => {
       const mockTableData = [
         [
           {
@@ -229,54 +192,46 @@ describe('PaletteTableComponent', () => {
         ],
       ];
 
-      spyOn(colorUtilService, 'generateAllOklchVariants').and.returnValue(
-        Promise.resolve(mockTableData),
-      );
+      spyOn(colorUtilService, 'generateAdaptiveVariants').and.returnValue(mockTableData);
 
-      await component.getTableData('#ff5733');
+      component.getTableData('#ff5733');
 
-      expect(colorUtilService.generateAllOklchVariants).toHaveBeenCalledWith(
-        '#ff5733',
-        component.lightSteps,
-        component.chromaSteps,
-      );
+      expect(colorUtilService.generateAdaptiveVariants).toHaveBeenCalledWith('#ff5733', 11);
       expect(component.dataStruct()).toEqual(mockTableData);
     });
 
-    it('should set empty array when color is empty', async () => {
-      await component.getTableData('');
+    it('should set empty array when color is empty', () => {
+      component.getTableData('');
       expect(component.dataStruct()).toEqual([]);
     });
 
-    it('should log warning in debug mode when color is empty', async () => {
+    it('should log warning in debug mode when color is empty', () => {
       spyOn(console, 'warn');
       fixture.componentRef.setInput('debug', true);
       fixture.detectChanges();
 
-      await component.getTableData('');
+      component.getTableData('');
 
       expect(console.warn).toHaveBeenCalledWith('no color for palette table');
     });
 
-    it('should use correct lightSteps and chromaSteps', async () => {
-      spyOn(colorUtilService, 'generateAllOklchVariants').and.returnValue(Promise.resolve([]));
+    it('should use minDelta of 11', () => {
+      spyOn(colorUtilService, 'generateAdaptiveVariants').and.returnValue([]);
 
-      await component.getTableData('#ff5733');
+      component.getTableData('#ff5733');
 
-      expect(colorUtilService.generateAllOklchVariants).toHaveBeenCalledWith('#ff5733', 5, 14);
+      expect(colorUtilService.generateAdaptiveVariants).toHaveBeenCalledWith('#ff5733', 11);
     });
 
-    it('should update dataStruct with generated variants', async () => {
+    it('should update dataStruct with generated variants', () => {
       const mockData = [
         [{ color: '#abc', chroma: 0.1 } as TableColorCell],
         [{ color: '#def', chroma: 0.2 } as TableColorCell],
       ];
 
-      spyOn(colorUtilService, 'generateAllOklchVariants').and.returnValue(
-        Promise.resolve(mockData),
-      );
+      spyOn(colorUtilService, 'generateAdaptiveVariants').and.returnValue(mockData);
 
-      await component.getTableData('#ff5733');
+      component.getTableData('#ff5733');
 
       expect(component.dataStruct()).toEqual(mockData);
     });
@@ -319,10 +274,7 @@ describe('PaletteTableComponent', () => {
         ],
       ];
 
-      spyOn(colorUtilService, 'generateAllOklchVariants').and.returnValues(
-        Promise.resolve(mockData1),
-        Promise.resolve(mockData2),
-      );
+      spyOn(colorUtilService, 'generateAdaptiveVariants').and.returnValues(mockData1, mockData2);
 
       fixture.componentRef.setInput('color', '#ff5733');
       fixture.detectChanges();
@@ -332,21 +284,19 @@ describe('PaletteTableComponent', () => {
       fixture.detectChanges();
       await fixture.whenStable();
 
-      expect(colorUtilService.generateAllOklchVariants).toHaveBeenCalledTimes(2);
+      expect(colorUtilService.generateAdaptiveVariants).toHaveBeenCalledTimes(2);
     });
   });
 
   describe('Integration', () => {
-    it('should generate table with correct dimensions', async () => {
+    it('should generate table with data', async () => {
       fixture.componentRef.setInput('color', '#ff5733');
       fixture.detectChanges();
       await fixture.whenStable();
 
       const data = component.dataStruct();
 
-      // The table generation is async, so we just verify it was called and has data
       if (data.length > 0) {
-        // Verify we have rows and columns
         expect(data.length).toBeGreaterThan(0);
         expect(data[0].length).toBeGreaterThan(0);
       }
@@ -356,12 +306,12 @@ describe('PaletteTableComponent', () => {
   describe('Edge cases', () => {
     it('should handle empty dataStruct gracefully', () => {
       component.dataStruct.set([]);
-      expect(() => component.tableHeaders()).not.toThrow();
+      expect(component.dataStruct()).toEqual([]);
     });
 
     it('should handle dataStruct with empty rows', () => {
       component.dataStruct.set([[]]);
-      expect(component.tableHeaders()).toEqual([]);
+      expect(component.dataStruct()).toEqual([[]]);
     });
   });
 });

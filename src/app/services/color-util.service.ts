@@ -3,8 +3,8 @@ import Color from 'colorjs.io';
 import { to } from 'colorjs.io/fn';
 // import { ColorConstructor } from 'colorjs.io/types/src/color';
 import { ColorConstructor } from 'colorjs.io';
-import { scaleLinear, sort } from 'd3';
-import { random, reverse, uniqBy, uniq } from 'lodash-es';
+import { scaleLinear } from 'd3';
+import { random } from 'lodash-es';
 import { TableColorCell, TableData } from '../_components/palette-table/palette-table.component';
 
 export type ColorPair = [string, string];
@@ -451,126 +451,165 @@ export class ColorUtilService {
     return dimension;
   }
 
-  generateAllOklchVariants(
-    color: string,
-    lightSteps: number,
-    chromaSteps: number,
-  ): Promise<TableData> {
-    return new Promise((resolve, reject) => {
-      const parsedColor = this.parseColor(color);
+  /**
+   * Generate a variant grid where every adjacent cell differs by at least
+   * `minDelta` Delta E 2000 from its neighbors on both the lightness and
+   * chroma axes.  The grid self-sizes based on the color's sRGB gamut
+   * boundaries — no fixed step counts.
+   *
+   * Algorithm:
+   *  1. Walk chroma outward from the base color at the base lightness.
+   *     Accept a new chroma level only when deltaE >= minDelta from the
+   *     previously accepted level.
+   *  2. At each accepted chroma, walk lightness outward from the base
+   *     independently — so each chroma column explores the full gamut
+   *     range available at that chroma.
+   *  3. Only in-gamut (sRGB) cells are emitted.
+   *  4. Columns (chroma walks) are assembled into rows (by lightness)
+   *     to produce a jagged table ordered light-to-dark.
+   */
+  generateAdaptiveVariants(color: string, minDelta: number = 11): TableData {
+    const parsedColor = this.parseColor(color);
+    if (!parsedColor) throw new Error(`Could not parse color: ${color}`);
 
-      const variantsCollection = [];
+    const oklch = Color.to(parsedColor, 'oklch');
+    const baseL = oklch.coords[0];
+    const baseC = oklch.coords[1];
+    const baseH = oklch.coords[2];
 
-      let sortedVariantsCollection = [];
+    const L_STEP = 0.005;
+    const C_STEP = 0.005;
 
-      if (parsedColor) {
-        const oklchColor = Color.to(parsedColor, 'oklch');
-        const lchCooords = oklchColor.coords;
-        const colorLight = lchCooords[0];
-        const colorChroma = lchCooords[1];
-        const colorHue = lchCooords[2];
+    // --- Build accepted chroma levels (once, at base lightness) ---
+    const chromaLevels = this.walkAxis(baseL, baseC, baseH, minDelta, C_STEP, 0, 0.4, 'chroma');
 
-        const lightMax = 1;
-        const lightMin = 0;
-        const lightInterval = (lightMax - lightMin) / lightSteps;
+    // --- At each chroma, build accepted lightness levels independently ---
+    // columns[i] = array of cells for chromaLevels[i], ordered low-L to high-L
+    const columns: TableColorCell[][] = [];
 
-        // calculate light levels
-        const rawLightLevels = [];
+    for (const targetC of chromaLevels) {
+      const lightnessLevels = this.walkAxis(baseL, targetC, baseH, minDelta, L_STEP, 0, 1, 'lightness');
 
-        let lLevel = colorLight;
-        do {
-          rawLightLevels.push(lLevel);
+      const col: TableColorCell[] = [];
+      for (const targetL of lightnessLevels) {
+        const variant = new Color('oklch', [targetL, targetC, baseH]);
+        if (!variant.inGamut('srgb')) continue;
 
-          lLevel = lLevel + lightInterval;
-        } while (lLevel <= lightMax);
+        const hex = variant.to('srgb').toString({ format: 'hex' });
+        const deltaE = this.calcDeltaE(hex, color) ?? NaN;
+        const dLight = baseL !== 0 ? Math.round(((targetL - baseL) / baseL) * 100) : NaN;
+        const dChroma = baseC !== 0 ? Math.round(((targetC - baseC) / baseC) * 100) : NaN;
 
-        lLevel = colorLight;
-
-        do {
-          rawLightLevels.push(lLevel);
-
-          lLevel = lLevel - lightInterval;
-        } while (lLevel >= lightMin);
-
-        const sortedLightLevels = sort(uniq(rawLightLevels));
-
-        const chromaMax = 0.33;
-        const chromaMin = 0;
-        const chromaInterval = (chromaMax - chromaMin) / chromaSteps;
-
-        // calculate chroma levels
-        const rawChromaLevels = [];
-
-        let cLevel = colorChroma;
-        do {
-          rawChromaLevels.push(cLevel);
-
-          cLevel = cLevel + chromaInterval;
-        } while (cLevel <= chromaMax);
-
-        cLevel = colorChroma;
-
-        do {
-          rawChromaLevels.push(cLevel);
-
-          cLevel = cLevel - chromaInterval;
-        } while (cLevel >= chromaMin);
-
-        const sortedChromaLevels = sort(uniq(rawChromaLevels));
-
-        // generate all rows
-        for (let i = 0; i < sortedLightLevels.length; i++) {
-          const variantRow: Array<TableColorCell> = [];
-
-          for (let j = 0; j < sortedChromaLevels.length; j++) {
-            const targetLightness = sortedLightLevels[i];
-
-            const targetChroma = sortedChromaLevels[j];
-
-            const variantColor = new Color('oklch', [targetLightness, targetChroma, colorHue]);
-
-            const variantColorinGamut = variantColor.inGamut('srgb');
-
-            const colorVal = variantColorinGamut
-              ? variantColor.to('srgb').toString({ format: 'hex' })
-              : '';
-
-            const deltaE = colorVal ? this.calcDeltaE(colorVal, color) : null;
-
-            const dLight = colorVal
-              ? Math.round(((targetLightness - colorLight) / colorLight) * 100)
-              : null;
-
-            const dChroma = colorVal
-              ? Math.round(((targetChroma - colorChroma) / colorChroma) * 100)
-              : null;
-
-            const variantObj: TableColorCell = {
-              color: colorVal,
-              lightness: targetLightness,
-              chroma: targetChroma,
-              hue: colorHue,
-              deltaE: !deltaE ? NaN : deltaE,
-              deltaChroma: !dChroma ? NaN : dChroma,
-              deltaLightness: !dLight ? NaN : dLight,
-            };
-
-            variantRow.push(variantObj);
-          }
-
-          variantsCollection.push(variantRow);
-        }
-      } else {
-        console.error(`could not parse color`);
-
-        reject(`could not parse color`);
+        col.push({
+          color: hex,
+          lightness: targetL,
+          chroma: targetC,
+          hue: baseH,
+          deltaE,
+          deltaChroma: dChroma,
+          deltaLightness: dLight,
+        });
       }
 
-      // order color rows from light to dark
-      sortedVariantsCollection = reverse(variantsCollection);
+      if (col.length > 0) {
+        columns.push(col);
+      }
+    }
 
-      resolve(sortedVariantsCollection);
-    });
+    // --- Sort each column light-to-dark (descending lightness) ---
+    for (const col of columns) {
+      col.sort((a, b) => b.lightness - a.lightness);
+    }
+
+    // --- Transpose columns into rows by index ---
+    // Row r = the r-th cell from each column that has at least r+1 cells.
+    // This keeps each visual column at constant chroma with lightness
+    // decreasing top-to-bottom.
+    const maxHeight = Math.max(...columns.map((c) => c.length));
+    const grid: TableData = [];
+    for (let r = 0; r < maxHeight; r++) {
+      const row: TableColorCell[] = [];
+      for (const col of columns) {
+        if (r < col.length) {
+          row.push(col[r]);
+        }
+      }
+      if (row.length > 0) {
+        grid.push(row);
+      }
+    }
+
+    return grid;
+  }
+
+  /**
+   * Walk an OKLCH axis outward from a base value in both directions,
+   * accepting positions only when they are >= minDelta from the
+   * previously accepted position.
+   */
+  private walkAxis(
+    baseL: number,
+    baseC: number,
+    baseH: number,
+    minDelta: number,
+    step: number,
+    min: number,
+    max: number,
+    axis: 'lightness' | 'chroma',
+  ): number[] {
+    const makeHex = (l: number, c: number): string | null => {
+      const col = new Color('oklch', [l, c, baseH]);
+      if (!col.inGamut('srgb')) return null;
+      return col.to('srgb').toString({ format: 'hex' });
+    };
+
+    const getLVal = (pos: number): number => (axis === 'lightness' ? pos : baseL);
+    const getCVal = (pos: number): number => (axis === 'chroma' ? pos : baseC);
+
+    const baseVal = axis === 'lightness' ? baseL : baseC;
+    const accepted: number[] = [baseVal];
+
+    // Walk upward
+    let prevHex = makeHex(getLVal(baseVal), getCVal(baseVal));
+    let pos = baseVal + step;
+    while (pos <= max) {
+      const hex = makeHex(getLVal(pos), getCVal(pos));
+      if (hex && prevHex) {
+        const de = this.calcDeltaE(hex, prevHex);
+        if (de !== null && de >= minDelta) {
+          accepted.push(pos);
+          prevHex = hex;
+        }
+      } else if (hex && !prevHex) {
+        // Re-entered gamut
+        prevHex = hex;
+      } else if (!hex && prevHex) {
+        // Left gamut, stop
+        break;
+      }
+      pos += step;
+    }
+
+    // Walk downward
+    prevHex = makeHex(getLVal(baseVal), getCVal(baseVal));
+    pos = baseVal - step;
+    while (pos >= min) {
+      const hex = makeHex(getLVal(pos), getCVal(pos));
+      if (hex && prevHex) {
+        const de = this.calcDeltaE(hex, prevHex);
+        if (de !== null && de >= minDelta) {
+          accepted.unshift(pos);
+          prevHex = hex;
+        }
+      } else if (hex && !prevHex) {
+        prevHex = hex;
+      } else if (!hex && prevHex) {
+        break;
+      }
+      pos -= step;
+    }
+
+    return accepted;
   }
 
   constructor() {}

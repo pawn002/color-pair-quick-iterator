@@ -1,13 +1,4 @@
-import {
-  Component,
-  Output,
-  EventEmitter,
-  inject,
-  input,
-  signal,
-  computed,
-  effect,
-} from '@angular/core';
+import { Component, Output, EventEmitter, inject, input, signal, effect } from '@angular/core';
 import { ColorUtilService } from '../../services/color-util.service';
 
 export class TableColorCell {
@@ -38,16 +29,10 @@ export class PaletteTableComponent {
 
   readonly cus = inject(ColorUtilService);
 
-  readonly lightSteps = 5;
-  readonly chromaSteps = 14;
+  readonly minDelta = 11;
 
-  // Signals for table data and headers
+  // Signal for table data
   readonly dataStruct = signal<TableData>([]);
-  readonly tableHeaders = computed<number[]>(() => {
-    const data = this.dataStruct();
-    if (!data.length || !data[0].length) return [];
-    return data[0].map((cell) => cell.chroma);
-  });
 
   constructor() {
     effect(() => {
@@ -66,7 +51,7 @@ export class PaletteTableComponent {
     return (this.cus.calcWcag2('white', bkgdColor) as number) >= 7 ? 'white' : 'black';
   }
 
-  async getTableData(color: string) {
+  getTableData(color: string) {
     if (!color) {
       if (this.debug()) {
         console.warn(`no color for palette table`);
@@ -74,7 +59,7 @@ export class PaletteTableComponent {
       this.dataStruct.set([]);
       return;
     }
-    const data = await this.cus.generateAllOklchVariants(color, this.lightSteps, this.chromaSteps);
+    const data = this.cus.generateAdaptiveVariants(color, this.minDelta);
     this.dataStruct.set(data);
   }
 }

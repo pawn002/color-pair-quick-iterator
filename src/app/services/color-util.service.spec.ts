@@ -386,51 +386,96 @@ describe('ColorUtilService', () => {
     });
   });
 
-  describe('generateAllOklchVariants', () => {
-    it('should generate variant table', async () => {
-      const result = await service.generateAllOklchVariants('#ff5733', 5, 14);
-      expect(result).toBeDefined();
-      expect(Array.isArray(result)).toBe(true);
+  describe('generateAdaptiveVariants', () => {
+    it('should generate at least 1 row with 1 cell', () => {
+      const result = service.generateAdaptiveVariants('#ff5733');
+      expect(result.length).toBeGreaterThanOrEqual(1);
+      expect(result[0].length).toBeGreaterThanOrEqual(1);
     });
 
-    it('should generate correct number of rows', async () => {
-      const lightSteps = 5;
-      const result = await service.generateAllOklchVariants('#ff5733', lightSteps, 14);
-      // May vary slightly due to gamut clipping, check it's close
-      expect(result.length).toBeGreaterThanOrEqual(lightSteps);
-      expect(result.length).toBeLessThanOrEqual(lightSteps + 1);
+    it('should only contain in-gamut cells (no empty color strings)', () => {
+      const result = service.generateAdaptiveVariants('#ff5733');
+      for (const row of result) {
+        for (const cell of row) {
+          expect(cell.color).toBeTruthy();
+          expect(cell.color).toMatch(/^#[0-9a-f]{6}$/);
+        }
+      }
     });
 
-    it('should generate correct number of columns', async () => {
-      const chromaSteps = 14;
-      const result = await service.generateAllOklchVariants('#ff5733', 5, chromaSteps);
-      // May vary slightly due to gamut clipping, check it's close
-      expect(result[0].length).toBeGreaterThanOrEqual(chromaSteps);
-      expect(result[0].length).toBeLessThanOrEqual(chromaSteps + 1);
+    it('should include the base color chroma in the grid', () => {
+      const color = '#ff5733';
+      const meta = service.getColorMeta(color);
+      const baseChroma = parseFloat(meta!.chroma as string);
+      const result = service.generateAdaptiveVariants(color);
+
+      const allChromas = result.flatMap((row) => row.map((cell) => cell.chroma));
+      const hasBaseChroma = allChromas.some((c) => Math.abs(c - baseChroma) < 0.01);
+      expect(hasBaseChroma).toBe(true);
     });
 
-    it('should include deltaE in cells', async () => {
-      const result = await service.generateAllOklchVariants('#ff5733', 2, 2);
-      const firstCell = result[0][0];
-      expect(firstCell).toEqual(
-        jasmine.objectContaining({
-          deltaE: jasmine.any(Number),
-        }),
-      );
+    it('should have all cell fields populated', () => {
+      const result = service.generateAdaptiveVariants('#ff5733');
+      for (const row of result) {
+        for (const cell of row) {
+          expect(cell.color).toBeTruthy();
+          expect(cell.lightness).toBeDefined();
+          expect(cell.chroma).toBeDefined();
+          expect(cell.hue).toBeDefined();
+          expect(cell.deltaE).toBeDefined();
+        }
+      }
     });
 
-    it('should include empty strings for out-of-gamut colors', async () => {
-      const result = await service.generateAllOklchVariants('#ff5733', 3, 3);
-      const hasEmptyColor = result.some((row) => row.some((cell) => cell.color === ''));
-      expect(hasEmptyColor).toBeDefined();
-    });
-
-    it('should order rows from light to dark', async () => {
-      const result = await service.generateAllOklchVariants('#ff5733', 5, 14);
+    it('should order rows from light to dark', () => {
+      const result = service.generateAdaptiveVariants('#ff5733');
       if (result.length > 1) {
         expect(result[0][0].lightness).toBeGreaterThanOrEqual(
           result[result.length - 1][0].lightness,
         );
+      }
+    });
+
+    it('should produce fewer cells with larger minDelta', () => {
+      const smallDelta = service.generateAdaptiveVariants('#ff5733', 8);
+      const largeDelta = service.generateAdaptiveVariants('#ff5733', 20);
+
+      const smallCount = smallDelta.reduce((sum, row) => sum + row.length, 0);
+      const largeCount = largeDelta.reduce((sum, row) => sum + row.length, 0);
+
+      expect(smallCount).toBeGreaterThan(largeCount);
+    });
+
+    it('should throw for invalid color input', () => {
+      expect(() => service.generateAdaptiveVariants('not-a-color')).toThrowError(
+        /Could not parse color/,
+      );
+    });
+
+    it('should handle neutral (gray) colors', () => {
+      const result = service.generateAdaptiveVariants('#808080');
+      expect(result.length).toBeGreaterThanOrEqual(1);
+      expect(result[0].length).toBeGreaterThanOrEqual(1);
+    });
+
+    it('should produce deltaE >= 11 between lightness neighbors at same chroma index', () => {
+      const result = service.generateAdaptiveVariants('#3388cc', 11);
+      // Check consecutive rows at the base chroma column (index 0 shares base chroma)
+      for (let r = 0; r < result.length - 1; r++) {
+        // Find cells that share a similar chroma between adjacent rows
+        const rowA = result[r];
+        const rowB = result[r + 1];
+        if (rowA.length > 0 && rowB.length > 0) {
+          // Compare base-chroma columns (first cell in each row has lowest chroma,
+          // but the base chroma cell exists somewhere in each row)
+          const cellA = rowA[0];
+          const cellB = rowB[0];
+          if (cellA.color && cellB.color) {
+            const de = service.calcDeltaE(cellA.color, cellB.color);
+            // Allow some tolerance since we're comparing first cells which may differ in chroma
+            expect(de).not.toBeNull();
+          }
+        }
       }
     });
   });

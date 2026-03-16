@@ -5,14 +5,6 @@
       Collection of colors sharing the same hue organized by chroma as columns, and lightness as
       rows. Selecting a button in the table will copy the its color to the clipboard.
     </caption>
-    <thead>
-      <tr class="sr-only">
-        <td>&nbsp;</td>
-        @for (header of tableHeaders(); track $index) {
-        <th>{{ header.toFixed(5) }}</th>
-        }
-      </tr>
-    </thead>
     <tbody>
       @for (row of dataStruct(); track i; let i = $index) {
       <tr>
@@ -20,7 +12,6 @@
         @for (cell of row; track j; let j = $index) {
         <td>
           <div>
-            @if (cell.color) {
             <button
               [style.backgroundColor]="cell.deltaE === 0 ? 'black' : cell.color"
               [style.color]="getTextColor(cell.color)"
@@ -32,11 +23,6 @@
               <span class="sr-only">{{ cell.deltaChroma }}%, </span>
               <span class="sr-only">{{ cell.deltaE }}</span>
             </button>
-            } @else {
-            <div class="no-color">
-              <p class="sr-only">color out of sRGB gamut</p>
-            </div>
-            }
           </div>
         </td>
         }
