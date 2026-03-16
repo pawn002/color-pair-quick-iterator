@@ -12,6 +12,7 @@ export class DifferencesDataObj {
 export class SuccessesObj {
   text: 'pass' | 'fail' | null = null;
   largeText: 'pass' | 'fail' | null = null;
+  nonText: 'pass' | 'fail' | null = null;
   objectMinDimension: number | string = NaN;
 }
 
@@ -80,6 +81,7 @@ export class MetadataComponent {
     const result: SuccessesObj = {
       text: null,
       largeText: null,
+      nonText: null,
       objectMinDimension: NaN,
     };
     if (!colOne || !colTwo) {
@@ -88,22 +90,23 @@ export class MetadataComponent {
       }
       return result;
     }
-    const wcagNew = this.cms.getContrast(colOne, colTwo, 'bpca');
+    const okcaScore = this.cms.getContrast(colOne, colTwo, 'okca');
     const apcaScore = this.cms.getContrast(colOne, colTwo, 'apca');
-    if (!wcagNew || !apcaScore) {
+    if (okcaScore == null || !apcaScore) {
       if (this.debug()) {
         console.warn('trouble getting scores');
       }
       return result;
     }
-    if (wcagNew < 0 || Math.abs(apcaScore) < 0) {
+    if (okcaScore < 0 || Math.abs(apcaScore) < 0) {
       if (this.debug()) {
         console.warn('something wonky with calculating scores');
       }
       return result;
     }
-    result.text = wcagNew >= 4.5 ? 'pass' : 'fail';
-    result.largeText = wcagNew >= 3 ? 'pass' : 'fail';
+    result.text = okcaScore >= 4.5 ? 'pass' : 'fail';
+    result.largeText = okcaScore >= 3 ? 'pass' : 'fail';
+    result.nonText = okcaScore >= 3 ? 'pass' : 'fail';
     const minDimension = this.cus.getMinObjectDimension(apcaScore);
     result.objectMinDimension = Number.isNaN(minDimension) ? 'invisible' : minDimension;
     return result;

@@ -243,6 +243,15 @@ describe('MetadataComponent', () => {
       expect(success.largeText).toBe('pass');
     });
 
+    it('should calculate pass/fail for non-text contrast', () => {
+      fixture.componentRef.setInput('colorOne', '#000000');
+      fixture.componentRef.setInput('colorTwo', '#ffffff');
+      fixture.detectChanges();
+
+      const success = component.successes();
+      expect(success.nonText).toBe('pass');
+    });
+
     it('should calculate minimum object dimension', () => {
       fixture.componentRef.setInput('colorOne', '#000000');
       fixture.componentRef.setInput('colorTwo', '#ffffff');
@@ -252,7 +261,7 @@ describe('MetadataComponent', () => {
       expect(success.objectMinDimension).toBe(0.25);
     });
 
-    it('should mark text as fail for low contrast', () => {
+    it('should mark text as fail for low OKCA contrast', () => {
       spyOn(colorMetricsService, 'getContrast').and.returnValues(3.0, 60);
 
       fixture.componentRef.setInput('colorOne', '#808080');
@@ -263,7 +272,7 @@ describe('MetadataComponent', () => {
       expect(success.text).toBe('fail');
     });
 
-    it('should mark large text as pass for medium contrast', () => {
+    it('should mark large text as pass for medium OKCA contrast', () => {
       spyOn(colorMetricsService, 'getContrast').and.returnValues(3.5, 50);
 
       fixture.componentRef.setInput('colorOne', '#808080');
@@ -272,6 +281,28 @@ describe('MetadataComponent', () => {
 
       const success = component.successes();
       expect(success.largeText).toBe('pass');
+    });
+
+    it('should mark non-text as fail for low OKCA contrast', () => {
+      spyOn(colorMetricsService, 'getContrast').and.returnValues(2.5, 60);
+
+      fixture.componentRef.setInput('colorOne', '#808080');
+      fixture.componentRef.setInput('colorTwo', '#888888');
+      fixture.detectChanges();
+
+      const success = component.successes();
+      expect(success.nonText).toBe('fail');
+    });
+
+    it('should mark non-text as pass when OKCA >= 3', () => {
+      spyOn(colorMetricsService, 'getContrast').and.returnValues(3.0, 50);
+
+      fixture.componentRef.setInput('colorOne', '#808080');
+      fixture.componentRef.setInput('colorTwo', '#cccccc');
+      fixture.detectChanges();
+
+      const success = component.successes();
+      expect(success.nonText).toBe('pass');
     });
 
     it('should return invisible for very low contrast', () => {
@@ -294,6 +325,7 @@ describe('MetadataComponent', () => {
       const success = component.successes();
       expect(success.text).toBeNull();
       expect(success.largeText).toBeNull();
+      expect(success.nonText).toBeNull();
       expect(success.objectMinDimension).toBeNaN();
     });
 
