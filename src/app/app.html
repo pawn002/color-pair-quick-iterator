@@ -464,6 +464,18 @@
           </li>
         </ul>
 
+        <p id="notes-deltaE">
+          <span class="visual-header">Delta E:</span> A measure of the perceptual difference between
+          two colors. Unlike contrast ratios, Delta E quantifies how different two colors appear
+          regardless of their lightness relationship. Values range from 0 (identical) upward, where
+          higher values indicate greater perceptual difference.
+        </p>
+        <p id="notes-okca">
+          <span class="visual-header">OKCA:</span> OK Contrast Algorithm. A WCAG-compatible contrast
+          ratio (1-21) calculated in OKLCH color space. OKCA addresses known false-pass issues in WCAG
+          2 by applying chroma compression and green correction to produce conservative, accurate
+          scores with zero false passes.
+        </p>
         <p id="notes-perceptual-contrast">
           <span class="visual-header"> Perceptual contrast:</span> This score gauges inclusive
           contrast better than WCAG 2. For more information on why, refer to Myndex article,
@@ -479,10 +491,16 @@
           this score for judging inclusive contrast.
         </p>
 
-        <p id="notes-display-wcag2">
+        <p id="notes-display-okca">
+          <span class="visual-header">Colors Contrast Value: OKCA:</span>
+          The default score displayed by Colors Contrast. It produces a WCAG-compatible ratio from 1
+          to 21, calculated in OKLCH color space with corrections for saturated color false passes and
+          green hue boundary errors.
+        </p>
+        <p id="notes-display-perceptual">
           <span class="visual-header">Colors Contrast Value: Perceptual:</span>
-          The default score displayed by Colors Contrast. It ranges from -108 to 106. Use this value
-          in conjunction with
+          This option swaps in APCA, a perceptual contrast score ranging from -108 to 106. Use this
+          value in conjunction with
           <a href="http://https://www.myndex.com/APCA/">Myndex guides</a> to create inclusive
           designs.
         </p>
@@ -490,7 +508,13 @@
           <span class="visual-header">Colors Contrast Value: WCAG 2 compatible:</span>
           This option swaps in a score for a value usable with WCAG 2.x success criteria.
         </p>
-        <p id="notes-display-wcag2">
+        <p id="notes-display-deltaE">
+          <span class="visual-header">Colors Contrast Value: Delta E:</span>
+          This option swaps in a perceptual color difference score. Unlike contrast ratios, it
+          measures how different two colors appear to the human eye, independent of their lightness
+          relationship.
+        </p>
+        <p id="notes-display-object">
           <span class="visual-header">Colors Contrast Value: Object:</span>
           This option swaps in a score that either displays a number in pixels or an exclamation
           point (!). The number is the smallest object dimension you can use the current color

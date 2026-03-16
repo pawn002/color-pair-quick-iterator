@@ -4,6 +4,7 @@ import { ColorMetricsService } from '../../services/color-metrics.service';
 
 export class DifferencesDataObj {
   deltaE: number = NaN;
+  okca: number = NaN;
   wcag2Old: number = NaN;
   wcag2New: number = NaN;
   apca: number = NaN;
@@ -61,10 +62,12 @@ export class MetadataComponent {
       return result;
     }
     const deltaE = this.cus.calcDeltaE(colOne, colTwo);
+    const okca = this.cms.getContrast(colOne, colTwo, 'okca');
     const wcag2New = this.cms.getContrast(colOne, colTwo, 'bpca');
     const wcag2Old = this.cus.calcWcag2(colOne, colTwo);
     const apca = this.cms.getContrast(colOne, colTwo, 'apca');
     result.deltaE = !deltaE ? NaN : deltaE;
+    result.okca = okca == null ? NaN : okca;
     result.wcag2New = !wcag2New ? NaN : wcag2New;
     result.wcag2Old = !wcag2Old ? NaN : wcag2Old;
     result.apca = !apca ? NaN : apca;

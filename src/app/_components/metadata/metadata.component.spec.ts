@@ -144,6 +144,7 @@ describe('MetadataComponent', () => {
       const diff = component.differences();
       expect(diff).toBeDefined();
       expect(diff.deltaE).not.toBeNaN();
+      expect(diff.okca).not.toBeNaN();
       expect(diff.wcag2New).not.toBeNaN();
       expect(diff.wcag2Old).not.toBeNaN();
       expect(diff.apca).not.toBeNaN();
@@ -156,6 +157,7 @@ describe('MetadataComponent', () => {
 
       const diff = component.differences();
       expect(diff.deltaE).toBeNaN();
+      expect(diff.okca).toBeNaN();
       expect(diff.wcag2New).toBeNaN();
       expect(diff.wcag2Old).toBeNaN();
       expect(diff.apca).toBeNaN();
@@ -178,6 +180,15 @@ describe('MetadataComponent', () => {
       const diff = component.differences();
       expect(diff.wcag2New).toBeGreaterThan(1);
       expect(diff.wcag2Old).toBeGreaterThan(1);
+    });
+
+    it('should calculate OKCA score', () => {
+      fixture.componentRef.setInput('colorOne', '#000000');
+      fixture.componentRef.setInput('colorTwo', '#ffffff');
+      fixture.detectChanges();
+
+      const diff = component.differences();
+      expect(diff.okca).toBeGreaterThan(1);
     });
 
     it('should calculate APCA score', () => {
