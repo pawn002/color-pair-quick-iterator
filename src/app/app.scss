@@ -65,32 +65,10 @@
   }
 
   .pallette-viz-container {
-    summary {
-      padding: 0 var(--spacing-sm);
-      background-color: var(--color-bg-surface);
-      color: var(--color-text-subtle);
-      box-sizing: border-box;
-      border-radius: var(--radius-md);
-      font-family: var(--font-family-base);
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-medium);
-      margin-bottom: 0.4em;
-      min-height: var(--min-hit-dimension-aa);
-      min-width: var(--min-hit-dimension-aa);
-      max-width: unset;
-      line-height: 1.6em;
-      list-style: none;
-      text-align: center;
-      transition: background-color 0.2s ease-in-out;
-
-      &:hover {
-        background-color: var(--color-border-default);
-      }
-    }
-
     .content {
       max-width: 100%;
       overflow: auto;
+      padding-bottom: 0.875rem;
     }
   }
 
