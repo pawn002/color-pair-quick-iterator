@@ -4,14 +4,14 @@
   border-radius: var(--radius-sm) 0 0 var(--radius-sm);
 
   &:hover {
-    box-shadow: 0 4px 0 0 var(--ui-shadow-color);
+    box-shadow: var(--shadow-sm);
   }
 
   input {
     width: 50px;
     height: 50px;
     box-sizing: border-box;
-    border: var(--app-white) var(--border-width-medium) solid;
+    border: var(--border-width-thin) solid var(--color-border-default);
     border-radius: var(--radius-sm) 0 0 var(--radius-sm);
   }
 

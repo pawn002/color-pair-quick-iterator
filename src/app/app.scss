@@ -27,7 +27,7 @@
   .title-and-score {
     display: flex;
     position: sticky;
-    border-bottom: var(--color-border-control) var(--border-width-medium) solid;
+    border-bottom: var(--border-width-thin) solid var(--color-border-default);
     top: 0;
     gap: 0.6rem;
     padding-top: 0.5rem;
@@ -38,8 +38,9 @@
 
     h1 {
       width: min-content;
-      color: var(--min-body-text-black);
+      color: var(--color-text-default);
       text-align: right;
+      letter-spacing: var(--letter-spacing-tight);
     }
 
     app-color-contrast {
@@ -65,13 +66,14 @@
 
   .pallette-viz-container {
     summary {
-      padding: 0 0.5ch;
-      background-color: var(--app-white);
-      color: var(--min-text-on-white);
+      padding: 0 var(--spacing-sm);
+      background-color: var(--color-bg-surface);
+      color: var(--color-text-subtle);
       box-sizing: border-box;
-      border-radius: var(--radius-sm);
-      font-family: var(--body-font);
-      font-size: var(--min-text-size);
+      border-radius: var(--radius-md);
+      font-family: var(--font-family-base);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
       margin-bottom: 0.4em;
       min-height: var(--min-hit-dimension-aa);
       min-width: var(--min-hit-dimension-aa);
@@ -79,9 +81,10 @@
       line-height: 1.6em;
       list-style: none;
       text-align: center;
+      transition: background-color 0.2s ease-in-out;
 
       &:hover {
-        box-shadow: 0 4px 0 0 var(--ui-shadow-color);
+        background-color: var(--color-border-default);
       }
     }
 
@@ -95,33 +98,36 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 11px;
-    margin: 11px 0 5px;
+    gap: var(--spacing-xs);
+    margin: var(--spacing-xs) 0;
 
     button {
       display: flex;
       position: relative;
       font-size: 0;
-      padding: 2px;
-      border: transparent var(--border-width-medium) solid;
-      color: var(--min-body-text-black);
-      background-color: var(--app-white);
+      padding: var(--spacing-xs);
+      border: none;
+      color: var(--color-action-tertiary-text);
+      background-color: var(--color-action-tertiary);
       box-sizing: border-box;
       align-items: center;
       justify-content: center;
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius-md);
       min-width: var(--min-hit-dimension-aa);
       min-height: var(--min-hit-dimension-aa);
+      font-family: var(--font-family-base);
+      font-weight: var(--font-weight-medium);
+      transition: background-color 0.2s ease-in-out;
 
       &:hover {
-        box-shadow: 0 4px 0 0 var(--ui-shadow-color);
+        background-color: var(--color-action-tertiary-hover);
       }
 
       svg {
         display: inline-block;
         width: 22px;
         height: auto;
-        fill: var(--min-body-text-black);
+        fill: var(--color-action-tertiary-text);
 
         &.swap-colors {
           transform: rotateZ(90deg);
@@ -145,7 +151,7 @@
         calc(var(--visual-padding) / 2);
 
       &:hover {
-        box-shadow: 0 4px 0 0 var(--ui-shadow-color);
+        box-shadow: var(--shadow-sm);
       }
     }
 

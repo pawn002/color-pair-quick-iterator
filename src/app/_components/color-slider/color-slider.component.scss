@@ -1,5 +1,5 @@
 .comp-container {
-  --default-background: var(--app-white);
+  --default-background: var(--color-bg-page);
   --grad-stop-0: black;
   --grad-stop-1: rgb(8.6104% 8.6104% 8.6104%);
   --grad-stop-2: rgb(28.06% 28.06% 28.06%);
@@ -23,14 +23,14 @@
 
   /* gives input more room on left and right ends to be hit more successfully */
   padding: 0 calc(var(--min-hit-dimension-aaa) / 2);
-  border: var(--border-width-medium) solid var(--app-white);
+  border: var(--border-width-thin) solid var(--color-border-default);
   border-left: none;
   border-right: none;
   align-items: center;
   background: var(--default-background);
 
   &:hover {
-    box-shadow: 0 4px 0 0 var(--ui-shadow-color);
+    box-shadow: var(--shadow-sm);
   }
 
   input {

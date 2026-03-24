@@ -11,17 +11,17 @@
 /* App design tokens — mapped to @candor-design/tokens */
 :root {
   /* Color aliases */
-  --background-color: var(--color-bg-surface);
+  --background-color: var(--color-bg-page);
   --ui-shadow-color: var(--gray-400);
   --app-white: var(--gray-0);
   --min-text-on-white: var(--color-text-subtle);
   --app-black: var(--gray-900);
   --ideal-body-text-black: var(--color-text-default);
   --min-body-text-black: var(--color-text-subtle);
-  --min-large-text-black: var(--color-border-control);
+  --min-large-text-black: var(--color-border-default);
 
   /* Typography aliases */
-  --header-font: var(--font-family-mono);
+  --header-font: var(--font-family-display);
   --body-font: var(--font-family-accessible);
   --mono-font: var(--font-family-mono);
   --min-text-size: var(--font-size-sm);
@@ -35,7 +35,7 @@
 
 body {
   margin: 0;
-  background-color: var(--color-bg-inverse);
+  background-color: var(--color-bg-surface);
 }
 
 hr {
@@ -59,7 +59,7 @@ h3,
 h4,
 th {
   margin: 0;
-  line-height: 1.05em;
+  line-height: var(--line-height-tight);
   font-weight: var(--font-weight-semibold);
 
   sup {
@@ -69,8 +69,9 @@ th {
 
 h1 {
   font-family: var(--header-font);
-  font-size: 1.2rem;
-  line-height: 1.1em;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  font-optical-sizing: auto;
   font-style: normal;
 }
 
@@ -105,7 +106,7 @@ th {
 }
 
 .visual-header {
-  color: var(--min-body-text-black);
+  color: var(--color-text-default);
   font-family: var(--header-font);
   font-style: normal;
   font-weight: var(--font-weight-semibold);
