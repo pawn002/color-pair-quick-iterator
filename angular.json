@@ -26,7 +26,10 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"]
+            "styles": [
+              "node_modules/@candor-design/tokens/tokens/candor-tokens.css",
+              "src/styles.scss"
+            ]
           },
           "configurations": {
             "production": {
@@ -80,7 +83,10 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"]
+            "styles": [
+              "node_modules/@candor-design/tokens/tokens/candor-tokens.css",
+              "src/styles.scss"
+            ]
           }
         },
         "storybook": {

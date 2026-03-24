@@ -1,30 +1,33 @@
 /* You can add global styles to this file, and also import other style files */
 
-/* Imports */
+/* Candor Design System fonts */
 @import url('@fontsource/atkinson-hyperlegible/400.css');
 @import url('@fontsource/atkinson-hyperlegible/400-italic.css');
 @import url('@fontsource/atkinson-hyperlegible/700.css');
 @import url('@fontsource/atkinson-hyperlegible/700-italic.css');
-@import url('@fontsource-variable/source-code-pro/wght.css');
-@import url('@fontsource-variable/source-code-pro/wght-italic.css');
+@import url('@fontsource-variable/roboto-flex/index.css');
+@import url('@fontsource-variable/roboto-mono/index.css');
 
-/* Vars */
+/* App design tokens — mapped to @candor-design/tokens */
 :root {
-  --background-color: #e2e2e2;
-  --ui-shadow-color: #8b8b8b;
-  --app-white: #fff;
-  --min-text-on-white: #717171;
-  --app-black: #000;
-  --ideal-body-text-black: var(--app-black);
-  --min-body-text-black: #4e4e4e;
-  --min-large-text-black: #797979;
-  --header-font: 'Source Code Pro Variable', sans-serif;
-  --body-font: 'Atkinson Hyperlegible', sans-serif;
-  --mono-font: 'Source Code Pro Variable', sans-serif;
+  /* Color aliases */
+  --background-color: var(--color-bg-surface);
+  --ui-shadow-color: var(--gray-400);
+  --app-white: var(--gray-0);
+  --min-text-on-white: var(--color-text-subtle);
+  --app-black: var(--gray-900);
+  --ideal-body-text-black: var(--color-text-default);
+  --min-body-text-black: var(--color-text-subtle);
+  --min-large-text-black: var(--color-border-control);
 
-  /* Assuming 1rem = 16px. . . */
-  --min-text-size: 0.8125rem;
-  --min-body-text-size: 1rem;
+  /* Typography aliases */
+  --header-font: var(--font-family-mono);
+  --body-font: var(--font-family-accessible);
+  --mono-font: var(--font-family-mono);
+  --min-text-size: var(--font-size-sm);
+  --min-body-text-size: var(--font-size-base);
+
+  /* Layout tokens (no Candor equivalent — kept as-is) */
   --min-hit-dimension-aaa: 2.75rem;
   --min-hit-dimension-aa: 1.375rem;
   --fluid-padding: clamp(0.313rem, 4.5vw + -0.25rem, 2rem);
@@ -32,13 +35,13 @@
 
 body {
   margin: 0;
-  background-color: var(--app-black);
+  background-color: var(--color-bg-inverse);
 }
 
 hr {
   width: 100%;
-  border-width: 2px;
-  border-color: var(--min-large-text-black);
+  border-width: var(--border-width-medium);
+  border-color: var(--color-border-control);
   border-top: none;
   border-left: none;
   border-right: none;
@@ -57,7 +60,7 @@ h4,
 th {
   margin: 0;
   line-height: 1.05em;
-  font-weight: 650;
+  font-weight: var(--font-weight-semibold);
 
   sup {
     margin-left: 0.25ch;
@@ -105,7 +108,7 @@ th {
   color: var(--min-body-text-black);
   font-family: var(--header-font);
   font-style: normal;
-  font-weight: 650;
+  font-weight: var(--font-weight-semibold);
 }
 
 td {
@@ -113,9 +116,9 @@ td {
   font-size: var(--min-body-text-size);
   color: var(--ideal-body-text-black);
   font-style: normal;
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   max-width: 40ch;
-  line-height: 1.5em;
+  line-height: var(--line-height-normal);
 }
 
 p,
@@ -125,16 +128,20 @@ details > summary {
   font-size: var(--min-body-text-size);
   color: var(--ideal-body-text-black);
   font-style: normal;
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   max-width: 40ch;
-  line-height: 1.5em;
+  line-height: var(--line-height-normal);
 
   sup {
     margin-right: 0.5ch;
   }
 
   a {
-    color: inherit;
+    color: var(--color-link);
+
+    &:visited {
+      color: var(--color-link-visited);
+    }
   }
 }
 
@@ -155,7 +162,7 @@ summary {
 strong {
   font-size: var(--min-text-size);
   text-transform: uppercase;
-  letter-spacing: 0.05ch;
+  letter-spacing: var(--letter-spacing-wide);
 }
 
 .sr-only:not(:focus, :active) {

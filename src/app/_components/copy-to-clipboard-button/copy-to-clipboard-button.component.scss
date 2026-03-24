@@ -6,11 +6,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 0 5px 5px 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     width: 50px;
     height: 50px;
     padding: 0.25rem;
-    border: transparent 2px solid;
+    border: transparent var(--border-width-medium) solid;
     background-color: var(--app-white);
     min-width: var(--min-hit-dimension-aaa);
     min-height: var(--min-hit-dimension-aaa);

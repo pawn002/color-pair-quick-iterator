@@ -1,9 +1,9 @@
 .comp-container {
   .alert-content {
-    box-shadow: 0 0 4px 0 black;
+    box-shadow: var(--shadow-sm);
     border-bottom: transparent;
-    border-radius: 5px 5px 0 0;
-    background-color: white;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    background-color: var(--color-bg-elevated);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -23,17 +23,17 @@
       font-family: var(--body-font);
       min-height: var(--min-hit-dimension-aaa);
       min-width: var(--min-hit-dimension-aaa);
-      border: transparent 2px solid;
-      border-radius: 5px;
-      background-color: white;
+      border: transparent var(--border-width-medium) solid;
+      border-radius: var(--radius-sm);
+      background-color: var(--color-bg-elevated);
 
       &:hover {
-        background-color: #dfdfdf;
+        background-color: var(--color-bg-surface);
       }
     }
 
     .msg-id {
-      color: #717171;
+      color: var(--color-text-subtle);
       font-size: var(--min-text-size);
     }
 

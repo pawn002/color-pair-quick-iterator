@@ -23,7 +23,7 @@
 
   /* gives input more room on left and right ends to be hit more successfully */
   padding: 0 calc(var(--min-hit-dimension-aaa) / 2);
-  border: 2px solid var(--app-white);
+  border: var(--border-width-medium) solid var(--app-white);
   border-left: none;
   border-right: none;
   align-items: center;

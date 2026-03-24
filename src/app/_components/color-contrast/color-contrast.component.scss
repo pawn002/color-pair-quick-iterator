@@ -1,6 +1,6 @@
 .comp-container {
   padding: 0.5em 0.25ch;
-  border: var(--min-body-text-black) solid 3px;
+  border: var(--color-border-control) solid var(--border-width-thick);
 
   .score-container {
     display: flex;

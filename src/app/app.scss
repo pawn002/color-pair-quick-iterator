@@ -27,7 +27,7 @@
   .title-and-score {
     display: flex;
     position: sticky;
-    border-bottom: var(--min-large-text-black) 2px solid;
+    border-bottom: var(--color-border-control) var(--border-width-medium) solid;
     top: 0;
     gap: 0.6rem;
     padding-top: 0.5rem;
@@ -69,7 +69,7 @@
       background-color: var(--app-white);
       color: var(--min-text-on-white);
       box-sizing: border-box;
-      border-radius: 5px;
+      border-radius: var(--radius-sm);
       font-family: var(--body-font);
       font-size: var(--min-text-size);
       margin-bottom: 0.4em;
@@ -103,13 +103,13 @@
       position: relative;
       font-size: 0;
       padding: 2px;
-      border: transparent 2px solid;
+      border: transparent var(--border-width-medium) solid;
       color: var(--min-body-text-black);
       background-color: var(--app-white);
       box-sizing: border-box;
       align-items: center;
       justify-content: center;
-      border-radius: 5px;
+      border-radius: var(--radius-sm);
       min-width: var(--min-hit-dimension-aa);
       min-height: var(--min-hit-dimension-aa);
 
