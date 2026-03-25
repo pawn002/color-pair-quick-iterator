@@ -45,3 +45,6 @@ Thumbs.db
 
 *storybook.log
 storybook-static
+
+# Playwright debug screenshots dropped in repo root
+/*.png
