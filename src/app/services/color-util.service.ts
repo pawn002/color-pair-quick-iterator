@@ -50,7 +50,9 @@ export class ColorUtilService {
   toHexString(color: string): string | null {
     const parsed = this.parseColor(color);
     if (!parsed) return null;
-    return new Color(parsed).to('srgb').toString({ format: 'hex' });
+    const hex = new Color(parsed).to('srgb').toString({ format: 'hex' });
+    // colorjs.io may return 3-digit shorthand (#fff) — expand to 6-digit for okca compatibility
+    return hex.replace(/^#([0-9a-f])([0-9a-f])([0-9a-f])$/i, '#$1$1$2$2$3$3');
   }
 
   hexToOklchString(color: string): string {
