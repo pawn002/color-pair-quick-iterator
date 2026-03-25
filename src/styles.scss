@@ -8,26 +8,8 @@
 @import url('@fontsource-variable/roboto-flex/index.css');
 @import url('@fontsource-variable/roboto-mono/index.css');
 
-/* App design tokens — mapped to @candor-design/tokens */
+/* App layout tokens (no Candor equivalent) */
 :root {
-  /* Color aliases */
-  --background-color: var(--color-bg-page);
-  --ui-shadow-color: var(--gray-400);
-  --app-white: var(--gray-0);
-  --min-text-on-white: var(--color-text-subtle);
-  --app-black: var(--gray-900);
-  --ideal-body-text-black: var(--color-text-default);
-  --min-body-text-black: var(--color-text-subtle);
-  --min-large-text-black: var(--color-border-default);
-
-  /* Typography aliases */
-  --header-font: var(--font-family-display);
-  --body-font: var(--font-family-accessible);
-  --mono-font: var(--font-family-mono);
-  --min-text-size: var(--font-size-sm);
-  --min-body-text-size: var(--font-size-base);
-
-  /* Layout tokens (no Candor equivalent — kept as-is) */
   --min-hit-dimension-aaa: 2.75rem;
   --min-hit-dimension-aa: 1.375rem;
   --fluid-padding: clamp(0.313rem, 4.5vw + -0.25rem, 2rem);
@@ -48,9 +30,9 @@ hr {
 }
 
 sup {
-  color: var(--min-body-text-black) !important;
+  color: var(--color-text-subtle) !important;
   font-weight: 400 !important;
-  font-size: var(--min-text-size) !important;
+  font-size: var(--font-size-sm) !important;
 }
 
 h1,
@@ -68,7 +50,7 @@ th {
 }
 
 h1 {
-  font-family: var(--header-font);
+  font-family: var(--font-family-display);
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   font-optical-sizing: auto;
@@ -76,7 +58,7 @@ h1 {
 }
 
 h2 {
-  font-family: var(--header-font);
+  font-family: var(--font-family-display);
   color: var(--color-text-default);
   font-size: var(--font-size-lg);
   font-style: normal;
@@ -86,36 +68,36 @@ h2 {
 h3 {
   line-height: unset;
   color: var(--color-text-default);
-  font-family: var(--header-font);
+  font-family: var(--font-family-display);
   font-size: var(--font-size-md);
   font-style: normal;
 }
 
 h4 {
   line-height: unset;
-  color: var(--min-body-text-black);
-  font-family: var(--header-font);
-  font-size: var(--min-body-text-size);
+  color: var(--color-text-subtle);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-base);
   font-style: normal;
 }
 
 th {
-  font-family: var(--header-font);
-  font-size: var(--min-body-text-size);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-base);
   font-style: normal;
 }
 
 .visual-header {
   color: var(--color-text-default);
-  font-family: var(--header-font);
+  font-family: var(--font-family-display);
   font-style: normal;
   font-weight: var(--font-weight-semibold);
 }
 
 td {
-  font-family: var(--body-font);
-  font-size: var(--min-body-text-size);
-  color: var(--ideal-body-text-black);
+  font-family: var(--font-family-accessible);
+  font-size: var(--font-size-base);
+  color: var(--color-text-default);
   font-style: normal;
   font-weight: var(--font-weight-regular);
   max-width: 40ch;
@@ -124,9 +106,9 @@ td {
 
 p,
 li {
-  font-family: var(--body-font);
-  font-size: var(--min-body-text-size);
-  color: var(--ideal-body-text-black);
+  font-family: var(--font-family-accessible);
+  font-size: var(--font-size-base);
+  color: var(--color-text-default);
   font-style: normal;
   font-weight: var(--font-weight-regular);
   max-width: 40ch;
@@ -153,7 +135,7 @@ input {
 }
 
 strong {
-  font-size: var(--min-text-size);
+  font-size: var(--font-size-sm);
   text-transform: uppercase;
   letter-spacing: var(--letter-spacing-wide);
 }

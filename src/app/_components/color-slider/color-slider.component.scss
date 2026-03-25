@@ -87,8 +87,8 @@
 
     /* TODO: what do custom input text need to be? <p>? */
     div {
-      font-family: var(--mono-font);
-      font-size: var(--min-body-text-size);
+      font-family: var(--font-family-mono);
+      font-size: var(--font-size-base);
       font-weight: 400;
     }
   }
@@ -109,6 +109,6 @@
     border-radius: 100%;
     width: 15px;
     height: 15px;
-    border: 15px solid var(--app-black);
+    border: 15px solid var(--gray-900);
   }
 }
