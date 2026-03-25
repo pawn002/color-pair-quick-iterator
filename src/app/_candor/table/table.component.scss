@@ -53,14 +53,14 @@
         @media (prefers-color-scheme: dark) {
             tbody tr:nth-child(even) td,
             tbody tr:nth-child(even) th {
-                background: var(--color-bg-elevated);
+                background: var(--color-bg-surface);
             }
         }
 
         [data-theme="dark"] & {
             tbody tr:nth-child(even) td,
             tbody tr:nth-child(even) th {
-                background: var(--color-bg-elevated);
+                background: var(--color-bg-surface);
             }
         }
 
@@ -104,7 +104,7 @@
 
                 tbody tr:nth-child(odd) td,
                 tbody tr:nth-child(odd) th {
-                    background: var(--color-bg-elevated);
+                    background: var(--color-bg-surface);
                 }
             }
 
@@ -116,7 +116,7 @@
 
                 tbody tr:nth-child(odd) td,
                 tbody tr:nth-child(odd) th {
-                    background: var(--color-bg-elevated);
+                    background: var(--color-bg-surface);
                 }
             }
 

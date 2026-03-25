@@ -1,7 +1,7 @@
 .comp-container {
   display: inline-block;
   position: relative;
-  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
 
   &:hover {
     box-shadow: var(--shadow-sm);
@@ -12,11 +12,11 @@
     height: 50px;
     box-sizing: border-box;
     border: var(--border-width-thin) solid var(--color-border-default);
-    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+    border-radius: var(--radius-md) 0 0 var(--radius-md);
   }
 
   .color-preview {
-    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+    border-radius: var(--radius-md) 0 0 var(--radius-md);
     position: absolute;
     top: 50%;
     left: 50%;

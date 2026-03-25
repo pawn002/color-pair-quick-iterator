@@ -16,4 +16,14 @@
   h3 {
     text-align: center;
   }
+
+  cite a {
+    color: inherit;
+    text-decoration-color: var(--color-border-strong);
+
+    &:hover {
+      color: var(--color-action-primary);
+      text-decoration-color: var(--color-action-primary);
+    }
+  }
 }
