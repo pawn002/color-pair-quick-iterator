@@ -77,17 +77,17 @@ h1 {
 
 h2 {
   font-family: var(--header-font);
-  color: var(--min-body-text-black);
-  font-size: var(--min-body-text-size);
+  color: var(--color-text-default);
+  font-size: var(--font-size-lg);
   font-style: normal;
   margin-bottom: 0.3em;
 }
 
 h3 {
   line-height: unset;
-  color: var(--min-body-text-black);
+  color: var(--color-text-default);
   font-family: var(--header-font);
-  font-size: var(--min-text-size);
+  font-size: var(--font-size-md);
   font-style: normal;
 }
 

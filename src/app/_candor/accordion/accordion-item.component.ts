@@ -9,4 +9,5 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 export class AccordionItemComponent {
   title = input('');
   open = input(false);
+  variant = input<'default' | 'subtle' | 'quiet'>('default');
 }

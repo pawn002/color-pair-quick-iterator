@@ -37,4 +37,23 @@ describe('AccordionItemComponent', () => {
     const details = fixture.nativeElement.querySelector('details');
     expect(details.open).toBeTrue();
   });
+
+  it('should apply default variant class by default', () => {
+    const title = fixture.nativeElement.querySelector('.accordion-item__title');
+    expect(title.classList).toContain('accordion-item__title--default');
+  });
+
+  it('should apply subtle variant class', () => {
+    fixture.componentRef.setInput('variant', 'subtle');
+    fixture.detectChanges();
+    const title = fixture.nativeElement.querySelector('.accordion-item__title');
+    expect(title.classList).toContain('accordion-item__title--subtle');
+  });
+
+  it('should apply quiet variant class', () => {
+    fixture.componentRef.setInput('variant', 'quiet');
+    fixture.detectChanges();
+    const title = fixture.nativeElement.querySelector('.accordion-item__title');
+    expect(title.classList).toContain('accordion-item__title--quiet');
+  });
 });

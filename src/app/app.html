@@ -10,7 +10,7 @@
     </div>
 
     <div class="title-and-sliders__body">
-      <app-accordion-item title="How to use this app.">
+      <app-accordion-item title="How to use this app." variant="quiet">
         <p>
           <span class="visual-header">Quick Start:</span>
           Input a Foreground and Background Color using the color inputs in the next section. You can
@@ -59,7 +59,7 @@
         ></app-copy-to-clipboard-button>
       </div>
 
-      <app-accordion-item title="Foreground LCH Limits">
+      <app-accordion-item title="Foreground LCH Limits" variant="subtle">
         <div class="pallette-viz-content">
           <app-palette-table
             [color]="colorPickerOneSelectedColor()"
@@ -93,7 +93,7 @@
         ></app-copy-to-clipboard-button>
       </div>
 
-      <app-accordion-item title="Background LCH Limits">
+      <app-accordion-item title="Background LCH Limits" variant="subtle">
         <div class="pallette-viz-content">
           <app-palette-table
             [color]="colorPickerTwoSelectedColor()"
