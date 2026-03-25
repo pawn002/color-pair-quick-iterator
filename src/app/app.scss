@@ -2,9 +2,10 @@
   display: flex;
   position: relative;
   left: 50%;
-  padding: var(--fluid-padding) var(--fluid-padding) 0 var(--fluid-padding);
+  padding: var(--fluid-padding) var(--fluid-padding) var(--fluid-padding) var(--fluid-padding);
   transform: translateX(-50%);
   flex-direction: column;
+  gap: var(--spacing-md);
   background-color: var(--background-color);
   max-width: 400px;
 
@@ -20,8 +21,16 @@
     margin-left: 2px;
   }
 
+  .card {
+    background-color: var(--color-bg-elevated);
+    border: var(--border-width-thin) solid var(--color-border-default);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+  }
+
   .title-and-sliders {
     position: relative;
+    padding-bottom: var(--spacing-sm);
   }
 
   .title-and-score {
@@ -33,7 +42,7 @@
     padding-top: 0.5rem;
     padding-bottom: 0.6rem;
     margin-bottom: 0.6rem;
-    background-color: var(--background-color);
+    background-color: var(--color-bg-elevated);
     z-index: 2;
 
     h1 {
@@ -270,9 +279,6 @@
         }
       }
     }
-  }
-
-  .metadata {
   }
 
   .instructions {

@@ -1,5 +1,5 @@
 <div class="app-container">
-  <section class="title-and-sliders">
+  <section class="title-and-sliders card">
     <div class="title-and-score">
       <h1>Colors Contrast</h1>
       <app-color-contrast
@@ -32,8 +32,6 @@
         >
       </p>
     </details>
-
-    <hr class="instructions-hr" />
 
     <h2 class="sr-only">Main Color Controls</h2>
 
@@ -110,7 +108,7 @@
     </details>
   </section>
 
-  <section class="quick-actions">
+  <section class="quick-actions card">
     <button
       (click)="swapColors()"
       [disabled]="!colorPickerOneSelectedColor() || !colorPickerTwoSelectedColor()"
@@ -241,9 +239,7 @@
     </button>
   </section>
 
-  <hr />
-
-  <section class="options">
+  <section class="options card">
     <h2>Options</h2>
 
     <div class="options">
@@ -363,9 +359,7 @@
     </div>
   </section>
 
-  <hr />
-
-  <section class="metadata">
+  <section class="metadata card">
     <h2 id="color-metadata">Color Metadata</h2>
 
     <details>
@@ -378,9 +372,7 @@
     </details>
   </section>
 
-  <hr />
-
-  <section class="instructions">
+  <section class="instructions card">
     <h2 id="additional-instructions">Additional Instructions</h2>
 
     <details>
@@ -425,9 +417,7 @@
     </details>
   </section>
 
-  <hr />
-
-  <section class="notes">
+  <section class="notes card">
     <h2>Notes</h2>
 
     <details>
@@ -552,9 +542,7 @@
     </details>
   </section>
 
-  <hr />
-
-  <section class="contact">
+  <section class="contact card">
     <h2>Contact Information and Feedback</h2>
 
     <p>
