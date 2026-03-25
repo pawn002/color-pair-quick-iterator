@@ -37,13 +37,15 @@
       <h3>Foreground Color</h3>
 
       <div class="slide-group">
-        <app-color-picker
-          [inputId]="'cp-0'"
-          [inputName]="'Foreground Color'"
-          [comparedColor]="colorPickerOneComparedColor()"
-          (selectedColor)="handleColorInputInput('One', $event)"
-          [color]="colorPickerOneSelectedColor()"
-        ></app-color-picker>
+        <app-tooltip text="Choose foreground color" position="bottom">
+          <app-color-picker
+            [inputId]="'cp-0'"
+            [inputName]="'Foreground Color'"
+            [comparedColor]="colorPickerOneComparedColor()"
+            (selectedColor)="handleColorInputInput('One', $event)"
+            [color]="colorPickerOneSelectedColor()"
+          ></app-color-picker>
+        </app-tooltip>
         <app-color-slider
           [id]="'slider-0'"
           [name]="'Foreground Slider'"
@@ -53,10 +55,12 @@
           [resetSlider]="resetSlider"
           [showGradient]="showGradient()"
         ></app-color-slider>
-        <app-copy-to-clipboard-button
-          [color]="colorPickerOneComparedColor()"
-          (copyEvent)="handleCopyEvent($event)"
-        ></app-copy-to-clipboard-button>
+        <app-tooltip text="Copy foreground color" position="bottom">
+          <app-copy-to-clipboard-button
+            [color]="colorPickerOneComparedColor()"
+            (copyEvent)="handleCopyEvent($event)"
+          ></app-copy-to-clipboard-button>
+        </app-tooltip>
       </div>
 
       <app-accordion-item title="Foreground LCH Limits" variant="subtle">
@@ -71,13 +75,15 @@
       <h3>Background Color</h3>
 
       <div class="slide-group">
-        <app-color-picker
-          [inputId]="'cp-1'"
-          [inputName]="'Background Color'"
-          [comparedColor]="colorPickerTwoComparedColor()"
-          [color]="colorPickerTwoSelectedColor()"
-          (selectedColor)="handleColorInputInput('Two', $event)"
-        ></app-color-picker>
+        <app-tooltip text="Choose background color" position="bottom">
+          <app-color-picker
+            [inputId]="'cp-1'"
+            [inputName]="'Background Color'"
+            [comparedColor]="colorPickerTwoComparedColor()"
+            [color]="colorPickerTwoSelectedColor()"
+            (selectedColor)="handleColorInputInput('Two', $event)"
+          ></app-color-picker>
+        </app-tooltip>
         <app-color-slider
           [id]="'slider-1'"
           [name]="'Backgroundground Slider'"
@@ -87,10 +93,12 @@
           [resetSlider]="resetSlider"
           [showGradient]="showGradient()"
         ></app-color-slider>
-        <app-copy-to-clipboard-button
-          [color]="colorPickerTwoComparedColor()"
-          (copyEvent)="handleCopyEvent($event)"
-        ></app-copy-to-clipboard-button>
+        <app-tooltip text="Copy background color" position="bottom">
+          <app-copy-to-clipboard-button
+            [color]="colorPickerTwoComparedColor()"
+            (copyEvent)="handleCopyEvent($event)"
+          ></app-copy-to-clipboard-button>
+        </app-tooltip>
       </div>
 
       <app-accordion-item title="Background LCH Limits" variant="subtle">
@@ -106,6 +114,7 @@
 
   <app-card class="quick-actions" variant="elevated" padding="sm">
     <div class="quick-actions__buttons">
+    <app-tooltip text="Swap foreground and background">
     <app-button
       variant="tertiary"
       size="icon"
@@ -126,7 +135,9 @@
         </g>
       </svg>
     </app-button>
+    </app-tooltip>
 
+    <app-tooltip text="Match chromas">
     <app-button
       variant="tertiary"
       size="icon"
@@ -145,7 +156,9 @@
         />
       </svg>
     </app-button>
+    </app-tooltip>
 
+    <app-tooltip text="Reset sliders">
     <app-button
       variant="tertiary"
       size="icon"
@@ -162,7 +175,9 @@
         />
       </svg>
     </app-button>
+    </app-tooltip>
 
+    <app-tooltip text="New random pair">
     <app-button
       variant="tertiary"
       size="icon"
@@ -217,6 +232,7 @@
         </g>
       </svg>
     </app-button>
+    </app-tooltip>
     </div>
   </app-card>
 
