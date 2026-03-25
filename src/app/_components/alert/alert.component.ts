@@ -1,5 +1,6 @@
-import { Component, EventEmitter, input, effect, Output, signal, output } from '@angular/core';
-import { random, set, times } from 'lodash-es';
+import { Component, input, effect, signal, output } from '@angular/core';
+import { random, times } from 'lodash-es';
+import { ToastComponent } from '../../_candor/toast/toast.component';
 
 export class AlertMessagObj {
   message: string = '';
@@ -9,7 +10,7 @@ export class AlertMessagObj {
   selector: 'app-alert',
   templateUrl: './alert.component.html',
   styleUrls: ['./alert.component.scss'],
-  standalone: true,
+  imports: [ToastComponent],
 })
 export class AlertComponent {
   alertMessage = input<AlertMessagObj>(new AlertMessagObj());

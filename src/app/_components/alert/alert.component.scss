@@ -1,58 +1,24 @@
 .comp-container {
-  .alert-content {
-    box-shadow: var(--shadow-sm);
-    border-bottom: transparent;
-    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-    background-color: var(--color-bg-elevated);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0.3rem;
-    gap: 0.3rem;
-    opacity: 1;
-    transform: scale(1);
-    animation-name: show-alert;
-    animation-duration: 200ms;
+  app-toast {
+    animation: show-alert 200ms ease-out;
+  }
 
-    p {
-      margin: 0;
-      text-align: center;
-    }
-
-    button {
-      font-family: var(--body-font);
-      min-height: var(--min-hit-dimension-aaa);
-      min-width: var(--min-hit-dimension-aaa);
-      border: transparent var(--border-width-medium) solid;
-      border-radius: var(--radius-sm);
-      background-color: var(--color-bg-elevated);
-
-      &:hover {
-        background-color: var(--color-bg-surface);
-      }
-    }
-
-    .msg-id {
-      color: var(--color-text-subtle);
-      font-size: var(--min-text-size);
-    }
-
-    &:empty {
-      display: none;
-      opacity: 0;
-      transform: translateY(100%);
-    }
+  .msg-id {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
   }
 
   @keyframes show-alert {
     from {
-      display: none;
       opacity: 0;
-      transform: translateY(100%);
+      transform: translateY(8px);
     }
 
     to {
-      display: flex;
       opacity: 1;
       transform: translateY(0);
     }

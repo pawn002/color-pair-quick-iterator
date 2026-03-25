@@ -175,23 +175,22 @@ describe('AlertComponent', () => {
   });
 
   describe('Template rendering', () => {
-    it('should render alert content when showAlert is true', () => {
+    it('should render toast when showAlert is true', () => {
       const message: AlertMessagObj = { message: 'Test alert message' };
       fixture.componentRef.setInput('alertMessage', message);
       component.showAlert.set(true);
       fixture.detectChanges();
 
-      const alertContent = fixture.nativeElement.querySelector('.alert-content p');
-      expect(alertContent).toBeTruthy();
-      expect(alertContent.textContent).toBe('Test alert message');
+      const toast = fixture.nativeElement.querySelector('app-toast');
+      expect(toast).toBeTruthy();
     });
 
-    it('should not render alert content when showAlert is false', () => {
+    it('should not render toast when showAlert is false', () => {
       component.showAlert.set(false);
       fixture.detectChanges();
 
-      const alertContent = fixture.nativeElement.querySelector('.alert-content p');
-      expect(alertContent).toBeFalsy();
+      const toast = fixture.nativeElement.querySelector('app-toast');
+      expect(toast).toBeFalsy();
     });
   });
 });

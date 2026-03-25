@@ -147,6 +147,6 @@
 
   .alert {
     position: sticky;
-    bottom: 0;
+    bottom: var(--spacing-sm);
   }
 }
