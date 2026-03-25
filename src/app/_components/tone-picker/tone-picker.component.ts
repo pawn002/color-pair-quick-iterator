@@ -39,18 +39,22 @@ export interface GridRow {
         class="gamut-grid"
         [class.size-small]="size() === 'small'"
       >
-        <thead>
-          <tr role="row">
-            <td class="corner" role="none"></td>
-            @for (header of columnHeaders(); track header) {
-              <th scope="col" role="columnheader" class="col-header">{{ header }}</th>
-            }
-          </tr>
-        </thead>
+        @if (!hideUi()) {
+          <thead>
+            <tr role="row">
+              <td class="corner" role="none"></td>
+              @for (header of columnHeaders(); track header) {
+                <th scope="col" role="columnheader" class="col-header">{{ header }}</th>
+              }
+            </tr>
+          </thead>
+        }
         <tbody>
           @for (row of rows(); track row.rowHeader; let ri = $index) {
             <tr role="row">
-              <th scope="row" role="rowheader" class="row-header">{{ row.rowHeader }}</th>
+              @if (!hideUi()) {
+                <th scope="row" role="rowheader" class="row-header">{{ row.rowHeader }}</th>
+              }
               @for (cell of row.cells; track $index; let ci = $index) {
                 @if (!cell.disabled) {
                   <td role="gridcell" class="cell">
@@ -80,16 +84,18 @@ export interface GridRow {
 
     <div role="status" aria-live="polite" aria-atomic="true" class="sr-only">{{ announcement() }}</div>
 
-    <div class="preview">
-      @if (selectedColor()) {
-        <span class="preview-swatch" [style.background]="selectedColor()" aria-hidden="true"></span>
-        <span class="preview-code">{{ selectedColor() }}</span>
-      } @else {
-        <span class="preview-empty">No color selected</span>
-      }
-    </div>
+    @if (!hideUi()) {
+      <div class="preview">
+        @if (selectedColor()) {
+          <span class="preview-swatch" [style.background]="selectedColor()" aria-hidden="true"></span>
+          <span class="preview-code">{{ selectedColor() }}</span>
+        } @else {
+          <span class="preview-empty">No color selected</span>
+        }
+      </div>
 
-    <p class="hint">Arrow keys navigate · Enter or Space activates · Blank cells are outside sRGB gamut</p>
+      <p class="hint">Arrow keys navigate · Enter or Space activates · Blank cells are outside sRGB gamut</p>
+    }
   `,
 })
 export class TonePickerComponent implements OnInit {
@@ -118,6 +124,7 @@ export class TonePickerComponent implements OnInit {
   ariaLabel = input<string>('');
   size = input<'small' | 'normal'>('normal');
   selectedValue = input<string | null>(null);
+  hideUi = input<boolean>(false);
 
   colorSelect = output<string>();
 

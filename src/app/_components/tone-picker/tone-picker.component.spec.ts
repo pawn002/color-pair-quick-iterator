@@ -66,6 +66,34 @@ describe('TonePickerComponent', () => {
       expect(component.ariaLabel()).toBe('');
     });
 
+    it('should default hideUi to false', () => {
+      expect(component.hideUi()).toBe(false);
+    });
+
+    it('should accept hideUi true', () => {
+      fixture.componentRef.setInput('hideUi', true);
+      fixture.detectChanges();
+      expect(component.hideUi()).toBe(true);
+    });
+
+    it('should hide thead and preview when hideUi is true', () => {
+      fixture.componentRef.setInput('hideUi', true);
+      fixture.detectChanges();
+      const el: HTMLElement = fixture.nativeElement;
+      expect(el.querySelector('thead')).toBeNull();
+      expect(el.querySelector('.preview')).toBeNull();
+      expect(el.querySelector('.hint')).toBeNull();
+    });
+
+    it('should show thead and preview when hideUi is false', () => {
+      fixture.componentRef.setInput('hideUi', false);
+      fixture.detectChanges();
+      const el: HTMLElement = fixture.nativeElement;
+      expect(el.querySelector('thead')).not.toBeNull();
+      expect(el.querySelector('.preview')).not.toBeNull();
+      expect(el.querySelector('.hint')).not.toBeNull();
+    });
+
     it('should accept selectedValue', () => {
       fixture.componentRef.setInput('selectedValue', 'oklch(0.60 0.050 180.0)');
       fixture.detectChanges();
