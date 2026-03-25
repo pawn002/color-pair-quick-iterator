@@ -142,7 +142,7 @@ describe('TonePickerComponent', () => {
   describe('setsize computed', () => {
     it('should count only non-disabled cells', () => {
       // ROWS has 3 non-disabled cells (row0col0, row1col0, row1col1)
-      expect(component.setsize()).toBe(3);
+      expect((component as any).setsize()).toBe(3);
     });
   });
 

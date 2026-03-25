@@ -28,7 +28,7 @@ describe('CheckboxComponent', () => {
   });
 
   it('should reflect the checked input', () => {
-    component.checked = true;
+    fixture.componentRef.setInput('checked', true);
     fixture.detectChanges();
     const input = fixture.nativeElement.querySelector('input[type=checkbox]');
     expect(input.checked).toBeTrue();
