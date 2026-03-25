@@ -13,6 +13,7 @@
   &--elevated {
     background-color: var(--color-bg-elevated);
     border: var(--border-width-thin) solid var(--color-border-default);
+    box-shadow: var(--shadow-sm);
   }
 
   &--outlined {

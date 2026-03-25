@@ -25,6 +25,7 @@
     position: relative;
   }
 
+
   .title-and-score {
     display: flex;
     position: sticky;
@@ -69,7 +70,7 @@
   }
 
   .quick-actions {
-    margin: var(--spacing-xs) 0;
+    margin: calc(var(--spacing-md) * -0.5) 0 0;
 
     .quick-actions__buttons {
       display: flex;
@@ -91,11 +92,6 @@
   }
 
   .options {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
     .checkbox-section {
       display: flex;
       flex-wrap: wrap;
