@@ -1,10 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/angular';
+import { componentWrapperDecorator } from '@storybook/angular';
 import { ColorContrastComponent } from './color-contrast.component';
 
 const meta: Meta<ColorContrastComponent> = {
   title: 'App/Color Contrast',
   component: ColorContrastComponent,
   tags: ['autodocs'],
+  decorators: [
+    componentWrapperDecorator(
+      (story) => `<div style="display:flex;height:200px;width:300px">${story}</div>`
+    ),
+  ],
   argTypes: {
     colorOne: {
       control: 'color',
