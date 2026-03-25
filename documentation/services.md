@@ -350,10 +350,11 @@ Adjusts the first color in a pair to use the midpoint of its available lightness
 
 **Location**: `src/app/services/color-metrics.service.ts`
 
-Calculates contrast scores between two colors using APCA and Bridge-PCA algorithms.
+Calculates contrast scores between two colors. **OKCA is the primary and default algorithm.** APCA, Bridge-PCA, and Delta E are also supported.
 
 ### Dependencies
 
+- `@pawn002/okca` - OKCA contrast calculation (primary)
 - `apca-w3` - APCA contrast calculation
 - `d3` - Scale utilities
 - `ColorUtilService` - Color parsing and conversion
@@ -362,7 +363,7 @@ Calculates contrast scores between two colors using APCA and Bridge-PCA algorith
 ### Types
 
 ```typescript
-export type ContrastType = 'apca' | 'bpca';
+export type ContrastType = 'apca' | 'bpca' | 'deltaE' | 'okca';
 
 export interface NumberKeyLookup {
   [key: number]: number;
@@ -373,17 +374,29 @@ export interface NumberKeyLookup {
 
 #### getContrast(colorOne: string, colorTwo: string, contrastType: ContrastType): number | null
 
-Main method to get contrast score between two colors.
+Main method to get contrast score between two colors. The app defaults to `'okca'`.
 
 **Parameters**:
 - `colorOne` - Foreground color string
 - `colorTwo` - Background color string
-- `contrastType` - Type of contrast calculation ('apca' or 'bpca')
+- `contrastType` - Algorithm to use: `'okca'` (default), `'apca'`, `'bpca'`, or `'deltaE'`
 
 **Returns**: Contrast score as number or null
 
+**Contrast type summary**:
+
+| Type | Scale | Notes |
+|------|-------|-------|
+| `okca` | 1–21 | OKLCH-native, zero WCAG false passes, default |
+| `apca` | ~0–108 | Perceptual contrast, signed (polarity matters) |
+| `bpca` | 1–21 | WCAG 2.x ratio via Bridge-PCA |
+| `deltaE` | 0–100 | CIE Delta E 2000 perceptual color difference |
+
 **Example**:
 ```typescript
+const okca = colorMetricsService.getContrast('#ff69b4', '#1a1a1a', 'okca');
+// Returns: 4.0 (WCAG gives 6.6 — a known false pass)
+
 const apca = colorMetricsService.getContrast('#000000', '#ffffff', 'apca');
 // Returns: 106 (very high contrast)
 
@@ -686,6 +699,7 @@ Potential improvements for the services:
 
 ## References
 
+- [OKCA on GitHub](https://github.com/pawn002/okca) — primary contrast algorithm
 - [colorjs.io Documentation](https://colorjs.io/)
 - [APCA on GitHub](https://github.com/Myndex/apca-w3)
 - [Bridge-PCA on GitHub](https://github.com/Myndex/bridge-pca)

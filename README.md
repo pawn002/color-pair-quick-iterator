@@ -1,12 +1,13 @@
 # Color Pair Quick Iterator
 
-An Angular 20 application for exploring and iterating on accessible color pairs using perceptual color contrast algorithms (APCA and Bridge-PCA).
+An Angular 20 application for exploring and iterating on accessible color pairs. Built around **OKCA** — an OKLCH-native contrast algorithm with zero false passes against WCAG 2.x.
 
 **Live Application**: https://pawn002.github.io/color-pair-quick-iterator/
 
 ## Features
 
-- **Perceptual Contrast**: Uses APCA (Accessible Perceptual Contrast Algorithm) for accurate accessibility assessment
+- **OKCA Contrast**: Primary contrast algorithm — OKLCH-native, 1–21 scale, zero false passes against WCAG 2.x, stricter for saturated chromatic colors
+- **APCA Support**: Accessible Perceptual Contrast Algorithm for perceptual contrast scoring
 - **WCAG Compatibility**: Bridge-PCA provides WCAG 2.x ratio equivalents
 - **Color Space**: Works in OKLCH color space for perceptually uniform adjustments
 - **Interactive Sliders**: Adjust lightness while maintaining chroma for fine-tuned color exploration
@@ -58,6 +59,7 @@ For AI-assisted development, see [CLAUDE.md](./CLAUDE.md) for project-specific g
 - **Angular CLI 20.3.4** - Build tooling and development server
 - **TypeScript 5.9.2** - Strict type checking
 - **colorjs.io 0.5.2** - Color space conversions in OKLCH
+- **@pawn002/okca** - OKCA contrast algorithm (primary)
 - **apca-w3 0.1.9** - APCA contrast algorithm
 - **bridge-pca 0.1.6** - WCAG 2.x compatibility layer (partial implementation)
 - **d3 7.9.0** - Scale utilities for contrast-to-size mapping
@@ -71,9 +73,18 @@ See [Architecture Overview](./documentation/architecture.md) for details.
 
 All color manipulation uses OKLCH (Oklab Lightness Chroma Hue) for perceptually uniform adjustments. This ensures that equal changes in values produce equal perceptual differences.
 
-### APCA vs WCAG 2.x
+### OKCA — the primary algorithm
 
-The app supports both modern APCA contrast scores and traditional WCAG 2.x ratios via Bridge-PCA. Learn more about contrast algorithms in the [Services Documentation](./documentation/services.md).
+OKCA (OK Contrast Algorithm) is the default contrast mode. It outputs ratios on the familiar 1–21 scale with the same AA (4.5) and AAA (7.0) thresholds as WCAG, while correcting two known WCAG failure modes:
+
+1. **Saturated chromatic false passes** — hot pink on near-black can score 6.6:1 under WCAG but is demonstrably harder to read. OKCA applies a chroma penalty that reduces the ratio for vivid colors.
+2. **Green false passes** — WCAG overestimates green luminance due to its 71.5% sRGB weight. OKCA corrects the luminance of dark green elements to prevent this.
+
+OKCA never approves a pair that WCAG rejects (FP = 0 by construction), making it a strictly stricter, drop-in alternative.
+
+### APCA, Bridge-PCA, and Delta E
+
+The app also supports APCA (perceptual contrast scores on ~0–108 scale), Bridge-PCA (WCAG 2.x ratio approximation from APCA), and Delta E (CIE 2000 perceptual color difference). Learn more in the [Services Documentation](./documentation/services.md).
 
 ### URL State Management
 
@@ -123,9 +134,8 @@ See [LICENSE](./LICENSE) for full details.
 
 ## Acknowledgments
 
-Built with modern perceptual contrast algorithms developed by Andrew Somers (Myndex):
-- APCA (Accessible Perceptual Contrast Algorithm)
-- Bridge-PCA (WCAG 2.x compatibility layer)
+- **OKCA** — developed for this project; an OKLCH-native contrast algorithm with zero WCAG false passes
+- **APCA and Bridge-PCA** — developed by Andrew Somers (Myndex)
 
 ---
 

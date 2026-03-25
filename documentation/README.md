@@ -4,7 +4,7 @@ Welcome to the developer documentation for the Color Pair Quick Iterator (CQPI) 
 
 ## Overview
 
-Color Pair Quick Iterator is an Angular 20 application designed for exploring and iterating on accessible color pairs. It uses advanced perceptual color contrast algorithms (APCA and Bridge-PCA) to help designers and developers find color combinations that meet accessibility standards.
+Color Pair Quick Iterator is an Angular 20 application designed for exploring and iterating on accessible color pairs. Its primary contrast algorithm is **OKCA** — an OKLCH-native ratio that outputs on the familiar 1–21 scale with zero false passes against WCAG 2.x. APCA and Bridge-PCA are also supported for comparison.
 
 **Live Application**: https://pawn002.github.io/color-pair-quick-iterator/
 
@@ -80,6 +80,7 @@ npm run storybook      # Launch Storybook on port 6006
 - **Angular CLI 20.3.4** - Build tooling and development server
 - **TypeScript 5.9.2** - Strict type checking enabled
 - **colorjs.io 0.5.2** - Color space conversions and manipulation in OKLCH
+- **@pawn002/okca** - OKCA contrast algorithm (primary) — OKLCH-native, zero WCAG false passes
 - **apca-w3 0.1.9** - APCA contrast calculation algorithm
 - **bridge-pca 0.1.6** - WCAG 2.x ratio approximation (partial implementation)
 - **d3 7.9.0** - Scale utilities for contrast-to-size mapping
@@ -89,7 +90,7 @@ npm run storybook      # Launch Storybook on port 6006
 ## Project Goals
 
 1. **Accessibility First**: Help designers create color combinations that meet and exceed WCAG guidelines
-2. **Perceptual Accuracy**: Use modern perceptual color contrast algorithms (APCA) for better accessibility assessment
+2. **Zero False Passes**: OKCA is the primary algorithm — stricter than WCAG for saturated chromatic colors, never approves what WCAG rejects
 3. **Developer Experience**: Provide intuitive tools for exploring color accessibility
 4. **Education**: Help users understand the relationship between color contrast and accessibility
 5. **Shareable Results**: URL-based state management allows sharing specific color combinations
