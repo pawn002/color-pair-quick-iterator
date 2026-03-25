@@ -47,6 +47,12 @@ export class ColorUtilService {
     return parsedColor;
   }
 
+  toHexString(color: string): string | null {
+    const parsed = this.parseColor(color);
+    if (!parsed) return null;
+    return new Color(parsed).to('srgb').toString({ format: 'hex' });
+  }
+
   hexToOklchString(color: string): string {
     const parsed = this.parseColor(color);
     if (!parsed) throw new Error(`Could not parse color: ${color}`);

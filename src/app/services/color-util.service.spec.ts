@@ -50,6 +50,33 @@ describe('ColorUtilService', () => {
     });
   });
 
+  describe('toHexString', () => {
+    it('should convert named color to hex', () => {
+      const result = service.toHexString('white');
+      expect(result).toBe('#ffffff');
+    });
+
+    it('should pass through 6-digit hex unchanged', () => {
+      const result = service.toHexString('#ff0000');
+      expect(result).toBe('#ff0000');
+    });
+
+    it('should convert 3-digit hex to 6-digit hex', () => {
+      const result = service.toHexString('#fff');
+      expect(result).toBe('#ffffff');
+    });
+
+    it('should convert rgb() to hex', () => {
+      const result = service.toHexString('rgb(0, 0, 0)');
+      expect(result).toBe('#000000');
+    });
+
+    it('should return null for invalid color', () => {
+      const result = service.toHexString('not-a-color');
+      expect(result).toBeNull();
+    });
+  });
+
   describe('getRgb255Array', () => {
     it('should convert white to RGB array', () => {
       const result = service.getRgb255Array('#ffffff');

@@ -39,7 +39,10 @@ export class ColorMetricsService {
     }
 
     if (contrastType === 'okca') {
-      return calculateContrast(colorOne, colorTwo);
+      const hexOne = this.cus.toHexString(colorOne);
+      const hexTwo = this.cus.toHexString(colorTwo);
+      if (!hexOne || !hexTwo) return null;
+      return calculateContrast(hexOne, hexTwo);
     }
 
     const contrast = this.calcRawApcaContrast(colorOne, colorTwo);

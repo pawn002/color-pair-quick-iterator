@@ -117,6 +117,17 @@ describe('ColorMetricsService', () => {
       expect(result!).toBeGreaterThanOrEqual(1);
       expect(result!).toBeLessThanOrEqual(21);
     });
+
+    it('should handle named colors with okca', () => {
+      const result = service.getContrast('white', 'black', 'okca');
+      expect(result).not.toBeNull();
+      expect(result!).toBeGreaterThanOrEqual(20);
+    });
+
+    it('should return null for invalid colors with okca', () => {
+      const result = service.getContrast('not-a-color', '#ffffff', 'okca');
+      expect(result).toBeNull();
+    });
   });
 
   describe('calcRawApcaContrast', () => {
