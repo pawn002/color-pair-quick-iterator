@@ -123,7 +123,8 @@ Here's a quick overview of the key directories:
 color-pair-quick-iterator/
 ├── src/
 │   ├── app/
-│   │   ├── _components/       # UI components (7 standalone components)
+│   │   ├── _components/       # App-specific UI components (8 standalone components)
+│   │   ├── _candor/           # Candor design system components (7 UI primitives)
 │   │   ├── services/          # Core business logic (3 services)
 │   │   ├── app.ts             # Root application component
 │   │   └── app.config.ts      # Application configuration
@@ -193,7 +194,7 @@ npm test
 
 This launches the Karma test runner with Chrome browser.
 
-**Test Coverage**: The project has 324 passing tests (100% pass rate). See [Testing Guide](./testing.md) for details.
+**Test Coverage**: The project has comprehensive passing tests. See [Testing Guide](./testing.md) for details.
 
 ### Formatting Code
 

@@ -22,7 +22,7 @@ npm install
 # Start development server
 npm start
 
-# Run tests (324 tests, 100% passing)
+# Run tests
 npm test
 
 # Launch Storybook
@@ -36,10 +36,7 @@ Visit `http://localhost:4200` after starting the development server.
 
 ## Test Coverage
 
-The project has comprehensive test coverage with **324 passing tests** (100% pass rate):
-- **Services**: 150 tests covering ColorUtilService, BpcaService, and ColorMetricsService
-- **Components**: 174 tests covering all 7 components
-- See [Testing Documentation](./documentation/testing.md) for details
+The project has comprehensive test coverage across all services and components. See [Testing Documentation](./documentation/testing.md) for details.
 
 ## Documentation
 
@@ -86,10 +83,11 @@ The app uses Angular's `Location` service to persist state in query parameters (
 
 ```
 src/app/
-├── _components/          # UI components (color picker, slider, contrast, etc.)
-├── services/            # Business logic (ColorUtil, ColorMetrics, Bpca)
-├── app.ts               # Root component with state management
-└── app.config.ts        # Application configuration
+├── _components/          # App-specific UI components (color picker, slider, contrast, etc.)
+├── _candor/              # Candor design system components (Button, Card, Table, Toast, etc.)
+├── services/             # Business logic (ColorUtil, ColorMetrics, Bpca)
+├── app.ts                # Root component with state management
+└── app.config.ts         # Application configuration
 ```
 
 See [Architecture Documentation](./documentation/architecture.md) for complete structure.
@@ -98,6 +96,7 @@ See [Architecture Documentation](./documentation/architecture.md) for complete s
 
 Contributions are welcome! Please read the [Contributing Guide](./documentation/contributing.md) for:
 - Angular 20 conventions (signals, standalone components, zoneless mode)
+- Candor design system conventions and token usage
 - Code style and formatting (Prettier configuration)
 - Component and service patterns
 - Testing requirements
@@ -132,10 +131,12 @@ Built with modern perceptual contrast algorithms developed by Andrew Somers (Myn
 
 ## Recent Updates
 
-- **2025-01**: Increased component style budget to 6kB, optimized app.scss
-- **2025-01**: Migrated from lodash to lodash-es for ESM compatibility
-- **2025-01**: Changed baseHref to portable default, added build:gh-pages script
-- **2025-01**: Comprehensive documentation update
+- **2026-03**: Integrated Candor design system — added `_candor/` directory with AccordionItemComponent, ButtonComponent, CardComponent, CheckboxComponent, RadioComponent, TableComponent, and ToastComponent
+- **2026-03**: Removed legacy token alias variables (`--mono-font`, `--body-font`, etc.); all styles now reference Candor tokens directly
+- **2026-03**: AlertComponent updated to use ToastComponent for visual output
+- **2026-03**: MetadataComponent tables wrapped with `<app-table [compact]="true">`
+- **2026-03**: AccordionItemComponent `variant` input replaces old boolean `subtle` input
+- **2026-03**: TonePickerComponent gains `hideHeaders` input; added `hideUi` input
 
 ---
 

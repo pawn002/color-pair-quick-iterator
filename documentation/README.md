@@ -35,7 +35,8 @@ Detailed documentation for core services:
 
 ### 4. [Components](./components.md)
 Component library documentation including:
-- Component responsibilities and usage
+- App-specific components (`_components/`) — responsibilities and usage
+- Candor design system components (`_candor/`) — UI primitives and design tokens
 - Input/Output interfaces
 - Signal-based state management
 - Integration patterns
@@ -43,6 +44,7 @@ Component library documentation including:
 ### 5. [Contributing](./contributing.md)
 Guidelines for contributing to the project:
 - Code style and conventions
+- Candor design system conventions and token usage
 - Angular 20 best practices
 - TypeScript standards
 - Pull request process
