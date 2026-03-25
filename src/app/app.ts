@@ -21,6 +21,7 @@ import { ButtonComponent } from './_candor/button/button.component';
 import { CardComponent } from './_candor/card/card.component';
 import { CheckboxComponent } from './_candor/form/checkbox/checkbox.component';
 import { RadioComponent } from './_candor/form/radio/radio.component';
+import { TooltipComponent } from './_candor/tooltip/tooltip.component';
 
 @Component({
   selector: 'app-root',
@@ -37,6 +38,7 @@ import { RadioComponent } from './_candor/form/radio/radio.component';
     CardComponent,
     CheckboxComponent,
     RadioComponent,
+    TooltipComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
