@@ -94,7 +94,7 @@ See `documentation/architecture.md` for detailed implementation.
 ### Core Services (`src/app/services/`)
 
 - **ColorUtilService** - Color manipulation using colorjs.io in OKLCH color space. Handles color parsing, gamut mapping, variant generation, and chroma matching.
-- **ColorMetricsService** - Calculates contrast scores using APCA (apca-w3) and Bridge-PCA algorithms.
+- **ColorMetricsService** - Calculates contrast scores using OKCA (primary, @pawn002/okca), APCA (apca-w3), Bridge-PCA, and Delta E algorithms.
 - **BpcaService** - Bridge-PCA implementation for WCAG 2.x ratio approximation from APCA scores.
 
 ### Component Pattern
