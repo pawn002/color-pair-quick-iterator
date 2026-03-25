@@ -145,10 +145,6 @@ li {
   }
 }
 
-details {
-  border-bottom: var(--border-width-thin) solid var(--color-border-strong);
-}
-
 details > summary {
   display: flex;
   align-items: center;
