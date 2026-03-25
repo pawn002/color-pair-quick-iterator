@@ -48,23 +48,26 @@ Color Pair Quick Iterator is built using **Angular 20** with modern patterns inc
     ▼                     ▼                     ▼
 ┌──────────────┐  ┌──────────────┐  ┌─────────────────────┐
 │ UI Components│  │   Services   │  │  External Libraries │
-│              │  │              │  │                     │
+│ (_components)│  │              │  │                     │
 │ - ColorPicker│  │ - ColorUtil  │  │ - colorjs.io        │
 │ - ColorSlider│  │ - Metrics    │  │ - apca-w3           │
 │ - Contrast   │  │ - Bpca       │  │ - bridge-pca        │
 │ - Metadata   │  │              │  │ - d3                │
 │ - PaletteTable│ │              │  │                     │
+│ - TonePicker │  │              │  │                     │
 │ - Alert      │  │              │  │                     │
 │ - CopyButton │  │              │  │                     │
-└──────────────┘  └──────────────┘  └─────────────────────┘
-       │                 │                     │
-       └─────────────────┴─────────────────────┘
-                         │
-                         ▼
-              Component Communication
-              - Signals for state
-              - Events for actions
-              - Two-way binding for forms
+├──────────────┤  └──────────────┘  └─────────────────────┘
+│ Candor DS    │
+│ (_candor)    │
+│ - Accordion  │
+│ - Button     │
+│ - Card       │
+│ - Checkbox   │
+│ - Radio      │
+│ - Table      │
+│ - Toast      │
+└──────────────┘
 ```
 
 ## Project Structure
@@ -72,14 +75,24 @@ Color Pair Quick Iterator is built using **Angular 20** with modern patterns inc
 ```
 src/
 ├── app/
-│   ├── _components/              # All UI components
+│   ├── _components/              # App-specific UI components
 │   │   ├── alert/
 │   │   ├── color-contrast/
 │   │   ├── color-picker/
 │   │   ├── color-slider/
 │   │   ├── copy-to-clipboard-button/
 │   │   ├── metadata/
-│   │   └── palette-table/
+│   │   ├── palette-table/
+│   │   └── tone-picker/
+│   ├── _candor/                  # Candor design system components
+│   │   ├── accordion/
+│   │   ├── button/
+│   │   ├── card/
+│   │   ├── form/
+│   │   │   ├── checkbox/
+│   │   │   └── radio/
+│   │   ├── table/
+│   │   └── toast/
 │   ├── services/                 # Business logic services
 │   │   ├── color-util.service.ts
 │   │   ├── color-metrics.service.ts
@@ -99,7 +112,7 @@ src/
 
 ### Component Organization Pattern
 
-Each component follows this co-location pattern:
+App-specific components in `_components/` follow this co-location pattern:
 
 ```
 component-name/
@@ -108,6 +121,8 @@ component-name/
 ├── component-name.scss               # Styles (component-scoped)
 └── component-name.stories.ts         # Storybook documentation
 ```
+
+Candor design system components in `_candor/` are copied from the Candor design system and use `ViewEncapsulation.None` to apply Candor design tokens globally.
 
 ### Component Communication
 
@@ -147,9 +162,53 @@ AppComponent (Root)
 ├── ColorContrastComponent           - Display contrast score
 ├── MetadataComponent                - Show detailed color information
 ├── PaletteTableComponent (x2)       - Show color variant grid
+├── TonePickerComponent              - Accessible grid-based tone selector
 ├── CopyToClipboardButtonComponent   - Copy hex values
-└── AlertComponent                   - Show user notifications
+├── AlertComponent                   - Show user notifications
+│
+│   (Candor design system components used throughout)
+├── AccordionItemComponent           - Collapsible content sections
+├── ButtonComponent                  - Styled action buttons
+├── CardComponent                    - Surface/section containers
+├── CheckboxComponent                - Styled checkbox form control
+├── RadioComponent                   - Styled radio form control
+├── TableComponent                   - Styled data tables
+└── ToastComponent                   - Notification display (used by Alert)
 ```
+
+## Candor Design System Integration
+
+The `_candor/` directory contains a set of UI primitives copied from the Candor design system. These components provide visual consistency through shared design tokens and serve as the presentational building blocks for the application's interface.
+
+### Key conventions for Candor components
+
+- **`ViewEncapsulation.None`**: Styles are applied globally so that Candor CSS custom property tokens cascade normally.
+- **Design tokens only**: All color, spacing, typography, and border values reference Candor CSS custom properties (e.g., `--color-text-default`, `--font-family-mono`, `--border-width-medium`) rather than hard-coded values.
+- **OnPush change detection**: All Candor components use `ChangeDetectionStrategy.OnPush`.
+- **No app-specific logic**: Candor components are presentational and contain no application business logic.
+
+### Available Candor components
+
+| Component | Selector | Location | Description |
+|-----------|----------|----------|-------------|
+| `AccordionItemComponent` | `app-accordion-item` | `_candor/accordion/` | Collapsible section with `title`, `open`, and `variant` (`'default' \| 'subtle' \| 'quiet'`) inputs |
+| `ButtonComponent` | `app-button` | `_candor/button/` | Action button with `variant`, `size`, `disabled`, `type`, and `ariaLabel` inputs |
+| `CardComponent` | `app-card` | `_candor/card/` | Surface container with `variant` and `padding` inputs; supports header/body/footer slots |
+| `CheckboxComponent` | `app-checkbox` | `_candor/form/checkbox/` | Checkbox implementing `ControlValueAccessor` with `label`, `id`, `name`, `required`, `checked`, and `disabled` |
+| `RadioComponent` | `app-radio` | `_candor/form/radio/` | Radio button implementing `ControlValueAccessor` with `label`, `value`, `name`, `id`, `checked`, and `disabled` |
+| `TableComponent` | `app-table` | `_candor/table/` | Styled table wrapper with optional `compact` input for dense data panels |
+| `ToastComponent` | `app-toast` | `_candor/toast/` | Notification banner with `variant` (`'info' \| 'success' \| 'warning' \| 'error'`), `title`, `message`, `dismissible` inputs, and `dismissed` output |
+
+### Design token conventions
+
+After the Candor migration, all style files reference Candor tokens directly. The old application-level alias variables (`--mono-font`, `--body-font`, `--header-font`, `--ideal-body-text-black`, etc.) have been removed. Use Candor tokens instead:
+
+| Old alias (removed) | Candor token |
+|---------------------|--------------|
+| `--mono-font` | `--font-family-mono` |
+| `--body-font` | `--font-family-accessible` |
+| `--header-font` | `--font-family-display` |
+| `--ideal-body-text-black` | `--color-text-default` |
 
 ## Service Architecture
 
@@ -308,19 +367,19 @@ import { Location } from '@angular/common';
 
 export class App {
   location = inject(Location);
-  
+
   private isInitializing = signal(true);  // Prevents effect during init
-  
+
   constructor() {
     effect(() => {
       if (this.isInitializing()) return;
-      
+
       const fg = this.colorPickerOneSelectedColor();
       const bg = this.colorPickerTwoSelectedColor();
       const type = this.contrastType();
       const chroma = this.constantChroma();
       const gradient = this.showGradient();
-      
+
       this.updateUrl(fg, bg, type, chroma, gradient);
     });
   }
@@ -380,51 +439,6 @@ If no URL state: generate random color pair
 setTimeout() sets isInitializing to false
          ↓
 Effect starts observing and updating URL
-```
-
-### Implementation Details
-
-**updateUrl() method** (`app.ts:234-250`):
-```typescript
-private updateUrl(
-  fg: string,
-  bg: string,
-  type: ContrastType | 'apca object',
-  chroma: boolean,
-  gradient: boolean,
-): void {
-  const params = new URLSearchParams();
-  
-  if (fg) params.set('fg', fg);
-  if (bg) params.set('bg', bg);
-  if (type !== 'apca') params.set('type', type);
-  if (!chroma) params.set('chroma', 'false');
-  if (!gradient) params.set('gradient', 'false');
-  
-  const queryString = params.toString();
-  const newUrl = queryString ? `?${queryString}` : '/';
-  
-  this.location.replaceState(newUrl);
-}
-```
-
-**loadStateFromUrl() method** (`app.ts:252-279`):
-```typescript
-private loadStateFromUrl(): boolean {
-  const urlParams = new URLSearchParams(window.location.search);
-  
-  const fg = urlParams.get('fg');
-  const bg = urlParams.get('bg');
-  // ... read all parameters
-  
-  if (fg) {
-    this.colorPickerOneSelectedColor.set(fg);
-    hasUrlState = true;
-  }
-  // ... set all signals
-  
-  return hasUrlState;
-}
 ```
 
 ### Why Location Service Instead of Router?
@@ -531,8 +545,9 @@ See [Deployment Guide](./deployment.md) for details.
 - `rxjs` (^7.8.0) - Reactive programming (minimal usage with signals)
 
 **Fonts**:
-- `@fontsource-variable/source-code-pro` (^5.2.7)
 - `@fontsource/atkinson-hyperlegible` (^5.2.8)
+- `@fontsource-variable/roboto-flex`
+- `@fontsource-variable/roboto-mono`
 
 ### Development Dependencies
 
@@ -597,8 +612,6 @@ export class ColorMetricsService {
 
 ## Testing Architecture
 
-**Current Status**: Comprehensive test coverage with 324 passing tests (100% pass rate)
-
 **Strategy**:
 - Unit tests for services (business logic)
 - Component tests for UI behavior
@@ -621,7 +634,7 @@ See [Testing Guide](./testing.md) for detailed testing patterns.
 
 Production build targets:
 - Initial bundle: 500 kB (warning at 500 kB, error at 1 MB)
-- Component styles: 4 kB (warning at 4 kB, error at 8 kB)
+- Component styles: 6 kB (warning at 6 kB, error at 8 kB)
 
 Current bundle size is well within limits.
 

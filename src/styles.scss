@@ -1,30 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
 
-/* Imports */
+/* Candor Design System fonts */
 @import url('@fontsource/atkinson-hyperlegible/400.css');
 @import url('@fontsource/atkinson-hyperlegible/400-italic.css');
 @import url('@fontsource/atkinson-hyperlegible/700.css');
 @import url('@fontsource/atkinson-hyperlegible/700-italic.css');
-@import url('@fontsource-variable/source-code-pro/wght.css');
-@import url('@fontsource-variable/source-code-pro/wght-italic.css');
+@import url('@fontsource-variable/roboto-flex/index.css');
+@import url('@fontsource-variable/roboto-mono/index.css');
 
-/* Vars */
+/* App layout tokens (no Candor equivalent) */
 :root {
-  --background-color: #e2e2e2;
-  --ui-shadow-color: #8b8b8b;
-  --app-white: #fff;
-  --min-text-on-white: #717171;
-  --app-black: #000;
-  --ideal-body-text-black: var(--app-black);
-  --min-body-text-black: #4e4e4e;
-  --min-large-text-black: #797979;
-  --header-font: 'Source Code Pro Variable', sans-serif;
-  --body-font: 'Atkinson Hyperlegible', sans-serif;
-  --mono-font: 'Source Code Pro Variable', sans-serif;
-
-  /* Assuming 1rem = 16px. . . */
-  --min-text-size: 0.8125rem;
-  --min-body-text-size: 1rem;
   --min-hit-dimension-aaa: 2.75rem;
   --min-hit-dimension-aa: 1.375rem;
   --fluid-padding: clamp(0.313rem, 4.5vw + -0.25rem, 2rem);
@@ -32,22 +17,22 @@
 
 body {
   margin: 0;
-  background-color: var(--app-black);
+  background-color: var(--color-bg-surface);
 }
 
 hr {
   width: 100%;
-  border-width: 2px;
-  border-color: var(--min-large-text-black);
+  border-width: var(--border-width-medium);
+  border-color: var(--color-border-control);
   border-top: none;
   border-left: none;
   border-right: none;
 }
 
 sup {
-  color: var(--min-body-text-black) !important;
+  color: var(--color-text-subtle) !important;
   font-weight: 400 !important;
-  font-size: var(--min-text-size) !important;
+  font-size: var(--font-size-sm) !important;
 }
 
 h1,
@@ -56,8 +41,8 @@ h3,
 h4,
 th {
   margin: 0;
-  line-height: 1.05em;
-  font-weight: 650;
+  line-height: var(--line-height-tight);
+  font-weight: var(--font-weight-semibold);
 
   sup {
     margin-left: 0.25ch;
@@ -65,97 +50,94 @@ th {
 }
 
 h1 {
-  font-family: var(--header-font);
-  font-size: 1.2rem;
-  line-height: 1.1em;
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  font-optical-sizing: auto;
   font-style: normal;
 }
 
 h2 {
-  font-family: var(--header-font);
-  color: var(--min-body-text-black);
-  font-size: var(--min-body-text-size);
+  font-family: var(--font-family-display);
+  color: var(--color-text-default);
+  font-size: var(--font-size-lg);
   font-style: normal;
   margin-bottom: 0.3em;
 }
 
 h3 {
   line-height: unset;
-  color: var(--min-body-text-black);
-  font-family: var(--header-font);
-  font-size: var(--min-text-size);
+  color: var(--color-text-default);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-md);
   font-style: normal;
 }
 
 h4 {
   line-height: unset;
-  color: var(--min-body-text-black);
-  font-family: var(--header-font);
-  font-size: var(--min-body-text-size);
+  color: var(--color-text-subtle);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-base);
   font-style: normal;
 }
 
 th {
-  font-family: var(--header-font);
-  font-size: var(--min-body-text-size);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-base);
   font-style: normal;
 }
 
 .visual-header {
-  color: var(--min-body-text-black);
-  font-family: var(--header-font);
+  color: var(--color-text-default);
+  font-family: var(--font-family-display);
   font-style: normal;
-  font-weight: 650;
+  font-weight: var(--font-weight-semibold);
 }
 
 td {
-  font-family: var(--body-font);
-  font-size: var(--min-body-text-size);
-  color: var(--ideal-body-text-black);
+  font-family: var(--font-family-accessible);
+  font-size: var(--font-size-base);
+  color: var(--color-text-default);
   font-style: normal;
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   max-width: 40ch;
-  line-height: 1.5em;
+  line-height: var(--line-height-normal);
 }
 
 p,
-li,
-details > summary {
-  font-family: var(--body-font);
-  font-size: var(--min-body-text-size);
-  color: var(--ideal-body-text-black);
+li {
+  font-family: var(--font-family-accessible);
+  font-size: var(--font-size-base);
+  color: var(--color-text-default);
   font-style: normal;
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   max-width: 40ch;
-  line-height: 1.5em;
+  line-height: var(--line-height-normal);
 
   sup {
     margin-right: 0.5ch;
   }
 
   a {
-    color: inherit;
+    color: var(--color-link);
+
+    &:visited {
+      color: var(--color-link-visited);
+    }
   }
 }
 
-details > summary {
-  font-size: var(--min-text-size);
-  margin-bottom: 0.3em;
-  max-width: unset;
-  text-align: center;
-}
 
 button,
-input,
-summary {
+input {
   cursor: pointer;
   touch-action: manipulation;
 }
 
 strong {
-  font-size: var(--min-text-size);
+  font-size: var(--font-size-sm);
   text-transform: uppercase;
-  letter-spacing: 0.05ch;
+  letter-spacing: var(--letter-spacing-wide);
 }
 
 .sr-only:not(:focus, :active) {

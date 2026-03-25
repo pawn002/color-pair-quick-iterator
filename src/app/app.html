@@ -1,5 +1,5 @@
 <div class="app-container">
-  <section class="title-and-sliders">
+  <app-card class="title-and-sliders" variant="elevated" padding="none">
     <div class="title-and-score">
       <h1>Colors Contrast</h1>
       <app-color-contrast
@@ -9,148 +9,134 @@
       ></app-color-contrast>
     </div>
 
-    <details class="app-instruction-start">
-      <summary>How to use this app.</summary>
+    <div class="title-and-sliders__body">
+      <app-accordion-item title="How to use this app." variant="quiet">
+        <p>
+          <span class="visual-header">Quick Start:</span>
+          Input a Foreground and Background Color using the color inputs in the next section. You can
+          then us the slider inputs, and Copy to Clipboard buttons to:
+        </p>
+        <ul>
+          <li>
+            Change the tone of your colors to achieve your desired combination of contrast and tone.
+          </li>
 
-      <p>
-        <span class="visual-header">Quick Start:</span>
-        Input a Foreground and Background Color using the color inputs in the next section. You can
-        then us the slider inputs, and Copy to Clipboard buttons to:
-      </p>
-      <ul>
-        <li>
-          Change the tone of your colors to achieve your desired combination of contrast and tone.
-        </li>
+          <li>Copy each color to the clipboard for use in other applications.</li>
+        </ul>
 
-        <li>Copy each color to the clipboard for use in other applications.</li>
-      </ul>
+        <p>
+          <a href="#additional-instructions"
+            >Screen reader–specific workflows, low vision user notes, and more in-depth
+            instructions.</a
+          >
+        </p>
+      </app-accordion-item>
 
-      <p>
-        <a href="#additional-instructions"
-          >Screen reader–specific workflows, low vision user notes, and more in-depth
-          instructions.</a
-        >
-      </p>
-    </details>
+      <h2 class="sr-only">Main Color Controls</h2>
 
-    <hr class="instructions-hr" />
+      <h3>Foreground Color</h3>
 
-    <h2 class="sr-only">Main Color Controls</h2>
-
-    <h3>Foreground Color</h3>
-
-    <div class="slide-group">
-      <app-color-picker
-        [inputId]="'cp-0'"
-        [inputName]="'Foreground Color'"
-        [comparedColor]="colorPickerOneComparedColor()"
-        (selectedColor)="handleColorInputInput('One', $event)"
-        [color]="colorPickerOneSelectedColor()"
-      ></app-color-picker>
-      <app-color-slider
-        [id]="'slider-0'"
-        [name]="'Foreground Slider'"
-        [color]="colorPickerOneSelectedColor()"
-        [constantChroma]="constantChroma()"
-        (colorVariant)="handleSliderInputInput('One', $event)"
-        [resetSlider]="resetSlider"
-        [showGradient]="showGradient()"
-      ></app-color-slider>
-      <app-copy-to-clipboard-button
-        [color]="colorPickerOneComparedColor()"
-        (copyEvent)="handleCopyEvent($event)"
-      ></app-copy-to-clipboard-button>
-    </div>
-
-    <details class="pallette-viz-container">
-      <summary>Foreground LCH Limits</summary>
-
-      <div class="content">
-        <app-palette-table
+      <div class="slide-group">
+        <app-color-picker
+          [inputId]="'cp-0'"
+          [inputName]="'Foreground Color'"
+          [comparedColor]="colorPickerOneComparedColor()"
+          (selectedColor)="handleColorInputInput('One', $event)"
           [color]="colorPickerOneSelectedColor()"
-          (selectedColor)="handleColorPaletteButtonEvent('One', $event)"
-        ></app-palette-table>
+        ></app-color-picker>
+        <app-color-slider
+          [id]="'slider-0'"
+          [name]="'Foreground Slider'"
+          [color]="colorPickerOneSelectedColor()"
+          [constantChroma]="constantChroma()"
+          (colorVariant)="handleSliderInputInput('One', $event)"
+          [resetSlider]="resetSlider"
+          [showGradient]="showGradient()"
+        ></app-color-slider>
+        <app-copy-to-clipboard-button
+          [color]="colorPickerOneComparedColor()"
+          (copyEvent)="handleCopyEvent($event)"
+        ></app-copy-to-clipboard-button>
       </div>
-    </details>
 
-    <h3>Background Color</h3>
+      <app-accordion-item title="Foreground LCH Limits" variant="subtle">
+        <div class="pallette-viz-content">
+          <app-palette-table
+            [color]="colorPickerOneSelectedColor()"
+            (selectedColor)="handleColorPaletteButtonEvent('One', $event)"
+          ></app-palette-table>
+        </div>
+      </app-accordion-item>
 
-    <div class="slide-group">
-      <app-color-picker
-        [inputId]="'cp-1'"
-        [inputName]="'Background Color'"
-        [comparedColor]="colorPickerTwoComparedColor()"
-        [color]="colorPickerTwoSelectedColor()"
-        (selectedColor)="handleColorInputInput('Two', $event)"
-      ></app-color-picker>
-      <app-color-slider
-        [id]="'slider-1'"
-        [name]="'Backgroundground Slider'"
-        [color]="colorPickerTwoSelectedColor()"
-        [constantChroma]="constantChroma()"
-        (colorVariant)="handleSliderInputInput('Two', $event)"
-        [resetSlider]="resetSlider"
-        [showGradient]="showGradient()"
-      ></app-color-slider>
-      <app-copy-to-clipboard-button
-        [color]="colorPickerTwoComparedColor()"
-        (copyEvent)="handleCopyEvent($event)"
-      ></app-copy-to-clipboard-button>
-    </div>
+      <h3>Background Color</h3>
 
-    <details class="pallette-viz-container">
-      <summary>Background LCH Limits</summary>
-
-      <div class="content">
-        <app-palette-table
+      <div class="slide-group">
+        <app-color-picker
+          [inputId]="'cp-1'"
+          [inputName]="'Background Color'"
+          [comparedColor]="colorPickerTwoComparedColor()"
           [color]="colorPickerTwoSelectedColor()"
-          (selectedColor)="handleColorPaletteButtonEvent('Two', $event)"
-        ></app-palette-table>
+          (selectedColor)="handleColorInputInput('Two', $event)"
+        ></app-color-picker>
+        <app-color-slider
+          [id]="'slider-1'"
+          [name]="'Backgroundground Slider'"
+          [color]="colorPickerTwoSelectedColor()"
+          [constantChroma]="constantChroma()"
+          (colorVariant)="handleSliderInputInput('Two', $event)"
+          [resetSlider]="resetSlider"
+          [showGradient]="showGradient()"
+        ></app-color-slider>
+        <app-copy-to-clipboard-button
+          [color]="colorPickerTwoComparedColor()"
+          (copyEvent)="handleCopyEvent($event)"
+        ></app-copy-to-clipboard-button>
       </div>
-    </details>
-  </section>
 
-  <section class="quick-actions">
-    <button
-      (click)="swapColors()"
+      <app-accordion-item title="Background LCH Limits" variant="subtle">
+        <div class="pallette-viz-content">
+          <app-palette-table
+            [color]="colorPickerTwoSelectedColor()"
+            (selectedColor)="handleColorPaletteButtonEvent('Two', $event)"
+          ></app-palette-table>
+        </div>
+      </app-accordion-item>
+    </div>
+  </app-card>
+
+  <app-card class="quick-actions" variant="elevated" padding="sm">
+    <div class="quick-actions__buttons">
+    <app-button
+      variant="tertiary"
+      size="icon"
+      ariaLabel="Swap Selected Colors"
       [disabled]="!colorPickerOneSelectedColor() || !colorPickerTwoSelectedColor()"
+      (clicked)="swapColors()"
     >
-      <span class="sr-only">Swap Selected Colors</span>
       <svg
         class="swap-colors"
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 32 32"
-        x="0px"
-        y="0px"
       >
-        <defs>
-          <style>
-            .cls-1 {
-              fill: none;
-            }
-          </style>
-        </defs>
         <g>
           <path
             d="M6.29,8.71a1,1,0,0,1,0-1.42l4-4a1,1,0,1,1,1.42,1.42L9.41,7H19a7,7,0,0,1,7,7,1,1,0,0,1-2,0,5,5,0,0,0-5-5H9.41l2.3,2.29a1,1,0,0,1,0,1.42,1,1,0,0,1-1.42,0ZM21.71,19.29a1,1,0,0,0-1.42,1.42L22.59,23H13a5,5,0,0,1-5-5,1,1,0,0,0-2,0,7,7,0,0,0,7,7h9.59l-2.3,2.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0l4-4a1,1,0,0,0,0-1.42Z"
           />
-          <rect class="cls-1" width="32" height="32" />
         </g>
       </svg>
-    </button>
+    </app-button>
 
-    <button (click)="matchChromas()">
-      <span class="sr-only">Harmonize Color Pair To Same Chroma</span>
+    <app-button
+      variant="tertiary"
+      size="icon"
+      ariaLabel="Harmonize Color Pair To Same Chroma"
+      (clicked)="matchChromas()"
+    >
       <svg
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-        version="1.1"
-        x="0px"
-        y="0px"
         viewBox="0 0 64 64"
-        enable-background="new 0 0 64 64"
         xml:space="preserve"
       >
         <path d="M43,39c1.66,0,3,1.34,3,3s-1.34,3-3,3H33c-1.66,0-3-1.34-3-3s1.34-3,3-3H43z" />
@@ -158,73 +144,66 @@
           d="M20,17v3h-3c-1.66,0-3,1.34-3,3s1.34,3,3,3h3v3c0,1.66,1.34,3,3,3s3-1.34,3-3v-3h3c1.66,0,3-1.34,3-3s-1.34-3-3-3h-3v-3  c0-1.66-1.34-3-3-3S20,15.34,20,17z M56,12v40c0,2.21-1.79,4-4,4H12c-2.21,0-4-1.79-4-4V12c0-2.21,1.79-4,4-4h40  C54.21,8,56,9.79,56,12z M50,50V14L14,50H50z"
         />
       </svg>
-    </button>
+    </app-button>
 
-    <button (click)="resetSliders()">
-      <span class="sr-only">Reset Color Sliders</span>
+    <app-button
+      variant="tertiary"
+      size="icon"
+      ariaLabel="Reset Color Sliders"
+      (clicked)="resetSliders()"
+    >
       <svg
-        class="reset-sliders"
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
-        x="0px"
-        y="0px"
       >
         <path
           d="M12,3A8.92277,8.92277,0,0,0,4.5,7.05823V5H3v5H8V8.5H5.38165A7.4775,7.4775,0,1,1,4.5,12H3a9,9,0,1,0,9-9Z"
         />
       </svg>
-    </button>
+    </app-button>
 
-    <button (click)="setRandomColorPair()">
-      <span class="sr-only">Create Random Color Pair</span>
+    <app-button
+      variant="tertiary"
+      size="icon"
+      ariaLabel="Create Random Color Pair"
+      (clicked)="setRandomColorPair()"
+    >
       <svg
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-        xml:space="preserve"
-        version="1.1"
-        style="
-          shape-rendering: geometricPrecision;
-          text-rendering: geometricPrecision;
-          image-rendering: optimizeQuality;
-        "
         viewBox="0 0 333 333"
-        x="0px"
-        y="0px"
         fill-rule="evenodd"
         clip-rule="evenodd"
       >
-        <defs>
-          <style type="text/css">
-            .str0 {
-              stroke: var(--min-body-text-black);
-              stroke-width: 14;
-            }
-            .fil0 {
-              fill: none;
-            }
-            .fil1 {
-              fill: var(--min-body-text-black);
-            }
-          </style>
-        </defs>
         <g>
-          <rect class="fil0 str0" x="24" y="167" width="138" height="138" rx="26" ry="26" />
+          <rect
+            fill="none"
+            stroke="currentColor"
+            stroke-width="14"
+            x="24"
+            y="167"
+            width="138"
+            height="138"
+            rx="26"
+            ry="26"
+          />
           <g>
             <g>
-              <circle class="fil1" cx="118" cy="199" r="12" />
-              <circle class="fil1" cx="118" cy="236" r="12" />
-              <circle class="fil1" cx="118" cy="272" r="12" />
+              <circle cx="118" cy="199" r="12" />
+              <circle cx="118" cy="236" r="12" />
+              <circle cx="118" cy="272" r="12" />
             </g>
             <g>
-              <circle class="fil1" cx="67" cy="199" r="12" />
-              <circle class="fil1" cx="67" cy="236" r="12" />
-              <circle class="fil1" cx="67" cy="272" r="12" />
+              <circle cx="67" cy="199" r="12" />
+              <circle cx="67" cy="236" r="12" />
+              <circle cx="67" cy="272" r="12" />
             </g>
           </g>
           <rect
-            class="fil0 str0"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="14"
             transform="matrix(0.707107 -0.707107 0.707107 0.707107 125.466 115.35)"
             width="138"
             height="138"
@@ -232,160 +211,99 @@
             ry="26"
           />
           <circle
-            class="fil1"
             transform="matrix(0.876112 -0.876112 0.876112 0.876112 222.904 115.349)"
             r="10"
           />
         </g>
       </svg>
-    </button>
-  </section>
+    </app-button>
+    </div>
+  </app-card>
 
-  <hr />
-
-  <section class="options">
+  <app-card class="options" variant="elevated" padding="md">
     <h2>Options</h2>
 
-    <div class="options">
-      <details>
-        <summary>Change how Colors Contrast works.</summary>
-        <div>
-          <h3>Colors Contrast Value</h3>
+    <app-accordion-item title="Change how Colors Contrast works.">
+      <div>
+        <h3>Colors Contrast Value</h3>
 
-          <div class="radio-section">
-            <div class="radio-group">
-              <label for="ct-okca"
-                >OKCA<span class="sr-only"
-                  >; this affects a visual element not percievable to screenreaders for good UX—same
-                  value is obtainable on Color Metadata section under Differences.</span
-                >
-              </label>
-              <input
-                type="radio"
-                name="contrastType"
-                id="ct-okca"
-                (change)="radioChange('okca')"
-                [checked]="contrastType() === 'okca'"
-              />
-            </div>
-            <div class="radio-group">
-              <label for="ct-apca"
-                >Perceptual<span class="sr-only"
-                  >; this affects a visual element not percievable to screenreaders for good UX—same
-                  value is obtainable on Color Metadata section under Differences.</span
-                >
-              </label>
-              <input
-                type="radio"
-                name="contrastType"
-                id="ct-apca"
-                (change)="radioChange('apca')"
-                [checked]="contrastType() === 'apca'"
-              />
-            </div>
-            <div class="radio-group">
-              <label for="ct-bpca"
-                >WCAG 2 compatible<span class="sr-only"
-                  >; this affects a visual element not percievable to screenreaders for good UX—same
-                  value is obtainable on Color Metadata section under Differences.</span
-                >
-              </label>
-              <input
-                type="radio"
-                name="contrastType"
-                id="ct-bpca"
-                (change)="radioChange('bpca')"
-                [checked]="contrastType() === 'bpca'"
-              />
-            </div>
-            <div class="radio-group">
-              <label for="ct-apca-object"
-                >Object
-                <span class="sr-only"
-                  >; this affects a visual element not percievable to screenreaders for good UX—same
-                  value is obtainable on Color Metadata section under Differences.</span
-                >
-              </label>
-              <input
-                type="radio"
-                name="contrastType"
-                id="ct-apca-object"
-                (change)="radioChange('apca object')"
-                [checked]="contrastType() === 'apca object'"
-              />
-            </div>
-            <div class="radio-group">
-              <label for="ct-deltaE"
-                >Delta E
-                <span class="sr-only"
-                  >; this affects a visual element not percievable to screenreaders for good UX—same
-                  value is obtainable on Color Metadata section under Differences.</span
-                >
-              </label>
-              <input
-                type="radio"
-                name="contrastType"
-                id="ct-deltaE"
-                (change)="radioChange('deltaE')"
-                [checked]="contrastType() === 'deltaE'"
-              />
-            </div>
-          </div>
+        <div class="radio-section">
+          <app-radio
+            name="contrastType"
+            value="okca"
+            label="OKCA"
+            [checked]="contrastType() === 'okca'"
+            (changed)="contrastType.set($any($event))"
+          ></app-radio>
+          <app-radio
+            name="contrastType"
+            value="apca"
+            label="Perceptual"
+            [checked]="contrastType() === 'apca'"
+            (changed)="contrastType.set($any($event))"
+          ></app-radio>
+          <app-radio
+            name="contrastType"
+            value="bpca"
+            label="WCAG 2 compatible"
+            [checked]="contrastType() === 'bpca'"
+            (changed)="contrastType.set($any($event))"
+          ></app-radio>
+          <app-radio
+            name="contrastType"
+            value="apca object"
+            label="Object"
+            [checked]="contrastType() === 'apca object'"
+            (changed)="contrastType.set($any($event))"
+          ></app-radio>
+          <app-radio
+            name="contrastType"
+            value="deltaE"
+            label="Delta E"
+            [checked]="contrastType() === 'deltaE'"
+            (changed)="contrastType.set($any($event))"
+          ></app-radio>
         </div>
+      </div>
 
-        <div>
-          <h3>Color Sliders</h3>
+      <div>
+        <h3>Color Sliders</h3>
 
-          <div class="checkbox-section">
-            <div class="checkbox-group">
-              <label for="option-const-chroma">Constant chroma</label>
-              <input
-                [checked]="constantChroma()"
-                type="checkbox"
-                name="Constant Chroma Toggle"
-                id="option-const-chroma"
-                (change)="toggleConstantChroma($event)"
-              />
-            </div>
-            <div class="checkbox-group">
-              <label for="option-show-grad">Show Gradient</label>
-              <input
-                [checked]="showGradient()"
-                type="checkbox"
-                name="Show Gradient Toggle"
-                id="option-show-grad"
-                (change)="toggleShowGradient($event)"
-              />
-            </div>
-          </div>
+        <div class="checkbox-section">
+          <app-checkbox
+            id="option-const-chroma"
+            name="Constant Chroma Toggle"
+            label="Constant chroma"
+            [checked]="constantChroma()"
+            (changed)="constantChroma.set($event)"
+          ></app-checkbox>
+          <app-checkbox
+            id="option-show-grad"
+            name="Show Gradient Toggle"
+            label="Show Gradient"
+            [checked]="showGradient()"
+            (changed)="showGradient.set($event)"
+          ></app-checkbox>
         </div>
-      </details>
-    </div>
-  </section>
+      </div>
+    </app-accordion-item>
+  </app-card>
 
-  <hr />
-
-  <section class="metadata">
+  <app-card class="metadata" variant="elevated" padding="md">
     <h2 id="color-metadata">Color Metadata</h2>
 
-    <details>
-      <summary>Descriptive data about your inputted colors.</summary>
-
+    <app-accordion-item title="Descriptive data about your inputted colors.">
       <app-metadata
         [colorOne]="colorPickerOneComparedColor()"
         [colorTwo]="colorPickerTwoComparedColor()"
       ></app-metadata>
-    </details>
-  </section>
+    </app-accordion-item>
+  </app-card>
 
-  <hr />
-
-  <section class="instructions">
+  <app-card class="instructions" variant="elevated" padding="md">
     <h2 id="additional-instructions">Additional Instructions</h2>
 
-    <details>
-      <summary>Detailed instructions and workflows.</summary>
-
+    <app-accordion-item title="Detailed instructions and workflows.">
       <div class="content">
         <p>
           <span class="visual-header">Screen Reader Users:</span> Input a Foreground Color and a
@@ -422,17 +340,13 @@
           <li>Try swapping Foreground, and Background colors for a dark mode pair.</li>
         </ul>
       </div>
-    </details>
-  </section>
+    </app-accordion-item>
+  </app-card>
 
-  <hr />
-
-  <section class="notes">
+  <app-card class="notes" variant="elevated" padding="md">
     <h2>Notes</h2>
 
-    <details>
-      <summary>Details about app features.</summary>
-
+    <app-accordion-item title="Details about app features.">
       <div class="content">
         <p id="notes-lch-limits">
           <span class="visual-header">LCH Limits:</span>
@@ -549,12 +463,10 @@
           ranges from black to white.
         </p>
       </div>
-    </details>
-  </section>
+    </app-accordion-item>
+  </app-card>
 
-  <hr />
-
-  <section class="contact">
+  <app-card class="contact" variant="elevated" padding="md">
     <h2>Contact Information and Feedback</h2>
 
     <p>
@@ -564,7 +476,7 @@
       >
       to help improve its Accessibility.
     </p>
-  </section>
+  </app-card>
 
   <div class="alert">
     <app-alert [alertMessage]="currentAlertMessage()"></app-alert>

@@ -16,6 +16,12 @@ import { CopyToClipboardButtonComponent } from './_components/copy-to-clipboard-
 import { MetadataComponent } from './_components/metadata/metadata.component';
 import { PaletteTableComponent } from './_components/palette-table/palette-table.component';
 
+import { AccordionItemComponent } from './_candor/accordion/accordion-item.component';
+import { ButtonComponent } from './_candor/button/button.component';
+import { CardComponent } from './_candor/card/card.component';
+import { CheckboxComponent } from './_candor/form/checkbox/checkbox.component';
+import { RadioComponent } from './_candor/form/radio/radio.component';
+
 @Component({
   selector: 'app-root',
   imports: [
@@ -26,6 +32,11 @@ import { PaletteTableComponent } from './_components/palette-table/palette-table
     MetadataComponent,
     PaletteTableComponent,
     AlertComponent,
+    AccordionItemComponent,
+    ButtonComponent,
+    CardComponent,
+    CheckboxComponent,
+    RadioComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',

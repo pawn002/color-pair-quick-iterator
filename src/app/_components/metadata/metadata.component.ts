@@ -1,6 +1,7 @@
 import { Component, effect, inject, input, signal, computed } from '@angular/core';
 import { ColorUtilService, ColorMetaObj } from '../../services/color-util.service';
 import { ColorMetricsService } from '../../services/color-metrics.service';
+import { TableComponent } from '../../_candor/table/table.component';
 
 export class DifferencesDataObj {
   deltaE: number = NaN;
@@ -21,6 +22,7 @@ export class SuccessesObj {
   templateUrl: './metadata.component.html',
   styleUrls: ['./metadata.component.scss'],
   standalone: true,
+  imports: [TableComponent],
 })
 export class MetadataComponent {
   colorOne = input<string>('');

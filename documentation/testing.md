@@ -6,7 +6,7 @@ This guide provides comprehensive information about testing strategies, patterns
 
 The project uses **Karma** as the test runner with **Jasmine** as the testing framework. All tests run in a Chrome browser environment.
 
-**Current Status**: Comprehensive test coverage implemented with **324 passing tests** covering all services and components (100% pass rate).
+**Current Status**: Comprehensive test coverage implemented covering all services and components.
 
 ## Table of Contents
 
@@ -732,21 +732,12 @@ afterEach(() => {
 
 ### Current Test Coverage
 
-**Test Statistics** (as of latest commit):
-- **Total Tests**: 324
-- **Pass Rate**: 100% (324/324 passing)
-- **Services**: 150 tests
-  - ColorUtilService: 79 tests
-  - BpcaService: 38 tests
-  - ColorMetricsService: 33 tests
-- **Components**: 174 tests
-  - ColorPickerComponent: 25 tests
-  - AlertComponent: 20 tests
-  - CopyToClipboardButtonComponent: 18 tests
-  - ColorContrastComponent: 30 tests
-  - MetadataComponent: 42 tests
-  - ColorSliderComponent: 30 tests
-  - PaletteTableComponent: 35 tests
+The project has comprehensive test coverage across all services and components. Run `npm test` to see the current test count and pass rate.
+
+**Coverage by area**:
+- **Services**: ColorUtilService, BpcaService, ColorMetricsService
+- **App components**: ColorPickerComponent, AlertComponent, CopyToClipboardButtonComponent, ColorContrastComponent, MetadataComponent, ColorSliderComponent, PaletteTableComponent, TonePickerComponent
+- **Candor components**: AccordionItemComponent, ButtonComponent, CardComponent, CheckboxComponent, RadioComponent, TableComponent, ToastComponent
 
 ### Running Coverage
 

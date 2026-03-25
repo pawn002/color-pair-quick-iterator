@@ -1,11 +1,11 @@
 .comp-container {
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
 
   table {
     border-collapse: collapse;
 
     th {
-      font-family: var(--mono-font);
+      font-family: var(--font-family-mono);
     }
 
     td {
@@ -23,9 +23,9 @@
     button {
       margin: 0;
       padding: 0;
-      border: transparent 2px solid;
+      border: transparent var(--border-width-medium) solid;
       box-sizing: border-box;
-      border-radius: 5px;
+      border-radius: var(--radius-sm);
       min-width: 22px;
       min-height: 22px;
       line-height: 0;
@@ -36,17 +36,17 @@
       }
 
       &:hover:not([disabled]) {
-        background-color: white !important;
-        border-color: #8f8f8f !important;
+        background-color: var(--color-bg-elevated) !important;
+        border-color: var(--color-border-default) !important;
       }
     }
 
     .no-color {
       margin: 0;
       padding: 0;
-      border: transparent 2px solid;
+      border: transparent var(--border-width-medium) solid;
       box-sizing: border-box;
-      border-radius: 5px;
+      border-radius: var(--radius-sm);
       min-width: 22px;
       min-height: 22px;
       line-height: 0;

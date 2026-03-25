@@ -8,14 +8,15 @@ Thank you for your interest in contributing to Color Pair Quick Iterator! This d
 2. [Getting Started](#getting-started)
 3. [Development Workflow](#development-workflow)
 4. [Coding Standards](#coding-standards)
-5. [Angular 20 Conventions](#angular-20-conventions)
-6. [TypeScript Best Practices](#typescript-best-practices)
-7. [Component Development](#component-development)
-8. [Service Development](#service-development)
-9. [Testing Requirements](#testing-requirements)
-10. [Documentation](#documentation)
-11. [Pull Request Process](#pull-request-process)
-12. [Commit Message Guidelines](#commit-message-guidelines)
+5. [Candor Design System Conventions](#candor-design-system-conventions)
+6. [Angular 20 Conventions](#angular-20-conventions)
+7. [TypeScript Best Practices](#typescript-best-practices)
+8. [Component Development](#component-development)
+9. [Service Development](#service-development)
+10. [Testing Requirements](#testing-requirements)
+11. [Documentation](#documentation)
+12. [Pull Request Process](#pull-request-process)
+13. [Commit Message Guidelines](#commit-message-guidelines)
 
 ---
 
@@ -39,6 +40,7 @@ Before contributing, ensure you have:
 3. Reviewed the [Architecture](./architecture.md) documentation
 4. Familiarized yourself with [Services](./services.md) and [Components](./components.md)
 5. Read [CLAUDE.md](../CLAUDE.md) and [best-practices.md](../best-practices.md)
+6. Understood the [Candor design system conventions](#candor-design-system-conventions)
 
 ### Finding Something to Work On
 
@@ -204,6 +206,68 @@ Prettier runs automatically via IDE integration. Configuration in `package.json`
   }
 }
 ```
+
+---
+
+## Candor Design System Conventions
+
+The project uses the **Candor design system** for UI primitives. Components from Candor live in `src/app/_candor/` and must be used as-is for consistent visuals.
+
+### When to use Candor components
+
+Use Candor components for any standard UI primitive:
+
+- Buttons → `<app-button>`
+- Cards/surfaces → `<app-card>`
+- Accordions → `<app-accordion-item>`
+- Checkboxes → `<app-checkbox>`
+- Radio buttons → `<app-radio>`
+- Data tables → `<app-table>`
+- Notifications → `<app-toast>` (via `AlertComponent`)
+
+### Styling with Candor tokens
+
+All styles in both `_components/` and `_candor/` must reference Candor CSS custom properties. Do **not** use hard-coded color, font, or spacing values:
+
+```scss
+// Good
+color: var(--color-text-default);
+font-family: var(--font-family-mono);
+border: var(--border-width-thin) solid var(--color-border-control);
+
+// Avoid
+color: #1a1a1a;
+font-family: 'Source Code Pro', monospace;
+border: 1px solid #ccc;
+```
+
+### Token categories
+
+| Category | Example tokens |
+|----------|---------------|
+| Color — text | `--color-text-default`, `--color-text-subtle`, `--color-text-inverse` |
+| Color — background | `--color-bg-surface`, `--color-bg-subtle` |
+| Color — border | `--color-border-control`, `--color-border-strong` |
+| Typography | `--font-family-display`, `--font-family-accessible`, `--font-family-mono` |
+| Font size | `--font-size-sm`, `--font-size-md`, `--font-size-lg` |
+| Font weight | `--font-weight-semibold`, `--font-weight-bold` |
+| Border | `--border-width-thin`, `--border-width-medium` |
+| Line height | `--line-height-tight`, `--line-height-normal` |
+
+### Modifying Candor components
+
+Candor components are copied into `_candor/` and can be modified if needed. However, keep changes minimal and focused on the application's specific requirements. Use `ViewEncapsulation.None` (already set on all Candor components) to allow parent-scope token overrides if necessary.
+
+### Old alias variables
+
+The following application-level alias variables were removed during the Candor migration. If you encounter them in older code or branches, replace with the Candor token:
+
+| Removed alias | Candor replacement |
+|---------------|-------------------|
+| `--mono-font` | `--font-family-mono` |
+| `--body-font` | `--font-family-accessible` |
+| `--header-font` | `--font-family-display` |
+| `--ideal-body-text-black` | `--color-text-default` |
 
 ---
 
@@ -591,7 +655,7 @@ export class MyService {
 
 ### Current Status
 
-The project has comprehensive test coverage with 324 passing tests (100% pass rate). All new code should include tests.
+The project has comprehensive test coverage with passing tests across all services and components. All new code should include tests.
 
 ### Testing Standards
 

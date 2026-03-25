@@ -4,11 +4,16 @@ This document provides detailed documentation for all UI components in the Color
 
 ## Overview
 
-The application contains 7 standalone components plus the root app component. All components follow Angular 20 patterns with signals, modern control flow (@if, @for), and co-located files.
+The application contains two groups of components:
+
+- **App-specific components** (`src/app/_components/`) — 8 standalone components that implement the application's features
+- **Candor design system components** (`src/app/_candor/`) — 7 copied UI primitives that provide visual consistency via shared design tokens
+
+All components follow Angular 20 patterns with signals, modern control flow (`@if`, `@for`), and co-located files.
 
 ## Component File Structure
 
-Each component follows this pattern:
+App-specific components follow this pattern:
 
 ```
 component-name/
@@ -17,6 +22,8 @@ component-name/
 ├── component-name.scss             # Component-scoped styles
 └── component-name.stories.ts       # Storybook stories
 ```
+
+Candor components use `ViewEncapsulation.None` and reference Candor CSS custom property tokens for all visual values.
 
 ---
 
@@ -79,7 +86,7 @@ The AppComponent is bootstrapped in `main.ts` and serves as the entry point for 
 
 ---
 
-## UI Components
+## App-Specific Components (`_components/`)
 
 ### 1. ColorPickerComponent
 
@@ -208,7 +215,7 @@ When `showGradient` is true, the component:
 
 **Location**: `src/app/_components/color-contrast/`
 
-Displays the contrast score between two colors.
+Displays the contrast score between two colors. The score header uses container queries (`55cqh`) to fill the sticky header box height responsively.
 
 #### Inputs
 
@@ -249,24 +256,8 @@ contrastScore = signal<string | number | null>(null);
 The component supports three contrast display modes via `contrastType` input:
 
 1. **'apca'** - Displays APCA Lc score as a number (e.g., "75")
-   ```typescript
-   [contrastType]="'apca'"
-   // Displays: 75
-   ```
-
 2. **'bpca'** - Displays WCAG 2.x compatible ratio (e.g., "4.5")
-   ```typescript
-   [contrastType]="'bpca'"
-   // Displays: 4.5
-   ```
-
-3. **'apca object'** - Displays minimum object dimension in pixels
-   ```typescript
-   [contrastType]="'apca object'"
-   // Displays: 2 (minimum 2px object size for this contrast)
-   ```
-   
-   This mode uses `ColorUtilService.getMinObjectDimension()` to convert APCA scores to minimum object sizes based on a D3 scale mapping.
+3. **'apca object'** - Displays minimum object dimension in pixels using `ColorUtilService.getMinObjectDimension()`
 
 #### Contrast Score Interpretation
 
@@ -279,18 +270,13 @@ The component supports three contrast display modes via `contrastType` input:
 - 15+: Disabled elements
 - <15: Insufficient contrast
 
-**Minimum Object Dimensions** (when `contrastType === 'apca object'`):
-- Calculated from APCA score using perceptual scale
-- Lower scores = larger minimum size required
-- NaN if contrast too low for any size object
-
 ---
 
 ### 4. MetadataComponent
 
 **Location**: `src/app/_components/metadata/`
 
-Displays detailed color information and differences between two colors.
+Displays detailed color information and differences between two colors. Metadata tables are wrapped with `<app-table [compact]="true">` from the Candor design system for consistent table styling.
 
 #### Inputs
 
@@ -421,11 +407,73 @@ Center: Base color
 
 ---
 
-### 6. AlertComponent
+### 6. TonePickerComponent
+
+**Location**: `src/app/_components/tone-picker/`
+
+An accessible grid-based tone selector that lets users navigate and select a color from a 2D grid using keyboard or pointer. Implements ARIA `role="grid"` with roving tabindex and live region announcements.
+
+#### Inputs
+
+```typescript
+rows = input.required<GridRow[]>();          // Grid row data
+columnHeaders = input.required<string[]>();  // Column header labels
+ariaLabel = input<string>('');               // Accessible label for the grid
+size = input<'small' | 'normal'>('normal'); // Grid size variant
+selectedValue = input<string | null>(null);  // Currently selected color (OKLCH or hex)
+hideHeaders = input<boolean>(false);         // Hide visual row/column headers
+hideUi = input<boolean>(false);             // Hide preview/hint UI below the grid
+```
+
+#### Outputs
+
+```typescript
+colorSelect = output<string>();  // Emits hex color when a cell is activated
+```
+
+#### Types
+
+```typescript
+export interface GridCell {
+  label: string;
+  value?: unknown;
+  background?: string;
+  disabled?: boolean;     // true = outside sRGB gamut (renders blank cell)
+}
+
+export interface GridRow {
+  rowHeader?: string;
+  cells: GridCell[];
+}
+```
+
+#### Behavior
+
+- Full keyboard navigation (arrow keys, Enter/Space to activate)
+- Live region announces selected color for screen readers
+- Disabled cells (out-of-gamut) are rendered blank and are not focusable
+- Syncs selection state when `selectedValue` input changes
+
+#### Example Usage
+
+```html
+<app-tone-picker
+  [rows]="toneRows()"
+  [columnHeaders]="chromaHeaders()"
+  [ariaLabel]="'Foreground tone picker'"
+  [selectedValue]="currentColor()"
+  [hideHeaders]="true"
+  (colorSelect)="handleToneSelect($event)"
+/>
+```
+
+---
+
+### 7. AlertComponent
 
 **Location**: `src/app/_components/alert/`
 
-Displays temporary user notifications that auto-dismiss after 5 seconds.
+Displays temporary user notifications that auto-dismiss after 5 seconds. Uses `ToastComponent` from the Candor design system for its visual output.
 
 #### Inputs
 
@@ -444,23 +492,22 @@ export interface AlertMessagObj {
 #### Outputs
 
 ```typescript
-alertClosed = output<void>();
+alertClosed = output<boolean>();
 ```
 
 #### Internal State
 
 ```typescript
-id = signal<string>('');           // Unique alert ID
-isVisible = signal<boolean>(true); // Visibility state
+showAlert = signal<boolean>(false);
+uniqId = signal<string>('');
 ```
 
 #### Behavior
 
-- Displays alert message in a dismissible banner
+- Displays alert message using `ToastComponent` from `_candor/toast/`
 - Auto-hides after 5 seconds using `setTimeout`
 - Generates unique IDs using lodash `random` for each alert
 - Emits `alertClosed` event when dismissed
-- User can manually dismiss by clicking close button
 
 #### Example Usage
 
@@ -473,7 +520,7 @@ isVisible = signal<boolean>(true); // Visibility state
 
 ---
 
-### 7. CopyToClipboardButtonComponent
+### 8. CopyToClipboardButtonComponent
 
 **Location**: `src/app/_components/copy-to-clipboard-button/`
 
@@ -530,6 +577,177 @@ async copyToClipboard() {
   (copyEvent)="handleCopy($event)"
 />
 ```
+
+---
+
+## Candor Design System Components (`_candor/`)
+
+These components are copied from the Candor design system and live in `src/app/_candor/`. They provide consistent, token-driven UI primitives. All use `ViewEncapsulation.None` so Candor CSS custom property tokens cascade naturally, and all use `ChangeDetectionStrategy.OnPush`.
+
+### AccordionItemComponent
+
+**Location**: `src/app/_candor/accordion/`
+
+Collapsible section with a title header and projected content body.
+
+#### Inputs
+
+```typescript
+title = input('');
+open = input(false);
+variant = input<'default' | 'subtle' | 'quiet'>('default');
+```
+
+The `variant` input controls the visual weight of the accordion border/background. Use `'subtle'` or `'quiet'` for less prominent sections.
+
+---
+
+### ButtonComponent
+
+**Location**: `src/app/_candor/button/`
+
+Styled action button with multiple variants and sizes.
+
+#### Inputs
+
+```typescript
+variant = input<'primary' | 'secondary' | 'tertiary' | 'ghost' | 'destructive'>('primary');
+size = input<'small' | 'medium' | 'large' | 'icon'>('medium');
+disabled = input(false);
+type = input<'button' | 'submit' | 'reset'>('button');
+ariaLabel = input<string>();
+```
+
+#### Outputs
+
+```typescript
+clicked = output<Event>();
+```
+
+Emits a click event only when the button is not disabled.
+
+---
+
+### CardComponent
+
+**Location**: `src/app/_candor/card/`
+
+Surface container that wraps content in a styled card with optional header and footer slots.
+
+#### Inputs
+
+```typescript
+variant = input<'default' | 'elevated' | 'outlined'>('default');
+padding = input<'none' | 'sm' | 'md' | 'lg'>('md');
+```
+
+#### Content Projection
+
+- Default slot: card body content
+- `slot="header"`: card header content
+- `slot="footer"`: card footer content
+
+---
+
+### CheckboxComponent
+
+**Location**: `src/app/_candor/form/checkbox/`
+
+Styled checkbox implementing Angular's `ControlValueAccessor` for use with reactive forms.
+
+#### Inputs
+
+```typescript
+label = input<string>();
+id = input<string>();
+required = input(false);
+name = input<string>();
+checked = false;    // @Input (mutable via CVA)
+disabled = false;   // @Input (mutable via CVA)
+```
+
+#### Outputs
+
+```typescript
+changed = output<boolean>();
+```
+
+---
+
+### RadioComponent
+
+**Location**: `src/app/_candor/form/radio/`
+
+Styled radio button implementing Angular's `ControlValueAccessor` for use with reactive forms.
+
+#### Inputs
+
+```typescript
+label = input<string>();
+value = input<unknown>();
+name = input<string>();
+id = input<string>();
+checked = false;    // @Input (mutable via CVA)
+disabled = false;   // @Input (mutable via CVA)
+```
+
+#### Outputs
+
+```typescript
+changed = output<unknown>();
+```
+
+---
+
+### TableComponent
+
+**Location**: `src/app/_candor/table/`
+
+Styled table wrapper. Wraps `<ng-content>` (your `<table>` markup) in a host element with Candor table token classes.
+
+#### Inputs
+
+```typescript
+compact = input(false);  // Reduces cell padding for dense data panels
+```
+
+#### Example Usage
+
+```html
+<app-table [compact]="true">
+  <table>
+    <tr><th>Color</th><th>Lightness</th></tr>
+    <tr><td>#ff5733</td><td>0.63</td></tr>
+  </table>
+</app-table>
+```
+
+The `MetadataComponent` uses `<app-table [compact]="true">` to wrap its measurement tables.
+
+---
+
+### ToastComponent
+
+**Location**: `src/app/_candor/toast/`
+
+Notification banner with icon, title, message, and optional dismiss button. Used directly by `AlertComponent`.
+
+#### Inputs
+
+```typescript
+variant = input<'info' | 'success' | 'warning' | 'error'>('info');
+title = input('');
+message = input('');
+dismissible = input(true);
+```
+
+#### Outputs
+
+```typescript
+dismissed = output<void>();
+```
+
+The icon and `role` attribute (`'alert'` for warning/error, `'status'` for others) are set automatically based on `variant`.
 
 ---
 
@@ -684,6 +902,20 @@ export class MyComponent {
 }
 ```
 
+### 7. Use Candor tokens in styles
+
+Reference Candor CSS custom properties rather than hard-coded values:
+
+```scss
+// Good
+color: var(--color-text-default);
+font-family: var(--font-family-mono);
+
+// Avoid
+color: #1a1a1a;
+font-family: 'Source Code Pro', monospace;
+```
+
 ---
 
 ## Testing Components
@@ -728,7 +960,7 @@ See [Testing Guide](./testing.md) for more examples.
 
 ## Storybook Stories
 
-Each component has a corresponding `.stories.ts` file for Storybook documentation.
+Each app-specific component has a corresponding `.stories.ts` file for Storybook documentation.
 
 ### Example Story
 
@@ -763,27 +995,25 @@ Run Storybook: `npm run storybook`
 
 ### Component-Scoped Styles
 
-Each component has its own `.scss` file with scoped styles:
+Each app-specific component has its own `.scss` file:
 
 ```scss
 // color-picker.component.scss
 :host {
   display: block;
 }
-
-.color-input {
-  width: 100%;
-  height: 40px;
-}
 ```
+
+### Candor Component Styles
+
+Candor components use `ViewEncapsulation.None` and a dedicated `.scss` file. Their styles rely entirely on Candor design token variables rather than hard-coded values.
 
 ### Global Styles
 
 Global styles are in `src/styles.scss` and include:
-- CSS reset/normalize
-- Font imports
-- Global CSS custom properties
-- Utility classes
+- Font imports (Atkinson Hyperlegible, Roboto Flex, Roboto Mono)
+- Layout-specific CSS custom properties (not covered by Candor tokens)
+- Base element styles using Candor token references
 
 ---
 
@@ -796,6 +1026,7 @@ Components follow accessibility best practices:
 3. **Keyboard navigation**: All interactive elements are keyboard accessible
 4. **Color contrast**: The app itself promotes accessible color contrast
 5. **Focus management**: Visible focus indicators
+6. **Live regions**: TonePickerComponent uses `aria-live` to announce selections
 
 ---
 

@@ -47,6 +47,14 @@ export class ColorUtilService {
     return parsedColor;
   }
 
+  hexToOklchString(color: string): string {
+    const parsed = this.parseColor(color);
+    if (!parsed) throw new Error(`Could not parse color: ${color}`);
+    const oklch = Color.to(parsed, 'oklch');
+    const [l, c, h] = oklch.coords;
+    return `oklch(${l.toFixed(2)} ${c.toFixed(3)} ${(h || 0).toFixed(1)})`;
+  }
+
   getRgb255Array(color: string) {
     const colorObj = this.parseColor(color);
 

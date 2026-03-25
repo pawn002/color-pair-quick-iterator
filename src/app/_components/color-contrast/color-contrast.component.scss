@@ -1,16 +1,21 @@
 .comp-container {
-  padding: 0.5em 0.25ch;
-  border: var(--min-body-text-black) solid 3px;
+  flex: 1;
+  container-type: size;
+  padding: 0 0.25ch;
+  border: var(--border-width-thin) solid var(--color-border-default);
 
   .score-container {
     display: flex;
+    height: 100%;
     justify-content: center;
     align-items: center;
 
     .score {
-      color: var(--ideal-body-text-black);
+      color: var(--color-text-default);
       font-weight: 600;
-      font-family: var(--mono-font);
+      font-family: var(--font-family-mono);
+      font-size: 55cqh;
+      line-height: 1;
     }
   }
 }

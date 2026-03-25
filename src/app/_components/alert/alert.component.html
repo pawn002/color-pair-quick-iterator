@@ -1,8 +1,6 @@
-<div class="comp-container" role="alert">
-  <div class="alert-content">
-    @if (showAlert()) {
-      <p [innerText]="alertMessage().message"></p>
-      <p class="msg-id">Message ID: {{ uniqId() }}</p>
-    }
-  </div>
+<div class="comp-container">
+  @if (showAlert()) {
+    <app-toast variant="success" [message]="alertMessage().message" [dismissible]="false" />
+    <span class="msg-id" aria-hidden="true">{{ uniqId() }}</span>
+  }
 </div>

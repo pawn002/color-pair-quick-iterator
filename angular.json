@@ -26,7 +26,10 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"]
+            "styles": [
+              "node_modules/@candor-design/tokens/tokens/candor-tokens.css",
+              "src/styles.scss"
+            ]
           },
           "configurations": {
             "production": {
@@ -39,8 +42,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "6kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "10kB",
+                  "maximumError": "16kB"
                 }
               ],
               "outputHashing": "all"
@@ -80,7 +83,10 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"]
+            "styles": [
+              "node_modules/@candor-design/tokens/tokens/candor-tokens.css",
+              "src/styles.scss"
+            ]
           }
         },
         "storybook": {

@@ -3,7 +3,7 @@
   position: relative;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: 0.5rem 4rem;
+  gap: var(--spacing-xl) var(--spacing-2xl);
   justify-content: center;
 
   div {
@@ -17,17 +17,13 @@
     text-align: center;
   }
 
-  table {
-    margin-bottom: 1rem;
-  }
+  cite a {
+    color: inherit;
+    text-decoration-color: var(--color-border-strong);
 
-  tr {
-    :nth-child(2) {
-      font-family: var(--mono-font);
-      text-align: right;
-      font-style: normal;
-      padding-left: 1ch;
-      min-width: 9ch;
+    &:hover {
+      color: var(--color-action-primary);
+      text-decoration-color: var(--color-action-primary);
     }
   }
 }

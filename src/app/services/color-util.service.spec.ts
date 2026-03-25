@@ -479,4 +479,38 @@ describe('ColorUtilService', () => {
       }
     });
   });
+
+  describe('hexToOklchString', () => {
+    it('should return oklch string for valid hex color', () => {
+      const result = service.hexToOklchString('#ff0000');
+      expect(result).toMatch(/^oklch\(\d+\.\d+ \d+\.\d+ \d+\.\d+\)$/);
+    });
+
+    it('should return oklch string for white', () => {
+      const result = service.hexToOklchString('#ffffff');
+      expect(result).toMatch(/^oklch\(1\.00 0\.000 /);
+    });
+
+    it('should return oklch string for black', () => {
+      const result = service.hexToOklchString('#000000');
+      expect(result).toMatch(/^oklch\(0\.00 0\.000 /);
+    });
+
+    it('should throw for invalid color', () => {
+      expect(() => service.hexToOklchString('not-a-color')).toThrow();
+    });
+
+    it('should produce parseable oklch values', () => {
+      const result = service.hexToOklchString('#3366cc');
+      const m = result.match(/oklch\(([\d.]+) ([\d.]+) ([\d.]+)\)/);
+      expect(m).not.toBeNull();
+      if (m) {
+        const l = parseFloat(m[1]);
+        const c = parseFloat(m[2]);
+        expect(l).toBeGreaterThanOrEqual(0);
+        expect(l).toBeLessThanOrEqual(1);
+        expect(c).toBeGreaterThanOrEqual(0);
+      }
+    });
+  });
 });
