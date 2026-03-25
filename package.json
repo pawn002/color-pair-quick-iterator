@@ -1,5 +1,5 @@
 {
-  "name": "cqpi-ng-20-holding",
+  "name": "color-pair-quick-iterator",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -9,8 +9,8 @@
     "deploy:gh-pages": "npm run build:gh-pages && rm -rf docs/* && cp -r dist/color-pair-quick-iterator/browser/* docs/ && git add docs/ && git commit -m \"build: update GitHub Pages deployment with latest changes\" && git push",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "storybook": "ng run cqpi-ng-20-holding:storybook",
-    "build-storybook": "ng run cqpi-ng-20-holding:build-storybook"
+    "storybook": "ng run color-pair-quick-iterator:storybook",
+    "build-storybook": "ng run color-pair-quick-iterator:build-storybook"
   },
   "prettier": {
     "printWidth": 100,
