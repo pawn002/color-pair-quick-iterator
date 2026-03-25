@@ -1,11 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/angular';
+import { componentWrapperDecorator } from '@storybook/angular';
 import { ColorContrastComponent } from './color-contrast.component';
 
-// More on how to set up stories at: https://storybook.js.org/docs/angular/writing-stories/introduction
 const meta: Meta<ColorContrastComponent> = {
   title: 'App/Color Contrast',
   component: ColorContrastComponent,
   tags: ['autodocs'],
+  decorators: [
+    componentWrapperDecorator(
+      (story) =>
+        `<style>app-color-contrast { display: flex; flex: 1; }</style><div style="display:flex;height:200px;width:300px">${story}</div>`
+    ),
+  ],
   argTypes: {
     colorOne: {
       control: 'color',
@@ -14,8 +20,11 @@ const meta: Meta<ColorContrastComponent> = {
       control: 'color',
     },
     contrastType: {
-      options: ['okca', 'apca', 'bpca', 'apca object'],
+      options: ['okca', 'apca', 'bpca', 'deltaE', 'apca object'],
       control: { type: 'radio' },
+    },
+    debug: {
+      control: 'boolean',
     },
   },
 };
@@ -23,8 +32,15 @@ const meta: Meta<ColorContrastComponent> = {
 export default meta;
 type Story = StoryObj<ColorContrastComponent>;
 
-// More on writing stories with args: https://storybook.js.org/docs/angular/writing-stories/args
 export const Typical: Story = {};
+
+export const OKCA: Story = {
+  args: {
+    colorOne: '#ffffff',
+    colorTwo: '#000000',
+    contrastType: 'okca',
+  },
+};
 
 export const APCA: Story = {
   args: {
@@ -39,7 +55,6 @@ export const WCAGEnhanced: Story = {
     colorOne: 'white',
     colorTwo: 'black',
     contrastType: 'bpca',
-    debug: true,
   },
 };
 
@@ -51,11 +66,11 @@ export const WCAGEnhancedEdgeCase: Story = {
   },
 };
 
-export const OKCA: Story = {
+export const DeltaE: Story = {
   args: {
-    colorOne: 'white',
-    colorTwo: 'black',
-    contrastType: 'okca',
+    colorOne: '#928f8f',
+    colorTwo: 'white',
+    contrastType: 'deltaE',
   },
 };
 
