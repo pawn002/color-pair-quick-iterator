@@ -37,13 +37,15 @@
       <h3>Foreground Color</h3>
 
       <div class="slide-group">
-        <app-color-picker
-          [inputId]="'cp-0'"
-          [inputName]="'Foreground Color'"
-          [comparedColor]="colorPickerOneComparedColor()"
-          (selectedColor)="handleColorInputInput('One', $event)"
-          [color]="colorPickerOneSelectedColor()"
-        ></app-color-picker>
+        <app-tooltip text="Choose foreground color" position="bottom">
+          <app-color-picker
+            [inputId]="'cp-0'"
+            [inputName]="'Foreground Color'"
+            [comparedColor]="colorPickerOneComparedColor()"
+            (selectedColor)="handleColorInputInput('One', $event)"
+            [color]="colorPickerOneSelectedColor()"
+          ></app-color-picker>
+        </app-tooltip>
         <app-color-slider
           [id]="'slider-0'"
           [name]="'Foreground Slider'"
@@ -73,13 +75,15 @@
       <h3>Background Color</h3>
 
       <div class="slide-group">
-        <app-color-picker
-          [inputId]="'cp-1'"
-          [inputName]="'Background Color'"
-          [comparedColor]="colorPickerTwoComparedColor()"
-          [color]="colorPickerTwoSelectedColor()"
-          (selectedColor)="handleColorInputInput('Two', $event)"
-        ></app-color-picker>
+        <app-tooltip text="Choose background color" position="bottom">
+          <app-color-picker
+            [inputId]="'cp-1'"
+            [inputName]="'Background Color'"
+            [comparedColor]="colorPickerTwoComparedColor()"
+            [color]="colorPickerTwoSelectedColor()"
+            (selectedColor)="handleColorInputInput('Two', $event)"
+          ></app-color-picker>
+        </app-tooltip>
         <app-color-slider
           [id]="'slider-1'"
           [name]="'Backgroundground Slider'"
