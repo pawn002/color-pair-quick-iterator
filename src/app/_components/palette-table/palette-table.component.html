@@ -4,6 +4,7 @@
       [rows]="tonePickerRows()"
       [columnHeaders]="tonePickerHeaders()"
       [size]="'small'"
+      [hideHeaders]="true"
       [hideUi]="true"
       [selectedValue]="selectedOklch()"
       [ariaLabel]="'Color tones — hue ' + (dataStruct()[0]?.[0]?.hue?.toFixed(0) ?? '') + '°'"

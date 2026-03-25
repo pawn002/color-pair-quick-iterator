@@ -37,24 +37,21 @@ export interface GridRow {
         [attr.aria-label]="ariaLabel() || 'Tone picker'"
         [attr.aria-describedby]="hintId"
         class="gamut-grid"
+        [class.hide-headers]="hideHeaders()"
         [class.size-small]="size() === 'small'"
       >
-        @if (!hideUi()) {
-          <thead>
-            <tr role="row">
-              <td class="corner" role="none"></td>
-              @for (header of columnHeaders(); track header) {
-                <th scope="col" role="columnheader" class="col-header">{{ header }}</th>
-              }
-            </tr>
-          </thead>
-        }
+        <thead>
+          <tr role="row">
+            <td class="corner" role="none"></td>
+            @for (header of columnHeaders(); track header) {
+              <th scope="col" role="columnheader" class="col-header">{{ header }}</th>
+            }
+          </tr>
+        </thead>
         <tbody>
           @for (row of rows(); track row.rowHeader; let ri = $index) {
             <tr role="row">
-              @if (!hideUi()) {
-                <th scope="row" role="rowheader" class="row-header">{{ row.rowHeader }}</th>
-              }
+              <th scope="row" role="rowheader" class="row-header">{{ row.rowHeader }}</th>
               @for (cell of row.cells; track $index; let ci = $index) {
                 @if (!cell.disabled) {
                   <td role="gridcell" class="cell">
@@ -84,7 +81,7 @@ export interface GridRow {
 
     <div role="status" aria-live="polite" aria-atomic="true" class="sr-only">{{ announcement() }}</div>
 
-    @if (!hideUi()) {
+    <div class="ui" [class.sr-only]="hideUi()">
       <div class="preview">
         @if (selectedColor()) {
           <span class="preview-swatch" [style.background]="selectedColor()" aria-hidden="true"></span>
@@ -95,7 +92,7 @@ export interface GridRow {
       </div>
 
       <p class="hint">Arrow keys navigate · Enter or Space activates · Blank cells are outside sRGB gamut</p>
-    }
+    </div>
   `,
 })
 export class TonePickerComponent implements OnInit {
@@ -124,6 +121,7 @@ export class TonePickerComponent implements OnInit {
   ariaLabel = input<string>('');
   size = input<'small' | 'normal'>('normal');
   selectedValue = input<string | null>(null);
+  hideHeaders = input<boolean>(false);
   hideUi = input<boolean>(false);
 
   colorSelect = output<string>();
@@ -274,7 +272,7 @@ export class TonePickerComponent implements OnInit {
         const cell = rows[r].cells[col];
         if (cell.disabled || !cell.value) continue;
         const v = cell.value as { l: number; c: number; h: number };
-        if (Math.abs(v.l - l) < 0.001 && Math.abs(v.c - c) < 0.001) {
+        if (Math.abs(v.l - l) < 0.006 && Math.abs(v.c - c) < 0.001) {
           return { r, col };
         }
       }

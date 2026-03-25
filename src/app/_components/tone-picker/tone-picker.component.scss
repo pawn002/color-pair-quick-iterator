@@ -39,14 +39,16 @@
 }
 
 .cell {
-  padding: 3px;
+  // Padding must be >= outline-width + outline-offset (2px + 2px = 4px) to avoid clipping the focus ring.
+  padding: 4px;
   width: 3.125rem;
   height: 3.125rem;
 }
 
 .size-small .cell {
-  width: 1.75rem;
-  height: 1.75rem;
+  width: 1.625rem;
+  height: 1.625rem;
+  padding: 4px;
 }
 
 .cell-btn {
@@ -67,6 +69,33 @@
     border-color: var(--color-focus);
     outline: 2px solid var(--color-focus);
     outline-offset: 2px;
+  }
+}
+
+// ─── Visually hidden header variant ──────────────────────────────────────────
+// Headers stay in the DOM so screen readers retain column/row context in the grid.
+
+.gamut-grid.hide-headers {
+  thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .row-header,
+  .corner {
+    width: 0;
+    min-width: 0;
+    max-width: 0;
+    padding: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    clip-path: inset(50%);
   }
 }
 

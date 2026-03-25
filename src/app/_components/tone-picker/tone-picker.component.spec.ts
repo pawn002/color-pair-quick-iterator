@@ -70,28 +70,45 @@ describe('TonePickerComponent', () => {
       expect(component.hideUi()).toBe(false);
     });
 
-    it('should accept hideUi true', () => {
-      fixture.componentRef.setInput('hideUi', true);
-      fixture.detectChanges();
-      expect(component.hideUi()).toBe(true);
+    it('should default hideHeaders to false', () => {
+      expect(component.hideHeaders()).toBe(false);
     });
 
-    it('should hide thead and preview when hideUi is true', () => {
+    it('should keep thead in DOM when hideUi is true (accessibility)', () => {
       fixture.componentRef.setInput('hideUi', true);
-      fixture.detectChanges();
-      const el: HTMLElement = fixture.nativeElement;
-      expect(el.querySelector('thead')).toBeNull();
-      expect(el.querySelector('.preview')).toBeNull();
-      expect(el.querySelector('.hint')).toBeNull();
-    });
-
-    it('should show thead and preview when hideUi is false', () => {
-      fixture.componentRef.setInput('hideUi', false);
       fixture.detectChanges();
       const el: HTMLElement = fixture.nativeElement;
       expect(el.querySelector('thead')).not.toBeNull();
-      expect(el.querySelector('.preview')).not.toBeNull();
-      expect(el.querySelector('.hint')).not.toBeNull();
+    });
+
+    it('should CSS-hide the .ui section when hideUi is true', () => {
+      fixture.componentRef.setInput('hideUi', true);
+      fixture.detectChanges();
+      const el: HTMLElement = fixture.nativeElement;
+      const ui = el.querySelector('.ui');
+      expect(ui?.classList).toContain('sr-only');
+    });
+
+    it('should show .ui section when hideUi is false', () => {
+      fixture.componentRef.setInput('hideUi', false);
+      fixture.detectChanges();
+      const el: HTMLElement = fixture.nativeElement;
+      const ui = el.querySelector('.ui');
+      expect(ui?.classList).not.toContain('sr-only');
+    });
+
+    it('should add hide-headers class to table when hideHeaders is true', () => {
+      fixture.componentRef.setInput('hideHeaders', true);
+      fixture.detectChanges();
+      const el: HTMLElement = fixture.nativeElement;
+      expect(el.querySelector('.gamut-grid')?.classList).toContain('hide-headers');
+    });
+
+    it('should keep thead in DOM when hideHeaders is true', () => {
+      fixture.componentRef.setInput('hideHeaders', true);
+      fixture.detectChanges();
+      const el: HTMLElement = fixture.nativeElement;
+      expect(el.querySelector('thead')).not.toBeNull();
     });
 
     it('should accept selectedValue', () => {
@@ -183,6 +200,23 @@ describe('TonePickerComponent', () => {
       fixture.detectChanges();
       await fixture.whenStable();
       expect(component.selectedRow()).toBe(1);
+      expect(component.selectedCol()).toBe(0);
+    });
+
+    it('should match cell when selectedValue L is rounded by toFixed(2) (up to 0.005 rounding error)', async () => {
+      // Simulate hexToOklchString behavior: raw L=0.5127 → toFixed(2) → "0.51" → parsed back as 0.51
+      // The cell stores the raw 0.5127. Old tolerance (0.001) would miss this; new tolerance (0.006) catches it.
+      const rowsWithRawL: GridRow[] = [
+        {
+          rowHeader: '0.51',
+          cells: [makeCell('oklch(0.51 0.05 180)', 0.5127, 0.05, 180), disabledCell()],
+        },
+      ];
+      fixture.componentRef.setInput('rows', rowsWithRawL);
+      fixture.componentRef.setInput('selectedValue', 'oklch(0.51 0.050 180.0)');
+      fixture.detectChanges();
+      await fixture.whenStable();
+      expect(component.selectedRow()).toBe(0);
       expect(component.selectedCol()).toBe(0);
     });
   });

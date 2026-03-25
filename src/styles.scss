@@ -145,63 +145,6 @@ li {
   }
 }
 
-details {
-  background: var(--color-bg-surface);
-  border-radius: var(--radius-md);
-  padding: 0 1rem;
-}
-
-details > summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.875rem 0;
-  font-family: var(--font-family-accessible);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-bold);
-  letter-spacing: 0.02em;
-  color: var(--color-text-default);
-  max-width: unset;
-  line-height: var(--line-height-tight);
-  list-style: none;
-  text-align: left;
-  margin: 0;
-  transition: color 0.2s ease-in-out;
-
-  &::-webkit-details-marker {
-    display: none;
-  }
-
-  &:hover {
-    color: var(--color-action-primary);
-  }
-
-  &:focus {
-    outline: none;
-  }
-
-  &:focus-visible {
-    outline: var(--focus-ring-width) solid var(--color-focus);
-    outline-offset: 2px;
-    border-radius: var(--radius-sm);
-  }
-
-  &::after {
-    content: '';
-    flex-shrink: 0;
-    width: 6px;
-    height: 6px;
-    border-right: var(--border-width-medium) solid currentColor;
-    border-bottom: var(--border-width-medium) solid currentColor;
-    transform: rotate(45deg) translateY(-2px);
-    transition: transform 0.22s ease;
-  }
-}
-
-details[open] > summary::after {
-  transform: rotate(-135deg) translateY(-2px);
-}
 
 button,
 input {

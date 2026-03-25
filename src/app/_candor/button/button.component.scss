@@ -1,0 +1,116 @@
+.button {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-medium);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease-in-out,
+    color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out,
+    opacity 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+
+  &:focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-focus);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  // ─── Sizes ────────────────────────────────────────────────────────────────
+
+  &--small {
+    font-size: var(--font-size-sm);
+    letter-spacing: 0.01em;
+    padding: var(--spacing-button-padding-y-sm) var(--spacing-button-padding-x-sm);
+    min-height: 2rem;
+  }
+
+  &--medium {
+    font-size: var(--font-size-md);
+    padding: var(--spacing-button-padding-y) var(--spacing-button-padding-x);
+    min-height: 2.5rem;
+  }
+
+  &--large {
+    font-size: var(--font-size-lg);
+    padding: var(--spacing-button-padding-y-lg) var(--spacing-button-padding-x-lg);
+    min-height: 3rem;
+  }
+
+  // Square padding for icon-only buttons — no forced min-height; content drives size.
+  &--icon {
+    padding: var(--spacing-xs);
+  }
+
+  // ─── Variants ─────────────────────────────────────────────────────────────
+
+  &--primary {
+    background-color: var(--color-action-primary);
+    color: var(--color-text-on-action);
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-action-primary-hover);
+    }
+    &:active:not(:disabled) {
+      background-color: var(--color-action-primary-active);
+    }
+  }
+
+  &--secondary {
+    background-color: transparent;
+    color: var(--color-action-primary);
+    border: var(--border-width-thin) solid var(--color-action-primary);
+
+    &:hover:not(:disabled) {
+      background-color: oklch(from var(--color-action-primary) l c h / 0.08);
+    }
+    &:active:not(:disabled) {
+      background-color: oklch(from var(--color-action-primary) l c h / 0.15);
+    }
+  }
+
+  &--destructive {
+    background-color: var(--color-action-destructive);
+    color: var(--color-action-destructive-text);
+    border: var(--border-width-thin) solid var(--color-action-destructive-border);
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-action-destructive-hover);
+    }
+    &:active:not(:disabled) {
+      background-color: var(--color-action-destructive-active);
+    }
+  }
+
+  &--tertiary {
+    background-color: var(--color-action-tertiary);
+    color: var(--color-action-tertiary-text);
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-action-tertiary-hover);
+    }
+    &:active:not(:disabled) {
+      background-color: oklch(from var(--color-action-tertiary-hover) calc(l - 0.04) c h);
+    }
+  }
+
+  &--ghost {
+    background-color: transparent;
+    color: var(--color-text-default);
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-bg-surface);
+    }
+    &:active:not(:disabled) {
+      background-color: oklch(from var(--color-bg-surface) calc(l - 0.06) c h);
+    }
+  }
+}

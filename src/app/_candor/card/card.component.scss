@@ -1,0 +1,88 @@
+:host {
+  display: block;
+}
+
+.card {
+  border-radius: var(--radius-md);
+  // overflow: hidden intentionally omitted — would break position: sticky on children
+
+  &--default {
+    background-color: var(--color-bg-surface);
+  }
+
+  &--elevated {
+    background-color: var(--color-bg-elevated);
+    border: var(--border-width-thin) solid var(--color-border-default);
+  }
+
+  &--outlined {
+    background-color: var(--color-bg-page);
+    border: var(--border-width-thin) solid var(--color-border-default);
+  }
+
+  // ─── Padding ──────────────────────────────────────────────────────────────
+
+  &--padding-none {
+    .card__header,
+    .card__body,
+    .card__footer {
+      padding: 0;
+    }
+  }
+
+  &--padding-sm {
+    .card__header,
+    .card__body,
+    .card__footer {
+      padding: var(--spacing-sm);
+    }
+  }
+
+  &--padding-md {
+    .card__header,
+    .card__body,
+    .card__footer {
+      padding: var(--spacing-md);
+    }
+  }
+
+  &--padding-lg {
+    .card__header,
+    .card__body,
+    .card__footer {
+      padding: var(--spacing-lg);
+    }
+  }
+
+  // ─── Slots ────────────────────────────────────────────────────────────────
+
+  &__header {
+    &:empty {
+      display: none;
+    }
+
+    &:not(:empty) {
+      border-bottom: var(--border-width-medium) solid var(--color-border-default);
+      font-family: var(--font-family-base);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-default);
+    }
+  }
+
+  &__body {
+    font-family: var(--font-family-base);
+    color: var(--color-text-default);
+  }
+
+  &__footer {
+    &:empty {
+      display: none;
+    }
+
+    &:not(:empty) {
+      border-top: var(--border-width-thin) solid var(--color-border-default);
+      font-family: var(--font-family-base);
+      color: var(--color-text-subtle);
+    }
+  }
+}

@@ -3,7 +3,7 @@
   position: relative;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: 0.5rem 4rem;
+  gap: var(--spacing-xl) 4rem;
   justify-content: center;
 
   div {
@@ -15,19 +15,5 @@
 
   h3 {
     text-align: center;
-  }
-
-  table {
-    margin-bottom: 1rem;
-  }
-
-  tr {
-    :nth-child(2) {
-      font-family: var(--mono-font);
-      text-align: right;
-      font-style: normal;
-      padding-left: 1ch;
-      min-width: 9ch;
-    }
   }
 }
