@@ -31,7 +31,7 @@
     position: sticky;
     border-bottom: var(--border-width-thin) solid var(--color-border-default);
     top: 0;
-    gap: 0.6rem;
+    gap: var(--spacing-sm);
     padding: 0.5rem var(--spacing-md) 0.6rem;
     margin-bottom: 0.6rem;
     background-color: var(--color-bg-elevated);
@@ -46,6 +46,8 @@
 
     app-color-contrast {
       flex-grow: 1;
+      display: flex;
+      align-items: stretch;
     }
   }
 
