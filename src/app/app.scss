@@ -136,18 +136,68 @@
     .checkbox-section {
       display: flex;
       flex-wrap: wrap;
+      gap: var(--spacing-xs);
 
       .checkbox-group {
-        display: flex;
+        display: inline-flex;
+        align-items: center;
+        gap: var(--spacing-sm);
         flex-direction: row-reverse;
         justify-content: flex-end;
-        align-items: center;
-        gap: 0.8ch;
+        cursor: pointer;
 
         label {
-          font-size: var(--min-text-size);
-          font-family: var(--body-font);
-          color: var(--ideal-body-text-black);
+          font-family: var(--font-family-accessible);
+          font-size: var(--font-size-md);
+          color: var(--color-text-default);
+          cursor: pointer;
+          user-select: none;
+        }
+
+        input[type='checkbox'] {
+          appearance: none;
+          -webkit-appearance: none;
+          width: 20px;
+          height: 20px;
+          min-width: 20px;
+          border: var(--border-width-medium) solid var(--color-border-control);
+          border-radius: var(--radius-sm);
+          background-color: var(--color-bg-page);
+          position: relative;
+          cursor: pointer;
+          transition: border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+
+          &::after {
+            content: '';
+            position: absolute;
+            width: 5px;
+            height: 9px;
+            border-right: var(--border-width-medium) solid transparent;
+            border-bottom: var(--border-width-medium) solid transparent;
+            top: 44%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+            transition: border-color 0.15s ease-in-out;
+          }
+
+          &:hover {
+            border-color: var(--color-action-primary);
+          }
+
+          &:checked {
+            border-color: var(--color-action-primary);
+            background-color: var(--color-action-primary);
+
+            &::after {
+              border-right-color: var(--color-bg-page);
+              border-bottom-color: var(--color-bg-page);
+            }
+          }
+
+          &:focus-visible {
+            outline: var(--focus-ring-width) solid var(--color-focus);
+            outline-offset: var(--focus-ring-offset);
+          }
         }
       }
     }
