@@ -145,6 +145,12 @@ li {
   }
 }
 
+details {
+  background: var(--color-bg-surface);
+  border-radius: var(--radius-md);
+  padding: 0 1rem;
+}
+
 details > summary {
   display: flex;
   align-items: center;
