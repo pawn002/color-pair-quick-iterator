@@ -8,7 +8,8 @@ const meta: Meta<ColorContrastComponent> = {
   tags: ['autodocs'],
   decorators: [
     componentWrapperDecorator(
-      (story) => `<div style="display:flex;height:200px;width:300px">${story}</div>`
+      (story) =>
+        `<style>app-color-contrast { display: flex; flex: 1; }</style><div style="display:flex;height:200px;width:300px">${story}</div>`
     ),
   ],
   argTypes: {
@@ -35,8 +36,8 @@ export const Typical: Story = {};
 
 export const OKCA: Story = {
   args: {
-    colorOne: 'white',
-    colorTwo: 'black',
+    colorOne: '#ffffff',
+    colorTwo: '#000000',
     contrastType: 'okca',
   },
 };

@@ -27,7 +27,7 @@ export const Typical: Story = {
 
 export const Populated: Story = {
   args: {
-    colorOne: 'red',
-    colorTwo: 'white',
+    colorOne: '#ff0000',
+    colorTwo: '#ffffff',
   },
 };
