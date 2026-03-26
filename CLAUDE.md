@@ -69,11 +69,12 @@ When the user requests that the project's documentation be updated:
 ## Commands
 
 ```bash
-npm start               # Development server (ng serve)
-npm run build           # Production build (generic, works anywhere)
-npm run build:gh-pages  # Build for this repo's GitHub Pages
-npm test                # Run unit tests with Karma
-npm run storybook       # Launch Storybook on port 6006
+npm start                  # Development server (ng serve)
+npm run build              # Production build (generic, works anywhere)
+npm run build:gh-pages     # Build for this repo's GitHub Pages (output to dist/ only)
+npm run deploy:gh-pages    # Build, copy to docs/, commit, and push — full deploy to GitHub Pages
+npm test                   # Run unit tests with Karma
+npm run storybook          # Launch Storybook on port 6006
 ```
 
 ## Architecture
