@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, input, signal, viewChild } from '@angular/core';
 
 type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
 
@@ -13,10 +13,11 @@ type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
   template: `
     <ng-content></ng-content>
     <div
+      #bubble
       aria-hidden="true"
-      class="tooltip__bubble"
       [class]="'tooltip__bubble tooltip__bubble--' + position()"
       [class.tooltip__bubble--visible]="visible()"
+      [style.--nudge-x.px]="nudgeX()"
     >
       {{ text() }}
     </div>
@@ -31,20 +32,31 @@ export class TooltipComponent {
   position = input<TooltipPosition>('top');
 
   protected visible = signal(false);
+  protected nudgeX = signal(0);
 
-  @HostListener('mouseenter') onMouseEnter(): void {
+  private bubble = viewChild<ElementRef<HTMLDivElement>>('bubble');
+
+  private show(): void {
+    this.nudgeX.set(0);
     this.visible.set(true);
+    queueMicrotask(() => {
+      const el = this.bubble()?.nativeElement;
+      if (!el) return;
+      const { left, right } = el.getBoundingClientRect();
+      const margin = 8;
+      const vw = window.innerWidth;
+      if (left < margin) this.nudgeX.set(margin - left);
+      else if (right > vw - margin) this.nudgeX.set(vw - margin - right);
+    });
   }
-  @HostListener('mouseleave') onMouseLeave(): void {
+
+  private hide(): void {
     this.visible.set(false);
   }
-  @HostListener('focusin') onFocusIn(): void {
-    this.visible.set(true);
-  }
-  @HostListener('focusout') onFocusOut(): void {
-    this.visible.set(false);
-  }
-  @HostListener('keydown.escape') onEscape(): void {
-    this.visible.set(false);
-  }
+
+  @HostListener('mouseenter') onMouseEnter(): void { this.show(); }
+  @HostListener('mouseleave') onMouseLeave(): void { this.hide(); }
+  @HostListener('focusin') onFocusIn(): void { this.show(); }
+  @HostListener('focusout') onFocusOut(): void { this.hide(); }
+  @HostListener('keydown.escape') onEscape(): void { this.hide(); }
 }

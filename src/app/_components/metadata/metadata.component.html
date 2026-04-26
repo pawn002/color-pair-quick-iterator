@@ -26,8 +26,13 @@
             <td class="numeric">{{ successes().nonText }}</td>
           </tr>
           <tr>
-            <td class="label">
-              <cite><a href="#notes-object">Object</a></cite>
+            <td class="label label--with-info">
+              Object
+              <app-tooltip text="About Object" position="right">
+                <app-button variant="ghost" size="icon" ariaLabel="About Object" (clicked)="noteRequested.emit('apca object')">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                </app-button>
+              </app-tooltip>
             </td>
             <td class="numeric">{{ successes().objectMinDimension }}</td>
           </tr>
@@ -51,32 +56,57 @@
         </thead>
         <tbody>
           <tr>
-            <td class="label">
-              <cite><a href="#notes-deltaE">Delta E</a></cite>
+            <td class="label label--with-info">
+              Delta E
+              <app-tooltip text="About Delta E" position="right">
+                <app-button variant="ghost" size="icon" ariaLabel="About Delta E" (clicked)="noteRequested.emit('deltaE')">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                </app-button>
+              </app-tooltip>
             </td>
             <td class="numeric">{{ differences().deltaE }}</td>
           </tr>
           <tr>
-            <td class="label">
-              <cite><a href="#notes-okca">OKCA</a></cite>
+            <td class="label label--with-info">
+              OKCA
+              <app-tooltip text="About OKCA" position="right">
+                <app-button variant="ghost" size="icon" ariaLabel="About OKCA" (clicked)="noteRequested.emit('okca')">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                </app-button>
+              </app-tooltip>
             </td>
             <td class="numeric">{{ differences().okca }}</td>
           </tr>
           <tr>
-            <td class="label">
-              <cite><a href="#notes-perceptual-contrast"> Perceptual contrast</a></cite>
+            <td class="label label--with-info">
+              Perceptual contrast
+              <app-tooltip text="About Perceptual contrast" position="right">
+                <app-button variant="ghost" size="icon" ariaLabel="About Perceptual contrast" (clicked)="noteRequested.emit('apca')">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                </app-button>
+              </app-tooltip>
             </td>
             <td class="numeric">{{ differences().apca }}</td>
           </tr>
           <tr>
-            <td class="label">
-              <cite><a href="#notes-wcag2-compat"> WCAG 2 compatible</a></cite>
+            <td class="label label--with-info">
+              WCAG 2 compatible
+              <app-tooltip text="About WCAG 2 compatible" position="right">
+                <app-button variant="ghost" size="icon" ariaLabel="About WCAG 2 compatible" (clicked)="noteRequested.emit('bpca')">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                </app-button>
+              </app-tooltip>
             </td>
             <td class="numeric">{{ differences().wcag2New }}</td>
           </tr>
           <tr>
-            <td class="label">
-              <cite><a href="#notes-wcag2">WCAG 2</a></cite>
+            <td class="label label--with-info">
+              WCAG 2
+              <app-tooltip text="About WCAG 2" position="right">
+                <app-button variant="ghost" size="icon" ariaLabel="About WCAG 2" (clicked)="noteRequested.emit('wcag2')">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                </app-button>
+              </app-tooltip>
             </td>
             <td class="numeric">{{ differences().wcag2Old }}</td>
           </tr>

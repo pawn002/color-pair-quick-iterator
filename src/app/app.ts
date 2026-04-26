@@ -1,4 +1,4 @@
-import { Component, signal, inject, AfterViewInit, effect, untracked } from '@angular/core';
+import { Component, signal, computed, inject, AfterViewInit, effect, untracked } from '@angular/core';
 import { Location } from '@angular/common';
 
 import { ContrastType } from './services/color-metrics.service';
@@ -20,6 +20,7 @@ import { AccordionItemComponent } from './_candor/accordion/accordion-item.compo
 import { ButtonComponent } from './_candor/button/button.component';
 import { CardComponent } from './_candor/card/card.component';
 import { CheckboxComponent } from './_candor/form/checkbox/checkbox.component';
+import { ModalComponent } from './_candor/modal/modal.component';
 import { RadioComponent } from './_candor/form/radio/radio.component';
 import { TooltipComponent } from './_candor/tooltip/tooltip.component';
 
@@ -37,6 +38,7 @@ import { TooltipComponent } from './_candor/tooltip/tooltip.component';
     ButtonComponent,
     CardComponent,
     CheckboxComponent,
+    ModalComponent,
     RadioComponent,
     TooltipComponent,
   ],
@@ -59,6 +61,23 @@ export class App implements AfterViewInit {
 
   constantChroma = signal<boolean>(true);
   showGradient = signal<boolean>(true);
+
+  activeNoteModal = signal<string | null>(null);
+
+  private readonly noteModalTitles: Record<string, string> = {
+    okca: 'OKCA',
+    apca: 'Perceptual contrast',
+    bpca: 'WCAG 2 compatible',
+    'apca object': 'Object',
+    deltaE: 'Delta E',
+    accessibility: 'Screen reader and low vision workflows',
+    wcag2: 'WCAG 2',
+  };
+
+  noteModalTitle = computed(() => {
+    const note = this.activeNoteModal();
+    return note ? (this.noteModalTitles[note] ?? '') : '';
+  });
 
   currentAlertMessage = signal<AlertMessagObj>(new AlertMessagObj());
 

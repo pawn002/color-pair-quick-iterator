@@ -31,7 +31,7 @@
   &--top {
     bottom: calc(100% + 0.5rem);
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(calc(-50% + var(--nudge-x, 0px)));
 
     &::after {
       content: '';
@@ -47,7 +47,7 @@
   &--bottom {
     top: calc(100% + 0.5rem);
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(calc(-50% + var(--nudge-x, 0px)));
 
     &::after {
       content: '';
@@ -90,5 +90,11 @@
       border: 5px solid transparent;
       border-right-color: var(--color-bg-inverse);
     }
+  }
+}
+
+@media (hover: none) {
+  .tooltip__bubble {
+    display: none;
   }
 }

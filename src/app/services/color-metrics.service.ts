@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 
 import { calcAPCA, sRGBtoY } from 'apca-w3';
-import { calculateContrast } from '@pawn002/okca';
+import { contrast as okcaContrast } from '@pawn002/okca';
 
 import { scaleLinear } from 'd3';
 
@@ -42,7 +42,7 @@ export class ColorMetricsService {
       const hexOne = this.cus.toHexString(colorOne);
       const hexTwo = this.cus.toHexString(colorTwo);
       if (!hexOne || !hexTwo) return null;
-      return calculateContrast(hexOne, hexTwo);
+      return okcaContrast(hexOne, hexTwo);
     }
 
     const contrast = this.calcRawApcaContrast(colorOne, colorTwo);

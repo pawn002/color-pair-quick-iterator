@@ -13,23 +13,12 @@
       <app-accordion-item title="How to use this app." variant="quiet">
         <p>
           <span class="visual-header">Quick Start:</span>
-          Input a Foreground and Background Color using the color inputs in the next section. You can
-          then us the slider inputs, and Copy to Clipboard buttons to:
+          Input a foreground and background color. Use the sliders to adjust tone until you reach
+          your target contrast, then copy each color to the clipboard.
         </p>
-        <ul>
-          <li>
-            Change the tone of your colors to achieve your desired combination of contrast and tone.
-          </li>
-
-          <li>Copy each color to the clipboard for use in other applications.</li>
-        </ul>
-
-        <p>
-          <a href="#additional-instructions"
-            >Screen reader–specific workflows, low vision user notes, and more in-depth
-            instructions.</a
-          >
-        </p>
+        <app-button variant="secondary" size="small" (clicked)="activeNoteModal.set('accessibility')">
+          Screen reader and low vision workflows
+        </app-button>
       </app-accordion-item>
 
       <h2 class="sr-only">Main Color Controls</h2>
@@ -244,41 +233,76 @@
         <h3>Colors Contrast Value</h3>
 
         <div class="radio-section">
-          <app-radio
-            name="contrastType"
-            value="okca"
-            label="OKCA"
-            [checked]="contrastType() === 'okca'"
-            (changed)="contrastType.set($any($event))"
-          ></app-radio>
-          <app-radio
-            name="contrastType"
-            value="apca"
-            label="Perceptual"
-            [checked]="contrastType() === 'apca'"
-            (changed)="contrastType.set($any($event))"
-          ></app-radio>
-          <app-radio
-            name="contrastType"
-            value="bpca"
-            label="WCAG 2 compatible"
-            [checked]="contrastType() === 'bpca'"
-            (changed)="contrastType.set($any($event))"
-          ></app-radio>
-          <app-radio
-            name="contrastType"
-            value="apca object"
-            label="Object"
-            [checked]="contrastType() === 'apca object'"
-            (changed)="contrastType.set($any($event))"
-          ></app-radio>
-          <app-radio
-            name="contrastType"
-            value="deltaE"
-            label="Delta E"
-            [checked]="contrastType() === 'deltaE'"
-            (changed)="contrastType.set($any($event))"
-          ></app-radio>
+          <div class="radio-item">
+            <app-radio
+              name="contrastType"
+              value="okca"
+              label="OKCA"
+              [checked]="contrastType() === 'okca'"
+              (changed)="contrastType.set($any($event))"
+            ></app-radio>
+            <app-tooltip text="About OKCA" position="left">
+              <app-button variant="ghost" size="icon" ariaLabel="About OKCA" (clicked)="activeNoteModal.set('okca')">
+                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+              </app-button>
+            </app-tooltip>
+          </div>
+          <div class="radio-item">
+            <app-radio
+              name="contrastType"
+              value="apca"
+              label="Perceptual"
+              [checked]="contrastType() === 'apca'"
+              (changed)="contrastType.set($any($event))"
+            ></app-radio>
+            <app-tooltip text="About Perceptual contrast" position="left">
+              <app-button variant="ghost" size="icon" ariaLabel="About Perceptual contrast" (clicked)="activeNoteModal.set('apca')">
+                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+              </app-button>
+            </app-tooltip>
+          </div>
+          <div class="radio-item">
+            <app-radio
+              name="contrastType"
+              value="bpca"
+              label="WCAG 2 compatible"
+              [checked]="contrastType() === 'bpca'"
+              (changed)="contrastType.set($any($event))"
+            ></app-radio>
+            <app-tooltip text="About WCAG 2 compatible" position="left">
+              <app-button variant="ghost" size="icon" ariaLabel="About WCAG 2 compatible" (clicked)="activeNoteModal.set('bpca')">
+                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+              </app-button>
+            </app-tooltip>
+          </div>
+          <div class="radio-item">
+            <app-radio
+              name="contrastType"
+              value="apca object"
+              label="Object"
+              [checked]="contrastType() === 'apca object'"
+              (changed)="contrastType.set($any($event))"
+            ></app-radio>
+            <app-tooltip text="About Object contrast" position="left">
+              <app-button variant="ghost" size="icon" ariaLabel="About Object contrast" (clicked)="activeNoteModal.set('apca object')">
+                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+              </app-button>
+            </app-tooltip>
+          </div>
+          <div class="radio-item">
+            <app-radio
+              name="contrastType"
+              value="deltaE"
+              label="Delta E"
+              [checked]="contrastType() === 'deltaE'"
+              (changed)="contrastType.set($any($event))"
+            ></app-radio>
+            <app-tooltip text="About Delta E" position="left">
+              <app-button variant="ghost" size="icon" ariaLabel="About Delta E" (clicked)="activeNoteModal.set('deltaE')">
+                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+              </app-button>
+            </app-tooltip>
+          </div>
         </div>
       </div>
 
@@ -312,52 +336,11 @@
       <app-metadata
         [colorOne]="colorPickerOneComparedColor()"
         [colorTwo]="colorPickerTwoComparedColor()"
+        (noteRequested)="activeNoteModal.set($event)"
       ></app-metadata>
     </app-accordion-item>
   </app-card>
 
-  <app-card class="instructions" variant="elevated" padding="md">
-    <h2 id="additional-instructions">Additional Instructions</h2>
-
-    <app-accordion-item title="Detailed instructions and workflows.">
-      <div class="content">
-        <p>
-          <span class="visual-header">Screen Reader Users:</span> Input a Foreground Color and a
-          Background Color in the Main Color Controls section. You can then:
-        </p>
-        <ol>
-          <li>Adjust your inputted colors lighter and darker using the slider inputs. . .</li>
-          <li>
-            . . .while checking contrast and color descriptions in the
-            <a href="#color-metatdata">Color Metadata</a> section.
-          </li>
-        </ol>
-
-        <p>
-          <span class="visual-header">Low Vision Users:</span> We designed Colors Contrast from the
-          ground up with you in mind. You will notice that zooming your browser still allows you to
-          see the most important parts of the UI:
-        </p>
-        <ul>
-          <li>The contrast value</li>
-          <li>The color inputs</li>
-          <li>The slider inputs</li>
-          <li>The Copy to Clipboard buttons</li>
-        </ul>
-
-        <p>
-          <span class="visual-header"> Random Color Pairs:</span> Colors Contrast starts you off
-          with a random pair of colors that passes most if not all levels of Accessible Contrast.
-        </p>
-        <ul>
-          <li>
-            Use the slider inputs to create tones of those colors for each contrast level you need.
-          </li>
-          <li>Try swapping Foreground, and Background colors for a dark mode pair.</li>
-        </ul>
-      </div>
-    </app-accordion-item>
-  </app-card>
 
   <app-card class="notes" variant="elevated" padding="md">
     <h2>Notes</h2>
@@ -366,117 +349,26 @@
       <div class="content">
         <p id="notes-lch-limits">
           <span class="visual-header">LCH Limits:</span>
-          This feature displays variants of your selected color. Unlike most color pickers, this
-          feature only shows you what is in the sRGB color gamut. This allows you to know:
+          Shows variants of your color within the sRGB gamut. The palette reveals how hue
+          constrains your lightness and chroma options — for example, strong yellows are only
+          possible at high lightness.
         </p>
-        <ul>
-          <li>
-            How your choice of hue affects your options for lightness and color strength. For
-            example, strong yellows are only possible at high lightness levels.
-          </li>
-          <li>How lightness and color strength relate to each other for your selected hue.</li>
-        </ul>
-        <p>This feature uses an HTML table element that should allow screen reader users to:</p>
-        <ul>
-          <li>Use column and row headers to examine and choose specific variants.</li>
-          <li>Read various color metadata.</li>
-        </ul>
 
-        <p id="notes-object">
-          <span class="visual-header">Object:</span> This readout shows two different values:
-        </p>
-        <ul>
-          <li>The first value is a number in pixels that the current contrast level supports.</li>
-          <li>
-            The second value is an exclamation point. This occurs when the current contrast level is
-            too low to support
-            <strong>ANY</strong> object.
-          </li>
-        </ul>
-
-        <p id="notes-deltaE">
-          <span class="visual-header">Delta E:</span> A measure of the perceptual difference between
-          two colors. Unlike contrast ratios, Delta E quantifies how different two colors appear
-          regardless of their lightness relationship. Values range from 0 (identical) upward, where
-          higher values indicate greater perceptual difference.
-        </p>
-        <p id="notes-okca">
-          <span class="visual-header">OKCA:</span> OK Contrast Algorithm. A WCAG-compatible contrast
-          ratio (1-21) calculated in OKLCH color space. OKCA addresses known false-pass issues in WCAG
-          2 by applying chroma compression and green correction to produce conservative, accurate
-          scores with zero false passes.
-        </p>
-        <p id="notes-perceptual-contrast">
-          <span class="visual-header"> Perceptual contrast:</span> This score gauges inclusive
-          contrast better than WCAG 2. For more information on why, refer to Myndex article,
-          <a href="https://git.apcacontrast.com/documentation/WhyAPCA.html">Why APCA?</a>
-        </p>
-        <p id="notes-wcag2-compat">
-          <span class="visual-header">WCAG 2 compatible:</span> A score compatible with use for WCAG
-          2.x success criteria. This score meets or exceeds WCAG 2 scores to better include those
-          with atypical vision.
-        </p>
         <p id="notes-wcag2">
           <span class="visual-header">WCAG 2:</span> This score is for reference only—do not use
           this score for judging inclusive contrast.
         </p>
 
-        <p id="notes-display-okca">
-          <span class="visual-header">Colors Contrast Value: OKCA:</span>
-          The default score displayed by Colors Contrast. It produces a WCAG-compatible ratio from 1
-          to 21, calculated in OKLCH color space with corrections for saturated color false passes and
-          green hue boundary errors.
-        </p>
-        <p id="notes-display-perceptual">
-          <span class="visual-header">Colors Contrast Value: Perceptual:</span>
-          This option swaps in APCA, a perceptual contrast score ranging from -108 to 106. Use this
-          value in conjunction with
-          <a href="http://https://www.myndex.com/APCA/">Myndex guides</a> to create inclusive
-          designs.
-        </p>
-        <p id="notes-display-wcag2">
-          <span class="visual-header">Colors Contrast Value: WCAG 2 compatible:</span>
-          This option swaps in a score for a value usable with WCAG 2.x success criteria.
-        </p>
-        <p id="notes-display-deltaE">
-          <span class="visual-header">Colors Contrast Value: Delta E:</span>
-          This option swaps in a perceptual color difference score. Unlike contrast ratios, it
-          measures how different two colors appear to the human eye, independent of their lightness
-          relationship.
-        </p>
-        <p id="notes-display-object">
-          <span class="visual-header">Colors Contrast Value: Object:</span>
-          This option swaps in a score that either displays a number in pixels or an exclamation
-          point (!). The number is the smallest object dimension you can use the current color
-          variant pair for.
-        </p>
-        <ul>
-          <li>
-            Smallest object dimension is the smallest dimension of an object you are designing.
-          </li>
-          <li>
-            For example, if an object is 15 pixels by 20 pixels, the smallest dimension is 15
-            pixels.
-          </li>
-        </ul>
-
         <p id="notes-constant-chroma">
           <span class="visual-header">Constant chroma:</span>
-          This option forces input sliders to limit tones with the same chroma and hue of your
-          inputted color.
+          Constrains sliders to tones that preserve your input color's chroma and hue. Disable to
+          access a wider tonal range, though some generated tones may clash with your original
+          color. When disabled, the Show Gradient option ranges from black to white.
         </p>
-        <ul>
-          <li>Keeping the same chroma and hue preserves the identity of your input color.</li>
-          <li>
-            Deselecting this option allows you to generate more tones. Be aware that a lot of tones
-            generated will now clash with your inputted color.
-          </li>
-        </ul>
         <p id="notes-show-grad">
           <span class="visual-header">Show Gradient:</span>
           This option renders a tone gradient behind the slider inputs. The gradient shows the tonal
-          possibilities of your inputted color. If Constant Chroma is not active, the gradient
-          ranges from black to white.
+          possibilities of your inputted color.
         </p>
       </div>
     </app-accordion-item>
@@ -493,6 +385,71 @@
       to help improve its Accessibility.
     </p>
   </app-card>
+
+  <app-modal
+    [title]="noteModalTitle()"
+    [open]="activeNoteModal() !== null"
+    (openChange)="$event || activeNoteModal.set(null)"
+  >
+    @if (activeNoteModal() === 'okca') {
+      <p>
+        A WCAG-compatible ratio (1–21) in OKLCH color space. Unlike WCAG 2, OKCA is
+        polarity-aware — light-on-dark and dark-on-light score differently. Chroma compression
+        reduces scores for saturated lighter colors (e.g. vivid pink on dark), addressing
+        common WCAG false passes. Scores are always at or below the WCAG 2 equivalent.
+      </p>
+    }
+    @if (activeNoteModal() === 'apca') {
+      <p>
+        Gauges inclusive contrast better than WCAG 2. For more information on why, refer to
+        the Myndex article,
+        <a href="https://git.apcacontrast.com/documentation/WhyAPCA.html">Why APCA?</a>
+      </p>
+    }
+    @if (activeNoteModal() === 'bpca') {
+      <p>
+        A score compatible with use for WCAG 2.x success criteria. This score meets or exceeds
+        WCAG 2 scores to better include those with atypical vision.
+      </p>
+    }
+    @if (activeNoteModal() === 'apca object') {
+      <p>
+        Displays the smallest pixel dimension the current contrast level supports, or
+        <strong>!</strong> when contrast is too low for any object.
+      </p>
+    }
+    @if (activeNoteModal() === 'deltaE') {
+      <p>
+        A measure of the perceptual difference between two colors. Unlike contrast ratios,
+        Delta E quantifies how different two colors appear regardless of their lightness
+        relationship. Values range from 0 (identical) upward, where higher values indicate
+        greater perceptual difference.
+      </p>
+    }
+    @if (activeNoteModal() === 'wcag2') {
+      <p>
+        This score is for reference only — do not use it for judging inclusive contrast.
+      </p>
+    }
+    @if (activeNoteModal() === 'accessibility') {
+      <p>
+        <span class="visual-header">Screen Reader Users:</span> Input a Foreground Color and a
+        Background Color in the Main Color Controls section. Adjust colors lighter and darker
+        using the sliders, then check contrast and color descriptions in the Color Metadata
+        section.
+      </p>
+      <p>
+        <span class="visual-header">Low Vision Users:</span> Colors Contrast is designed to remain
+        usable at high browser zoom — the contrast value, color inputs, sliders, and copy buttons
+        stay visible.
+      </p>
+      <p>
+        <span class="visual-header">Random Color Pairs:</span> The app starts with a random
+        passing pair. Use the sliders to generate tones for each contrast level you need, or swap
+        foreground and background for a dark-mode variant.
+      </p>
+    }
+  </app-modal>
 
   <div class="alert">
     <app-alert [alertMessage]="currentAlertMessage()"></app-alert>
