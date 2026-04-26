@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { ColorMetricsService, ContrastType } from '../../services/color-metrics.service';
 import { ColorUtilService } from '../../services/color-util.service';
 
@@ -23,6 +23,11 @@ export class ColorContrastComponent {
   debug = input<boolean>(false);
 
   contrastScore = signal<number>(NaN);
+
+  readonly contrastAnnouncement = computed(() => {
+    const score = this.contrastScore();
+    return isNaN(score) ? '' : `Contrast score: ${score}`;
+  });
 
   constructor() {
     effect(() => {

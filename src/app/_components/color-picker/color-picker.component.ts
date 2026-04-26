@@ -18,6 +18,7 @@ import {
 export class ColorPickerComponent {
   inputId = input<string>('fg-color');
   inputName = input<string>('foreground color');
+  label = input<string>('Color');
   color = input<string>('');
   debug = input<boolean>(false);
 

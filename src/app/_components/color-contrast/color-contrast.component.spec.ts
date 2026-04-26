@@ -367,6 +367,38 @@ describe('ColorContrastComponent', () => {
     });
   });
 
+  describe('contrastAnnouncement', () => {
+    it('should return empty string when contrastScore is NaN', () => {
+      expect(component.contrastAnnouncement()).toBe('');
+    });
+
+    it('should return formatted string when contrastScore is a number', () => {
+      spyOn(colorMetricsService, 'getContrast').and.returnValue(4.5);
+      fixture.componentRef.setInput('colorOne', '#000000');
+      fixture.componentRef.setInput('colorTwo', '#ffffff');
+      fixture.componentRef.setInput('contrastType', 'okca');
+      fixture.detectChanges();
+
+      expect(component.contrastAnnouncement()).toBe('Contrast score: 4.5');
+    });
+
+    it('should update when contrastScore changes', () => {
+      const spy = spyOn(colorMetricsService, 'getContrast').and.returnValue(21);
+      fixture.componentRef.setInput('colorOne', '#000000');
+      fixture.componentRef.setInput('colorTwo', '#ffffff');
+      fixture.componentRef.setInput('contrastType', 'okca');
+      fixture.detectChanges();
+
+      expect(component.contrastAnnouncement()).toBe('Contrast score: 21');
+
+      spy.and.returnValue(3);
+      fixture.componentRef.setInput('colorOne', '#808080');
+      fixture.detectChanges();
+
+      expect(component.contrastAnnouncement()).toBe('Contrast score: 3');
+    });
+  });
+
   describe('Edge cases', () => {
     it('should handle identical colors', () => {
       fixture.componentRef.setInput('colorOne', '#808080');

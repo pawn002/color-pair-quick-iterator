@@ -13,6 +13,7 @@ export class CopyToClipboardEvent {
 })
 export class CopyToClipboardButtonComponent {
   color = input<string>('');
+  label = input<string>('Copy to Clipboard');
   debug = input<boolean>(true);
 
   copyEvent = output<CopyToClipboardEvent>();

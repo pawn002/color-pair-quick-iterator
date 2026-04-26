@@ -1,6 +1,7 @@
 <dialog
   #dialog
   class="modal"
+  aria-modal="true"
   [attr.aria-labelledby]="uid"
   (click)="onBackdropClick($event)"
   (close)="open.set(false)"

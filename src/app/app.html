@@ -1,4 +1,5 @@
-<div class="app-container">
+<a class="sr-only" href="#main-content">Skip to main content</a>
+<main class="app-container" id="main-content">
   <app-card class="title-and-sliders" variant="elevated" padding="none">
     <div class="title-and-score">
       <h1>Colors Contrast</h1>
@@ -30,6 +31,7 @@
           <app-color-picker
             [inputId]="'cp-0'"
             [inputName]="'Foreground Color'"
+            [label]="'Foreground Color'"
             [comparedColor]="colorPickerOneComparedColor()"
             (selectedColor)="handleColorInputInput('One', $event)"
             [color]="colorPickerOneSelectedColor()"
@@ -38,6 +40,7 @@
         <app-color-slider
           [id]="'slider-0'"
           [name]="'Foreground Slider'"
+          [label]="'Foreground lightness'"
           [color]="colorPickerOneSelectedColor()"
           [constantChroma]="constantChroma()"
           (colorVariant)="handleSliderInputInput('One', $event)"
@@ -47,6 +50,7 @@
         <app-tooltip text="Copy foreground color" position="bottom">
           <app-copy-to-clipboard-button
             [color]="colorPickerOneComparedColor()"
+            [label]="'Copy foreground color'"
             (copyEvent)="handleCopyEvent($event)"
           ></app-copy-to-clipboard-button>
         </app-tooltip>
@@ -68,6 +72,7 @@
           <app-color-picker
             [inputId]="'cp-1'"
             [inputName]="'Background Color'"
+            [label]="'Background Color'"
             [comparedColor]="colorPickerTwoComparedColor()"
             [color]="colorPickerTwoSelectedColor()"
             (selectedColor)="handleColorInputInput('Two', $event)"
@@ -76,6 +81,7 @@
         <app-color-slider
           [id]="'slider-1'"
           [name]="'Background Slider'"
+          [label]="'Background lightness'"
           [color]="colorPickerTwoSelectedColor()"
           [constantChroma]="constantChroma()"
           (colorVariant)="handleSliderInputInput('Two', $event)"
@@ -85,6 +91,7 @@
         <app-tooltip text="Copy background color" position="bottom">
           <app-copy-to-clipboard-button
             [color]="colorPickerTwoComparedColor()"
+            [label]="'Copy background color'"
             (copyEvent)="handleCopyEvent($event)"
           ></app-copy-to-clipboard-button>
         </app-tooltip>
@@ -332,7 +339,7 @@
   <app-card class="metadata" variant="elevated" padding="md">
     <h2 id="color-metadata">Color Metadata</h2>
 
-    <app-accordion-item title="Descriptive data about your inputted colors.">
+    <app-accordion-item title="Descriptive data about your inputted colors." [open]="true">
       <app-metadata
         [colorOne]="colorPickerOneComparedColor()"
         [colorTwo]="colorPickerTwoComparedColor()"
@@ -378,8 +385,8 @@
     <h2>Contact Information and Feedback</h2>
 
     <p>
-      Made by <a href="https://github.com/pawn002">pawn002</a>, who would appreciate
-      <a href="https://github.com/pawn002/color-pair-quick-iterator/issues">
+      Made by <a href="https://github.com/pawn002" aria-label="pawn002 on GitHub (external link)">pawn002</a>, who would appreciate
+      <a href="https://github.com/pawn002/color-pair-quick-iterator/issues" aria-label="bug reports and feature requests for this app on GitHub (external link)">
         bug reports and feature requests for this app</a
       >
       to help improve its Accessibility.
@@ -434,9 +441,16 @@
     @if (activeNoteModal() === 'accessibility') {
       <p>
         <span class="visual-header">Screen Reader Users:</span> Input a Foreground Color and a
-        Background Color in the Main Color Controls section. Adjust colors lighter and darker
-        using the sliders, then check contrast and color descriptions in the Color Metadata
-        section.
+        Background Color in the Main Color Controls section. Adjust colors lighter and darker using
+        the sliders — the contrast score is announced automatically as you move them. Check full
+        color descriptions and all contrast scores in the Color Metadata section, which is open by
+        default.
+      </p>
+      <p>
+        <span class="visual-header">LCH Limits Grid:</span> Each color section has a collapsible
+        LCH Limits accordion. Inside is a tone grid — navigate it with arrow keys, activate a tone
+        with Enter or Space. Blank cells are outside the sRGB gamut. The selected tone is announced
+        when activated.
       </p>
       <p>
         <span class="visual-header">Low Vision Users:</span> Colors Contrast is designed to remain
@@ -454,4 +468,4 @@
   <div class="alert">
     <app-alert [alertMessage]="currentAlertMessage()"></app-alert>
   </div>
-</div>
+</main>

@@ -44,9 +44,16 @@ describe('ColorPickerComponent', () => {
       expect(component.debug()).toBe(true);
     });
 
+    it('should accept label', () => {
+      fixture.componentRef.setInput('label', 'Foreground Color');
+      fixture.detectChanges();
+      expect(component.label()).toBe('Foreground Color');
+    });
+
     it('should have default values', () => {
       expect(component.inputId()).toBe('fg-color');
       expect(component.inputName()).toBe('foreground color');
+      expect(component.label()).toBe('Color');
       expect(component.color()).toBe('');
       expect(component.debug()).toBe(false);
     });
@@ -199,6 +206,22 @@ describe('ColorPickerComponent', () => {
 
       const input = fixture.nativeElement.querySelector('#custom-id');
       expect(input).toBeTruthy();
+    });
+
+    it('should render label with label input text', () => {
+      fixture.componentRef.setInput('label', 'Background Color');
+      fixture.detectChanges();
+
+      const label = fixture.nativeElement.querySelector('label');
+      expect(label.textContent.trim()).toBe('Background Color');
+    });
+
+    it('should associate label with input via for attribute', () => {
+      fixture.componentRef.setInput('inputId', 'cp-test');
+      fixture.detectChanges();
+
+      const label = fixture.nativeElement.querySelector('label');
+      expect(label.getAttribute('for')).toBe('cp-test');
     });
   });
 

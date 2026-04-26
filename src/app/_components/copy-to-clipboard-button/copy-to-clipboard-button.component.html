@@ -1,13 +1,10 @@
 <div class="comp-container">
   <button
-    id="'ctc-0'"
+    [attr.aria-label]="label()"
     [disabled]="!color()"
-    [attr.aria-disabled]="!color()"
     (click)="copyToClipboard()"
   >
-    <span class="sr-only"> Copy current variant to Clipboard </span>
-
-    <div class="svg-container">
+    <div class="svg-container" aria-hidden="true">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" x="0px" y="0px">
         <path
           fill-rule="evenodd"

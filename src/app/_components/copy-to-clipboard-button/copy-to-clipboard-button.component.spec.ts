@@ -35,8 +35,15 @@ describe('CopyToClipboardButtonComponent', () => {
       expect(component.debug()).toBe(false);
     });
 
+    it('should accept label', () => {
+      fixture.componentRef.setInput('label', 'Copy foreground color');
+      fixture.detectChanges();
+      expect(component.label()).toBe('Copy foreground color');
+    });
+
     it('should have default values', () => {
       expect(component.color()).toBe('');
+      expect(component.label()).toBe('Copy to Clipboard');
       expect(component.debug()).toBe(true);
     });
   });
@@ -230,6 +237,20 @@ describe('CopyToClipboardButtonComponent', () => {
     it('should render button element', () => {
       const button = fixture.nativeElement.querySelector('button');
       expect(button).toBeTruthy();
+    });
+
+    it('should bind aria-label to label input', () => {
+      fixture.componentRef.setInput('label', 'Copy foreground color');
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector('button');
+      expect(button.getAttribute('aria-label')).toBe('Copy foreground color');
+    });
+
+    it('should disable button when no color', () => {
+      fixture.componentRef.setInput('color', '');
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector('button');
+      expect(button.disabled).toBe(true);
     });
 
     it('should call copyToClipboard on button click', async () => {

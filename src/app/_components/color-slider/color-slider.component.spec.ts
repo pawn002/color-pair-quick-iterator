@@ -60,9 +60,16 @@ describe('ColorSliderComponent', () => {
       expect(component.resetSlider()).toEqual({ reset: true });
     });
 
+    it('should accept label', () => {
+      fixture.componentRef.setInput('label', 'Foreground lightness');
+      fixture.detectChanges();
+      expect(component.label()).toBe('Foreground lightness');
+    });
+
     it('should have default values', () => {
       expect(component.id()).toBe('slider-0');
       expect(component.name()).toBe('color-slider');
+      expect(component.label()).toBe('Lightness');
       expect(component.color()).toBe('');
       expect(component.constantChroma()).toBe(false);
       expect(component.showGradient()).toBe(false);
@@ -388,10 +395,66 @@ describe('ColorSliderComponent', () => {
     });
   });
 
+  describe('rangeDescription', () => {
+    it('should return empty string when min or max is NaN', () => {
+      expect(component.rangeDescription()).toBe('');
+    });
+
+    it('should format min and max as percentages', () => {
+      component.slideMin.set(0.2);
+      component.slideMax.set(0.8);
+      expect(component.rangeDescription()).toBe('Lightness range: 20% to 80%');
+    });
+
+    it('should round to nearest integer percent', () => {
+      component.slideMin.set(0.263);
+      component.slideMax.set(0.967);
+      expect(component.rangeDescription()).toBe('Lightness range: 26% to 97%');
+    });
+
+    it('should handle full 0–1 range', () => {
+      component.slideMin.set(0);
+      component.slideMax.set(1);
+      expect(component.rangeDescription()).toBe('Lightness range: 0% to 100%');
+    });
+  });
+
+  describe('valueText', () => {
+    it('should return empty string when value is NaN', () => {
+      component.value.set(NaN);
+      expect(component.valueText()).toBe('');
+    });
+
+    it('should format value as percentage', () => {
+      component.value.set(0.5);
+      expect(component.valueText()).toBe('50%');
+    });
+
+    it('should round to nearest integer percent', () => {
+      component.value.set(0.5685);
+      expect(component.valueText()).toBe('57%');
+    });
+
+    it('should handle 0 and 1 boundaries', () => {
+      component.value.set(0);
+      expect(component.valueText()).toBe('0%');
+      component.value.set(1);
+      expect(component.valueText()).toBe('100%');
+    });
+  });
+
   describe('Template integration', () => {
     it('should render range input', () => {
       const input = fixture.nativeElement.querySelector('input[type="range"]');
       expect(input).toBeTruthy();
+    });
+
+    it('should render label with label input text', () => {
+      fixture.componentRef.setInput('label', 'Background lightness');
+      fixture.detectChanges();
+
+      const label = fixture.nativeElement.querySelector('label');
+      expect(label.textContent.trim()).toBe('Background lightness');
     });
   });
 });

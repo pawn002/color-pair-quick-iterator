@@ -1,5 +1,6 @@
 import {
   Component,
+  computed,
   input,
   Output,
   EventEmitter,
@@ -33,6 +34,7 @@ export class ColorSliderComponent {
 
   id = input<string | 'slider-0'>('slider-0');
   name = input<string | 'color-slider'>('color-slider');
+  label = input<string>('Lightness');
   color = input<string>('');
   constantChroma = input<boolean>(false);
   showGradient = input<boolean>(false);
@@ -42,6 +44,20 @@ export class ColorSliderComponent {
 
   devColorVariant = signal<string>('');
   slideMin = signal<number>(NaN);
+
+  readonly valueText = computed(() => {
+    const v = this.value();
+    return isNaN(v) ? '' : `${Math.round(v * 100)}%`;
+  });
+
+  readonly rangeDescription = computed(() => {
+    const min = this.slideMin();
+    const max = this.slideMax();
+    if (isNaN(min) || isNaN(max)) return '';
+    return `Lightness range: ${Math.round(min * 100)}% to ${Math.round(max * 100)}%`;
+  });
+
+  readonly rangeDescId = `slider-range-${Math.random().toString(36).slice(2, 9)}`;
   slideMax = signal<number>(NaN);
   slideInterval = signal<number>(NaN);
   value = signal<number>(NaN);
