@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Color Pair Quick Iterator (CQPI) is an Angular 20 application for exploring and iterating on accessible color pairs. It uses perceptual color contrast algorithms (APCA and Bridge-PCA) to help designers find color combinations that meet accessibility standards.
+Color Pair Quick Iterator (CQPI) is an Angular 20 application for exploring and iterating on accessible color pairs. It uses OKCA as its primary contrast algorithm — a polarity-aware, WCAG-compatible ratio in OKLCH color space — alongside APCA, Bridge-PCA, and Delta E to help designers find color combinations that meet accessibility standards.
 
 ## Developer Preferences
 

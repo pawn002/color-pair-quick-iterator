@@ -7,7 +7,7 @@ This document provides detailed documentation for all UI components in the Color
 The application contains two groups of components:
 
 - **App-specific components** (`src/app/_components/`) — 8 standalone components that implement the application's features
-- **Candor design system components** (`src/app/_candor/`) — 7 copied UI primitives that provide visual consistency via shared design tokens
+- **Candor design system components** (`src/app/_candor/`) — 8 copied UI primitives that provide visual consistency via shared design tokens
 
 All components follow Angular 20 patterns with signals, modern control flow (`@if`, `@for`), and co-located files.
 
@@ -38,9 +38,9 @@ The root component that orchestrates the entire application, managing global sta
 #### Responsibilities
 
 - Manages primary color pairs (foreground/background, selected/compared)
-- Handles contrast type selection (APCA, Bridge-PCA, or APCA object)
+- Handles contrast type selection (OKCA, APCA, Bridge-PCA, Object, or Delta E)
 - Coordinates UI toggles (constant chroma, show gradient)
-- Manages alert notifications
+- Manages alert notifications and contextual note modals
 - Handles user interactions (swapping colors, matching chromas, resetting sliders)
 
 #### State Signals
@@ -53,11 +53,11 @@ colorPickerTwoSelectedColor = signal<string>('#f4f7f5');
 colorPickerTwoComparedColor = signal<string>('#f4f7f5');
 
 // UI state
-contrastType = signal<'apca' | 'bpca' | 'apca object'>('apca');
-constantChroma = signal<boolean>(false);
+contrastType = signal<ContrastType | 'apca object'>('okca');
+constantChroma = signal<boolean>(true);
 showGradient = signal<boolean>(true);
-currentAlertMessage = signal<AlertMessagObj | null>(null);
-resetSlider = signal<boolean>(false);
+activeNoteModal = signal<string | null>(null);
+currentAlertMessage = signal<AlertMessagObj>(new AlertMessagObj());
 ```
 
 #### Key Methods
@@ -74,7 +74,7 @@ resetSlider = signal<boolean>(false);
 
 **resetSliders()**: Resets all slider positions by toggling the resetSlider signal.
 
-**radioChange(value: string)**: Updates contrast display type ('apca', 'bpca', or 'apca object').
+**radioChange(value: string)**: Updates contrast display type ('okca', 'apca', 'bpca', 'apca object', or 'deltaE').
 
 **toggleConstantChroma()**: Toggles whether sliders maintain constant chroma.
 
@@ -281,9 +281,15 @@ Displays detailed color information and differences between two colors. Metadata
 #### Inputs
 
 ```typescript
-colorOne = input.required<string>();  // First color
-colorTwo = input.required<string>();  // Second color
-debug = input<boolean>(false);        // Debug mode
+colorOne = input<string>('');  // First color
+colorTwo = input<string>('');  // Second color
+debug = input<boolean>(false); // Debug mode
+```
+
+#### Outputs
+
+```typescript
+noteRequested = output<string>(); // Emits a note key ('okca', 'apca', 'bpca', 'apca object', 'deltaE', 'wcag2') when an info button is clicked
 ```
 
 #### Computed Signals
@@ -748,6 +754,32 @@ dismissed = output<void>();
 ```
 
 The icon and `role` attribute (`'alert'` for warning/error, `'status'` for others) are set automatically based on `variant`.
+
+---
+
+### ModalComponent
+
+**Location**: `src/app/_candor/modal/`
+
+Modal dialog using the native `<dialog>` element. Provides focus trapping, Escape-to-close, and a styled backdrop automatically.
+
+#### Inputs
+
+```typescript
+title = input('');       // Displayed in the modal header
+open = model(false);     // Two-way: set true to open; modal sets false on close
+```
+
+#### Behavior
+
+- Opens via `dialog.showModal()` when `open` becomes `true`
+- Closes on: close button click, Escape key, or backdrop click
+- On close the `open` model is set to `false`, keeping the parent signal in sync
+- `aria-labelledby` wired to the title heading
+
+#### Content Projection
+
+Default slot: modal body content.
 
 ---
 

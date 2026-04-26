@@ -198,6 +198,7 @@ The `_candor/` directory contains a set of UI primitives copied from the Candor 
 | `RadioComponent` | `app-radio` | `_candor/form/radio/` | Radio button implementing `ControlValueAccessor` with `label`, `value`, `name`, `id`, `checked`, and `disabled` |
 | `TableComponent` | `app-table` | `_candor/table/` | Styled table wrapper with optional `compact` input for dense data panels |
 | `ToastComponent` | `app-toast` | `_candor/toast/` | Notification banner with `variant` (`'info' \| 'success' \| 'warning' \| 'error'`), `title`, `message`, `dismissible` inputs, and `dismissed` output |
+| `ModalComponent` | `app-modal` | `_candor/modal/` | Native `<dialog>`-based modal with `title` input and two-way `open` model; handles focus trap, Escape, and backdrop click |
 
 ### Design token conventions
 

@@ -75,10 +75,9 @@ All color manipulation uses OKLCH (Oklab Lightness Chroma Hue) for perceptually 
 
 ### OKCA — the primary algorithm
 
-OKCA (OK Contrast Algorithm) is the default contrast mode. It outputs ratios on the familiar 1–21 scale with the same AA (4.5) and AAA (7.0) thresholds as WCAG, while correcting two known WCAG failure modes:
+OKCA (OK Contrast Algorithm) is the default contrast mode. It outputs ratios on the familiar 1–21 scale with the same AA (4.5) and AAA (7.0) thresholds as WCAG, while correcting a known WCAG failure mode:
 
-1. **Saturated chromatic false passes** — hot pink on near-black can score 6.6:1 under WCAG but is demonstrably harder to read. OKCA applies a chroma penalty that reduces the ratio for vivid colors.
-2. **Green false passes** — WCAG overestimates green luminance due to its 71.5% sRGB weight. OKCA corrects the luminance of dark green elements to prevent this.
+**Saturated chromatic false passes** — hot pink on near-black can score 6.6:1 under WCAG but is demonstrably harder to read. OKCA applies a chroma penalty that reduces the ratio for vivid colors. It is also polarity-aware: light-on-dark and dark-on-light pairs score differently, capped at 21 and 20 respectively.
 
 OKCA never approves a pair that WCAG rejects (FP = 0 by construction), making it a strictly stricter, drop-in alternative.
 
@@ -147,6 +146,9 @@ See [LICENSE](./LICENSE) for full details.
 - **2026-03**: MetadataComponent tables wrapped with `<app-table [compact]="true">`
 - **2026-03**: AccordionItemComponent `variant` input replaces old boolean `subtle` input
 - **2026-03**: TonePickerComponent gains `hideHeaders` input; added `hideUi` input
+- **2026-04**: Added ModalComponent (`app-modal`) to Candor; replaced accordion anchor links with contextual info buttons and modals throughout the app
+- **2026-04**: Upgraded `@pawn002/okca` to 1.0.1 (ESM, polarity-aware caps); OKCA is now the default contrast type
+- **2026-04**: Fixed checkbox double-toggle bug; fixed tooltip mobile overflow via `@media (hover: none)`
 
 ---
 
