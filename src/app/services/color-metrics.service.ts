@@ -20,8 +20,6 @@ export class ColorMetricsService {
   cus = inject(ColorUtilService);
   bpca = inject(BpcaService);
 
-  dev: boolean = true;
-
   apcaToWcagLookup: NumberKeyLookup = {};
   apcaToWcagLookupAlt: NumberKeyLookup = {};
 

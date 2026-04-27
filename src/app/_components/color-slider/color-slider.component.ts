@@ -2,8 +2,6 @@ import {
   Component,
   computed,
   input,
-  Output,
-  EventEmitter,
   inject,
   effect,
   output,
@@ -11,7 +9,6 @@ import {
   viewChild,
   ElementRef,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ColorUtilService } from '../../services/color-util.service';
 
 export interface ResetObject {
@@ -22,7 +19,6 @@ export interface ResetObject {
   selector: 'app-color-slider',
   templateUrl: './color-slider.component.html',
   styleUrls: ['./color-slider.component.scss'],
-  imports: [CommonModule],
   standalone: true,
 })
 export class ColorSliderComponent {
@@ -161,7 +157,7 @@ export class ColorSliderComponent {
         const lightnessVariant = this.cus.createSrgbColor(boundColor, lightValue);
 
         if (this.debug()) {
-          console.log(`slide modding ${this.color} to ${lightnessVariant}`);
+          console.log(`slide modding ${this.color()} to ${lightnessVariant}`);
 
           this.devColorVariant.set(!lightnessVariant ? '' : lightnessVariant);
         }
@@ -237,7 +233,6 @@ export class ColorSliderComponent {
 
       for (let i = 0; i < stops.length; i++) {
         const targetLight = stopInterval * i + lightMin;
-        targetLight;
 
         const boundColor = this.color();
 

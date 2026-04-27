@@ -140,11 +140,6 @@ export class App implements AfterViewInit {
     });
   }
 
-  radioChange(changeTo: ContrastType | 'apca object') {
-    console.log(changeTo);
-    this.contrastType.set(changeTo);
-  }
-
   toggleConstantChroma(event: Event) {
     const inputElement = event.target as HTMLInputElement;
     const checked = inputElement.checked;

@@ -62,9 +62,9 @@ currentAlertMessage = signal<AlertMessagObj>(new AlertMessagObj());
 
 #### Key Methods
 
-**handleColorInputInput(data: { color: string; pickerId: string })**: Updates color signals when user selects colors in color pickers.
+**handleColorInputInput(inputNumber: 'One' | 'Two', event: string)**: Updates color signals when user selects colors in color pickers.
 
-**handleSliderInputInput(data: { color: string | null; sliderId: string })**: Updates compared colors when user adjusts sliders.
+**handleSliderInputInput(inputNumber: 'One' | 'Two', event: string | null)**: Updates compared colors when user adjusts sliders.
 
 **swapColors()**: Swaps foreground and background colors.
 
@@ -73,8 +73,6 @@ currentAlertMessage = signal<AlertMessagObj>(new AlertMessagObj());
 **setRandomColorPair()**: Generates and sets a random accessible color pair on initialization.
 
 **resetSliders()**: Resets all slider positions by toggling the resetSlider signal.
-
-**radioChange(value: string)**: Updates contrast display type ('okca', 'apca', 'bpca', 'apca object', or 'deltaE').
 
 **toggleConstantChroma()**: Toggles whether sliders maintain constant chroma.
 
@@ -97,22 +95,23 @@ HTML color input for selecting colors with two-way data binding.
 #### Inputs
 
 ```typescript
-inputId = input<string>('color-input-one');        // HTML input id
-inputName = input<string>('color-input-one');      // HTML input name
-color = input<string>('#000000');                  // Initial color value
-debug = input<boolean>(false);                     // Debug mode flag
+inputId = input<string>('fg-color');        // HTML input id
+inputName = input<string>('foreground color');  // HTML input name
+label = input<string>('Color');             // Accessible label text
+color = input<string>('');                  // Initial color value
+debug = input<boolean>(false);              // Debug mode flag
 ```
 
 #### Model (Two-way Binding)
 
 ```typescript
-comparedColor = model<string>('#000000');  // Two-way bound compared color
+comparedColor = model<string>('');  // Two-way bound compared color
 ```
 
 #### Outputs
 
 ```typescript
-selectedColor = output<{ color: string; pickerId: string }>();
+selectedColor = output<string>();
 ```
 
 #### Internal State
@@ -152,29 +151,30 @@ Interactive range slider for adjusting color tone (lightness) while optionally m
 #### Inputs
 
 ```typescript
-id = input<string>('color-slider-one');       // Slider HTML id
-name = input<string>('color-slider-one');     // Slider HTML name
-color = input.required<string>();             // Base color to vary
-constantChroma = input<boolean>(false);       // Lock chroma during adjustment
-showGradient = input<boolean>(true);          // Display gradient background
-resetSlider = input<boolean>(false);          // Signal to reset slider
+id = input<string>('slider-0');             // Slider HTML id
+name = input<string>('color-slider');       // Slider HTML name
+label = input<string>('Lightness');         // Accessible label text
+color = input<string>('');                  // Base color to vary
+constantChroma = input<boolean>(false);     // Lock chroma during adjustment
+showGradient = input<boolean>(false);       // Display gradient background
+resetSlider = input<ResetObject | null>(null); // Signal to reset slider
 ```
 
 #### Outputs
 
 ```typescript
-colorVariant = output<{ color: string | null; sliderId: string }>();
+colorVariant = output<string | null>();
 ```
 
 #### Internal State
 
 ```typescript
-slideMin = signal<number>(0);
-slideMax = signal<number>(100);
-slideInterval = signal<number>(1);
-value = signal<number>(50);
-initValue = signal<number>(50);
-devColorVariant = signal<string | null>(null);
+slideMin = signal<number>(NaN);
+slideMax = signal<number>(NaN);
+slideInterval = signal<number>(NaN);
+value = signal<number>(NaN);
+initValue = signal<number>(NaN);
+devColorVariant = signal<string>('');
 ```
 
 #### Behavior
@@ -220,26 +220,30 @@ Displays the contrast score between two colors. The score header uses container 
 #### Inputs
 
 ```typescript
-colorOne = input.required<string>();                              // Foreground color
-colorTwo = input.required<string>();                              // Background color
-contrastType = input<'apca' | 'bpca' | 'apca object'>('apca');  // Type of contrast
-debug = input<boolean>(false);                                    // Debug mode
+colorOne = input<string>('');                                                      // Foreground color
+colorTwo = input<string>('');                                                      // Background color
+contrastType = input<'okca' | 'apca' | 'bpca' | 'deltaE' | 'apca object'>('okca'); // Contrast algorithm
+debug = input<boolean>(false);                                                     // Debug mode
 ```
 
 #### Internal State
 
 ```typescript
-contrastScore = signal<string | number | null>(null);
+contrastScore = signal<number>(NaN);
+contrastAnnouncement = computed(() => ...); // Screen-reader announcement string
 ```
 
 #### Behavior
 
 - Uses `effect()` to reactively calculate contrast when inputs change
 - Calls ColorMetricsService to get contrast score
+- Visually hidden from assistive technology (`aria-hidden="true"`); announces score changes via an `aria-live="polite"` region
 - Displays different metrics based on `contrastType`:
-  - **'apca'**: Shows APCA score (e.g., "75")
-  - **'bpca'**: Shows WCAG 2.x ratio (e.g., "4.5 to 1")
-  - **'apca object'**: Shows detailed APCA object
+  - **'okca'**: OKCA ratio (OKLCH-based, polarity-aware WCAG-compatible)
+  - **'apca'**: APCA Lc score
+  - **'bpca'**: WCAG 2.x compatible ratio
+  - **'deltaE'**: Perceptual color difference
+  - **'apca object'**: Minimum object pixel dimension
 
 #### Example Usage
 
@@ -250,25 +254,6 @@ contrastScore = signal<string | number | null>(null);
   [contrastType]="contrastMode()"
 />
 ```
-
-#### Contrast Type Modes
-
-The component supports three contrast display modes via `contrastType` input:
-
-1. **'apca'** - Displays APCA Lc score as a number (e.g., "75")
-2. **'bpca'** - Displays WCAG 2.x compatible ratio (e.g., "4.5")
-3. **'apca object'** - Displays minimum object dimension in pixels using `ColorUtilService.getMinObjectDimension()`
-
-#### Contrast Score Interpretation
-
-**APCA Scores** (when `contrastType === 'apca'`):
-- 90+: Maximum text readability
-- 75+: Body text
-- 60+: Large text
-- 45+: Large/bold text
-- 30+: Non-text UI elements
-- 15+: Disabled elements
-- <15: Insufficient contrast
 
 ---
 
@@ -484,14 +469,14 @@ Displays temporary user notifications that auto-dismiss after 5 seconds. Uses `T
 #### Inputs
 
 ```typescript
-alertMessage = input<AlertMessagObj | null>(null);
+alertMessage = input<AlertMessagObj>(new AlertMessagObj());
 ```
 
 #### Types
 
 ```typescript
-export interface AlertMessagObj {
-  message: string;
+export class AlertMessagObj {
+  message: string = '';
 }
 ```
 
@@ -535,8 +520,9 @@ Button that copies a color's hex value to the clipboard.
 #### Inputs
 
 ```typescript
-color = input.required<string>();  // Color to copy
-debug = input<boolean>(false);     // Debug mode
+color = input<string>('');                    // Color to copy
+label = input<string>('Copy to Clipboard');   // Accessible button label
+debug = input<boolean>(true);                 // Debug mode
 ```
 
 #### Outputs

@@ -6,6 +6,9 @@ const meta: Meta<CopyToClipboardButtonComponent> = {
   component: CopyToClipboardButtonComponent,
   tags: ['autodocs'],
   argTypes: {
+    label: {
+      control: 'text',
+    },
     color: {
       control: 'color',
     },

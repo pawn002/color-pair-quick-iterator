@@ -4,6 +4,12 @@ import { ColorPickerComponent } from './color-picker.component';
 // model() signals cause a runtime type extraction failure in Storybook's docs renderer
 // (value.replace is not a function). Use extractArgTypes override to bypass automatic extraction.
 const colorPickerArgTypes = {
+  label: {
+    control: 'text',
+    type: { name: 'string', required: false },
+    description: 'Accessible label for the color input.',
+    table: { defaultValue: { summary: 'Color' } },
+  },
   color: {
     control: 'color',
     type: { name: 'string', required: false },

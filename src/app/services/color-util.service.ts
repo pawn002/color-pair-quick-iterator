@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import Color from 'colorjs.io';
-import { to } from 'colorjs.io/fn';
-// import { ColorConstructor } from 'colorjs.io/types/src/color';
 import { ColorConstructor } from 'colorjs.io';
 import { scaleLinear } from 'd3';
 import { random } from 'lodash-es';
@@ -94,14 +92,6 @@ export class ColorUtilService {
       const originalHue = oklchColor.coords[2];
 
       const targetColor = new Color('oklch', [lightness, originalChroma, originalHue]);
-
-      // const inSrgbGamut = targetColor.inGamut('srgb');
-
-      // if (!inSrgbGamut) {
-      //   console.warn(
-      //     `OKLCH color in SRGB gamut: ${targetColor.inGamut('srgb')}`
-      //   );
-      // }
 
       const tColorInSrgbGamut = targetColor.toGamut({
         space: 'srgb',

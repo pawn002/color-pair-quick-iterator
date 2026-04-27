@@ -1,13 +1,4 @@
-import {
-  Component,
-  effect,
-  EventEmitter,
-  input,
-  model,
-  output,
-  Output,
-  signal,
-} from '@angular/core';
+import { Component, effect, input, model, output, signal } from '@angular/core';
 
 @Component({
   selector: 'app-color-picker',

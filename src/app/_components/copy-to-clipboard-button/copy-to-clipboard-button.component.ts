@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, input, output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 export class CopyToClipboardEvent {
   copied: boolean = false;
