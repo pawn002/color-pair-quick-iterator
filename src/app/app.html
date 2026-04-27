@@ -63,6 +63,10 @@
             (selectedColor)="handleColorPaletteButtonEvent('One', $event)"
           ></app-palette-table>
         </div>
+        <p class="lch-limits-intro">
+          Variants of your foreground color within the sRGB gamut. Hue constrains your lightness
+          and chroma options — for example, strong yellows are only possible at high lightness.
+        </p>
       </app-accordion-item>
 
       <h3>Background Color</h3>
@@ -104,6 +108,10 @@
             (selectedColor)="handleColorPaletteButtonEvent('Two', $event)"
           ></app-palette-table>
         </div>
+        <p class="lch-limits-intro">
+          Variants of your background color within the sRGB gamut. Hue constrains your lightness
+          and chroma options — for example, strong yellows are only possible at high lightness.
+        </p>
       </app-accordion-item>
     </div>
   </app-card>
@@ -232,6 +240,18 @@
     </div>
   </app-card>
 
+  <app-card class="metadata" variant="elevated" padding="md">
+    <h2 id="color-metadata">Color Metadata</h2>
+
+    <app-accordion-item title="Descriptive data about your inputted colors." [open]="true">
+      <app-metadata
+        [colorOne]="colorPickerOneComparedColor()"
+        [colorTwo]="colorPickerTwoComparedColor()"
+        (noteRequested)="activeNoteModal.set($event)"
+      ></app-metadata>
+    </app-accordion-item>
+  </app-card>
+
   <app-card class="options" variant="elevated" padding="md">
     <h2>Options</h2>
 
@@ -317,69 +337,39 @@
         <h3>Color Sliders</h3>
 
         <div class="checkbox-section">
-          <app-checkbox
-            id="option-const-chroma"
-            name="Constant Chroma Toggle"
-            label="Constant chroma"
-            [checked]="constantChroma()"
-            (changed)="constantChroma.set($event)"
-          ></app-checkbox>
-          <app-checkbox
-            id="option-show-grad"
-            name="Show Gradient Toggle"
-            label="Show Gradient"
-            [checked]="showGradient()"
-            (changed)="showGradient.set($event)"
-          ></app-checkbox>
+          <div class="checkbox-item">
+            <app-checkbox
+              id="option-const-chroma"
+              name="Constant Chroma Toggle"
+              label="Constant chroma"
+              [checked]="constantChroma()"
+              (changed)="constantChroma.set($event)"
+            ></app-checkbox>
+            <app-tooltip text="About Constant chroma" position="left">
+              <app-button variant="ghost" size="icon" ariaLabel="About Constant chroma" (clicked)="activeNoteModal.set('constantChroma')">
+                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+              </app-button>
+            </app-tooltip>
+          </div>
+          <div class="checkbox-item">
+            <app-checkbox
+              id="option-show-grad"
+              name="Show Gradient Toggle"
+              label="Show Gradient"
+              [checked]="showGradient()"
+              (changed)="showGradient.set($event)"
+            ></app-checkbox>
+            <app-tooltip text="About Show Gradient" position="left">
+              <app-button variant="ghost" size="icon" ariaLabel="About Show Gradient" (clicked)="activeNoteModal.set('showGradient')">
+                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+              </app-button>
+            </app-tooltip>
+          </div>
         </div>
       </div>
     </app-accordion-item>
   </app-card>
 
-  <app-card class="metadata" variant="elevated" padding="md">
-    <h2 id="color-metadata">Color Metadata</h2>
-
-    <app-accordion-item title="Descriptive data about your inputted colors." [open]="true">
-      <app-metadata
-        [colorOne]="colorPickerOneComparedColor()"
-        [colorTwo]="colorPickerTwoComparedColor()"
-        (noteRequested)="activeNoteModal.set($event)"
-      ></app-metadata>
-    </app-accordion-item>
-  </app-card>
-
-
-  <app-card class="notes" variant="elevated" padding="md">
-    <h2>Notes</h2>
-
-    <app-accordion-item title="Details about app features.">
-      <div class="content">
-        <p id="notes-lch-limits">
-          <span class="visual-header">LCH Limits:</span>
-          Shows variants of your color within the sRGB gamut. The palette reveals how hue
-          constrains your lightness and chroma options — for example, strong yellows are only
-          possible at high lightness.
-        </p>
-
-        <p id="notes-wcag2">
-          <span class="visual-header">WCAG 2:</span> This score is for reference only—do not use
-          this score for judging inclusive contrast.
-        </p>
-
-        <p id="notes-constant-chroma">
-          <span class="visual-header">Constant chroma:</span>
-          Constrains sliders to tones that preserve your input color's chroma and hue. Disable to
-          access a wider tonal range, though some generated tones may clash with your original
-          color. When disabled, the Show Gradient option ranges from black to white.
-        </p>
-        <p id="notes-show-grad">
-          <span class="visual-header">Show Gradient:</span>
-          This option renders a tone gradient behind the slider inputs. The gradient shows the tonal
-          possibilities of your inputted color.
-        </p>
-      </div>
-    </app-accordion-item>
-  </app-card>
 
   <app-card class="contact" variant="elevated" padding="md">
     <h2>Contact Information and Feedback</h2>
@@ -436,6 +426,19 @@
     @if (activeNoteModal() === 'wcag2') {
       <p>
         This score is for reference only — do not use it for judging inclusive contrast.
+      </p>
+    }
+    @if (activeNoteModal() === 'constantChroma') {
+      <p>
+        Constrains sliders to tones that preserve your input color's chroma and hue. Disable to
+        access a wider tonal range, though some generated tones may clash with your original
+        color. When disabled, the Show Gradient option ranges from black to white.
+      </p>
+    }
+    @if (activeNoteModal() === 'showGradient') {
+      <p>
+        Renders a tone gradient behind the slider inputs. The gradient shows the tonal
+        possibilities of your inputted color.
       </p>
     }
     @if (activeNoteModal() === 'accessibility') {

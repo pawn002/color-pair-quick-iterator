@@ -72,6 +72,8 @@ export class App implements AfterViewInit {
     deltaE: 'Delta E',
     accessibility: 'Screen reader and low vision workflows',
     wcag2: 'WCAG 2',
+    constantChroma: 'Constant chroma',
+    showGradient: 'Show Gradient',
   };
 
   noteModalTitle = computed(() => {

@@ -65,6 +65,10 @@
     }
   }
 
+  .lch-limits-intro {
+    margin: var(--spacing-sm) 0 0;
+  }
+
   .pallette-viz-content {
     max-width: 100%;
     overflow: auto;
@@ -96,8 +100,25 @@
   .options {
     .checkbox-section {
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
       gap: var(--spacing-xs);
+
+      .checkbox-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        app-checkbox {
+          flex: 1;
+        }
+
+        svg {
+          display: block;
+          width: 18px;
+          height: 18px;
+          fill: currentColor;
+        }
+      }
     }
 
     .radio-section {
@@ -121,23 +142,6 @@
           fill: currentColor;
         }
       }
-    }
-  }
-
-  .notes {
-    p {
-      margin: 0 0 1em;
-    }
-
-    ul,
-    ol {
-      margin-top: 0;
-    }
-
-    .content {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
     }
   }
 
