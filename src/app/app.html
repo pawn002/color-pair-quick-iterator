@@ -1,5 +1,6 @@
 <a class="sr-only" href="#main-content">Skip to main content</a>
 <main class="app-container" id="main-content">
+  <div class="primary-stack">
   <app-card class="title-and-sliders" variant="elevated" padding="none">
     <div class="title-and-score">
       <h1>Colors Contrast</h1>
@@ -240,18 +241,6 @@
     </div>
   </app-card>
 
-  <app-card class="metadata" variant="elevated" padding="md">
-    <h2 id="color-metadata">Color Metadata</h2>
-
-    <app-accordion-item title="Descriptive data about your inputted colors." [open]="true">
-      <app-metadata
-        [colorOne]="colorPickerOneComparedColor()"
-        [colorTwo]="colorPickerTwoComparedColor()"
-        (noteRequested)="activeNoteModal.set($event)"
-      ></app-metadata>
-    </app-accordion-item>
-  </app-card>
-
   <app-card class="options" variant="elevated" padding="md">
     <h2>Options</h2>
 
@@ -369,18 +358,33 @@
       </div>
     </app-accordion-item>
   </app-card>
+  </div>
+
+  <app-card class="metadata" variant="elevated" padding="md">
+    <h2 id="color-metadata">Color Metadata</h2>
+
+    <app-accordion-item title="Descriptive data about your inputted colors." [open]="true">
+      <app-metadata
+        [colorOne]="colorPickerOneComparedColor()"
+        [colorTwo]="colorPickerTwoComparedColor()"
+        (noteRequested)="activeNoteModal.set($event)"
+      ></app-metadata>
+    </app-accordion-item>
+  </app-card>
 
 
   <app-card class="contact" variant="elevated" padding="md">
-    <h2>Contact Information and Feedback</h2>
+    <div class="contact__body">
+      <h2>Contact Information and Feedback</h2>
 
-    <p>
-      Made by <a href="https://github.com/pawn002" aria-label="pawn002 on GitHub (external link)">pawn002</a>, who would appreciate
-      <a href="https://github.com/pawn002/color-pair-quick-iterator/issues" aria-label="bug reports and feature requests for this app on GitHub (external link)">
-        bug reports and feature requests for this app</a
-      >
-      to help improve its Accessibility.
-    </p>
+      <p>
+        Made by <a href="https://github.com/pawn002" aria-label="pawn002 on GitHub (external link)">pawn002</a>, who would appreciate
+        <a href="https://github.com/pawn002/color-pair-quick-iterator/issues" aria-label="bug reports and feature requests for this app on GitHub (external link)">
+          bug reports and feature requests for this app</a
+        >
+        to help improve its Accessibility.
+      </p>
+    </div>
   </app-card>
 
   <app-modal
