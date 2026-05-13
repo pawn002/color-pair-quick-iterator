@@ -67,7 +67,7 @@
       letter-spacing: var(--letter-spacing-tight);
     }
 
-    app-color-contrast {
+    cc-color-contrast {
       flex-grow: 1;
       display: flex;
       align-items: stretch;
@@ -83,7 +83,7 @@
     margin-bottom: 4px;
     align-items: center;
 
-    app-color-slider {
+    cc-color-slider {
       flex-grow: 1;
     }
   }
@@ -132,7 +132,7 @@
         align-items: center;
         justify-content: space-between;
 
-        app-checkbox {
+        candor-checkbox {
           flex: 1;
         }
 
@@ -156,7 +156,7 @@
         align-items: center;
         justify-content: space-between;
 
-        app-radio {
+        candor-radio {
           flex: 1;
         }
 

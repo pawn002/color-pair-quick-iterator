@@ -1,16 +1,16 @@
 {
   "name": "color-pair-quick-iterator",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "build:gh-pages": "ng build --base-href=/color-pair-quick-iterator/",
-    "deploy:gh-pages": "npm run build:gh-pages && rm -rf docs/* && cp -r dist/color-pair-quick-iterator/browser/* docs/ && git add docs/ && git commit -m \"build: update GitHub Pages deployment with latest changes\" && git push",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "storybook": "ng run color-pair-quick-iterator:storybook",
-    "build-storybook": "ng run color-pair-quick-iterator:build-storybook"
+    "start": "vite",
+    "build": "vite build",
+    "build:gh-pages": "vite build --base=/color-pair-quick-iterator/",
+    "deploy:gh-pages": "npm run build:gh-pages && rm -rf docs/* && cp -r dist/* docs/ && git add docs/ && git commit -m \"build: update GitHub Pages deployment with latest changes\" && git push",
+    "preview": "vite preview",
+    "test": "vitest",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "prettier": {
     "printWidth": 100,
@@ -19,20 +19,13 @@
       {
         "files": "*.html",
         "options": {
-          "parser": "angular"
+          "parser": "html"
         }
       }
     ]
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "^20.3.0",
-    "@angular/compiler": "^20.3.0",
-    "@angular/core": "^20.3.0",
-    "@angular/forms": "^20.3.0",
-    "@angular/platform-browser": "^20.3.0",
-    "@angular/platform-browser-dynamic": "^20.3.19",
-    "@angular/router": "^20.3.0",
     "@candor-design/tokens": "^1.0.1",
     "@fontsource-variable/roboto-flex": "^5.2.8",
     "@fontsource-variable/roboto-mono": "^5.2.8",
@@ -43,29 +36,19 @@
     "bridge-pca": "^0.1.6",
     "colorjs.io": "^0.5.2",
     "d3": "^7.9.0",
-    "lodash-es": "^4.17.21",
-    "rxjs": "~7.8.0",
-    "tslib": "^2.3.0",
-    "zone.js": "^0.15.1"
+    "lit": "^3.2.0",
+    "lodash-es": "^4.17.21"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^20.3.0",
-    "@angular/build": "^20.3.4",
-    "@angular/cli": "^20.3.4",
-    "@angular/compiler-cli": "^20.3.0",
-    "@compodoc/compodoc": "^1.1.31",
-    "@storybook/addon-docs": "^9.1.10",
-    "@storybook/angular": "^9.1.10",
+    "@storybook/addon-docs": "^8.6.12",
+    "@storybook/web-components": "^8.6.12",
+    "@storybook/web-components-vite": "^8.6.12",
     "@types/d3": "^7.4.3",
-    "@types/jasmine": "~5.1.0",
     "@types/lodash-es": "^4.17.12",
-    "jasmine-core": "~5.9.0",
-    "karma": "~6.4.0",
-    "karma-chrome-launcher": "~3.2.0",
-    "karma-coverage": "~2.2.0",
-    "karma-jasmine": "~5.1.0",
-    "karma-jasmine-html-reporter": "~2.1.0",
-    "storybook": "^9.1.10",
-    "typescript": "~5.9.2"
+    "sass": "^1.89.0",
+    "storybook": "^8.6.12",
+    "typescript": "~5.7.3",
+    "vite": "^6.3.5",
+    "vitest": "^3.2.2"
   }
 }

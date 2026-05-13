@@ -1,26 +1,9 @@
-import { Injectable, inject } from '@angular/core';
-import { ColorUtilService } from './color-util.service';
+import type { ColorUtilService } from './color-util.service';
 
-@Injectable({
-  providedIn: 'root',
-})
 export class BpcaService {
-  cus = inject(ColorUtilService);
+  constructor(private cus: ColorUtilService) {}
 
-  // Following Code is copied with some modification from [Bridge-PCA algo](https://github.com/Myndex/bridge-pca/blob/master/src/bridge-pca.js)
-  // Attempts to use bpca module as-is has failed because of some issue with colorparsely dependency
-
-  bridgeRatio(
-    contrastLc = 0,
-    txtY: number,
-    bgY: number,
-    ratioStr = ' to 1',
-    places = 1
-  ) {
-    // Takes the output of APCA (either a string or number)
-    // and makes it a WCAG2 ratio, returning a string '4.5 to 1'
-    // Jan 16 2022 constants
-
+  bridgeRatio(contrastLc = 0, txtY: number, bgY: number, ratioStr = ' to 1', places = 1) {
     let maxY = Math.max(txtY, bgY);
 
     const offsetA = 0.2693;
@@ -36,7 +19,7 @@ export class BpcaService {
 
     const hiTrim = 0.0785;
     const loTrim = 0.0815;
-    const trimThresh = 0.506; // #c0c0c0
+    const trimThresh = 0.506;
 
     let addTrim = loTrim + hiTrim;
 
@@ -46,33 +29,23 @@ export class BpcaService {
     }
 
     contrastLc = Math.max(0, Math.abs(contrastLc * 0.01));
-    // contrastLc = Math.max(0, Math.abs(parseFloat(contrastLc) * 0.01));
 
-    // convert Lc into a WCAG ratio
     let wcagContrast =
-      (Math.pow(contrastLc + preScale, powerShift) + offsetA) *
-        mainFactor *
-        contrastLc +
+      (Math.pow(contrastLc + preScale, powerShift) + offsetA) * mainFactor * contrastLc +
       addTrim;
 
-    // adjust WCAG ratios that are under  3 : 1, clean up near 0.
     wcagContrast =
       wcagContrast > loThresh
         ? 10.0 * wcagContrast
         : contrastLc < 0.06
-        ? 0
-        : 10.0 * wcagContrast -
-          (Math.pow(loThresh - wcagContrast + preEmph, loExp) - postDe);
+          ? 0
+          : 10.0 * wcagContrast - (Math.pow(loThresh - wcagContrast + preEmph, loExp) - postDe);
 
-    return wcagContrast.toFixed(places) + ratioStr; // + '<br>trim:' + addTrim;
+    return wcagContrast.toFixed(places) + ratioStr;
   }
 
   BPCAcontrast(txtY: number, bgY: number, places = -1) {
-    // send linear Y (luminance) for text and background.
-    // txtY and bgY must be between 0.0-1.0
-    // IMPORTANT: Do not swap, polarity is important.
-
-    const icp = [0.0, 1.1]; // input range clamp / input error check
+    const icp = [0.0, 1.1];
 
     if (
       isNaN(txtY) ||
@@ -80,16 +53,13 @@ export class BpcaService {
       Math.min(txtY, bgY) < icp[0] ||
       Math.max(txtY, bgY) > icp[1]
     ) {
-      return 0; // return zero on error
-      // return 'error'; // optional string return for error
+      return 0;
     }
-
-    //////////   BPCA 0.1.6 G - 4g Constants   ///////////////////////
 
     const normBG = 0.56,
       normTXT = 0.57,
       revTXT = 0.62,
-      revBG = 0.65; // G-4g constants for use with 2.4 exponent
+      revBG = 0.65;
 
     const blkThrs = 0.022,
       blkClmp = 1.414,
@@ -102,117 +72,58 @@ export class BpcaService {
       loClip = 0.1,
       deltaYmin = 0.0005;
 
-    //////////   SAPC LOCAL VARS   /////////////////////////////////////////
+    let SAPC = 0.0;
+    let outputContrast = 0.0;
+    let polCat = 'BoW';
 
-    let SAPC = 0.0; // For raw SAPC values
-    let outputContrast = 0.0; // For weighted final values
-    let polCat = 'BoW'; // Polarity Indicator. N normal R reverse
-
-    // TUTORIAL
-
-    // Use Y for text and BG, and soft clamp black,
-    // return 0 for very close luminances, determine
-    // polarity, and calculate SAPC raw contrast
-    // Then scale for easy to remember levels.
-
-    // Note that reverse contrast (white text on black)
-    // intentionally returns a negative number
-    // Proper polarity is important!
-
-    //////////   BLACK SOFT CLAMP   ////////////////////////////////////////
-
-    // Soft clamps Y for either color if it is near black.
     txtY = txtY > blkThrs ? txtY : txtY + Math.pow(blkThrs - txtY, blkClmp);
     bgY = bgY > blkThrs ? bgY : bgY + Math.pow(blkThrs - bgY, blkClmp);
 
-    ///// Return 0 Early for extremely low ∆Y
     if (Math.abs(bgY - txtY) < deltaYmin) {
       return 0.0;
     }
 
-    //////////   Bridge-PCA/SAPC CONTRAST - LOW CLIP (W3 LICENSE)  ///////////////
-
     if (bgY > txtY) {
-      // For normal polarity, black text on white (BoW)
-
-      // Calculate the SAPC contrast value and scale
-
       SAPC = (Math.pow(bgY, normBG) - Math.pow(txtY, normTXT)) * scaleBoW;
-
-      // Low Clip to prevent polarity reversal
       outputContrast = SAPC < loClip ? 0.0 : SAPC - loBoWoffset;
     } else {
-      // For reverse polarity, light text on dark (WoB)
-      // WoB should always return either negative value.
-      // OR the output will have R appended as string '23R'
-      // OR WoB '23 BoW' toolmaker choice so long as explained
       polCat = 'WoB';
-
       SAPC = (Math.pow(bgY, revBG) - Math.pow(txtY, revTXT)) * scaleWoB;
-
-      // this is a special offset to align with incorrect WCAG_2 math.
       let bridge = Math.max(0, txtY / bridgeWoBpivot - 1.0) * bridgeWoBfact;
-
-      // console.log(bridge + ' txtY ' + txtY + ' SAPC ' + SAPC);
-
       outputContrast = SAPC > -loClip ? 0.0 : SAPC + loWoBoffset + bridge;
     }
-
-    // return Lc (lightness contrast) as a signed numeric value
-    // Round to the nearest whole number is optional.
-    // Rounded can be a signed INT as output will be within ± 127
-    // places = -1 returns signed float, 0 returns rounded as string
 
     if (places < 0) {
       return outputContrast * 100.0;
     } else if (places == 0) {
       return (
-        Math.round(Math.abs(outputContrast) * 100.0) +
-        '<sub>' +
-        polCat +
-        '</sub>'
+        Math.round(Math.abs(outputContrast) * 100.0) + '<sub>' + polCat + '</sub>'
       );
     } else if (Number.isInteger(places)) {
       return (outputContrast * 100.0).toFixed(places);
     } else {
       throw 'Err-3';
     }
-  } // End BPCAcontrast()
+  }
 
   sRGBtoY(rgba = [0, 0, 0]) {
-    // send sRGB 8bpc (0xFFFFFF) or string
-
-    /////   Bridge-PCA 0.1.6 G - 4g - W3 Constants   ////////////////////////
-
-    const mainTRC = 2.4; // 2.4 exponent emulates actual monitor perception
-
+    const mainTRC = 2.4;
     const sRco = 0.212647813391364,
       sGco = 0.715179147533615,
-      sBco = 0.0721730390750208; // sRGB coefficients
-
-    // Derived from:
-    // xW	yW	K	xR	yR	xG	yG	xB	yB
-    // 0.312720	0.329030	6504	0.640	0.330	0.300	0.600	0.150	0.060
-
-    // linearize r, g, or b then apply coefficients
-    // and sum then return the resulting luminance
+      sBco = 0.0721730390750208;
 
     function simpleExp(chan: number) {
       return Math.pow(chan / 255.0, mainTRC);
     }
 
-    return (
-      sRco * simpleExp(rgba[0]) +
-      sGco * simpleExp(rgba[1]) +
-      sBco * simpleExp(rgba[2])
-    );
-  } // End sRGBtoY()
+    return sRco * simpleExp(rgba[0]) + sGco * simpleExp(rgba[1]) + sBco * simpleExp(rgba[2]);
+  }
 
   alphaBlend(rgbaFG = [0, 0, 0, 1.0], rgbBG = [0, 0, 0], isInt = true) {
     if (rgbaFG[3]) {
-      rgbaFG[3] = Math.max(Math.min(rgbaFG[3], 1.0), 0.0); // clamp alpha
+      rgbaFG[3] = Math.max(Math.min(rgbaFG[3], 1.0), 0.0);
       let compBlend = 1.0 - rgbaFG[3];
-      let rgbOut = [0, 0, 0]; // or just use rgbBG to retain other elements?
+      let rgbOut = [0, 0, 0];
 
       for (let i = 0; i < 3; i++) {
         rgbOut[i] = rgbBG[i] * compBlend + rgbaFG[i] * rgbaFG[3];
@@ -223,33 +134,20 @@ export class BpcaService {
     } else {
       return rgbaFG;
     }
-  } // End alphaBlend()
+  }
 
-  calcBPCA(textColor: string, bgColor: string, places = -1, isInt = true) {
-    // NOTE:  that this function required colorParsley !!
-    // let txClr = colorParsley(textColor);
-    // let bgClr = colorParsley(bgColor);
-    // let hasAlpha = txClr[3] != '' && txClr[3] < 1 ? true : false;
-    // if (hasAlpha) {
-    // txClr = this.alphaBlend(txClr, bgClr, isInt);
-    // }
-    // return this.BPCAcontrast(this.sRGBtoY(txClr), this.sRGBtoY(bgClr), places);
-
+  calcBPCA(textColor: string, bgColor: string, places = -1) {
     let bpca: string | number = NaN;
 
     let txClr = this.cus.getRgb255Array(textColor);
     let bgClr = this.cus.getRgb255Array(bgColor);
 
     if (txClr && bgClr) {
-      bpca = this.BPCAcontrast(
-        this.sRGBtoY(txClr),
-        this.sRGBtoY(bgClr),
-        places
-      );
+      bpca = this.BPCAcontrast(this.sRGBtoY(txClr), this.sRGBtoY(bgClr), places);
     } else {
-      console.warn(`issue calculating BPCA`);
+      console.warn('issue calculating BPCA');
     }
 
     return bpca;
-  } // End calcBPCA()
+  }
 }
