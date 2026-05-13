@@ -1,3 +1,29 @@
+/* Custom element display defaults (custom elements are inline by default) */
+cc-app,
+cc-alert,
+cc-color-contrast,
+cc-color-picker,
+cc-color-slider,
+cc-copy-to-clipboard-button,
+cc-metadata,
+cc-palette-table,
+cc-tone-picker,
+candor-accordion-item,
+candor-button,
+candor-card,
+candor-checkbox,
+candor-modal,
+candor-radio,
+candor-table,
+candor-toast {
+  display: block;
+}
+
+candor-tooltip {
+  display: inline-block;
+  position: relative;
+}
+
 /* App layout tokens (no Candor equivalent) */
 :root {
   --min-hit-dimension-aaa: 2.75rem;
