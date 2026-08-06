@@ -1,36 +1,27 @@
-import type { Meta, StoryObj } from '@storybook/angular';
-import { AlertComponent } from './alert.component';
+import type { Meta, StoryObj } from '@storybook/web-components';
+import { html } from 'lit';
+import './alert';
 
-const meta: Meta<AlertComponent> = {
+const meta: Meta = {
   title: 'App/Alert',
-  component: AlertComponent,
   tags: ['autodocs'],
+  render: (args) => html`
+    <cc-alert .alertMessage=${{ message: args['message'] ?? '' }}></cc-alert>
+  `,
   argTypes: {
-    alertMessage: {
-      control: 'object',
-    },
+    message: { control: 'text' },
   },
 };
 
 export default meta;
-type Story = StoryObj<AlertComponent>;
+type Story = StoryObj;
 
-export const Typical: Story = {
-  args: {},
-};
+export const Typical: Story = { args: {} };
 
 export const ColorCopied: Story = {
-  args: {
-    alertMessage: {
-      message: 'Color One Variant, #ffe1df, copied to clipboard.',
-    },
-  },
+  args: { message: 'Color One Variant, #ffe1df, copied to clipboard.' },
 };
 
 export const AppWarning: Story = {
-  args: {
-    alertMessage: {
-      message: 'Warning',
-    },
-  },
+  args: { message: 'Warning' },
 };

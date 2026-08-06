@@ -1,79 +1,53 @@
-import type { Meta, StoryObj } from '@storybook/angular';
-import { ColorSliderComponent } from './color-slider.component';
+import type { Meta, StoryObj } from '@storybook/web-components';
+import { html } from 'lit';
+import './color-slider';
 
-const meta: Meta<ColorSliderComponent> = {
+const meta: Meta = {
   title: 'App/Color Slider',
-  component: ColorSliderComponent,
   tags: ['autodocs'],
+  render: (args) => html`
+    <div style="width: 400px">
+      <cc-color-slider
+        id=${args['id'] ?? 'slider-story'}
+        name=${args['name'] ?? 'color-slider'}
+        label=${args['label'] ?? 'Lightness'}
+        color=${args['color'] ?? ''}
+        ?constantchroma=${args['constantChroma'] ?? false}
+        ?showgradient=${args['showGradient'] ?? false}
+        ?debug=${args['debug'] ?? false}
+      ></cc-color-slider>
+    </div>
+  `,
   argTypes: {
-    label: {
-      control: 'text',
-    },
-    color: {
-      control: 'color',
-    },
-    id: {
-      control: 'text',
-    },
-    name: {
-      control: 'text',
-    },
-    constantChroma: {
-      control: 'boolean',
-    },
-    showGradient: {
-      control: 'boolean',
-    },
-    resetSlider: {
-      control: 'object',
-    },
-    debug: {
-      control: 'boolean',
-    },
+    label: { control: 'text' },
+    color: { control: 'color' },
+    id: { control: 'text' },
+    name: { control: 'text' },
+    constantChroma: { control: 'boolean' },
+    showGradient: { control: 'boolean' },
+    debug: { control: 'boolean' },
   },
 };
 
 export default meta;
-type Story = StoryObj<ColorSliderComponent>;
+type Story = StoryObj;
 
 export const Typical: Story = {
-  args: {
-    color: '#3a86ff',
-    showGradient: true,
-  },
+  args: { color: '#3a86ff', showGradient: true },
 };
 
 export const RgbRed: Story = {
-  args: {
-    color: 'red',
-    constantChroma: true,
-    showGradient: true,
-    debug: true,
-  },
+  args: { color: '#ff0000', constantChroma: true, showGradient: true, debug: true },
 };
 
 export const RgbGreen: Story = {
-  args: {
-    color: 'green',
-    constantChroma: true,
-    showGradient: true,
-    debug: true,
-  },
+  args: { color: '#008000', constantChroma: true, showGradient: true, debug: true },
 };
 
 export const RgbBlue: Story = {
-  args: {
-    color: 'blue',
-    constantChroma: true,
-    showGradient: true,
-    debug: true,
-  },
+  args: { color: '#0000ff', constantChroma: true, showGradient: true, debug: true },
 };
 
 export const NoHueColor: Story = {
-  args: {
-    color: 'gray',
-    showGradient: true,
-    debug: true,
-  },
+  args: { color: '#808080', showGradient: true, debug: true },
 };

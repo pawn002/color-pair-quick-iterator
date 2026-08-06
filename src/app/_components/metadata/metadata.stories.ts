@@ -1,29 +1,27 @@
-import type { Meta, StoryObj } from '@storybook/angular';
-import { MetadataComponent } from './metadata.component';
+import type { Meta, StoryObj } from '@storybook/web-components';
+import { html } from 'lit';
+import './metadata';
 
-const meta: Meta<MetadataComponent> = {
+const meta: Meta = {
   title: 'App/Metadata Readout',
-  component: MetadataComponent,
   tags: ['autodocs'],
+  render: (args) => html`
+    <cc-metadata
+      colorone=${args['colorOne'] ?? ''}
+      colortwo=${args['colorTwo'] ?? ''}
+    ></cc-metadata>
+  `,
   argTypes: {
-    colorOne: {
-      control: 'color',
-    },
-    colorTwo: {
-      control: 'color',
-    },
-    debug: {
-      control: 'boolean',
-    },
+    colorOne: { control: 'color' },
+    colorTwo: { control: 'color' },
+    debug: { control: 'boolean' },
   },
 };
 
 export default meta;
-type Story = StoryObj<MetadataComponent>;
+type Story = StoryObj;
 
-export const Typical: Story = {
-  args: {},
-};
+export const Typical: Story = { args: {} };
 
 export const Populated: Story = {
   args: {

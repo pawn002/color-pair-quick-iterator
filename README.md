@@ -6,7 +6,7 @@ An Angular 20 application for exploring and iterating on accessible color pairs.
 
 ## Features
 
-- **OKCA Contrast**: Primary contrast algorithm — OKLCH-native, 1–21 scale, zero false passes against WCAG 2.x, stricter for saturated chromatic colors
+- **OKCA Contrast**: Primary contrast algorithm — OKLCH-native, 1–21 scale (20.9 ceiling), zero false passes against WCAG 2.x, stricter for saturated chromatic colors
 - **APCA Support**: Accessible Perceptual Contrast Algorithm for perceptual contrast scoring
 - **WCAG Compatibility**: Bridge-PCA provides WCAG 2.x ratio equivalents
 - **Color Space**: Works in OKLCH color space for perceptually uniform adjustments
@@ -77,9 +77,9 @@ All color manipulation uses OKLCH (Oklab Lightness Chroma Hue) for perceptually 
 
 OKCA (OK Contrast Algorithm) is the default contrast mode. It outputs ratios on the familiar 1–21 scale with the same AA (4.5) and AAA (7.0) thresholds as WCAG, while correcting a known WCAG failure mode:
 
-**Saturated chromatic false passes** — hot pink on near-black can score 6.6:1 under WCAG but is demonstrably harder to read. OKCA applies a chroma penalty that reduces the ratio for vivid colors. It is also polarity-aware: light-on-dark and dark-on-light pairs score differently, capped at 21 and 20 respectively.
+**Saturated chromatic false passes** — hot pink on near-black can score 6.6:1 under WCAG but is demonstrably harder to read. OKCA applies a chroma penalty that reduces the ratio for vivid colors (that pair scores 3.6). It is also polarity-aware: light-on-dark and dark-on-light pairs score differently, capped at 20.9 and 20 respectively. The light-on-dark ceiling sits just below WCAG's 21 so that every OKCA score is *strictly* under the WCAG equivalent.
 
-OKCA never approves a pair that WCAG rejects (FP = 0 by construction), making it a strictly stricter, drop-in alternative.
+OKCA never approves a pair that WCAG rejects (FP = 0, proven for sRGB), making it a strictly stricter, drop-in alternative.
 
 ### APCA, Bridge-PCA, and Delta E
 
@@ -149,6 +149,7 @@ See [LICENSE](./LICENSE) for full details.
 - **2026-04**: Added ModalComponent (`app-modal`) to Candor; replaced accordion anchor links with contextual info buttons and modals throughout the app
 - **2026-04**: Upgraded `@pawn002/okca` to 1.0.1 (ESM, polarity-aware caps); OKCA is now the default contrast type
 - **2026-04**: Fixed checkbox double-toggle bug; fixed tooltip mobile overflow via `@media (hover: none)`
+- **2026-08**: Upgraded `@pawn002/okca` to 2.0.2. v2.0.0 recalibrated the algorithm — mid-tone neutrals and brand chromatics score roughly +0.4–0.5 higher, the white/`#767676` anchor moved 3.5 → 3.9, and the light-on-dark cap dropped from 21 to 20.9 so every score sits strictly below WCAG. Saturated-colour catches are unchanged; AA (4.5) and AAA (7.0) thresholds are unchanged
 
 ---
 

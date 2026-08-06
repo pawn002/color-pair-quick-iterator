@@ -1,36 +1,32 @@
-import type { Meta, StoryObj } from '@storybook/angular';
-import { componentWrapperDecorator } from '@storybook/angular';
-import { ColorContrastComponent } from './color-contrast.component';
+import type { Meta, StoryObj } from '@storybook/web-components';
+import { html } from 'lit';
+import './color-contrast';
 
-const meta: Meta<ColorContrastComponent> = {
+const meta: Meta = {
   title: 'App/Color Contrast',
-  component: ColorContrastComponent,
   tags: ['autodocs'],
-  decorators: [
-    componentWrapperDecorator(
-      (story) =>
-        `<style>app-color-contrast { display: flex; flex: 1; }</style><div style="display:flex;height:200px;width:300px">${story}</div>`
-    ),
-  ],
+  render: (args) => html`
+    <style>cc-color-contrast { display: flex; flex: 1; }</style>
+    <div style="display:flex;height:200px;width:300px">
+      <cc-color-contrast
+        colorone=${args['colorOne'] ?? ''}
+        colortwo=${args['colorTwo'] ?? ''}
+        contrasttype=${args['contrastType'] ?? 'okca'}
+      ></cc-color-contrast>
+    </div>
+  `,
   argTypes: {
-    colorOne: {
-      control: 'color',
-    },
-    colorTwo: {
-      control: 'color',
-    },
+    colorOne: { control: 'color' },
+    colorTwo: { control: 'color' },
     contrastType: {
       options: ['okca', 'apca', 'bpca', 'deltaE', 'apca object'],
       control: { type: 'radio' },
-    },
-    debug: {
-      control: 'boolean',
     },
   },
 };
 
 export default meta;
-type Story = StoryObj<ColorContrastComponent>;
+type Story = StoryObj;
 
 export const Typical: Story = {};
 
@@ -44,16 +40,16 @@ export const OKCA: Story = {
 
 export const APCA: Story = {
   args: {
-    colorOne: 'white',
-    colorTwo: 'black',
+    colorOne: '#ffffff',
+    colorTwo: '#000000',
     contrastType: 'apca',
   },
 };
 
 export const WCAGEnhanced: Story = {
   args: {
-    colorOne: 'white',
-    colorTwo: 'black',
+    colorOne: '#ffffff',
+    colorTwo: '#000000',
     contrastType: 'bpca',
   },
 };
@@ -61,7 +57,7 @@ export const WCAGEnhanced: Story = {
 export const WCAGEnhancedEdgeCase: Story = {
   args: {
     colorOne: '#928f8f',
-    colorTwo: 'white',
+    colorTwo: '#ffffff',
     contrastType: 'bpca',
   },
 };
@@ -69,7 +65,7 @@ export const WCAGEnhancedEdgeCase: Story = {
 export const DeltaE: Story = {
   args: {
     colorOne: '#928f8f',
-    colorTwo: 'white',
+    colorTwo: '#ffffff',
     contrastType: 'deltaE',
   },
 };
@@ -77,7 +73,7 @@ export const DeltaE: Story = {
 export const ObjectContrast: Story = {
   args: {
     colorOne: '#928f8f',
-    colorTwo: 'white',
+    colorTwo: '#ffffff',
     contrastType: 'apca object',
   },
 };

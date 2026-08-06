@@ -387,7 +387,7 @@ Main method to get contrast score between two colors. The app defaults to `'okca
 
 | Type | Scale | Notes |
 |------|-------|-------|
-| `okca` | 1–21 | OKLCH-native, zero WCAG false passes, default |
+| `okca` | 1–21 (20.9 ceiling) | OKLCH-native, polarity-aware, zero WCAG false passes, default |
 | `apca` | ~0–108 | Perceptual contrast, signed (polarity matters) |
 | `bpca` | 1–21 | WCAG 2.x ratio via Bridge-PCA |
 | `deltaE` | 0–100 | CIE Delta E 2000 perceptual color difference |
@@ -395,7 +395,7 @@ Main method to get contrast score between two colors. The app defaults to `'okca
 **Example**:
 ```typescript
 const okca = colorMetricsService.getContrast('#ff69b4', '#1a1a1a', 'okca');
-// Returns: 4.0 (WCAG gives 6.6 — a known false pass)
+// Returns: 3.6 (WCAG gives 6.6 — a known false pass)
 
 const apca = colorMetricsService.getContrast('#000000', '#ffffff', 'apca');
 // Returns: 106 (very high contrast)
