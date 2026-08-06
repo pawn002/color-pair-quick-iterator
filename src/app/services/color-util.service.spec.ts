@@ -1,12 +1,11 @@
-import { TestBed } from '@angular/core/testing';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { ColorUtilService } from './color-util.service';
 
 describe('ColorUtilService', () => {
   let service: ColorUtilService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(ColorUtilService);
+    service = new ColorUtilService();
   });
 
   it('should be created', () => {
@@ -208,11 +207,11 @@ describe('ColorUtilService', () => {
       const result = service.getColorMeta('#ff5733');
       expect(result).not.toBeNull();
       expect(result).toEqual(
-        jasmine.objectContaining({
-          lightness: jasmine.any(String),
-          chroma: jasmine.any(String),
-          hue: jasmine.any(String),
-          saturation: jasmine.any(String),
+        expect.objectContaining({
+          lightness: expect.any(String),
+          chroma: expect.any(String),
+          hue: expect.any(String),
+          saturation: expect.any(String),
         }),
       );
     });
@@ -333,10 +332,10 @@ describe('ColorUtilService', () => {
       const result = await service.getMinMaxLight('#ff5733');
       expect(result).not.toBeNull();
       expect(result).toEqual(
-        jasmine.objectContaining({
-          originalCoords: jasmine.any(Array),
-          lightMin: jasmine.any(Number),
-          lightMax: jasmine.any(Number),
+        expect.objectContaining({
+          originalCoords: expect.any(Array),
+          lightMin: expect.any(Number),
+          lightMax: expect.any(Number),
         }),
       );
     });
@@ -386,10 +385,10 @@ describe('ColorUtilService', () => {
       const result = await service.matchChromas(['#ff5733', '#e0e0e0']);
       expect(result).toBeDefined();
       expect(result).toEqual(
-        jasmine.objectContaining({
-          success: jasmine.any(Boolean),
-          colors: jasmine.anything(),
-          chroma: jasmine.any(Number),
+        expect.objectContaining({
+          success: expect.any(Boolean),
+          colors: expect.anything(),
+          chroma: expect.any(Number),
         }),
       );
     });
