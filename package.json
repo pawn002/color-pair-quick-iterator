@@ -41,6 +41,7 @@
   "devDependencies": {
     "@types/d3": "^7.4.3",
     "@types/lodash-es": "^4.17.12",
+    "jsdom": "^29.1.1",
     "sass": "^1.89.0",
     "typescript": "~5.7.3",
     "vite": "^6.3.5",
