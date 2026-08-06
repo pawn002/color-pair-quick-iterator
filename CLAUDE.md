@@ -16,8 +16,10 @@ Color Pair Quick Iterator (CQPI) is an Angular 20 application for exploring and 
 
 ### Test File Locations
 
-- **Services**: `src/app/services/*.spec.ts` - Test files co-located with service files
-- **Components**: `src/app/_components/*/component-name.component.spec.ts` - Test files co-located with components
+Tests run on **vitest** (not Karma/Jasmine). Use `vi.spyOn(...).mockReturnValue(...)` and `expect.objectContaining` / `expect.any` — the Jasmine equivalents (`spyOn(...).and.returnValue`, `jasmine.*`) are not available.
+
+- **Services**: `src/app/services/*.spec.ts` - Test files co-located with service files. Services are plain classes; instantiate them directly (`new ColorUtilService()`) — there is no DI container
+- **Components**: `src/app/_components/*/component-name.spec.ts` - Test files co-located with the Lit component (`component-name.ts`, *not* `component-name.component.ts` — those were the Angular versions and have been removed)
 
 ### When to Update Tests
 
@@ -46,8 +48,10 @@ Color Pair Quick Iterator (CQPI) is an Angular 20 application for exploring and 
 1. Make code changes
 2. Update/add corresponding tests
 3. Run `npm run build` to verify TypeScript compilation
-4. If possible, run `npm test` (requires headless browser in CI/CD)
+4. Run `npm test` — a single vitest run that exits with a status code. It runs in Node with no browser needed
 5. Commit both implementation and test changes together
+
+`npm test` is configured with `passWithNoTests: false`: a run that collects zero tests fails. This is deliberate — the Angular-era specs sat dead and uncollected for months after the Lit migration because `npm test` was watch mode and never exited.
 
 ### Test Coverage Examples
 
@@ -69,11 +73,12 @@ When the user requests that the project's documentation be updated:
 ## Commands
 
 ```bash
-npm start                  # Development server (ng serve)
+npm start                  # Development server (vite)
 npm run build              # Production build (generic, works anywhere)
 npm run build:gh-pages     # Build for this repo's GitHub Pages (output to dist/ only)
 npm run deploy:gh-pages    # Build, copy to docs/, commit, and push — full deploy to GitHub Pages
-npm test                   # Run unit tests with Karma
+npm test                   # Run unit tests once with vitest (exits with a status code)
+npm run test:watch         # Run vitest in watch mode
 npm run storybook          # Launch Storybook on port 6006
 ```
 
@@ -100,11 +105,12 @@ See `documentation/architecture.md` for detailed implementation.
 
 ### Component Pattern
 
-Components live in `src/app/_components/` with co-located files:
-- `component-name.component.ts` - Logic with signals
-- `component-name.html` - Template
-- `component-name.scss` - Styles
-- `component-name.stories.ts` - Storybook stories
+Components are Lit elements and live in `src/app/_components/` (app-specific) and `src/app/_candor/` (design-system primitives), with co-located files:
+- `component-name.ts` - The Lit element: logic and template together via the `html` tagged template
+- `component-name.component.scss` - Styles, imported directly by the `.ts` file. The `.component` in the name is a leftover from the Angular era; the file is live
+- `component-name.stories.ts` - Storybook stories, using `@storybook/web-components`
+
+Components render into the light DOM (`createRenderRoot() { return this; }`) so the global Candor token stylesheet applies.
 
 ### Key Dependencies
 

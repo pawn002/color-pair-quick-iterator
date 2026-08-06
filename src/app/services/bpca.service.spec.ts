@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { BpcaService } from './bpca.service';
 import { ColorUtilService } from './color-util.service';
 
@@ -7,9 +7,12 @@ describe('BpcaService', () => {
   let colorUtilService: ColorUtilService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(BpcaService);
-    colorUtilService = TestBed.inject(ColorUtilService);
+    colorUtilService = new ColorUtilService();
+    service = new BpcaService(colorUtilService);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('should be created', () => {
@@ -286,13 +289,13 @@ describe('BpcaService', () => {
 
   describe('Integration with ColorUtilService', () => {
     it('should use ColorUtilService for RGB conversion', () => {
-      spyOn(colorUtilService, 'getRgb255Array').and.returnValue([255, 255, 255]);
+      vi.spyOn(colorUtilService, 'getRgb255Array').mockReturnValue([255, 255, 255]);
       service.calcBPCA('#ffffff', '#000000');
       expect(colorUtilService.getRgb255Array).toHaveBeenCalled();
     });
 
     it('should handle null RGB arrays gracefully', () => {
-      spyOn(colorUtilService, 'getRgb255Array').and.returnValue(null);
+      vi.spyOn(colorUtilService, 'getRgb255Array').mockReturnValue(null);
       const result = service.calcBPCA('#ffffff', '#000000');
       expect(result).toBeNaN();
     });
