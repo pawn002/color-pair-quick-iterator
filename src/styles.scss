@@ -8,19 +8,19 @@ cc-copy-to-clipboard-button,
 cc-metadata,
 cc-palette-table,
 cc-tone-picker,
-cc-accordion-item,
-cc-button,
-cc-checkbox,
-cc-modal,
-cc-radio,
-cc-table,
-cc-toast {
+cc-table {
   display: block;
 }
 
-cc-tooltip {
-  display: inline-block;
-  position: relative;
+/* Icon-only buttons. There is no `size="icon"` upstream, so the square padding
+   is reproduced from the host via candor-button's documented theming hooks —
+   its internals are behind a shadow root and cannot be reached with a
+   descendant selector. `min-height: 0` lets the icon drive the size, matching
+   what the local element did. */
+candor-button.button--icon {
+  --candor-button-padding-x: var(--spacing-xs);
+  --candor-button-padding-y: var(--spacing-xs);
+  --candor-button-min-height: 0;
 }
 
 /* App layout tokens (no Candor equivalent) */

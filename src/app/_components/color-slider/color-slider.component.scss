@@ -1,4 +1,4 @@
-.comp-container {
+cc-color-slider .comp-container {
   --default-background: var(--color-bg-page);
   --grad-stop-0: black;
   --grad-stop-1: rgb(8.6104% 8.6104% 8.6104%);
@@ -94,7 +94,7 @@
   }
 }
 
-.dev-overlay {
+cc-color-slider .dev-overlay {
   display: none;
   position: absolute;
   gap: 1rem;
