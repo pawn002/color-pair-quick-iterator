@@ -26,9 +26,6 @@ npm start
 # Run tests
 npm test
 
-# Launch Storybook
-npm run storybook
-
 # Build for production
 npm run build
 ```
@@ -63,7 +60,6 @@ For AI-assisted development, see [CLAUDE.md](./CLAUDE.md) for project-specific g
 - **apca-w3 0.1.9** - APCA contrast algorithm
 - **bridge-pca 0.1.6** - WCAG 2.x compatibility layer (partial implementation)
 - **d3 7.9.0** - Scale utilities for contrast-to-size mapping
-- **Storybook 9.1.10** - Component documentation
 
 See [Architecture Overview](./documentation/architecture.md) for details.
 

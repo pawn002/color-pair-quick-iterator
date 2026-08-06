@@ -9,9 +9,7 @@
     "deploy:gh-pages": "npm run build:gh-pages && rm -rf docs/* && cp -r dist/* docs/ && git add docs/ && git commit -m \"build: update GitHub Pages deployment with latest changes\" && git push",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "test:watch": "vitest"
   },
   "prettier": {
     "printWidth": 100,
@@ -41,13 +39,9 @@
     "lodash-es": "^4.17.21"
   },
   "devDependencies": {
-    "@storybook/addon-docs": "^8.6.12",
-    "@storybook/web-components": "^8.6.12",
-    "@storybook/web-components-vite": "^8.6.12",
     "@types/d3": "^7.4.3",
     "@types/lodash-es": "^4.17.12",
     "sass": "^1.89.0",
-    "storybook": "^8.6.12",
     "typescript": "~5.7.3",
     "vite": "^6.3.5",
     "vitest": "^3.2.2"
