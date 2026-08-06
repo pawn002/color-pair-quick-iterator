@@ -1,10 +1,15 @@
 # Color Pair Quick Iterator - Documentation
 
-Welcome to the developer documentation for the Color Pair Quick Iterator (CQPI) project.
+Welcome to the developer documentation for the Color Pair Quick Iterator (CPQI) project.
+
+> [!WARNING]
+> **Much of this folder predates the Lit migration and is out of date.** The app was rewritten from Angular 20 to Lit web components, and these guides still describe the Angular setup in places — `ng serve`, port 4200, Karma/Jasmine, `angular.json`, `*.component.ts` files. Commands and file paths here may not match the repo.
+>
+> Accurate sources meanwhile: [`CLAUDE.md`](../CLAUDE.md) and the root [`README.md`](../README.md), both kept current. A full rewrite of this folder is tracked separately.
 
 ## Overview
 
-Color Pair Quick Iterator is an Angular 20 application designed for exploring and iterating on accessible color pairs. Its primary contrast algorithm is **OKCA** — an OKLCH-native ratio that outputs on the familiar 1–21 scale with zero false passes against WCAG 2.x. APCA and Bridge-PCA are also supported for comparison.
+Color Pair Quick Iterator is a Lit web components application designed for exploring and iterating on accessible color pairs. Its primary contrast algorithm is **OKCA** — an OKLCH-native ratio that outputs on the familiar 1–21 scale with zero false passes against WCAG 2.x. APCA and Bridge-PCA are also supported for comparison.
 
 **Live Application**: https://pawn002.github.io/color-pair-quick-iterator/
 
@@ -68,10 +73,10 @@ Deployment process and configuration:
 ### Essential Commands
 
 ```bash
-npm start              # Development server (ng serve)
+npm start              # Development server (vite)
 npm run build          # Production build
-npm test               # Run unit tests with Karma
-npm run storybook      # Launch Storybook on port 6006
+npm test               # Run unit tests once with vitest
+npm run test:watch     # Run vitest in watch mode
 ```
 
 ### Key Technologies
@@ -85,7 +90,6 @@ npm run storybook      # Launch Storybook on port 6006
 - **bridge-pca 0.1.6** - WCAG 2.x ratio approximation (partial implementation)
 - **d3 7.9.0** - Scale utilities for contrast-to-size mapping
 - **lodash-es 4.17.21** - Utility functions (ESM-compatible)
-- **Storybook 9.1.10** - Component documentation and visual testing
 
 ## Project Goals
 

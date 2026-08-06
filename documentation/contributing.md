@@ -83,7 +83,6 @@ git checkout -b fix/bug-description
 - Write code following the [Coding Standards](#coding-standards)
 - Test your changes locally
 - Run the development server: `npm start`
-- Run Storybook: `npm run storybook`
 - Ensure build succeeds: `npm run build`
 
 ### 4. Commit Your Changes
@@ -537,7 +536,6 @@ This creates:
 - `my-component.scss`
 
 Manually create:
-- `my-component.stories.ts` (for Storybook)
 
 ### Component Template
 
@@ -590,7 +588,6 @@ export class MyComponent {
 - [ ] Uses inject() for dependencies
 - [ ] Uses input()/output()/model() for props
 - [ ] Uses native control flow in template
-- [ ] Has Storybook story
 - [ ] Has proper TypeScript types
 - [ ] Follows naming conventions
 - [ ] Documented in [components.md](./components.md)
@@ -705,7 +702,6 @@ When adding new features:
 
 1. Update relevant documentation in `documentation/` directory
 2. Update [Components](./components.md) or [Services](./services.md) as needed
-3. Add examples to Storybook stories
 4. Update [Architecture](./architecture.md) if changing structure
 
 ---
@@ -716,8 +712,7 @@ When adding new features:
 
 - [ ] Code follows style guidelines
 - [ ] Build succeeds: `npm run build`
-- [ ] Tests pass: `npm test` (when tests exist)
-- [ ] Storybook works: `npm run storybook`
+- [ ] Tests pass: `npm test`
 - [ ] Documentation updated
 - [ ] Commit messages follow guidelines
 - [ ] Branch is up to date with main
@@ -742,7 +737,6 @@ How has this been tested?
 - [ ] Tests added/updated
 - [ ] Documentation updated
 - [ ] Build succeeds
-- [ ] Storybook stories added/updated (if applicable)
 ```
 
 ### Review Process

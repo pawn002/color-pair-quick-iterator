@@ -51,7 +51,7 @@ This will install all required dependencies including:
 - Angular 20 framework
 - Color manipulation libraries (colorjs.io)
 - Contrast calculation libraries (apca-w3, bridge-pca)
-- Development tools (Storybook, Karma, Jasmine)
+- Development tools (vite, vitest)
 
 **Note**: Installation may take 2-5 minutes depending on your internet connection.
 
@@ -98,23 +98,6 @@ ng serve --open
 ng serve --configuration production
 ```
 
-## Running Storybook
-
-Storybook provides an isolated environment for developing and testing components.
-
-```bash
-npm run storybook
-```
-
-This will start Storybook on port 6006:
-- **Storybook URL**: http://localhost:6006/
-
-Storybook includes:
-- Interactive component documentation
-- Visual component testing
-- API documentation via Compodoc integration
-- Example stories for all components
-
 ## Project Structure Overview
 
 Here's a quick overview of the key directories:
@@ -128,12 +111,10 @@ color-pair-quick-iterator/
 │   │   ├── services/          # Core business logic (3 services)
 │   │   ├── app.ts             # Root application component
 │   │   └── app.config.ts      # Application configuration
-│   ├── stories/               # Storybook demo components
 │   ├── main.ts                # Application bootstrap
 │   └── styles.scss            # Global styles
 ├── documentation/             # Developer documentation (you are here)
 ├── public/                    # Static assets
-├── .storybook/                # Storybook configuration
 ├── angular.json               # Angular CLI configuration
 ├── package.json               # Dependencies and scripts
 └── tsconfig.json              # TypeScript configuration
@@ -273,16 +254,13 @@ Now that you have the development environment running:
 
 ## Development Workflow Tips
 
-1. **Use Storybook for Component Development**
-   - Develop components in isolation
-   - Test different component states
-   - Faster than full app reload
+1. **Use `npm run test:watch` while iterating**
+   - Re-runs affected specs on save
+   - Faster feedback than a full app reload
 
-2. **Leverage Angular DevTools**
-   - Install Angular DevTools browser extension
-   - Inspect component tree
-   - View signal values in real-time
-   - Profile performance
+2. **Inspect custom elements in DevTools**
+   - Components render into the light DOM, so their markup is visible directly in the Elements panel
+   - Candor tokens resolve as CSS custom properties you can inspect and override live
 
 3. **Use TypeScript Strictly**
    - Let the compiler catch errors

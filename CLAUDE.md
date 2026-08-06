@@ -79,7 +79,6 @@ npm run build:gh-pages     # Build for this repo's GitHub Pages (output to dist/
 npm run deploy:gh-pages    # Build, copy to docs/, commit, and push — full deploy to GitHub Pages
 npm test                   # Run unit tests once with vitest (exits with a status code)
 npm run test:watch         # Run vitest in watch mode
-npm run storybook          # Launch Storybook on port 6006
 ```
 
 ## Architecture
@@ -108,7 +107,8 @@ See `documentation/architecture.md` for detailed implementation.
 Components are Lit elements and live in `src/app/_components/` (app-specific) and `src/app/_candor/` (design-system primitives), with co-located files:
 - `component-name.ts` - The Lit element: logic and template together via the `html` tagged template
 - `component-name.component.scss` - Styles, imported directly by the `.ts` file. The `.component` in the name is a leftover from the Angular era; the file is live
-- `component-name.stories.ts` - Storybook stories, using `@storybook/web-components`
+
+There is no Storybook in this repo. The Candor design system publishes its own hosted component catalog, so the `_candor/` primitives are documented upstream rather than here.
 
 Components render into the light DOM (`createRenderRoot() { return this; }`) so the global Candor token stylesheet applies.
 
