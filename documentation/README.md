@@ -3,9 +3,11 @@
 Welcome to the developer documentation for the Color Pair Quick Iterator (CPQI) project.
 
 > [!WARNING]
-> **Much of this folder predates the Lit migration and is out of date.** The app was rewritten from Angular 20 to Lit web components, and these guides still describe the Angular setup in places — `ng serve`, port 4200, Karma/Jasmine, `angular.json`, `*.component.ts` files. Commands and file paths here may not match the repo.
+> **Much of this folder predates the Lit migration and is out of date.** The app was rewritten from Angular 20 to Lit web components, and these guides still describe the Angular setup in places — `ng serve`, port 4200, Karma/Jasmine, `angular.json`, `*.component.ts` files, `input()`/`output()`/`signal()`. Commands and API examples here may not match the repo.
 >
-> Accurate sources meanwhile: [`CLAUDE.md`](../CLAUDE.md) and the root [`README.md`](../README.md), both kept current. A full rewrite of this folder is tracked separately.
+> **The design-system sections are current.** The Candor parts of [`architecture.md`](./architecture.md) and [`components.md`](./components.md) were rewritten for the migration to `@candor-design/web-components` (#149). The local `_candor/` directory they used to describe no longer exists.
+>
+> Accurate sources meanwhile: [`CLAUDE.md`](../CLAUDE.md) and the root [`README.md`](../README.md), both kept current. A full rewrite of the remaining Angular-era prose is tracked separately.
 
 ## Overview
 
@@ -41,7 +43,7 @@ Detailed documentation for core services:
 ### 4. [Components](./components.md)
 Component library documentation including:
 - App-specific components (`_components/`) — responsibilities and usage
-- Candor design system components (`_candor/`) — UI primitives and design tokens
+- Candor design system components (`candor-*`, from `@candor-design/web-components`) and design tokens
 - Input/Output interfaces
 - Signal-based state management
 - Integration patterns

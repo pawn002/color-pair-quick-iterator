@@ -1,8 +1,7 @@
 import { LitElement, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { colorUtil, type TableColorCell, type TableData } from '../../services/color-util.service';
-import '../tone-picker/tone-picker';
-import type { GridRow, GridCell } from '../tone-picker/tone-picker';
+import type { ToneRow, ToneCell, CandorToneColorSelectDetail } from '@candor-design/web-components';
 import './palette-table.component.scss';
 
 @customElement('cc-palette-table')
@@ -24,13 +23,13 @@ export class CcPaletteTable extends LitElement {
     }
   }
 
-  get tonePickerRows(): GridRow[] {
+  get tonePickerRows(): ToneRow[] {
     const data = this.dataStruct;
     if (!data.length) return [];
     const { lightnesses, chromas, cellMap } = this._buildIndex(data);
     return lightnesses.map((l) => ({
       rowHeader: l.toFixed(2),
-      cells: chromas.map((c): GridCell => {
+      cells: chromas.map((c): ToneCell => {
         const cell = cellMap.get(this._cellKey(l, c));
         if (cell) {
           return {
@@ -62,17 +61,14 @@ export class CcPaletteTable extends LitElement {
     }
   }
 
-  private _onTonePickerSelect(event: CustomEvent) {
-    const oklch = event.detail as string;
-    const parsed = this._parseOklch(oklch);
-    if (!parsed) return;
+  private _onTonePickerSelect(event: CustomEvent<CandorToneColorSelectDetail>) {
+    // candor-tone-picker reports the coordinates alongside the string, so the
+    // local element's re-parse of its own output is no longer needed.
+    const { value: oklch, l, c } = event.detail;
 
     const { cellMap } = this._buildIndex(this.dataStruct);
     for (const [, cell] of cellMap) {
-      if (
-        Math.abs(cell.lightness - parsed.l) < 0.001 &&
-        Math.abs(cell.chroma - parsed.c) < 0.001
-      ) {
+      if (Math.abs(cell.lightness - l) < 0.001 && Math.abs(cell.chroma - c) < 0.001) {
         this.dispatchEvent(
           new CustomEvent('selected-color', { detail: cell, bubbles: true, composed: true }),
         );
@@ -136,16 +132,16 @@ export class CcPaletteTable extends LitElement {
       <div class="comp-container">
         ${this.tonePickerRows.length
           ? html`
-              <cc-tone-picker
+              <candor-tone-picker
                 .rows=${this.tonePickerRows}
                 .columnHeaders=${this.tonePickerHeaders}
                 size="small"
-                hideHeaders
-                hideUi
-                selectedValue=${this.selectedOklch ?? ''}
-                ariaLabel=${'Color tones — hue ' + (this.dataStruct[0]?.[0]?.hue?.toFixed(0) ?? '') + '°'}
+                hide-headers
+                hide-ui
+                selected-value=${this.selectedOklch ?? ''}
+                aria-label=${'Color tones — hue ' + (this.dataStruct[0]?.[0]?.hue?.toFixed(0) ?? '') + '°'}
                 @color-select=${this._onTonePickerSelect}
-              ></cc-tone-picker>
+              ></candor-tone-picker>
             `
           : ''}
       </div>

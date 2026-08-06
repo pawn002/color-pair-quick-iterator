@@ -17,7 +17,7 @@
 
 import { describe, it, expect, afterEach } from 'vitest';
 import '@candor-design/web-components';
-import './_candor/table/table';
+import './_components/table/table';
 import { mount, update, cleanup } from './test-utils';
 
 afterEach(cleanup);

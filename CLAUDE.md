@@ -85,16 +85,12 @@ npm run test:watch         # Run vitest in watch mode
 
 ### URL State Management
 
-The app uses Angular's `Location` service (not Router) for query parameter-based state persistence:
+State lives in query parameters so a URL restores the exact app state:
 
 - **Query parameters**: `fg` (foreground), `bg` (background), `type`, `chroma`, `gradient`
-- **State synchronization**: Effect in `app.ts` updates URL when signals change
-- **Initial load**: Restores state from URL or generates random colors
-- **Shareable URLs**: Users can share URLs that restore exact app state
-
-**Key pattern**: Use `signal()` for `isInitializing` flag to enable effect re-runs.
-
-See `documentation/architecture.md` for detailed implementation.
+- **State synchronization**: `_updateUrl()` in `app.ts` writes them via `history.replaceState`
+- **Initial load**: restores from the URL, or generates a random passing pair
+- **Shareable URLs**: users can hand someone a link that reproduces what they see
 
 ### Core Services (`src/app/services/`)
 
@@ -104,19 +100,21 @@ See `documentation/architecture.md` for detailed implementation.
 
 ### Component Pattern
 
-Components are Lit elements and live in `src/app/_components/` (app-specific) and `src/app/_candor/` (design-system primitives), with co-located files:
+Components are Lit elements and live in `src/app/_components/`, with co-located files:
 - `component-name.ts` - The Lit element: logic and template together via the `html` tagged template
 - `component-name.component.scss` - Styles, imported directly by the `.ts` file. The `.component` in the name is a leftover from the Angular era; the file is live
 
-There is no Storybook in this repo. The Candor design system publishes its own hosted component catalog, so the `_candor/` primitives are documented upstream rather than here.
+There is no Storybook in this repo. The design-system primitives come from `@candor-design/web-components`, which publishes its own hosted catalog.
 
-Locally-authored components render into the light DOM (`createRenderRoot() { return this; }`) so the global Candor token stylesheet applies. Note this is why every `<slot>` in `_candor/` is inert — see #151.
+Locally-authored components render into the light DOM (`createRenderRoot() { return this; }`) so the global token stylesheet applies. **A `<slot>` does nothing in the light DOM** — Lit appends its template *after* the authored children instead of projecting them. That was #151, and it is why none of these components use slots. If you need content projection, use a `candor-*` element or give the component a shadow root.
 
 ### Two namespaces: `cc-*` and `candor-*`
 
 `candor-*` elements come from `@candor-design/web-components` and use shadow DOM. `cc-*` elements are authored in this repo. **The prefixes are load-bearing, not cosmetic:** the package has a single entry point with `sideEffects: true`, so importing it in `src/main.ts` registers all of its elements at once — there is no way to import just one. Any local element that reclaims a `candor-*` name throws on registration and takes the rest of the package's elements down with it, leaving a half-registered app. `src/app/candor-package.spec.ts` guards this.
 
-The migration (#149) is replacing the `_candor/` primitives with their upstream equivalents one at a time; `_candor/` shrinks to nothing when it finishes. Design tokens are plain custom properties on `:root`, so they inherit through shadow boundaries and styling works the same on both sides. Global SCSS that reaches *inside* a component does not.
+Design tokens are plain custom properties on `:root`, so they inherit through shadow boundaries and styling works the same on both sides. Global SCSS that reaches *inside* a component does not — use the `--candor-*` theming hooks or `::part()`.
+
+**`cc-table` is deliberately not `candor-table`.** The upstream element is data-driven (`headers: string[]`, `rows: { cells: string[] }[]`), and half the tables in `cc-metadata` put an interactive tooltip and info button inside a cell. `cc-table` is a light-DOM wrapper that styles whatever `<table>` markup it is handed; the two solve different problems.
 
 Upstream API differences worth knowing before reaching for a `candor-*` element:
 - **`heading`, never `title`** — `title` is a global HTML attribute and would render a browser tooltip instead of a label
@@ -141,49 +139,28 @@ Every `_components/*.component.scss` is a plain global stylesheet, because the c
 - Prefer type inference when the type is obvious
 - Avoid the `any` type; use `unknown` when type is uncertain
 
-## Angular 20 Conventions
+## Lit Conventions
 
-This project follows modern Angular patterns:
+There is no Angular here. The app was rewritten as Lit web components in commit `36bd8e2`; anything describing NgModules, signals, `inject()`, or the async pipe is describing a version of this repo that no longer exists.
 
-### Components and Modules
-- **Standalone components** - No NgModules; do NOT set `standalone: true` in decorators (it's the default)
-- **OnPush change detection** - Set `changeDetection: ChangeDetectionStrategy.OnPush`
+### Components
+- **`@customElement('cc-name')`** registers the element; declare it in `HTMLElementTagNameMap` at the bottom of the file so `document.createElement` and the test helpers stay typed
+- **`@property()`** for public API, **`@state()`** for internal reactive state. Use `attribute: 'kebab-case'` when the attribute name differs from the property
+- **`@property({ type: Boolean, reflect: true })`** when a stylesheet needs to select on it — reflecting beats adding a class in `connectedCallback`
+- **`override createRenderRoot() { return this; }`** — every locally-authored component renders into the light DOM. See the slot caveat above
 
-### Signals and Reactivity
-- **Signals** - Use `signal()`, `computed()` for state; use `update()` or `set()` (not `mutate()`)
-- **Computed values** - Use `computed()` for derived state (prefer over getters)
-- **Effects** - Use `effect()` for reactive side effects (DOM updates, logging, etc.)
+### Templates
+- Native JS in the `html` tagged template: ternaries and `.map()`, not control-flow directives
+- **`.prop=${}`** sets a property, **`attr=${}`** sets an attribute, **`?attr=${}`** toggles it, **`@event=${}`** listens. Objects and arrays must use `.prop`
+- Derived values go in getters — they re-evaluate on each render, which is what you want
 
-### Component APIs
-- **Inputs** - Use `input()` and `input.required()` functions instead of `@Input()` decorator
-- **Outputs** - Use `output()` function instead of `@Output()` decorator
-- **Two-way binding** - Use `model()` function for two-way binding (replaces `[(ngModel)]` pattern)
-- **View queries** - Use `viewChild()`, `viewChildren()`, `contentChild()`, `contentChildren()` instead of decorators
+### Events
+- Dispatch `CustomEvent` with `bubbles: true, composed: true` so it escapes nested markup and shadow roots
+- Name events for what happened, not what to do: `note-requested`, `selected-color`
 
-### Template Syntax
-- **Native control flow** - Use `@if`, `@for`, `@switch` instead of `*ngIf`, `*ngFor`, `*ngSwitch`
-- **Bindings** - Use `[class]` and `[style]` bindings instead of `ngClass`/`ngStyle`
-- **Images** - Use `NgOptimizedImage` for static images (not for inline base64)
-- **Observables** - Use the async pipe in templates to handle observables
-
-### Dependency Injection
-- **inject()** - Use `inject()` function instead of constructor injection
-- **Services** - Use `providedIn: 'root'` for singleton services
-
-### Forms
-- **Reactive forms** - Prefer Reactive forms over Template-driven forms
-
-### Host Bindings
-- **host object** - Use `host` object in decorators instead of `@HostBinding`/`@HostListener`
-
-### Change Detection
-- **Zoneless mode** - App uses `provideZonelessChangeDetection()` for better performance
-
-## Services
-
-- Design services around a single responsibility
-- Use `providedIn: 'root'` for singleton services
-- Use `inject()` function instead of constructor injection
+### Services
+- Plain classes in `src/app/services/`, exported as a module-level singleton (`export const colorUtil = new ColorUtilService()`). There is no DI container — import the instance
+- One responsibility per service
 
 ## Formatting
 

@@ -1,4 +1,4 @@
-.table-host {
+cc-table {
     display: block;
 
     table {
@@ -78,7 +78,7 @@
 
     // ─── Compact variant ─────────────────────────────────────────────────────
 
-    &--compact {
+    &[compact] {
         table {
             th,
             td {

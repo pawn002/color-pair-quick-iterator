@@ -1,6 +1,6 @@
 # Color Pair Quick Iterator
 
-An Angular 20 application for exploring and iterating on accessible color pairs. Built around **OKCA** — an OKLCH-native contrast algorithm with zero false passes against WCAG 2.x.
+A Lit web-component application for exploring and iterating on accessible color pairs. Built around **OKCA** — an OKLCH-native contrast algorithm with zero false passes against WCAG 2.x.
 
 **Live Application**: https://pawn002.github.io/color-pair-quick-iterator/
 
@@ -52,8 +52,10 @@ For AI-assisted development, see [CLAUDE.md](./CLAUDE.md) for project-specific g
 
 ## Technology Stack
 
-- **Angular 20.3.0** - Modern Angular with signals and standalone components
-- **Angular CLI 20.3.4** - Build tooling and development server
+- **Lit 3** - Web components; every element renders into the light DOM
+- **Vite** - Build tooling and development server
+- **@candor-design/web-components 5** - Design-system primitives (shadow DOM)
+- **@candor-design/tokens 5** - Design tokens as CSS custom properties
 - **TypeScript 5.9.2** - Strict type checking
 - **colorjs.io 0.5.2** - Color space conversions in OKLCH
 - **@pawn002/okca** - OKCA contrast algorithm (primary)
@@ -83,17 +85,18 @@ The app also supports APCA (perceptual contrast scores on ~0–108 scale), Bridg
 
 ### URL State Management
 
-The app uses Angular's `Location` service to persist state in query parameters (`fg`, `bg`, `type`, `chroma`, `gradient`). Share URLs to reproduce exact color combinations. See [Architecture - URL State Management](./documentation/architecture.md#url-state-management).
+The app persists state in query parameters (`fg`, `bg`, `type`, `chroma`, `gradient`). Share URLs to reproduce exact color combinations. See [Architecture - URL State Management](./documentation/architecture.md#url-state-management).
 
 ## Project Structure
 
 ```
 src/app/
-├── _components/          # App-specific UI components (color picker, slider, contrast, etc.)
-├── _candor/              # Candor design system components (Button, Card, Table, Toast, etc.)
+├── _components/          # App components, all `cc-*` (color picker, slider, contrast, metadata, table)
 ├── services/             # Business logic (ColorUtil, ColorMetrics, Bpca)
-├── app.ts                # Root component with state management
-└── app.config.ts         # Application configuration
+└── app.ts                # Root component with state management
+
+Design-system primitives are `candor-*` elements imported from
+@candor-design/web-components in src/main.ts — there is no local copy.
 ```
 
 See [Architecture Documentation](./documentation/architecture.md) for complete structure.
@@ -101,7 +104,7 @@ See [Architecture Documentation](./documentation/architecture.md) for complete s
 ## Contributing
 
 Contributions are welcome! Please read the [Contributing Guide](./documentation/contributing.md) for:
-- Angular 20 conventions (signals, standalone components, zoneless mode)
+- Lit conventions (properties, reactive state, custom events)
 - Candor design system conventions and token usage
 - Code style and formatting (Prettier configuration)
 - Component and service patterns
@@ -136,7 +139,7 @@ See [LICENSE](./LICENSE) for full details.
 
 ## Recent Updates
 
-- **2026-03**: Integrated Candor design system — added `_candor/` directory with AccordionItemComponent, ButtonComponent, CardComponent, CheckboxComponent, RadioComponent, TableComponent, and ToastComponent
+- **2026-03**: Integrated Candor design system — added a local `_candor/` directory of primitives (since replaced by the published package)
 - **2026-03**: Removed legacy token alias variables (`--mono-font`, `--body-font`, etc.); all styles now reference Candor tokens directly
 - **2026-03**: AlertComponent updated to use ToastComponent for visual output
 - **2026-03**: MetadataComponent tables wrapped with `<app-table [compact]="true">`
@@ -145,8 +148,5 @@ See [LICENSE](./LICENSE) for full details.
 - **2026-04**: Added ModalComponent (`app-modal`) to Candor; replaced accordion anchor links with contextual info buttons and modals throughout the app
 - **2026-04**: Upgraded `@pawn002/okca` to 1.0.1 (ESM, polarity-aware caps); OKCA is now the default contrast type
 - **2026-04**: Fixed checkbox double-toggle bug; fixed tooltip mobile overflow via `@media (hover: none)`
+- **2026-08**: Migrated to the published Candor design system. `@candor-design/tokens` 1.0.1 → 5.0.1 (which fixed a latent bug where `--font-sans` named a font family that was never registered, so the app had been silently falling back to `serif`), and the nine local `_candor/` primitives were replaced by `@candor-design/web-components` 5.0.1. Local components moved to the `cc-*` prefix, which is load-bearing: the package registers all of its elements from one entry point, so a shared name breaks registration. The swap also fixed #151 — `<slot>` does nothing in the light DOM, so every local primitive had been dropping its authored content beside the control instead of inside it
 - **2026-08**: Upgraded `@pawn002/okca` to 2.0.2. v2.0.0 recalibrated the algorithm — mid-tone neutrals and brand chromatics score roughly +0.4–0.5 higher, the white/`#767676` anchor moved 3.5 → 3.9, and the light-on-dark cap dropped from 21 to 20.9 so every score sits strictly below WCAG. Saturated-colour catches are unchanged; AA (4.5) and AAA (7.0) thresholds are unchanged
-
----
-
-_Built with [Angular CLI](https://github.com/angular/angular-cli) version 20.3.4_

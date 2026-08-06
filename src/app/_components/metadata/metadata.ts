@@ -2,7 +2,7 @@ import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { colorUtil, type ColorMetaObj } from '../../services/color-util.service';
 import { colorMetrics } from '../../services/color-metrics.service';
-import '../../_candor/table/table';
+import '../table/table';
 import './metadata.component.scss';
 
 interface DifferencesDataObj {
