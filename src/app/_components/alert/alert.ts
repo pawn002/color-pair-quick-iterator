@@ -50,11 +50,11 @@ export class CcAlert extends LitElement {
       <div class="comp-container">
         ${this.showAlert
           ? html`
-              <candor-toast
+              <cc-toast
                 variant="success"
                 message=${this.alertMessage.message}
                 .dismissible=${false}
-              ></candor-toast>
+              ></cc-toast>
               <span class="msg-id" aria-hidden="true">${this.uniqId}</span>
             `
           : ''}

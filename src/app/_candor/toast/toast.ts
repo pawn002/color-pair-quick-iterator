@@ -4,8 +4,8 @@ import './toast.component.scss';
 
 type ToastVariant = 'info' | 'success' | 'warning' | 'error';
 
-@customElement('candor-toast')
-export class CandorToast extends LitElement {
+@customElement('cc-toast')
+export class CcToast extends LitElement {
   override createRenderRoot(): this {
     return this;
   }
@@ -99,6 +99,6 @@ export class CandorToast extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'candor-toast': CandorToast;
+    'cc-toast': CcToast;
   }
 }

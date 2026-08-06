@@ -4,8 +4,8 @@ import './tooltip.component.scss';
 
 type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
 
-@customElement('candor-tooltip')
-export class CandorTooltip extends LitElement {
+@customElement('cc-tooltip')
+export class CcTooltip extends LitElement {
   override createRenderRoot(): this {
     return this;
   }
@@ -65,6 +65,6 @@ export class CandorTooltip extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'candor-tooltip': CandorTooltip;
+    'cc-tooltip': CcTooltip;
   }
 }

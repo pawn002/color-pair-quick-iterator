@@ -3,8 +3,8 @@ import { customElement, property, query } from 'lit/decorators.js';
 import './modal.component.scss';
 import '../button/button';
 
-@customElement('candor-modal')
-export class CandorModal extends LitElement {
+@customElement('cc-modal')
+export class CcModal extends LitElement {
   override createRenderRoot(): this {
     return this;
   }
@@ -53,11 +53,11 @@ export class CandorModal extends LitElement {
         <div class="modal__panel" @click=${(e: Event) => e.stopPropagation()}>
           <div class="modal__header">
             <h2 id=${this.uid} class="modal__title">${this.title}</h2>
-            <candor-button variant="ghost" size="icon" aria-label="Close dialog" @clicked=${this.close}>
+            <cc-button variant="ghost" size="icon" aria-label="Close dialog" @clicked=${this.close}>
               <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
                 <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
               </svg>
-            </candor-button>
+            </cc-button>
           </div>
           <div class="modal__body">
             <slot></slot>
@@ -70,6 +70,6 @@ export class CandorModal extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'candor-modal': CandorModal;
+    'cc-modal': CcModal;
   }
 }

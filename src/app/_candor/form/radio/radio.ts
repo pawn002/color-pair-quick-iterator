@@ -2,8 +2,8 @@ import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import './radio.component.scss';
 
-@customElement('candor-radio')
-export class CandorRadio extends LitElement {
+@customElement('cc-radio')
+export class CcRadio extends LitElement {
   override createRenderRoot(): this {
     return this;
   }
@@ -55,6 +55,6 @@ export class CandorRadio extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'candor-radio': CandorRadio;
+    'cc-radio': CcRadio;
   }
 }

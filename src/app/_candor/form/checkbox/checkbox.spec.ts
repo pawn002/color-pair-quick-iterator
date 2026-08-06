@@ -4,13 +4,13 @@ import { mount, update, cleanup } from '../../../test-utils';
 
 afterEach(cleanup);
 
-describe('candor-checkbox', () => {
+describe('cc-checkbox', () => {
   it('registers the custom element', () => {
-    expect(customElements.get('candor-checkbox')).toBeDefined();
+    expect(customElements.get('cc-checkbox')).toBeDefined();
   });
 
   it('renders an input wired to its label', async () => {
-    const el = await mount('candor-checkbox', { label: 'Constant chroma' });
+    const el = await mount('cc-checkbox', { label: 'Constant chroma' });
     const input = el.querySelector('input')!;
     const label = el.querySelector('label')!;
 
@@ -20,14 +20,14 @@ describe('candor-checkbox', () => {
   });
 
   it('prefers an explicit input-id over the generated one', async () => {
-    const el = await mount('candor-checkbox', { inputId: 'show-gradient' });
+    const el = await mount('cc-checkbox', { inputId: 'show-gradient' });
     expect(el.querySelector('input')!.id).toBe('show-gradient');
     expect(el.querySelector('label')!.getAttribute('for')).toBe('show-gradient');
   });
 
   it('generates a unique id when none is supplied', async () => {
-    const a = await mount('candor-checkbox');
-    const b = await mount('candor-checkbox');
+    const a = await mount('cc-checkbox');
+    const b = await mount('cc-checkbox');
 
     const idA = a.querySelector('input')!.id;
     const idB = b.querySelector('input')!.id;
@@ -37,7 +37,7 @@ describe('candor-checkbox', () => {
   });
 
   it('reflects checked and disabled', async () => {
-    const el = await mount('candor-checkbox', { checked: true, disabled: true });
+    const el = await mount('cc-checkbox', { checked: true, disabled: true });
     const input = el.querySelector('input')!;
 
     expect(input.checked).toBe(true);
@@ -46,7 +46,7 @@ describe('candor-checkbox', () => {
   });
 
   it('emits "changed" with the new state and updates its own property', async () => {
-    const el = await mount('candor-checkbox');
+    const el = await mount('cc-checkbox');
     const received: boolean[] = [];
     document.body.addEventListener('changed', (e) => received.push((e as CustomEvent).detail));
 
@@ -59,7 +59,7 @@ describe('candor-checkbox', () => {
   });
 
   it('emits a composed, bubbling event so it escapes nested markup', async () => {
-    const el = await mount('candor-checkbox');
+    const el = await mount('cc-checkbox');
     let event: CustomEvent | null = null;
     document.body.addEventListener('changed', (e) => (event = e as CustomEvent));
 
@@ -72,7 +72,7 @@ describe('candor-checkbox', () => {
   });
 
   it('re-renders when checked is set programmatically', async () => {
-    const el = await mount('candor-checkbox');
+    const el = await mount('cc-checkbox');
     expect(el.querySelector('input')!.checked).toBe(false);
 
     await update(el, { checked: true });

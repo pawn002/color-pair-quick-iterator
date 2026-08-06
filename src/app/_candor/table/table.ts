@@ -2,8 +2,8 @@ import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import './table.component.scss';
 
-@customElement('candor-table')
-export class CandorTable extends LitElement {
+@customElement('cc-table')
+export class CcTable extends LitElement {
   override createRenderRoot(): this {
     return this;
   }
@@ -26,6 +26,6 @@ export class CandorTable extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'candor-table': CandorTable;
+    'cc-table': CcTable;
   }
 }
