@@ -17,13 +17,11 @@ App-specific components follow this pattern:
 
 ```
 component-name/
-├── component-name.component.ts     # Component logic with signals
-├── component-name.html             # Template with native control flow
-├── component-name.scss             # Component-scoped styles
-└── component-name.stories.ts       # Storybook stories
+├── component-name.ts               # Lit element: logic and template
+└── component-name.component.scss   # Styles, imported by the .ts file
 ```
 
-Candor components use `ViewEncapsulation.None` and reference Candor CSS custom property tokens for all visual values.
+Components render into the light DOM and reference Candor CSS custom property tokens for all visual values.
 
 ---
 
@@ -976,39 +974,6 @@ See [Testing Guide](./testing.md) for more examples.
 
 ---
 
-## Storybook Stories
-
-Each app-specific component has a corresponding `.stories.ts` file for Storybook documentation.
-
-### Example Story
-
-```typescript
-import type { Meta, StoryObj } from '@storybook/angular';
-import { ColorPickerComponent } from './color-picker.component';
-
-const meta: Meta<ColorPickerComponent> = {
-  title: 'Components/ColorPicker',
-  component: ColorPickerComponent,
-  tags: ['autodocs'],
-};
-
-export default meta;
-type Story = StoryObj<ColorPickerComponent>;
-
-export const Default: Story = {
-  args: {
-    inputId: 'color-picker-1',
-    inputName: 'color-picker-1',
-    color: '#ff5733',
-    debug: false,
-  },
-};
-```
-
-Run Storybook: `npm run storybook`
-
----
-
 ## Styling
 
 ### Component-Scoped Styles
@@ -1075,7 +1040,5 @@ Color calculations can be heavy. Use:
 
 ## References
 
-- [Angular Components Guide](https://angular.dev/guide/components)
-- [Angular Signals](https://angular.dev/guide/signals)
-- [Storybook for Angular](https://storybook.js.org/docs/angular/get-started/introduction)
-- [Angular Accessibility](https://angular.dev/guide/accessibility)
+- [Lit documentation](https://lit.dev/docs/)
+- [Candor design system](https://github.com/pawn002/candor)

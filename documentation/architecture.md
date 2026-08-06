@@ -99,10 +99,7 @@ src/
 │   │   ├── bpca.service.ts
 │   │   └── declarations.d.ts
 │   ├── app.ts                    # Root component
-│   ├── app.html                  # Root template
 │   ├── app.scss                  # Root styles
-│   └── app.config.ts             # Application configuration
-├── stories/                      # Storybook demo components
 ├── main.ts                       # Application bootstrap
 ├── index.html                    # HTML entry point
 └── styles.scss                   # Global styles
@@ -116,13 +113,11 @@ App-specific components in `_components/` follow this co-location pattern:
 
 ```
 component-name/
-├── component-name.component.ts       # Logic (signals, methods)
-├── component-name.html               # Template (native control flow)
-├── component-name.scss               # Styles (component-scoped)
-└── component-name.stories.ts         # Storybook documentation
+├── component-name.ts                 # Lit element: logic and template
+└── component-name.component.scss     # Styles, imported by the .ts file
 ```
 
-Candor design system components in `_candor/` are copied from the Candor design system and use `ViewEncapsulation.None` to apply Candor design tokens globally.
+Candor design system components in `_candor/` are local Lit reimplementations of the Candor design system and render into the light DOM so Candor design tokens apply globally.
 
 ### Component Communication
 
@@ -552,9 +547,9 @@ See [Deployment Guide](./deployment.md) for details.
 
 ### Development Dependencies
 
-- `@angular/cli` - Angular command-line tools
-- `@storybook/angular` - Component documentation
-- `karma`, `jasmine` - Testing framework
+- `vite` - Build tooling and development server
+- `vitest` - Testing framework
+- `sass` - SCSS compilation
 - TypeScript, Prettier - Development tooling
 
 ## Design Patterns
