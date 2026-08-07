@@ -79,11 +79,12 @@ When the user requests that the project's documentation be updated:
 npm start                  # Development server (vite)
 npm run build              # Production build (generic, works anywhere) — does NOT type-check
 npm run typecheck          # tsc --noEmit; the only thing that type-checks this repo
-npm run build:gh-pages     # Build for this repo's GitHub Pages (output to dist/ only)
-npm run deploy:gh-pages    # Manual deploy: build, copy to docs/, commit, push
+npm run build:gh-pages     # Build with the /color-pair-quick-iterator/ base path (what CI deploys)
 npm test                   # Run unit tests once with vitest (exits with a status code)
 npm run test:watch         # Run vitest in watch mode
 ```
+
+**Deployment is automatic — push to `main`.** `.github/workflows/deploy.yml` type-checks, tests, builds, and publishes to GitHub Pages via `actions/deploy-pages`. There is no manual deploy script and no committed build output; the old `deploy:gh-pages` script and the `docs/` directory were removed once Pages moved to an Actions source. See `documentation/deployment.md`.
 
 ## Architecture
 
