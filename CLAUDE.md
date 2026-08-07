@@ -114,7 +114,9 @@ Locally-authored components render into the light DOM (`createRenderRoot() { ret
 
 Design tokens are plain custom properties on `:root`, so they inherit through shadow boundaries and styling works the same on both sides. Global SCSS that reaches *inside* a component does not — use the `--candor-*` theming hooks or `::part()`.
 
-**`cc-table` is deliberately not `candor-table`.** The upstream element is data-driven (`headers: string[]`, `rows: { cells: string[] }[]`), and half the tables in `cc-metadata` put an interactive tooltip and info button inside a cell. `cc-table` is a light-DOM wrapper that styles whatever `<table>` markup it is handed; the two solve different problems.
+**`cc-table` is deliberately not `candor-table`.** The upstream element is data-driven (`headers: string[]`, `rows: { cells: string[] }[]`), and half the tables in `cc-metadata` put an interactive tooltip and info button inside a cell. A cell can only be text, so it also cannot carry the `outcome--pass` / `outcome--fail` class the results table needs. `cc-table` is a light-DOM wrapper that styles whatever `<table>` markup it is handed; the two solve different problems.
+
+**Do not half-migrate the tables.** Two of the four in `cc-metadata` have no interactive cells and *could* move to `candor-table` today, but doing so puts two implementations side by side in one card, with mismatched headings — `candor-table` renders its `caption` visibly with no `::part` to hide it, while ours sits `sr-only` under an `<h3>`. Decided 2026-08-07 to wait for `pawn002/candor#258`, which would let all four migrate at once and delete `cc-table` entirely. Everything else already matches: value cells are identical, and the zebra stripe uses `--color-bg-surface`, the same token `candor-table` stripes with — so keep them pointed at the same token rather than reintroducing a literal.
 
 Upstream API differences worth knowing before reaching for a `candor-*` element:
 - **`heading`, never `title`** — `title` is a global HTML attribute and would render a browser tooltip instead of a label
