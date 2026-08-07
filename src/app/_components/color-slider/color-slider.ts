@@ -31,6 +31,20 @@ export class CcColorSlider extends LitElement {
 
   private readonly rangeDescId = `slider-range-${Math.random().toString(36).slice(2, 9)}`;
 
+  /**
+   * The inner input's id, kept distinct from the host's.
+   *
+   * `id` is overridden as a property above, so the value app.ts passes lands on
+   * the host element *and* would land on the input if both used `this.id`. The
+   * duplicate made `label[for]` resolve to the host — the first match in
+   * document order — leaving the range input with no accessible name at all
+   * (`input.labels.length === 0`, and an empty name in Chrome's AX tree). Every
+   * selector that reaches for the input must use this, not `this.id`.
+   */
+  private get inputId() {
+    return `${this.id}-input`;
+  }
+
   get valueText() {
     return isNaN(this.value) ? '' : `${Math.round(this.value * 100)}%`;
   }
@@ -105,6 +119,13 @@ export class CcColorSlider extends LitElement {
     const inputElem = event.target as HTMLInputElement;
     if (inputElem && this.color) {
       const lightValue = parseFloat(inputElem.value);
+
+      // `aria-valuetext` is derived from `this.value`, and screen readers prefer
+      // it over the raw value — so leaving it unset here froze the announcement
+      // at whatever the range was initialised to. Arrowing across the track read
+      // out the same percentage every press, as though the control were dead.
+      this.value = lightValue;
+
       const lightnessVariant = colorUtil.createSrgbColor(this.color, lightValue);
 
       if (this.debug) {
@@ -121,13 +142,18 @@ export class CcColorSlider extends LitElement {
   }
 
   private _reset() {
-    const element = this.querySelector(`#${this.id}`) as HTMLInputElement;
+    const element = this.querySelector(`#${this.inputId}`) as HTMLInputElement;
     if (!element) {
-      console.error(`no element found with id: ${this.id}`);
+      console.error(`no element found with id: ${this.inputId}`);
       return;
     }
     if (!isNaN(this.initValue)) {
       element.value = this.initValue.toString();
+      // Keep the announced value with the thumb. The DOM write above stays
+      // because Lit dirty-checks `.value` against what it last committed, not
+      // against the live input, so a reset back to an already-committed value
+      // would not otherwise reach the DOM.
+      this.value = this.initValue;
     }
   }
 
@@ -173,14 +199,14 @@ export class CcColorSlider extends LitElement {
   override render() {
     return html`
       <div id=${'cc-' + this.id} class="comp-container">
-        <label for=${this.id} class="sr-only">${this.label}</label>
+        <label for=${this.inputId} class="sr-only">${this.label}</label>
         ${this.slideMin !== this.slideMax
           ? html`
               <span id=${this.rangeDescId} class="sr-only">${this.rangeDescription}</span>
               <input
                 type="range"
                 name=${this.name}
-                id=${this.id}
+                id=${this.inputId}
                 min=${this.slideMin}
                 max=${this.slideMax}
                 step=${this.slideInterval}
