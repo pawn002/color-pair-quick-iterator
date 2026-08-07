@@ -1,15 +1,13 @@
-cc-alert .comp-container {
-  cc-toast {
-    animation: show-alert 200ms ease-out;
-  }
+// cc-alert generates no box of its own. The live region is visually hidden and
+// candor-toast-container is position: fixed, so leaving the host in flow would
+// add an empty row to the app grid where the old sticky wrapper used to sit.
+cc-alert {
+  display: contents;
 
-  .msg-id {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
+  // Was `cc-toast` — the pre-Candor element, which stopped existing at the
+  // migration, so the entrance animation had been dead since then.
+  candor-toast {
+    animation: show-alert 200ms ease-out;
   }
 
   @keyframes show-alert {

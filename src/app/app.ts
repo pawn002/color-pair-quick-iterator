@@ -325,7 +325,11 @@ export class CcApp extends LitElement {
   override render() {
     return html`
       <a class="sr-only" href="#main-content">Skip to main content</a>
-      <main class="app-container" id="main-content">
+      <!-- tabindex="-1" so the skip link actually moves focus. Without it the
+           fragment only sets Chrome's sequential-focus starting point, which
+           puts the *next* Tab in the right place but leaves the virtual cursor
+           where it was on AT that does not implement that behaviour. -->
+      <main class="app-container" id="main-content" tabindex="-1">
         <div class="primary-stack">
           <!-- Not a candor-card: the card sets overflow: hidden, which makes it a
                scroll container, and a position: sticky descendant is constrained
@@ -652,10 +656,16 @@ export class CcApp extends LitElement {
             : ''}
         </candor-modal>
 
-        <div class="alert">
-          <cc-alert .alertMessage=${this.currentAlertMessage}></cc-alert>
-        </div>
       </main>
+
+      <!-- Outside <main>, and that placement is load-bearing. cc-alert renders a
+           candor-toast-container, which is position: fixed — but .app-container
+           centres itself with translateX(-50%), and a transformed ancestor
+           becomes the containing block for fixed descendants. Inside main the
+           toast pinned to the bottom of the *document* instead of the viewport,
+           1379px below the fold. The old wrapper used position: sticky, which is
+           why this never came up before. -->
+      <cc-alert .alertMessage=${this.currentAlertMessage}></cc-alert>
     `;
   }
 }

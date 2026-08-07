@@ -214,6 +214,13 @@ strong {
   letter-spacing: var(--letter-spacing-wide);
 }
 
+// The skip-link target. It is focusable only so the skip link can move focus
+// there, never by Tab, so the ring would frame the whole page for a landmark
+// that is not a control — the destination heading is the actual feedback.
+#main-content:focus {
+  outline: none;
+}
+
 .sr-only:not(:focus, :active) {
   position: absolute !important;
   clip: rect(0 0 0 0) !important;

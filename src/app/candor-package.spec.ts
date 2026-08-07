@@ -165,6 +165,52 @@ describe('candor-tooltip', () => {
   });
 });
 
+/**
+ * The toast's live region arrives with its text, and the container does not
+ * supply one of its own.
+ *
+ * A region has to be in the DOM and observed *before* its contents change for
+ * assistive tech to announce reliably. `candor-toast` renders `role="status"`
+ * inside its own shadow root, so the region is created already populated; the
+ * documented outlet, `candor-toast-container`, is a positioning shell whose
+ * shadow root is a bare `<slot>`. Following the documented pattern therefore
+ * gives the same structure as not using the container at all.
+ *
+ * That is why cc-alert keeps its own persistent region and marks the toast
+ * `aria-hidden`. Upstream as `pawn002/candor#266`. When the container grows a
+ * region of its own this fails, and the workaround in alert.ts can go.
+ */
+describe('candor-toast-container', () => {
+  it('is registered, though the package does not export its type', () => {
+    // Present in the bundle and upgrades fine, but absent from index.d.ts —
+    // hence the plain markup in alert.ts rather than a typed handle.
+    expect(customElements.get('candor-toast-container')).toBeDefined();
+  });
+
+  it('owns no live region for slotted toasts to announce through', async () => {
+    const container = await mount('candor-toast-container');
+
+    expect(container.shadowRoot!.querySelector('[role="status"], [aria-live]')).toBeNull();
+    expect(container.shadowRoot!.querySelector('slot')).not.toBeNull();
+  });
+
+  it('leaves each toast carrying its own role=status', async () => {
+    const toast = await mount('candor-toast', { message: 'Saved.', variant: 'success' });
+
+    const region = toast.shadowRoot!.querySelector('[role="status"]');
+    expect(region).not.toBeNull();
+    expect(region!.textContent).toContain('Saved.');
+  });
+
+  it('fixes the stack to a viewport corner, so the app needs no wrapper', () => {
+    const styles = styleSheetOf('candor-toast-container');
+    expect(styles).toMatch(/:host\s*\{[^}]*position:\s*fixed/);
+    // Quote style differs between the authored source and the CSSOM, so match
+    // either rather than pinning one.
+    expect(styles).toMatch(/:host\(\[position=['"]?bottom-right['"]?\]\)/);
+  });
+});
+
 describe('candor-button', () => {
   it('projects its label into the control, giving it an accessible name (#151)', async () => {
     const el = await mount('candor-button');
