@@ -2,9 +2,7 @@ import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { colorUtil, type ColorMetaObj } from '../../services/color-util.service';
 import { colorMetrics } from '../../services/color-metrics.service';
-import '../../_candor/button/button';
 import '../../_candor/table/table';
-import '../../_candor/tooltip/tooltip';
 import './metadata.component.scss';
 
 interface DifferencesDataObj {
@@ -120,9 +118,9 @@ export class CcMetadata extends LitElement {
                 <tr>
                   <td class="label label--with-info">
                     Object
-                    <cc-tooltip text="About Object" position="right">
-                      <cc-button variant="ghost" size="icon" aria-label="About Object" @clicked=${() => this._emitNote('apca object')}>${INFO_SVG}</cc-button>
-                    </cc-tooltip>
+                    <candor-tooltip text="About Object" position="right">
+                      <candor-button variant="ghost" class="button--icon" aria-label="About Object" @click=${() => this._emitNote('apca object')}>${INFO_SVG}</candor-button>
+                    </candor-tooltip>
                   </td>
                   <td class="numeric">${s.objectMinDimension}</td>
                 </tr>
@@ -141,45 +139,45 @@ export class CcMetadata extends LitElement {
                 <tr>
                   <td class="label label--with-info">
                     Delta E
-                    <cc-tooltip text="About Delta E" position="right">
-                      <cc-button variant="ghost" size="icon" aria-label="About Delta E" @clicked=${() => this._emitNote('deltaE')}>${INFO_SVG}</cc-button>
-                    </cc-tooltip>
+                    <candor-tooltip text="About Delta E" position="right">
+                      <candor-button variant="ghost" class="button--icon" aria-label="About Delta E" @click=${() => this._emitNote('deltaE')}>${INFO_SVG}</candor-button>
+                    </candor-tooltip>
                   </td>
                   <td class="numeric">${d.deltaE}</td>
                 </tr>
                 <tr>
                   <td class="label label--with-info">
                     OKCA
-                    <cc-tooltip text="About OKCA" position="right">
-                      <cc-button variant="ghost" size="icon" aria-label="About OKCA" @clicked=${() => this._emitNote('okca')}>${INFO_SVG}</cc-button>
-                    </cc-tooltip>
+                    <candor-tooltip text="About OKCA" position="right">
+                      <candor-button variant="ghost" class="button--icon" aria-label="About OKCA" @click=${() => this._emitNote('okca')}>${INFO_SVG}</candor-button>
+                    </candor-tooltip>
                   </td>
                   <td class="numeric">${d.okca}</td>
                 </tr>
                 <tr>
                   <td class="label label--with-info">
                     Perceptual contrast
-                    <cc-tooltip text="About Perceptual contrast" position="right">
-                      <cc-button variant="ghost" size="icon" aria-label="About Perceptual contrast" @clicked=${() => this._emitNote('apca')}>${INFO_SVG}</cc-button>
-                    </cc-tooltip>
+                    <candor-tooltip text="About Perceptual contrast" position="right">
+                      <candor-button variant="ghost" class="button--icon" aria-label="About Perceptual contrast" @click=${() => this._emitNote('apca')}>${INFO_SVG}</candor-button>
+                    </candor-tooltip>
                   </td>
                   <td class="numeric">${d.apca}</td>
                 </tr>
                 <tr>
                   <td class="label label--with-info">
                     WCAG 2 compatible
-                    <cc-tooltip text="About WCAG 2 compatible" position="right">
-                      <cc-button variant="ghost" size="icon" aria-label="About WCAG 2 compatible" @clicked=${() => this._emitNote('bpca')}>${INFO_SVG}</cc-button>
-                    </cc-tooltip>
+                    <candor-tooltip text="About WCAG 2 compatible" position="right">
+                      <candor-button variant="ghost" class="button--icon" aria-label="About WCAG 2 compatible" @click=${() => this._emitNote('bpca')}>${INFO_SVG}</candor-button>
+                    </candor-tooltip>
                   </td>
                   <td class="numeric">${d.wcag2New}</td>
                 </tr>
                 <tr>
                   <td class="label label--with-info">
                     WCAG 2
-                    <cc-tooltip text="About WCAG 2" position="right">
-                      <cc-button variant="ghost" size="icon" aria-label="About WCAG 2" @clicked=${() => this._emitNote('wcag2')}>${INFO_SVG}</cc-button>
-                    </cc-tooltip>
+                    <candor-tooltip text="About WCAG 2" position="right">
+                      <candor-button variant="ghost" class="button--icon" aria-label="About WCAG 2" @click=${() => this._emitNote('wcag2')}>${INFO_SVG}</candor-button>
+                    </candor-tooltip>
                   </td>
                   <td class="numeric">${d.wcag2Old}</td>
                 </tr>

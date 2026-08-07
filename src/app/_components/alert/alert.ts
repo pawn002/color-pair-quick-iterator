@@ -1,7 +1,6 @@
 import { LitElement, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { random, times } from 'lodash-es';
-import '../../../app/_candor/toast/toast';
 import './alert.component.scss';
 
 export interface AlertMessageObj {
@@ -50,11 +49,11 @@ export class CcAlert extends LitElement {
       <div class="comp-container">
         ${this.showAlert
           ? html`
-              <cc-toast
+              <candor-toast
                 variant="success"
                 message=${this.alertMessage.message}
                 .dismissible=${false}
-              ></cc-toast>
+              ></candor-toast>
               <span class="msg-id" aria-hidden="true">${this.uniqId}</span>
             `
           : ''}

@@ -118,6 +118,16 @@ Locally-authored components render into the light DOM (`createRenderRoot() { ret
 
 The migration (#149) is replacing the `_candor/` primitives with their upstream equivalents one at a time; `_candor/` shrinks to nothing when it finishes. Design tokens are plain custom properties on `:root`, so they inherit through shadow boundaries and styling works the same on both sides. Global SCSS that reaches *inside* a component does not.
 
+Upstream API differences worth knowing before reaching for a `candor-*` element:
+- **`heading`, never `title`** — `title` is a global HTML attribute and would render a browser tooltip instead of a label
+- **`change`, not `changed`** — form controls emit `change` with the value/state as `detail`
+- **`candor-button` emits nothing.** Bind `@click`; the inner button's native click retargets to the host
+- **No `size="icon"`.** Use `class="button--icon"`, which sets the `--candor-button-*` hooks from `styles.scss`
+
+### Component stylesheets are global
+
+Every `_components/*.component.scss` is a plain global stylesheet, because the component that imports it renders into the light DOM. **Top-level selectors must be prefixed with the component's own tag** (`cc-metadata .comp-container`, not `.comp-container`). Seven files once declared a bare `.comp-container` and silently overwrote each other. `_components/styles-scoping.spec.ts` enforces this.
+
 ### Key Dependencies
 
 - **colorjs.io** - Color space conversions and gamut mapping
