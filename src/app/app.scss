@@ -1,4 +1,16 @@
 .app-container {
+  /* A focus ring paints *outside* the border box, so a control sitting flush
+     against a clipping ancestor loses its ring entirely — not partly.
+     `candor-accordion-item` keeps `overflow: hidden` on its content box even
+     while open (it needs it for the height transition) and exposes neither a
+     `::part` nor an overflow custom property, so the only fix from this side is
+     to stop putting controls flush against that edge. Eight were: the seven
+     Options info buttons at the right edge, and the note button at the left.
+
+     Expressed from the ring's own tokens rather than a literal 4px, so it stays
+     correct if Candor retunes them. Upstream as `pawn002/candor#261`. */
+  --focus-ring-clearance: calc(var(--focus-ring-width, 2px) + var(--focus-ring-offset, 2px));
+
   display: grid;
   position: relative;
   left: 50%;
@@ -37,11 +49,29 @@
     margin-bottom: 1.1em;
   }
 
-  h3 {
+  h3,
+  legend {
     text-align: center;
     margin-top: 0.6em;
     margin-bottom: 0.2em;
     margin-left: 2px;
+  }
+
+  /* Grouping only — the fieldset carries no visual weight of its own, it is
+     there so candor-radio can find the group (see app.ts). `min-width: 0`
+     overrides the UA's intrinsic minimum, which otherwise stops the group
+     shrinking below its widest label. A legend is shrink-to-fit, so it needs
+     an explicit width before `text-align: center` does anything. */
+  .radio-fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+
+    legend {
+      display: block;
+      width: 100%;
+    }
   }
 
   .title-and-sliders {
@@ -88,6 +118,34 @@
     }
   }
 
+  /* Icon + label. `ghost` paints its label in `--color-text-default` with no
+     fill or border, so at rest it is the same colour as the paragraph above it
+     and only `font-weight` separates a control from prose. The icon carries the
+     affordance instead — and it matches the other ghost buttons, which are all
+     icons opening the same kind of note modal. */
+  /* Flush against the accordion's clip edge — see --focus-ring-clearance. Both
+     sides, not just the start: below ~400px the label wraps and the button fills
+     the content box, so the end edge clips too. */
+  .note-button {
+    margin-inline: var(--focus-ring-clearance);
+  }
+
+  .note-button svg {
+    width: 1.4em;
+    height: auto;
+    margin-inline-end: var(--spacing-2xs);
+    fill: currentColor;
+    flex-shrink: 0;
+  }
+
+  /* candor-button sets `white-space: nowrap`, so this label cannot shrink and
+     overflowed the card at 375px once the icon widened it. `part="button"` is
+     the supported way in — the inner control is behind a shadow root. */
+  .note-button::part(button) {
+    white-space: normal;
+    text-align: start;
+  }
+
   .lch-limits-intro {
     margin: var(--spacing-sm) 0 0;
   }
@@ -98,8 +156,26 @@
     padding-bottom: 0.875rem;
   }
 
+  /* Stands in for `candor-card[variant="elevated"][padding="sm"]`, reproducing it
+     from the tokens the card itself uses.
+   *
+   * The card cannot be used here. It sets `overflow: hidden` on an inner
+   * shadow-DOM node exposed neither as a `::part` nor through a custom property,
+   * and `candor-tooltip` positions its bubble absolutely — so it cannot escape a
+   * clipping ancestor. Every tooltip in this row was cut to a sliver by the
+   * card's top edge (17px of a 25px bubble, all of the text).
+   *
+   * `candor-toolbar` is not an alternative: it sets `overflow-x: auto`, which
+   * computes `overflow-y` to `auto` and clips the same way.
+   *
+   * Delete this and go back to the card once the bubble renders in the top layer
+   * upstream — `candor-package.spec.ts` fails when that lands. */
   .quick-actions {
     margin: calc(var(--spacing-md) * -0.5) 0 0;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-elevated);
+    box-shadow: var(--shadow-md);
 
     .quick-actions__buttons {
       display: flex;
@@ -126,6 +202,11 @@
       flex-direction: column;
       gap: var(--spacing-xs);
       max-width: 32rem;
+      /* Both edges. `justify-content: space-between` puts the info button on the
+         accordion's right clip edge, and the checkbox sits flush on the left —
+         its ring is painted on `.checkbox-box`, whose border box starts exactly
+         at the content edge. See --focus-ring-clearance. */
+      padding-inline: var(--focus-ring-clearance);
 
       .checkbox-item {
         display: flex;
@@ -145,28 +226,30 @@
       }
     }
 
+    /* Just the options — the "About" buttons for these live in cc-metadata, so
+       there is no row to lay out, only a stack of radios. */
     .radio-section {
       display: flex;
       flex-direction: column;
       gap: var(--spacing-xs);
       max-width: 32rem;
+      /* The ring is painted on `.radio-circle`, whose left edge is flush with the
+         accordion's clip edge — see --focus-ring-clearance. */
+      padding-inline: var(--focus-ring-clearance);
+    }
 
-      .radio-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        candor-radio {
-          flex: 1;
-        }
-
-        svg {
-          display: block;
-          width: 18px;
-          height: 18px;
-          fill: currentColor;
-        }
-      }
+    /* Says where the per-option explanations went when they moved to cc-metadata.
+       Inside the fieldset, so it reads as part of the group rather than as loose
+       prose, and aligned with the options rather than the centred legend.
+     *
+     * Layout only. The typography belongs to `candor-text[variant="caption"]` —
+     * Candor's voice for supplementary context, which is Noto Sans italic by
+     * definition. Setting a font here would fork the type system. */
+    .radio-group-note {
+      display: block;
+      margin: var(--spacing-xs) 0 0;
+      padding-inline: var(--focus-ring-clearance);
+      max-width: 32rem;
     }
   }
 

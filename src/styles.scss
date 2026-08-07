@@ -29,6 +29,26 @@ candor-button.button--icon {
   --fluid-padding: clamp(0.313rem, 4.5vw + -0.25rem, 2rem);
 }
 
+/* Keyboard focus needs breathing room at the edges of the scrollport.
+ *
+ * Sequential focus navigation scrolls the *minimum* distance that makes the
+ * control technically visible, so tabbing forward parks it flush on the bottom
+ * edge and tabbing backward parks it flush on the top — measured at 375x600,
+ * the Options accordion landed at 532..600 in a 600px viewport, and "About
+ * Object" at 0..32. It reads as the page failing to scroll, and the half of the
+ * focus ring on that edge is cut off by the viewport.
+ *
+ * `scroll-padding` is the fix rather than `scroll-margin` on the controls: the
+ * ones that need it are inside shadow roots (`candor-button`'s inner button,
+ * `candor-accordion-item`'s summary) and mostly expose no `::part`, so there is
+ * nowhere to hang a margin. Padding belongs to the scrollport, which is ours.
+ *
+ * The top value also clears `.title-and-score`, which is `position: sticky;
+ * top: 0` and would otherwise cover anything scrolled to the top of the page. */
+html {
+  scroll-padding-block: 5rem var(--spacing-md);
+}
+
 body {
   margin: 0;
   background-color: var(--color-bg-surface);
@@ -53,7 +73,8 @@ h1,
 h2,
 h3,
 h4,
-th {
+th,
+legend {
   margin: 0;
   line-height: var(--line-height-tight);
   font-weight: var(--font-weight-semibold);
@@ -79,7 +100,10 @@ h2 {
   margin-bottom: 0.3em;
 }
 
-h3 {
+/* `legend` tracks `h3`: the only one in the app labels the contrast-type radio
+   group, which reads at the same level as the `h3` headings beside it. */
+h3,
+legend {
   line-height: unset;
   color: var(--color-text-default);
   font-family: var(--font-family-display);
