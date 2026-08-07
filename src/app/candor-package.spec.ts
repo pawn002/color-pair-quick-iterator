@@ -122,7 +122,9 @@ describe('candor-modal', () => {
    * header outside it. Route 2: that region does not contain its overscroll, so
    * reaching either end chains the rest to the page.
    *
-   * Drop the lock when both of these fail.
+   * Upstream as `pawn002/candor#265`, which covers candor-drawer too — it has
+   * the same structure and the same two gaps. Drop the lock when both of these
+   * fail.
    */
   it('leaves its scroll region focusable but does not start focus there', async () => {
     const styles = styleSheetOf('candor-modal');

@@ -246,7 +246,8 @@ export class CcApp extends LitElement {
    *
    * Both routes are `candor-modal`'s to fix — initial focus belongs in the
    * scrollable region, which already carries `tabindex="0"`, and that region
-   * wants `overscroll-behavior: contain`. This stays until it does.
+   * wants `overscroll-behavior: contain`. Upstream as `pawn002/candor#265`;
+   * this stays until that lands.
    */
   private _setPageScrollLock(locked: boolean) {
     const html = document.documentElement;
