@@ -28,6 +28,20 @@ afterEach(cleanup);
  * jsdom does no layout, so the clipping assertions below read the rule that
  * causes it rather than measuring a rendered box.
  */
+/**
+ * Calls `candor-radio`'s private group lookup.
+ *
+ * Reaching a private member is the point: what this file pins is *how* the
+ * upstream element resolves its group, which is the behaviour app.ts depends on
+ * and which no public API exposes. The cast goes via `unknown` because the
+ * declared type says `_groupSiblings` is private, so the two types do not
+ * overlap and a direct assertion is a compile error — one `tsc` only started
+ * reporting once CI began type-checking at all.
+ */
+function groupSiblingsOf(el: Element | null): unknown[] {
+  return (el as unknown as { _groupSiblings(): unknown[] })._groupSiblings();
+}
+
 function styleSheetOf(tag: string): string {
   const ctor = customElements.get(tag) as (CustomElementConstructor & { styles?: unknown }) | undefined;
   const styles = ctor?.styles;
@@ -304,10 +318,7 @@ describe('candor-radio', () => {
     }
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    const first = fieldset.querySelector('candor-radio') as HTMLElement & {
-      _groupSiblings(): unknown[];
-    };
-    expect(first._groupSiblings()).toHaveLength(values.length);
+    expect(groupSiblingsOf(fieldset.querySelector('candor-radio'))).toHaveLength(values.length);
 
     // Same radios, no fieldset: each wrapper yields a group of one.
     const loose = document.createElement('div');
@@ -319,7 +330,7 @@ describe('candor-radio', () => {
     document.body.appendChild(loose);
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    expect((lone as HTMLElement & { _groupSiblings(): unknown[] })._groupSiblings()).toHaveLength(1);
+    expect(groupSiblingsOf(lone)).toHaveLength(1);
 
     fieldset.remove();
     loose.remove();

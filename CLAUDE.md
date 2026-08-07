@@ -47,9 +47,12 @@ Tests run on **vitest** (not Karma/Jasmine). Use `vi.spyOn(...).mockReturnValue(
 
 1. Make code changes
 2. Update/add corresponding tests
-3. Run `npm run build` to verify TypeScript compilation
-4. Run `npm test` — a single vitest run that exits with a status code. It runs in Node with no browser needed
-5. Commit both implementation and test changes together
+3. Run `npm run typecheck` to verify TypeScript. **`npm run build` does not do this** — `vite build` transpiles and strips types without ever invoking the compiler, so a type error passes the build and ships. Two real ones sat unread in `candor-package.spec.ts` until CI started checking
+4. Run `npm run build` to verify the bundle actually builds
+5. Run `npm test` — a single vitest run that exits with a status code. It runs in Node with no browser needed
+6. Commit both implementation and test changes together
+
+CI runs steps 3–5 on every push and PR to `main` (`.github/workflows/ci.yml`), so a miss is caught — but locally is cheaper than a red PR.
 
 `npm test` is configured with `passWithNoTests: false`: a run that collects zero tests fails. This is deliberate — the Angular-era specs sat dead and uncollected for months after the Lit migration because `npm test` was watch mode and never exited.
 
@@ -74,9 +77,10 @@ When the user requests that the project's documentation be updated:
 
 ```bash
 npm start                  # Development server (vite)
-npm run build              # Production build (generic, works anywhere)
+npm run build              # Production build (generic, works anywhere) — does NOT type-check
+npm run typecheck          # tsc --noEmit; the only thing that type-checks this repo
 npm run build:gh-pages     # Build for this repo's GitHub Pages (output to dist/ only)
-npm run deploy:gh-pages    # Build, copy to docs/, commit, and push — full deploy to GitHub Pages
+npm run deploy:gh-pages    # Manual deploy: build, copy to docs/, commit, push
 npm test                   # Run unit tests once with vitest (exits with a status code)
 npm run test:watch         # Run vitest in watch mode
 ```

@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# A branch only needs its newest run. Superseded runs are cancelled so a quick
+# follow-up push does not queue behind the commit it just replaced.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      # Node 18 is out of support and Vite 6 does not target it; okca's matrix
+      # still carries it, candor's does not. Following candor here.
+      matrix:
+        node-version: [20, 22]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run build
+      # `npm test` is a single vitest run that exits with a status code, in Node
+      # with no browser. It is configured with `passWithNoTests: false`, which is
+      # what makes this job meaningful: the suite sat dead and uncollected for
+      # months after the Lit migration (#145) because a run collecting zero tests
+      # looked exactly like a run that passed.
+      - run: npm test
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - run: npm ci
+      # The build does NOT type-check — `vite build` transpiles and strips types
+      # without ever running the compiler, so nothing in this repo checked them
+      # anywhere. That is not hypothetical: when this job was added, `tsc
+      # --noEmit` immediately reported two genuine errors in candor-package.spec
+      # that had been sitting in the tree unread. Same shape as candor#237.
+      #
+      # It is a separate job from `test` because it is not per-Node-version:
+      # the compiler's answer does not change with the runtime.
+      - run: npm run typecheck

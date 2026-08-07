@@ -1,0 +1,58 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Manual re-run, for redeploying an unchanged commit — a Pages settings change
+  # or a failed deploy should not need an empty commit to recover from.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  # OIDC, which is how actions/deploy-pages authenticates. No stored secret.
+  id-token: write
+
+# One deploy at a time, and never cancel one in flight: a half-finished upload
+# that loses its race leaves the live site on whatever partial state it reached.
+# Queueing costs a minute; cancelling costs an outage.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - run: npm ci
+
+      # The same gates as CI, re-run here rather than assumed. CI and this
+      # workflow are triggered independently by the same push, so nothing
+      # otherwise stops a red CI run and a green deploy from racing — and the
+      # one that ships is the one that matters.
+      - run: npm run typecheck
+      - run: npm test
+
+      # --base=/color-pair-quick-iterator/ because the site is served from a
+      # repo subpath, not a domain root. Without it every asset URL resolves
+      # against / and the page loads blank.
+      - run: npm run build:gh-pages
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
