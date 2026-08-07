@@ -81,8 +81,31 @@
     }
   }
 
+  /* Stands in for `candor-card[variant="elevated"][padding="none"]`, reproducing
+     it from the tokens the card itself uses — the same workaround as
+     `.quick-actions` below, for the same unreachable rule.
+   *
+   * The card cannot be used here. It sets `overflow: hidden` on an inner
+   * shadow-DOM node, which makes that node a scroll container; a `position:
+   * sticky` descendant is constrained to its nearest scrollport, so the score
+   * header stuck to the *card* rather than the viewport. The card's scrollable
+   * overflow exactly equals its client box, so the sticky range was zero and
+   * the header tracked the card 1:1 off the top of the screen. Measured: sticky
+   * top and card top were identical at every scroll position.
+   *
+   * That header is the app's core readout — on a short viewport it is how you
+   * watch the contrast score change while reaching for a slider further down —
+   * so it has to outrank dogfooding the card here.
+   *
+   * `overflow: hidden` is exposed neither as a `::part` nor as a custom
+   * property, so there is nothing to override from this side. Upstream as
+   * `pawn002/candor#259`; `candor-package.spec.ts` fails when it lands, and
+   * then this block reverts to a card. */
   .title-and-sliders {
     position: relative;
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-elevated);
+    box-shadow: var(--shadow-md);
   }
 
 
@@ -95,6 +118,10 @@
     padding: 0.5rem var(--spacing-md) 0.6rem;
     margin-bottom: 0.6rem;
     background-color: var(--color-bg-elevated);
+    /* The card's clip used to round these corners for free. Matching the
+       container's radius keeps the header's square background from poking
+       past the top corners while it is scrolled to rest. */
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
     z-index: 2;
 
     h1 {

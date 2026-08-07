@@ -87,6 +87,17 @@ describe('candor-card', () => {
     expect(el.padding).toBe('none');
   });
 
+  /**
+   * `overflow: hidden` costs the app twice, and the second cost is the one that
+   * is easy to miss. It clips (the tooltips, below), but it also makes `.card` a
+   * scroll container — and a `position: sticky` descendant is constrained to its
+   * nearest scrollport. The card's scrollable overflow equals its client box, so
+   * the sticky range is zero: the score header in app.ts stuck to the card and
+   * rode it off the top of the screen instead of pinning to the viewport.
+   *
+   * That is why `.title-and-sliders` is a plain div. Both it and `.quick-actions`
+   * revert to a card when this test fails.
+   */
   it('clips its content, and offers no way to stop it', async () => {
     expect(styleSheetOf('candor-card')).toMatch(/\.card\s*\{[^}]*overflow:\s*hidden/);
 

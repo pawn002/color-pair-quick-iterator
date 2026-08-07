@@ -279,7 +279,12 @@ export class CcApp extends LitElement {
       <a class="sr-only" href="#main-content">Skip to main content</a>
       <main class="app-container" id="main-content">
         <div class="primary-stack">
-          <candor-card class="title-and-sliders" variant="elevated" padding="none">
+          <!-- Not a candor-card: the card sets overflow: hidden, which makes it a
+               scroll container, and a position: sticky descendant is constrained
+               to its nearest scrollport — so the header below stuck to the card,
+               which scrolls away with the page, rather than to the viewport.
+               See app.scss. -->
+          <div class="title-and-sliders">
             <div class="title-and-score">
               <h1>Colors Contrast</h1>
               <cc-color-contrast
@@ -398,7 +403,7 @@ export class CcApp extends LitElement {
                 </p>
               </candor-accordion-item>
             </div>
-          </candor-card>
+          </div>
 
           <!-- Not a candor-card: the card clips these tooltips. See app.scss. -->
           <div class="quick-actions">
