@@ -71,6 +71,13 @@
     legend {
       display: block;
       width: 100%;
+      /* A legend carries UA `padding-inline: 2px`, and this stylesheet has no
+         global border-box reset — so `width: 100%` plus that padding, plus the
+         2px nudge the shared h3 rule applies, overflowed the accordion by 6px.
+         Invisible today only because the accordion clips it. */
+      box-sizing: border-box;
+      padding-inline: 0;
+      margin-left: 0;
     }
   }
 
