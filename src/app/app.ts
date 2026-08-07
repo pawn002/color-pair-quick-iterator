@@ -212,6 +212,53 @@ export class CcApp extends LitElement {
   override updated(changed: PropertyValues) {
     super.updated(changed);
     void this._applyRovingTabIndex();
+    if (changed.has('activeNoteModal')) this._setPageScrollLock(this.activeNoteModal !== null);
+  }
+
+  // A modal that is torn down while open would otherwise leave the page locked.
+  override disconnectedCallback() {
+    this._setPageScrollLock(false);
+    super.disconnectedCallback();
+  }
+
+  /**
+   * Stop the page scrolling behind an open modal.
+   *
+   * `showModal()` puts the dialog in the top layer and makes everything behind
+   * it inert, but inert does not mean unscrollable — that is per spec, and the
+   * page keeps its own scrollport. So arrow keys reached the page instead of the
+   * note, by two separate routes:
+   *
+   * 1. `candor-modal` focuses its close button on open, which sits in the header
+   *    and so is outside `.modal__body` — the scrollable region. The very first
+   *    arrow key went to the page, before the reader had touched anything.
+   * 2. Even with focus in the body, `overscroll-behavior` there is `auto`, so
+   *    reaching either end chained the remaining scroll to the page.
+   *
+   * Both measured at 79px of background travel per two presses. Locking the
+   * document closes both, and covers wheel and touch as well; the dialog is in
+   * the top layer, so its own scrolling is unaffected.
+   *
+   * The padding compensates for the scrollbar the lock removes — without it the
+   * page widens by its width (15px here) and everything jumps sideways as the
+   * modal opens. `scrollbar-gutter: stable` does not help: the gutter is only
+   * reserved while overflow is `auto` or `scroll`.
+   *
+   * Both routes are `candor-modal`'s to fix — initial focus belongs in the
+   * scrollable region, which already carries `tabindex="0"`, and that region
+   * wants `overscroll-behavior: contain`. This stays until it does.
+   */
+  private _setPageScrollLock(locked: boolean) {
+    const html = document.documentElement;
+    if (locked) {
+      // Measure before locking — afterwards the scrollbar is already gone.
+      const gutter = window.innerWidth - html.clientWidth;
+      html.style.paddingInlineEnd = `${gutter}px`;
+      html.style.overflow = 'hidden';
+    } else {
+      html.style.overflow = '';
+      html.style.paddingInlineEnd = '';
+    }
   }
 
   /**

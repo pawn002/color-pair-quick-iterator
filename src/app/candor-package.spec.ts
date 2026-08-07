@@ -109,6 +109,43 @@ describe('candor-card', () => {
   });
 });
 
+describe('candor-modal', () => {
+  /**
+   * Why `_setPageScrollLock()` exists in app.ts.
+   *
+   * `showModal()` makes the background inert but not unscrollable, so the two
+   * facts below let arrow keys scroll the page behind an open note — measured at
+   * 79px of background travel per two presses, by either route.
+   *
+   * Route 1: the scrollable region is `.modal__body`, and it is already
+   * focusable — but initial focus goes to the close button, which sits in the
+   * header outside it. Route 2: that region does not contain its overscroll, so
+   * reaching either end chains the rest to the page.
+   *
+   * Drop the lock when both of these fail.
+   */
+  it('leaves its scroll region focusable but does not start focus there', async () => {
+    const styles = styleSheetOf('candor-modal');
+    expect(styles).toMatch(/\.modal__body/);
+
+    // Mounted closed: `showModal()` is not implemented in this environment, and
+    // the structure below is in the template either way.
+    const el = await mount('candor-modal');
+    const body = el.shadowRoot!.querySelector('.modal__body')!;
+    const closeButton = el.shadowRoot!.querySelector('.modal__close');
+
+    // Focusable, so arrows would scroll it — the app just never lands there.
+    expect(body.getAttribute('tabindex')).toBe('0');
+    // The close button is the focus target, and it is not inside the scroller.
+    expect(closeButton).not.toBeNull();
+    expect(body.contains(closeButton)).toBe(false);
+  });
+
+  it('does not contain its overscroll, so scrolling chains to the page', () => {
+    expect(styleSheetOf('candor-modal')).not.toMatch(/overscroll-behavior/);
+  });
+});
+
 describe('candor-tooltip', () => {
   /**
    * These two facts together are why `.quick-actions` in app.ts is a plain div
