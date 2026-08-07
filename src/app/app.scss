@@ -135,7 +135,8 @@
          leaves 6px of air that made "Colors" and "Contrast" read as two
          unrelated words rather than one wrapped phrase. Candor has no
          display-scale leading token to reach for — 1.25/1.5/1.75 are all
-         body-scale — so this stays a literal until it does. */
+         body-scale — so this stays a literal until `pawn002/candor#264`
+         adds one. */
       line-height: 1.1;
     }
 
