@@ -10,7 +10,10 @@ cc-table {
             padding: var(--spacing-xs) var(--spacing-sm);
             text-align: left;
             border-bottom: var(--border-width-thin) solid var(--color-border-strong);
-            font-family: var(--font-family-accessible);
+            /* No font-family: metric names and scores are comprehension text, so
+               they inherit the base voice from `body`. Atkinson Hyperlegible is
+               Candor's instructional voice and does not belong on data. The
+               `.numeric` columns below still take mono, for digit alignment. */
             font-size: var(--font-size-sm);
             color: var(--color-text-default);
             letter-spacing: 0.02em;

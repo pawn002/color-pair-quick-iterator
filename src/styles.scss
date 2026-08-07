@@ -49,9 +49,20 @@ html {
   scroll-padding-block: 5rem var(--spacing-md);
 }
 
+/* The document voice. Without this, anything not matched by a rule below falls
+   to the UA default — a bare `div` in the app rendered Times New Roman. Every
+   text-bearing element happened to be covered, but only by hand: the `legend`
+   added for the radio group needed an explicit rule for exactly this reason.
+ *
+ * Roboto Flex is Candor's execution voice — "navigation, UI scaffolding,
+ * data-dense components", which is this whole app. Atkinson Hyperlegible is
+ * applied deliberately below, to instructional text only. */
 body {
   margin: 0;
   background-color: var(--color-bg-surface);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  color: var(--color-text-default);
 }
 
 hr {
@@ -84,9 +95,18 @@ legend {
   }
 }
 
+/* Headings take Candor's heading tokens, shifted one level down: this is a
+   dense single-screen utility, so `--font-size-h1` (39px) would dominate a
+   sticky bar that has to share its row with the contrast readout. Shifting
+   keeps the compact feel while restoring the ratios — h1 and h2 both sat at
+   20px before, which is no hierarchy at all.
+ *
+ * `font-optical-sizing: auto` matters here: Roboto Flex's opsz axis adds
+ * stroke weight as size grows, so the steps read further apart than the
+ * numbers suggest. */
 h1 {
   font-family: var(--font-family-display);
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-h3);
   font-weight: var(--font-weight-bold);
   font-optical-sizing: auto;
   font-style: normal;
@@ -95,7 +115,8 @@ h1 {
 h2 {
   font-family: var(--font-family-display);
   color: var(--color-text-default);
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-h4);
+  font-optical-sizing: auto;
   font-style: normal;
   margin-bottom: 0.3em;
 }
@@ -107,7 +128,8 @@ legend {
   line-height: unset;
   color: var(--color-text-default);
   font-family: var(--font-family-display);
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-h5);
+  font-optical-sizing: auto;
   font-style: normal;
 }
 
@@ -115,7 +137,8 @@ h4 {
   line-height: unset;
   color: var(--color-text-subtle);
   font-family: var(--font-family-display);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-h6);
+  font-optical-sizing: auto;
   font-style: normal;
 }
 
@@ -132,8 +155,14 @@ th {
   font-weight: var(--font-weight-semibold);
 }
 
+/* Prose and data values inherit the base voice from `body`.
+ *
+ * These were Atkinson Hyperlegible. Candor reserves Atkinson for *instructional*
+ * text — "does the user need to read this precisely to know what to do next?":
+ * form labels, validation errors, status changes. Contrast scores, metric names
+ * and explanatory prose are comprehension text, which the docs put in Roboto
+ * Flex. See `cc-alert` below for what stayed. */
 td {
-  font-family: var(--font-family-accessible);
   font-size: var(--font-size-base);
   color: var(--color-text-default);
   font-style: normal;
@@ -144,7 +173,6 @@ td {
 
 p,
 li {
-  font-family: var(--font-family-accessible);
   font-size: var(--font-size-base);
   color: var(--color-text-default);
   font-style: normal;
@@ -165,6 +193,14 @@ li {
   }
 }
 
+
+/* The one place Atkinson Hyperlegible belongs: `cc-alert` announces what just
+   happened and what to do about it — "Copied to clipboard", a gamut warning —
+   which is the instructional register Candor designates it for. Everything else
+   in the app is comprehension text and stays in the base voice above. */
+cc-alert {
+  font-family: var(--font-family-accessible);
+}
 
 button,
 input {
