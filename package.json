@@ -5,6 +5,7 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
+    "typecheck": "tsc --noEmit",
     "build:gh-pages": "vite build --base=/color-pair-quick-iterator/",
     "deploy:gh-pages": "npm run build:gh-pages && rm -rf docs/* && cp -r dist/* docs/ && git add docs/ && git commit -m \"build: update GitHub Pages deployment with latest changes\" && git push",
     "preview": "vite preview",
