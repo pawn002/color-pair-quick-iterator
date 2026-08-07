@@ -129,6 +129,14 @@
       color: var(--color-text-default);
       text-align: right;
       letter-spacing: var(--letter-spacing-tight);
+      /* `width: min-content` wraps this to two lines on purpose, so it needs
+         display leading, not body leading. Candor's tightest token is
+         `--line-height-tight` (1.25) — tuned for running text, and at 25px it
+         leaves 6px of air that made "Colors" and "Contrast" read as two
+         unrelated words rather than one wrapped phrase. Candor has no
+         display-scale leading token to reach for — 1.25/1.5/1.75 are all
+         body-scale — so this stays a literal until it does. */
+      line-height: 1.1;
     }
 
     cc-color-contrast {
