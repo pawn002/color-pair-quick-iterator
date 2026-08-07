@@ -1,6 +1,7 @@
 # Contributing Guidelines
 
-Thank you for your interest in contributing to Color Pair Quick Iterator! This document provides guidelines and best practices for contributing to the project.
+Thank you for your interest in contributing to Color Pair Quick Iterator (CPQI). This
+document covers the conventions a change is expected to follow.
 
 ## Table of Contents
 
@@ -8,8 +9,8 @@ Thank you for your interest in contributing to Color Pair Quick Iterator! This d
 2. [Getting Started](#getting-started)
 3. [Development Workflow](#development-workflow)
 4. [Coding Standards](#coding-standards)
-5. [Candor Design System Conventions](#candor-design-system-conventions)
-6. [Angular 20 Conventions](#angular-20-conventions)
+5. [Lit Conventions](#lit-conventions)
+6. [Candor Design System Conventions](#candor-design-system-conventions)
 7. [TypeScript Best Practices](#typescript-best-practices)
 8. [Component Development](#component-development)
 9. [Service Development](#service-development)
@@ -33,19 +34,18 @@ Thank you for your interest in contributing to Color Pair Quick Iterator! This d
 
 ### Prerequisites
 
-Before contributing, ensure you have:
+Before contributing:
 
-1. Read the [Getting Started](./getting-started.md) guide
-2. Set up your development environment
-3. Reviewed the [Architecture](./architecture.md) documentation
-4. Familiarized yourself with [Services](./services.md) and [Components](./components.md)
-5. Read [CLAUDE.md](../CLAUDE.md) and [best-practices.md](../best-practices.md)
-6. Understood the [Candor design system conventions](#candor-design-system-conventions)
+1. Read the [Getting Started](./getting-started.md) guide and set up your environment
+2. Review the [Architecture](./architecture.md) documentation
+3. Skim [Services](./services.md) and [Components](./components.md)
+4. Read [CLAUDE.md](../CLAUDE.md) — the conventions there are authoritative and apply to
+   human contributors too
+5. Understand the [Candor conventions](#candor-design-system-conventions)
 
-### Finding Something to Work On
+### Finding something to work on
 
-- Check the GitHub Issues for open tasks
-- Look for issues labeled `good-first-issue` or `help-wanted`
+- Check the GitHub issues for open tasks
 - Propose new features by opening an issue first
 - Fix bugs or improve documentation
 
@@ -53,190 +53,243 @@ Before contributing, ensure you have:
 
 ## Development Workflow
 
-### 1. Fork and Clone
+### 1. Fork and clone
 
 ```bash
-# Fork the repository on GitHub
-# Clone your fork
 git clone https://github.com/YOUR_USERNAME/color-pair-quick-iterator.git
 cd color-pair-quick-iterator
-
-# Add upstream remote
 git remote add upstream https://github.com/pawn002/color-pair-quick-iterator.git
+npm install
 ```
 
-### 2. Create a Feature Branch
+### 2. Create a branch
 
 ```bash
-# Update your main branch
 git checkout main
 git pull upstream main
-
-# Create feature branch
-git checkout -b feature/your-feature-name
-# or for bugs
-git checkout -b fix/bug-description
+git checkout -b feat/your-feature-name    # or fix/… or docs/…
 ```
 
-### 3. Make Changes
+### 3. Make changes
 
-- Write code following the [Coding Standards](#coding-standards)
-- Test your changes locally
-- Run the development server: `npm start`
-- Ensure build succeeds: `npm run build`
+Work against the dev server (`npm start`), and update the specs alongside the code —
+see [Testing Requirements](#testing-requirements).
 
-### 4. Commit Your Changes
+### 4. Verify before committing
+
+All three, in this order:
 
 ```bash
-# Add files
-git add .
-
-# Commit with descriptive message
-git commit -m "feat: add color palette export feature"
+npm run typecheck   # tsc --noEmit — the ONLY thing that type-checks this repo
+npm test            # single vitest run
+npm run build       # verifies the bundle actually builds
 ```
 
-See [Commit Message Guidelines](#commit-message-guidelines) for format.
+`npm run build` does **not** type-check. `vite build` transpiles and strips types
+without invoking the compiler, so a type error passes the build and ships.
 
-### 5. Push and Create Pull Request
+### 5. Commit and open a PR
 
 ```bash
-# Push to your fork
-git push origin feature/your-feature-name
-
-# Create Pull Request on GitHub
+git commit -m "feat(component): add color palette export"
+git push origin feat/your-feature-name
 ```
+
+See [Commit Message Guidelines](#commit-message-guidelines).
+
+### A note on stacked branches
+
+If you have several dependent branches open, be careful with squash merges. Squashing
+branch A leaves branch B `CONFLICTING` against `main`, because the squash commit is not
+an ancestor of B — retargeting alone does not fix it. And **never** delete a branch that
+a later PR is based on: GitHub auto-closes that PR as conflicting and refuses to reopen
+it.
 
 ---
 
 ## Coding Standards
 
-### General Principles
+### General principles
 
-1. **Clarity over Cleverness**: Write code that is easy to understand
-2. **Consistency**: Follow existing patterns in the codebase
-3. **Simplicity**: Avoid over-engineering; solve the problem at hand
-4. **Comments**: Explain "why," not "what" (code should be self-documenting)
-5. **DRY**: Don't repeat yourself, but don't over-abstract
+1. **Clarity over cleverness** — write code that is easy to understand
+2. **Consistency** — follow existing patterns in the codebase
+3. **Simplicity** — solve the problem at hand; avoid over-engineering
+4. **Comments explain "why," not "what"** — and are worth writing where a choice looks
+   arbitrary but is load-bearing. Much of this codebase's commenting records a bug that
+   the code is shaped to avoid
+5. **DRY**, but don't over-abstract
 
-### File Naming
+### File naming
 
-- **Components**: `component-name.component.ts`, `component-name.html`, `component-name.scss`
+- **Components**: `component-name/component-name.ts` and
+  `component-name/component-name.component.scss`. The `.component` in the stylesheet
+  name is a leftover from the Angular era; the file is live. The element file is
+  `component-name.ts`, *not* `component-name.component.ts`
 - **Services**: `service-name.service.ts`
-- **Types/Interfaces**: Export from the file where they're primarily used
-- **Directories**: Use kebab-case (e.g., `color-picker/`)
-
-### Code Organization
-
-```typescript
-// 1. Imports (external first, then internal)
-import { Component, signal, computed } from '@angular/core';
-import { MyService } from '../services/my.service';
-
-// 2. Types/Interfaces
-export interface MyData {
-  value: string;
-}
-
-// 3. Component/Service decorator
-@Component({
-  selector: 'app-my-component',
-  templateUrl: './my-component.html',
-  styleUrl: './my-component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-
-// 4. Class
-export class MyComponent {
-  // 4a. Dependencies (inject)
-  private myService = inject(MyService);
-
-  // 4b. Inputs
-  myInput = input.required<string>();
-
-  // 4c. Outputs
-  myOutput = output<string>();
-
-  // 4d. State signals
-  myState = signal<string>('');
-
-  // 4e. Computed signals
-  myComputed = computed(() => this.process(this.myInput()));
-
-  // 4f. Constructor
-  constructor() {
-    // Effects only
-  }
-
-  // 4g. Lifecycle hooks
-  ngOnInit() {}
-
-  // 4h. Public methods
-  publicMethod() {}
-
-  // 4i. Private methods
-  private privateMethod() {}
-}
-```
+- **Specs**: co-located, `*.spec.ts`
+- **Directories**: kebab-case
 
 ### Formatting
 
-The project uses Prettier for consistent formatting:
+Prettier config lives in `package.json`: 100-character width, single quotes, and the
+plain `html` parser for `*.html` files. Most editors can format on save from it.
 
-- **Line width**: 100 characters
-- **Quotes**: Single quotes
-- **Semicolons**: Required
-- **Trailing commas**: ES5
+---
 
-Prettier runs automatically via IDE integration. Configuration in `package.json`:
+## Lit Conventions
 
-```json
-{
-  "prettier": {
-    "printWidth": 100,
-    "singleQuote": true,
-    "overrides": [
-      {
-        "files": "*.html",
-        "options": {
-          "parser": "angular"
-        }
-      }
-    ]
+**There is no Angular here.** The app was rewritten as Lit web components in commit
+`36bd8e2`. Anything describing NgModules, `signal()`, `computed()`, `effect()`,
+`inject()`, `input()`/`output()`, `@if`/`@for`, `OnPush`, or the async pipe describes a
+version of this repo that no longer exists.
+
+### 1. Registration
+
+```ts
+@customElement('cc-my-thing')
+export class CcMyThing extends LitElement {}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'cc-my-thing': CcMyThing;
   }
 }
 ```
+
+The `HTMLElementTagNameMap` declaration keeps `document.createElement` and the `mount()`
+test helper typed. It is not optional.
+
+### 2. Light DOM
+
+```ts
+override createRenderRoot(): this {
+  return this;
+}
+```
+
+Every locally-authored component does this, so the global token stylesheet applies.
+
+**A `<slot>` does nothing in the light DOM.** Lit appends its template *after* the
+authored children instead of projecting them. That was #151, and it is why none of these
+components use slots. If you need content projection, use a `candor-*` element or give
+the component a shadow root.
+
+### 3. Properties and state
+
+```ts
+@property() label = 'Color';                                  // public API
+@property({ attribute: 'colorone' }) colorOne = '';           // differing attribute name
+@property({ type: Boolean, reflect: true }) compact = false;  // stylesheet selects on it
+@property({ type: Object, attribute: false }) reset: ResetObject | null = null;
+@state() private uiColor = '';                                // internal
+```
+
+- `@property()` for public API, `@state()` for internal reactive state
+- Use `attribute:` when the attribute name differs from the property name
+- Add `reflect: true` when a stylesheet needs to select on it — reflecting beats adding
+  a class in `connectedCallback`
+
+### 4. Templates
+
+Native JavaScript in the `html` tagged template — ternaries and `.map()`, never
+control-flow directives:
+
+```ts
+render() {
+  return html`
+    ${this.items.map((item) => html`<li>${item.name}</li>`)}
+    ${this.isVisible ? html`<div>Content</div>` : ''}
+  `;
+}
+```
+
+Binding syntax is load-bearing:
+
+| Syntax | Sets |
+|---|---|
+| `.prop=${value}` | a property — **required** for objects and arrays |
+| `attr=${value}` | an attribute |
+| `?attr=${value}` | toggles an attribute |
+| `@event=${handler}` | an event listener |
+
+### 5. Derived values
+
+Plain getters. They re-evaluate on each render, which is what you want:
+
+```ts
+get contrastAnnouncement() {
+  return `Contrast score: ${this.contrastScore}`;
+}
+```
+
+### 6. Events
+
+```ts
+this.dispatchEvent(
+  new CustomEvent('selected-color', { detail: color, bubbles: true, composed: true }),
+);
+```
+
+`bubbles: true, composed: true` so the event escapes nested markup and shadow roots.
+**Name events for what happened, not what to do**: `note-requested`, `selected-color`,
+`color-variant` — not `updateNote` or `setColor`.
 
 ---
 
 ## Candor Design System Conventions
 
-The project uses the **Candor design system** for UI primitives, via the published `@candor-design/web-components` package. `src/main.ts` imports it once, which registers every element it ships — there is no local copy to edit.
+UI primitives come from the published `@candor-design/web-components` package.
+`src/main.ts` imports it once, which registers every element it ships — there is no
+local copy to edit.
 
-### When to use Candor components
+### Which element to use
 
-Use Candor components for any standard UI primitive:
+Use a `candor-*` element for any standard primitive: `candor-button`, `candor-card`,
+`candor-accordion-item`, `candor-checkbox`, `candor-radio`, `candor-modal`,
+`candor-tooltip`, `candor-text`, `candor-toast` / `candor-toast-container`,
+`candor-tone-picker`.
 
-- Buttons → `<candor-button>`
-- Cards/surfaces → `<candor-card>`
-- Accordions → `<candor-accordion-item>`
-- Checkboxes → `<candor-checkbox>`
-- Radio buttons → `<candor-radio>`
-- Modals → `<candor-modal>`
-- Tooltips → `<candor-tooltip>`
-- Notifications → `<candor-toast>` (via `cc-alert`)
+Data tables are the exception — use the app's own `<cc-table>`. See
+[Components](./components.md#why-not-candor-table) for why, and for why the metadata
+tables should not be half-migrated.
 
-Data tables are the exception: use the app's own `<cc-table>`. `candor-table` is
-data-driven (`headers`, `rows`) and the metadata tables need interactive content
-inside cells.
-
-**Never name a local element `candor-*`.** The package registers all its elements from
-one entry point with no duplicate guard, so a collision throws and takes every
-registration after it down with it. App components use the `cc-*` prefix;
+**Never name a local element `candor-*`.** The package has a single entry point with
+`sideEffects: true`, so one import registers all 41 of its elements and there is no
+duplicate guard. A collision throws on registration and takes every element after it
+down with it, leaving a half-registered app. Local elements use the `cc-*` prefix;
 `src/app/candor-package.spec.ts` enforces the split.
 
-### Styling with Candor tokens
+### Upstream API differences worth knowing
 
-All styles in `_components/` must reference Candor CSS custom properties. Do **not** use hard-coded color, font, or spacing values:
+- **`heading`, never `title`** — `title` is a global HTML attribute and would render a
+  browser tooltip instead of a label
+- **`change`, not `changed`** — form controls emit `change` with the value/state as
+  `detail`
+- **`candor-button` emits nothing.** Bind `@click`; the inner button's native click
+  retargets to the host
+- **No `size="icon"`.** Use `class="button--icon"`, which sets the `--candor-button-*`
+  hooks from `styles.scss`
+- **`candor-card` clips whatever overflows it**, and `candor-tooltip` positions its
+  bubble absolutely, so a tooltip inside a card is cut off at the card's edge. There is
+  no CSS fix from this side — the card sets `overflow: hidden` on a shadow node exposed
+  neither as a `::part` nor through a custom property. Tracked as `pawn002/candor#259`
+
+### Radio groups need a fieldset
+
+**A group of `candor-radio`s always gets a `<fieldset>` and a `<legend>`.** This is
+Candor's documented rule and it is load-bearing, not presentational: the legend supplies
+the question context screen readers announce before each option, and `candor-radio`
+resolves its group as `closest('fieldset')` then `parentElement`. Remove the fieldset
+and arrow-key navigation *and* mutual exclusion both die with no error.
+
+Reset `border`/`padding`/`margin` and set `min-width: 0`; a `<legend>` is shrink-to-fit,
+so it needs an explicit width before `text-align` does anything.
+
+### Styling with tokens
+
+Design tokens are plain custom properties on `:root`, so they inherit through shadow
+boundaries and styling works the same on both sides of one. Reference them rather than
+literals:
 
 ```scss
 // Good
@@ -250,31 +303,69 @@ font-family: 'Source Code Pro', monospace;
 border: 1px solid #ccc;
 ```
 
-### Token categories
-
 | Category | Example tokens |
-|----------|---------------|
+|---|---|
 | Color — text | `--color-text-default`, `--color-text-subtle`, `--color-text-inverse` |
 | Color — background | `--color-bg-surface`, `--color-bg-subtle` |
 | Color — border | `--color-border-control`, `--color-border-strong` |
-| Typography | `--font-family-display`, `--font-family-accessible`, `--font-family-mono` |
-| Font size | `--font-size-sm`, `--font-size-md`, `--font-size-lg` |
+| Typography | `--font-family-base`, `--font-family-accessible`, `--font-family-mono` |
+| Font size | `--font-size-sm`, `--font-size-md`, `--font-size-lg`, `--font-size-h1..h6` |
 | Font weight | `--font-weight-semibold`, `--font-weight-bold` |
 | Border | `--border-width-thin`, `--border-width-medium` |
 | Line height | `--line-height-tight`, `--line-height-normal` |
 
-### Adjusting a Candor component
+**Global SCSS does not cross a shadow boundary.** A descendant selector cannot reach a
+`candor-*` component's internals. Adjust one from the outside with its documented
+`--candor-*` custom properties or `::part()`. If neither is enough, the fix belongs
+upstream in `pawn002/candor`, not in a local fork.
 
-You cannot edit them — they are a dependency, and they render into shadow roots that
-global CSS cannot reach. Two supported ways to adjust one from the outside:
+### Typography
 
-- **Custom properties.** Each component documents its own hooks, e.g.
-  `--candor-button-padding-x`, `--candor-modal-max-width`. `styles.scss` uses these to
-  rebuild the icon-only button that upstream has no size for.
-- **`::part()`.** Components expose parts such as `button`, `input`, `label`, `panel`.
+Candor's four-voice system; the rules live in `styles.scss`.
 
-If neither is enough, the fix belongs upstream in `pawn002/candor`, not in a local
-fork.
+- **`--font-family-base`** (Roboto Flex) is the document voice, set on `body`. Without
+  it, anything not matched by a rule falls to the UA serif — which is how a bare `div`
+  once rendered Times New Roman. It is the *comprehension* voice and covers almost
+  everything here: prose, headings, metric names, scores
+- **`--font-family-accessible`** (Atkinson Hyperlegible) is the *instructional* voice —
+  "does the user need to read this precisely to know what to do next?" In this app that
+  is `cc-alert` alone. Every other Atkinson run on the page comes from inside a
+  `candor-*` shadow root, where upstream applies the same rule to form labels
+- **`--font-family-mono`** stays on numeric table columns, for digit alignment
+- **Headings use the `--font-size-h1..h6` tokens shifted one level down** (`h1` →
+  `--font-size-h3`), because this is a dense single-screen utility and the sticky bar
+  shares its row with the contrast readout. Do not reach for `--font-size-lg`/`md`,
+  which are body-scale tokens and previously left `h1` and `h2` both at 20px
+- **14px (`--font-size-sm`) is the floor for readable text.** `--font-size-xs` is
+  decorative/non-text only
+- For supplementary text prefer `candor-text` over hand-rolled type — `variant="caption"`
+  is Noto Sans italic by definition, so setting a font or style alongside it forks the
+  system
+
+### Icons
+
+**Phosphor, inlined as raw `<path>` data.** Candor stipulates Phosphor but ships no icon
+set — the `ph*` constants in its `icons.d.ts` are its own component chrome and are not
+exported, so there is nothing to import (`pawn002/candor#260`).
+
+Source new glyphs from `@phosphor-icons/core` and paste the path into an `html` template
+next to `_INFO_SVG` in `app.ts`. Prefer the `fill` weight to match what is already
+there, and keep the `viewBox="0 0 256 256"` Phosphor uses. Do not add the package as a
+dependency for one glyph, and do not hand-draw one — an off-system icon renders fine and
+never announces itself.
+
+### Tooltip placement
+
+**Point edge-adjacent tooltips inward.** A bubble is centred on its trigger, so a control
+at the edge of a card overhangs it and gets clipped. Every tooltip on an edge control
+names the direction that puts the bubble *into* the card — `position="right"` on the
+color pickers (left edge), `position="left"` on the copy buttons and the Options info
+buttons (right edge).
+
+Only reach for a structural fix when no direction works. The quick-actions row is a
+tight horizontal group in a short card, where every bubble either overhangs the card or
+covers the neighbouring button, so it is a plain `<div>` styled from card tokens instead
+(see `app.scss`).
 
 ### Component stylesheets are global
 
@@ -282,268 +373,68 @@ Each `*.component.scss` becomes a plain global stylesheet, because the component
 imports it renders into the light DOM. **Prefix every top-level selector with the
 component's own tag** — `cc-metadata .comp-container`, not `.comp-container`. Seven
 files once declared a bare `.comp-container` and silently overwrote each other, which
-collapsed `cc-metadata` to 2px tall. `_components/styles-scoping.spec.ts` enforces
-this.
-
-### Old alias variables
-
-The following application-level alias variables were removed during the Candor migration. If you encounter them in older code or branches, replace with the Candor token:
-
-| Removed alias | Candor replacement |
-|---------------|-------------------|
-| `--mono-font` | `--font-family-mono` |
-| `--body-font` | `--font-family-accessible` |
-| `--header-font` | `--font-family-display` |
-| `--ideal-body-text-black` | `--color-text-default` |
-
----
-
-## Angular 20 Conventions
-
-This project uses modern Angular 20 patterns. **These conventions are mandatory.**
-
-### 1. Standalone Components
-
-All components are standalone (no NgModules):
-
-```typescript
-// Good - Default in Angular 20
-@Component({
-  selector: 'app-my-component',
-  imports: [CommonModule, FormsModule],
-  templateUrl: './my-component.html'
-})
-export class MyComponent {}
-
-// Don't add standalone: true (it's the default)
-```
-
-### 2. Signals for State
-
-Use signals, not properties:
-
-```typescript
-// Good
-uiColor = signal<string>('#000000');
-updateColor(newColor: string) {
-  this.uiColor.set(newColor);
-}
-
-// Avoid
-uiColor: string = '#000000';
-updateColor(newColor: string) {
-  this.uiColor = newColor;
-}
-```
-
-### 3. Computed for Derived State
-
-Use `computed()` instead of getters:
-
-```typescript
-// Good
-fullName = computed(() => `${this.firstName()} ${this.lastName()}`);
-
-// Avoid
-get fullName() {
-  return `${this.firstName()} ${this.lastName()}`;
-}
-```
-
-### 4. Input/Output Functions
-
-Use `input()` and `output()` functions:
-
-```typescript
-// Good
-myInput = input.required<string>();
-myOutput = output<string>();
-
-// Avoid
-@Input() myInput!: string;
-@Output() myOutput = new EventEmitter<string>();
-```
-
-### 5. Model for Two-Way Binding
-
-Use `model()` for two-way binding:
-
-```typescript
-// Good
-selectedColor = model<string>('#000000');
-
-// Avoid
-@Input() selectedColor!: string;
-@Output() selectedColorChange = new EventEmitter<string>();
-```
-
-### 6. Native Control Flow
-
-Use `@if`, `@for`, `@switch`:
-
-```html
-<!-- Good -->
-@if (isVisible()) {
-  <div>Content</div>
-}
-
-@for (item of items(); track item.id) {
-  <div>{{ item.name }}</div>
-}
-
-<!-- Avoid -->
-<div *ngIf="isVisible()">Content</div>
-<div *ngFor="let item of items()">{{ item.name }}</div>
-```
-
-### 7. Inject Function
-
-Use `inject()` instead of constructor injection:
-
-```typescript
-// Good
-export class MyComponent {
-  private myService = inject(MyService);
-}
-
-// Avoid
-export class MyComponent {
-  constructor(private myService: MyService) {}
-}
-```
-
-### 8. OnPush Change Detection
-
-Always use OnPush:
-
-```typescript
-@Component({
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class MyComponent {}
-```
-
-### 9. Effects for Side Effects
-
-Use `effect()` for reactive side effects:
-
-```typescript
-constructor() {
-  effect(() => {
-    // Runs when signals accessed here change
-    console.log('Color changed:', this.color());
-  });
-}
-```
-
-### 10. Host Bindings
-
-Use `host` object in decorator:
-
-```typescript
-// Good
-@Component({
-  host: {
-    '(click)': 'handleClick()',
-    '[class.active]': 'isActive()'
-  }
-})
-
-// Avoid
-@HostListener('click')
-handleClick() {}
-
-@HostBinding('class.active')
-get isActive() {}
-```
+collapsed `cc-metadata` to 2px tall. `_components/styles-scoping.spec.ts` enforces this.
 
 ---
 
 ## TypeScript Best Practices
 
-### Strict Type Checking
+The project uses strict TypeScript (`strict`, `noImplicitOverride`,
+`noImplicitReturns`, `noFallthroughCasesInSwitch`).
 
-The project uses strict TypeScript. Follow these rules:
+### 1. Avoid `any`
 
-#### 1. Avoid `any`
-
-```typescript
+```ts
 // Good
-function parseData(data: unknown): ParsedData {
-  if (typeof data === 'object' && data !== null) {
-    // type guard
-  }
+function parseData(data: unknown): ParsedData | null {
+  if (typeof data === 'object' && data !== null) { /* narrow it */ }
+  return null;
 }
 
 // Avoid
-function parseData(data: any): ParsedData {
-  // ...
-}
+function parseData(data: any): ParsedData {}
 ```
 
-#### 2. Prefer Type Inference
+### 2. Prefer type inference
 
-```typescript
+```ts
 // Good
-const myColor = signal<string>('#000000');  // Type needed
-const count = 42;  // Type inferred
+const count = 42;
 
 // Avoid
-const count: number = 42;  // Unnecessary annotation
+const count: number = 42;
 ```
 
-#### 3. Use Interfaces for Objects
+### 3. Interfaces for object shapes
 
-```typescript
-// Good
-export interface ColorData {
-  hex: string;
-  lightness: number;
-  chroma: number;
+```ts
+export interface ColorMetaObj {
+  lightness: number | string;
+  chroma: number | string;
+  hue: number | string;
+  saturation: number | string;
 }
+```
+
+### 4. Union types over enums
+
+```ts
+// Good
+export type ContrastType = 'apca' | 'bpca' | 'deltaE' | 'okca';
 
 // Avoid
-export type ColorData = {
-  hex: string;
-  lightness: number;
-  chroma: number;
-};  // Use interface for object shapes
+enum ContrastType { APCA = 'apca' }
 ```
 
-#### 4. Prefer Union Types
+### 5. Explicit return types on public methods
 
-```typescript
-// Good
-type ContrastType = 'apca' | 'bpca';
+```ts
+// Good — public surface
+getContrast(colorOne: string, colorTwo: string, type: ContrastType): number | null {}
 
-// Avoid
-enum ContrastType {
-  APCA = 'apca',
-  BPCA = 'bpca'
-}
-```
-
-#### 5. Use Readonly Where Appropriate
-
-```typescript
-// Good
-export interface Config {
-  readonly apiUrl: string;
-  readonly timeout: number;
-}
-```
-
-#### 6. Function Return Types
-
-```typescript
-// Good - Return type explicit for public methods
-public calculateContrast(c1: string, c2: string): number | null {
-  return this.service.getContrast(c1, c2);
-}
-
-// OK - Return type inferred for private methods
+// OK — inferred on a private helper
 private isValid(color: string) {
-  return this.parse(color) !== null;
+  return this.parseColor(color) !== null;
 }
 ```
 
@@ -551,201 +442,174 @@ private isValid(color: string) {
 
 ## Component Development
 
-### Creating a New Component
+There is no generator. Create the directory and two files by hand:
 
-```bash
-# Use Angular CLI
-ng generate component _components/my-component --skip-tests
+```
+src/app/_components/my-thing/
+├── my-thing.ts
+└── my-thing.component.scss
 ```
 
-This creates:
-- `my-component.component.ts`
-- `my-component.html`
-- `my-component.scss`
+### Template
 
-Manually create:
+```ts
+import { LitElement, html } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
+import './my-thing.component.scss';
 
-### Component Template
-
-```typescript
-import { Component, signal, computed, input, output, inject } from '@angular/core';
-import { ChangeDetectionStrategy } from '@angular/core';
-
-@Component({
-  selector: 'app-my-component',
-  templateUrl: './my-component.html',
-  styleUrl: './my-component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class MyComponent {
-  // Inject dependencies
-  private myService = inject(MyService);
-
-  // Inputs
-  myInput = input.required<string>();
-
-  // Outputs
-  myOutput = output<string>();
-
-  // State
-  myState = signal<string>('');
-
-  // Computed
-  myComputed = computed(() => {
-    return this.process(this.myInput());
-  });
-
-  // Constructor (effects only)
-  constructor() {
-    effect(() => {
-      // React to signal changes
-    });
+@customElement('cc-my-thing')
+export class CcMyThing extends LitElement {
+  override createRenderRoot(): this {
+    return this;
   }
 
-  // Methods
-  handleClick(): void {
-    this.myOutput.emit(this.myState());
+  @property() label = '';
+  @state() private uiValue = '';
+
+  private _handleClick() {
+    this.dispatchEvent(
+      new CustomEvent('thing-selected', {
+        detail: this.uiValue,
+        bubbles: true,
+        composed: true,
+      }),
+    );
+  }
+
+  override render() {
+    return html`
+      <button type="button" @click=${this._handleClick}>${this.label}</button>
+    `;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'cc-my-thing': CcMyThing;
   }
 }
 ```
 
-### Component Checklist
+### Checklist
 
-- [ ] Uses signals for state
-- [ ] Uses OnPush change detection
-- [ ] Uses inject() for dependencies
-- [ ] Uses input()/output()/model() for props
-- [ ] Uses native control flow in template
-- [ ] Has proper TypeScript types
-- [ ] Follows naming conventions
+- [ ] `cc-*` prefix, never `candor-*`
+- [ ] `createRenderRoot()` returns `this`
+- [ ] Declared in `HTMLElementTagNameMap`
+- [ ] `@property()` for public API, `@state()` for internal state
+- [ ] Events dispatched with `bubbles: true, composed: true`, named for what happened
+- [ ] No `<slot>` — it does nothing in the light DOM
+- [ ] Stylesheet selectors prefixed with the component's tag
+- [ ] Styles reference Candor tokens, not literals
+- [ ] Has a co-located `*.spec.ts`
 - [ ] Documented in [components.md](./components.md)
 
 ---
 
 ## Service Development
 
-### Creating a New Service
+Services are plain classes in `src/app/services/`, exported as a module-level singleton.
+There is no DI container — import the instance.
 
-```bash
-ng generate service services/my-service --skip-tests
-```
-
-### Service Template
-
-```typescript
-import { Injectable, inject } from '@angular/core';
-
-@Injectable({
-  providedIn: 'root'
-})
+```ts
 export class MyService {
-  // Inject dependencies
-  private otherService = inject(OtherService);
-
-  // Public methods
-  public doSomething(input: string): string | null {
-    // Implementation
+  doSomething(input: string): string | null {
     return this.process(input);
   }
 
-  // Private methods
   private process(input: string): string | null {
-    // Implementation
     return null;
   }
 }
+
+export const myService = new MyService();
 ```
 
-### Service Guidelines
+### Guidelines
 
-1. **Single Responsibility**: Each service should have one clear purpose
-2. **Singleton**: Use `providedIn: 'root'`
-3. **Pure Functions**: Prefer pure functions when possible
-4. **Error Handling**: Handle errors gracefully, don't throw unless necessary
-5. **Return null**: Return `null` for failures, not `undefined`
-6. **Type Safety**: All public methods must have explicit return types
+1. **Single responsibility** per service
+2. **Return `null` for failures**, not `undefined`, and not a thrown error unless the
+   caller genuinely cannot continue
+3. **Explicit return types** on every public method
+4. Keep them free of DOM access where you can — it is what makes them cheap to test
 
-### Service Checklist
+### Checklist
 
-- [ ] Single, focused responsibility
-- [ ] Uses `providedIn: 'root'`
-- [ ] Uses inject() for dependencies
-- [ ] All public methods have return types
-- [ ] Proper error handling
+- [ ] One focused responsibility
+- [ ] Exported as a module-level singleton
+- [ ] Public methods have explicit return types
+- [ ] Failures return `null`
+- [ ] Has a co-located `*.spec.ts`
 - [ ] Documented in [services.md](./services.md)
 
 ---
 
 ## Testing Requirements
 
-### Current Status
+**When you modify or add code, update the corresponding tests.** This is not optional,
+and CI enforces it indirectly: `npm test` runs with `passWithNoTests: false`, so a run
+collecting zero tests fails rather than passing silently.
 
-The project has comprehensive test coverage with passing tests across all services and components. All new code should include tests.
+Specifically:
 
-### Testing Standards
+1. **New features** — add tests covering the new behaviour
+2. **Modified code** — update the related specs to match
+3. **New parameters or type-union members** — add cases for every new value, in the
+   service that handles it *and* in the components that consume it
+4. **Changed service methods** — update the service spec and every component spec that
+   exercises it
 
-**Required Tests**:
-- Unit tests for all services
-- Component tests for user interactions
-- Tests for public methods and edge cases
+Tests run on **vitest**, not Karma/Jasmine. Use `vi.spyOn(...).mockReturnValue(...)`,
+`expect.objectContaining`, and `expect.any` — the Jasmine equivalents are not available.
 
-**See**: [Testing Guide](./testing.md) for detailed testing patterns.
-
-### Running Tests
-
-```bash
-npm test
-```
+See the [Testing Guide](./testing.md) for the helpers and patterns.
 
 ---
 
 ## Documentation
 
-### Code Documentation
+### Code documentation
 
-**Services**: Document all public methods with JSDoc:
+JSDoc on public service methods:
 
-```typescript
+```ts
 /**
- * Calculates APCA contrast between two colors.
+ * Calculates the minimum object dimension for an APCA score.
  *
- * @param colorOne - Foreground color (hex string)
- * @param colorTwo - Background color (hex string)
- * @returns APCA score (-108 to +108) or null if calculation fails
- *
- * @example
- * const score = service.calcContrast('#000000', '#ffffff');
- * // Returns: 106
+ * @param apca - APCA Lc score
+ * @returns Minimum dimension in pixels, or NaN if contrast is too low for any object
  */
-public calcContrast(colorOne: string, colorTwo: string): number | null {
-  // ...
-}
+getMinObjectDimension(apca: number): number {}
 ```
 
-**Components**: Document inputs, outputs, and behavior in component docstrings.
+Where a component's shape encodes a bug it exists to avoid, say so in a comment. The
+distinct-id getter in `cc-color-slider` is the model: it explains that a shared id made
+`label[for]` resolve to the host and left the range input with no accessible name.
 
-### Project Documentation
+### Project documentation
 
-When adding new features:
+When adding a feature, update the docs in the same PR:
 
-1. Update relevant documentation in `documentation/` directory
-2. Update [Components](./components.md) or [Services](./services.md) as needed
-4. Update [Architecture](./architecture.md) if changing structure
+1. [Components](./components.md) or [Services](./services.md) for API changes
+2. [Architecture](./architecture.md) if the structure changes
+3. The root [README.md](../README.md), which must stay in sync with
+   `documentation/`
+4. [CLAUDE.md](../CLAUDE.md) if you change a convention
 
 ---
 
 ## Pull Request Process
 
-### Before Submitting
+### Before submitting
 
-- [ ] Code follows style guidelines
-- [ ] Build succeeds: `npm run build`
-- [ ] Tests pass: `npm test`
+- [ ] `npm run typecheck` passes
+- [ ] `npm test` passes
+- [ ] `npm run build` succeeds
+- [ ] Tests added or updated alongside the code
 - [ ] Documentation updated
-- [ ] Commit messages follow guidelines
-- [ ] Branch is up to date with main
+- [ ] Commit messages follow the guidelines below
+- [ ] Branch is up to date with `main`
 
-### PR Template
+### PR template
 
 ```markdown
 ## Description
@@ -761,26 +625,25 @@ Brief description of changes
 How has this been tested?
 
 ## Checklist
-- [ ] Code follows style guidelines
+- [ ] Typecheck, tests, and build pass
 - [ ] Tests added/updated
 - [ ] Documentation updated
-- [ ] Build succeeds
 ```
 
-### Review Process
+### Review
 
-1. Submit PR with clear description
-2. Address reviewer feedback
-3. Ensure CI passes (if configured)
-4. Maintainer will merge once approved
+1. Submit a PR with a clear description
+2. CI must be green — the `test` matrix and the `typecheck` job
+3. Address review feedback
+4. A maintainer merges once approved
+
+Merging to `main` deploys automatically. See [Deployment](./deployment.md).
 
 ---
 
 ## Commit Message Guidelines
 
-Follow Conventional Commits format:
-
-### Format
+Conventional Commits.
 
 ```
 <type>(<scope>): <subject>
@@ -792,69 +655,53 @@ Follow Conventional Commits format:
 
 ### Types
 
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation changes
-- `style`: Formatting, missing semicolons, etc. (no code change)
-- `refactor`: Code change that neither fixes a bug nor adds a feature
-- `perf`: Performance improvement
-- `test`: Adding or updating tests
-- `chore`: Updating build tasks, package manager configs, etc.
+`feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`
 
-### Scope (Optional)
+### Scope (optional)
 
-- `component`: Component changes
-- `service`: Service changes
-- `build`: Build system changes
-- `deps`: Dependency updates
+`component`, `service`, `a11y`, `build`, `ci`, `deps`, `type`, `layout`
 
 ### Examples
 
-```bash
+```
 feat(component): add color palette export button
 
-fix(service): correct chroma matching algorithm
+fix(a11y): stop the page scrolling behind an open modal
 
-docs: update contributing guidelines with TypeScript best practices
+fix(service): correct chroma matching for out-of-gamut pairs
 
-refactor(component): simplify color picker state management
+docs: rewrite the documentation folder for Lit
 
-chore(deps): update Angular to 20.3.4
+chore(deps): update @candor-design/web-components to 5.0.1
 ```
 
-### Subject Rules
+### Subject rules
 
-- Use imperative mood ("add" not "added" or "adds")
-- Don't capitalize first letter
-- No period at the end
-- Maximum 72 characters
-
----
-
-## Questions?
-
-- Check existing documentation in `documentation/`
-- Review [CLAUDE.md](../CLAUDE.md) for AI-assisted development
-- Open an issue for questions or clarifications
-- Contact maintainers
+- Imperative mood ("add", not "added" or "adds")
+- No capital first letter, no trailing period
+- 72 characters maximum
 
 ---
 
 ## License
 
-This project is licensed under the **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0)**.
+This project is licensed under **Creative Commons
+Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)**.
 
-By contributing to this project, you agree that:
+By contributing you agree that:
 
-1. Your contributions will be licensed under the same CC BY-NC-SA 4.0 license
-2. You have the right to submit the contributions under this license
-3. Your contributions may be used, modified, and distributed non-commercially by others
-4. All derivative works must maintain the same license terms
-5. You will be credited as a contributor to the project
+1. Your contributions are licensed under the same CC BY-NC-SA 4.0 license
+2. You have the right to submit them under this license
+3. They may be used, modified, and distributed non-commercially by others
+4. Derivative works must keep the same license terms
+5. You will be credited as a contributor
 
-**Important**: This is **not an open source license**. Commercial use of this project or derivative works is prohibited without explicit written permission from the project owner.
+**Important**: this is **not an open source license**. Commercial use of this project or
+of derivative works is prohibited without explicit written permission from the project
+owner.
 
-For full license details, see the [LICENSE](../LICENSE) file or visit [creativecommons.org/licenses/by-nc-sa/4.0/](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+See [LICENSE](../LICENSE) or
+[creativecommons.org/licenses/by-nc-sa/4.0/](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
 ---
 

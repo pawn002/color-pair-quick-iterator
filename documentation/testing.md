@@ -1,822 +1,438 @@
 # Testing Guide
 
-This guide provides comprehensive information about testing strategies, patterns, and best practices for the Color Pair Quick Iterator application.
+Tests run on **vitest** in **jsdom**. There is no browser, no Karma, no Jasmine, and no
+Angular `TestBed`. A run is a single command that exits with a status code.
 
-## Overview
-
-The project uses **Karma** as the test runner with **Jasmine** as the testing framework. All tests run in a Chrome browser environment.
-
-**Current Status**: Comprehensive test coverage implemented covering all services and components.
+If you find a reference to `karma.conf.js`, `tsconfig.spec.json`, `ng test`, or
+`jasmine.createSpyObj`, it predates the Lit migration and is wrong.
 
 ## Table of Contents
 
-1. [Testing Setup](#testing-setup)
-2. [Running Tests](#running-tests)
-3. [Testing Strategy](#testing-strategy)
-4. [Service Testing](#service-testing)
-5. [Component Testing](#component-testing)
-6. [Testing with Signals](#testing-with-signals)
-7. [Test Patterns](#test-patterns)
-8. [Best Practices](#best-practices)
+1. [Setup](#setup)
+2. [Running tests](#running-tests)
+3. [What to test](#what-to-test)
+4. [Testing services](#testing-services)
+5. [Testing components](#testing-components)
+6. [The test helpers](#the-test-helpers)
+7. [Test patterns](#test-patterns)
+8. [The guard specs](#the-guard-specs)
 9. [Coverage](#coverage)
-10. [Continuous Integration](#continuous-integration)
+10. [Continuous integration](#continuous-integration)
 
 ---
 
-## Testing Setup
+## Setup
 
-### Configuration Files
+### Configuration
 
-**karma.conf.js**:
-- Test runner configuration
-- Chrome browser launcher
-- Jasmine framework
-- Coverage reporting
+There is no separate test config file. Everything lives in the `test` block of
+`vite.config.ts`:
 
-**tsconfig.spec.json**:
-- TypeScript configuration for tests
-- Includes test files (*.spec.ts)
-- Includes `src/test-setup.ts` for zone.js initialization
-
-**src/test-setup.ts**:
-- Initializes zone.js for testing (required even though app uses zoneless change detection)
-- Configures Angular testing environment
-- Sets up Jasmine test environment
-
-**angular.json** (test configuration):
-- Polyfills: `zone.js` and `zone.js/testing`
-- Required for Angular testing even in zoneless apps
-
-### Dependencies
-
-```json
-{
-  "karma": "^6.4.0",
-  "karma-jasmine": "^5.1.0",
-  "karma-chrome-launcher": "^3.2.0",
-  "karma-coverage": "^2.2.0",
-  "karma-jasmine-html-reporter": "^2.1.0",
-  "jasmine-core": "^5.9.0"
+```ts
+test: {
+  include: ['src/**/*.spec.ts'],
+  environment: 'jsdom',
+  setupFiles: ['src/test-setup.ts'],
+  passWithNoTests: false,
 }
 ```
 
+**`passWithNoTests: false` is deliberate.** A run that collects zero tests fails. This
+is not defensive styling — the Angular-era specs sat dead and uncollected for months
+after the Lit migration precisely because a run collecting nothing looked exactly like
+a run that passed (#145).
+
+### `src/test-setup.ts`
+
+jsdom is missing three things the Candor elements need, and the setup file fills each
+one. It exists to let elements *render*, not to emulate browser behaviour:
+
+- **`ElementInternals` form-value methods.** jsdom implements `attachInternals()` but
+  ships an `ElementInternals` without `setFormValue()`. Candor's form controls are
+  `formAssociated` and call it from `updated()`, so mounting one throws before it
+  renders. The stubs deliberately do not emulate form participation — nothing here
+  relies on it, since the controls are read through their `change` events rather than a
+  surrounding `<form>`.
+- **`CSS.escape`.** jsdom has no global `CSS` object; `candor-radio` uses `CSS.escape`
+  to build the selector that finds its group siblings.
+- **`HTMLDialogElement.showModal()` / `close()`.** `candor-modal` calls one or the other
+  from `updated()` on every change to `open` — including the first, where `open` is
+  false and it calls `close()`.
+
+Top-layer and inertness behaviour is not emulated, and no test asserts on it; the modal
+assertions read structure and stylesheets, not layout.
+
+### Test file locations
+
+Specs are co-located with what they test:
+
+- **Services**: `src/app/services/*.service.spec.ts`
+- **Components**: `src/app/_components/<name>/<name>.spec.ts` — note `<name>.ts`, not
+  `<name>.component.ts`. Those were the Angular versions and have been removed.
+- **Repo-wide guards**: `src/app/candor-package.spec.ts`,
+  `src/app/_components/styles-scoping.spec.ts`
+
 ---
 
-## Running Tests
-
-### Basic Commands
+## Running tests
 
 ```bash
-# Run all tests
-npm test
-
-# Run tests in watch mode (auto-rerun on file changes)
-ng test --watch
-
-# Run tests once (CI mode)
-ng test --watch=false
-
-# Run with code coverage
-ng test --code-coverage
-
-# Run specific test file
-ng test --include='**/color-util.service.spec.ts'
+npm test              # single run, exits with a status code
+npm run test:watch    # watch mode, re-runs affected specs on save
 ```
 
-### Test Output
+Narrowing a run uses vitest's own flags:
 
-Tests run in Chrome and display results in:
-1. Terminal output
-2. Karma server (http://localhost:9876/)
-3. Browser debug output (http://localhost:9876/debug.html)
+```bash
+npx vitest run src/app/services/color-util.service.spec.ts   # one file
+npx vitest run -t "aria-valuetext"                           # tests matching a name
+npx vitest run --coverage                                    # with coverage
+```
+
+The full suite is currently **238 tests across 9 files** and takes about five seconds.
 
 ---
 
-## Testing Strategy
+## What to test
 
-### Test Pyramid
+**Do test**:
 
-```
-       /\
-      /  \      E2E Tests (Future)
-     /────\     - Full user workflows
-    /      \    - Critical paths
-   /────────\   Integration Tests (Future)
-  /          \  - Component + Service
- /────────────\ Unit Tests (Priority)
-/              \ - Services
-\______________/ - Components
-```
+- Public service methods, including their `null` returns
+- Rendered output and accessible structure — labels, roles, live regions
+- Custom events: that they fire, and what is in `detail`
+- Reactions to property changes
+- Edge cases: empty strings, invalid colors, identical inputs, boundary values
 
-**Current Focus**: Unit tests for services and components
+**Don't test**:
 
-### What to Test
-
-**DO Test**:
-- Public service methods
-- Component user interactions
-- Edge cases and error handling
-- Computed signal calculations
-- Effects and side effects
-- Integration between components and services
-
-**DON'T Test**:
-- Private methods (test through public interface)
-- Third-party library internals
-- Angular framework behavior
-- Trivial getters/setters
+- Private methods — exercise them through the public surface
+- Lit's own reactivity, or colorjs.io's internals
+- Upstream Candor behaviour, *except* where this app depends on a specific detail of it.
+  Those pins belong in `candor-package.spec.ts` and each needs a comment saying what
+  breaks if the pin fails.
 
 ---
 
-## Service Testing
+## Testing services
 
-### Basic Service Test Template
+Services are plain classes exported as module-level singletons. There is no DI
+container: import the instance, or construct one directly.
 
-```typescript
-import { TestBed } from '@angular/core/testing';
-import { MyService } from './my.service';
-
-describe('MyService', () => {
-  let service: MyService;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(MyService);
-  });
-
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
-```
-
-### ColorUtilService Example Tests
-
-```typescript
-import { TestBed } from '@angular/core/testing';
+```ts
+import { describe, it, expect } from 'vitest';
 import { ColorUtilService } from './color-util.service';
 
 describe('ColorUtilService', () => {
-  let service: ColorUtilService;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(ColorUtilService);
-  });
+  const service = new ColorUtilService();
 
   describe('parseColor', () => {
-    it('should parse valid hex color', () => {
-      const result = service.parseColor('#ff5733');
-      expect(result).not.toBeNull();
+    it('parses a valid hex color', () => {
+      expect(service.parseColor('#ff5733')).not.toBeNull();
     });
 
-    it('should parse rgb color', () => {
-      const result = service.parseColor('rgb(255, 87, 51)');
-      expect(result).not.toBeNull();
-    });
-
-    it('should return null for invalid color', () => {
-      const result = service.parseColor('not-a-color');
-      expect(result).toBeNull();
-    });
-
-    it('should handle named colors', () => {
-      const result = service.parseColor('red');
-      expect(result).not.toBeNull();
-    });
-  });
-
-  describe('getRgb255Array', () => {
-    it('should convert hex to RGB 0-255 array', () => {
-      const result = service.getRgb255Array('#ffffff');
-      expect(result).toEqual([255, 255, 255]);
-    });
-
-    it('should handle black color', () => {
-      const result = service.getRgb255Array('#000000');
-      expect(result).toEqual([0, 0, 0]);
-    });
-
-    it('should return null for invalid color', () => {
-      const result = service.getRgb255Array('invalid');
-      expect(result).toBeNull();
-    });
-  });
-
-  describe('createSrgbColor', () => {
-    it('should create color with specified lightness', () => {
-      const result = service.createSrgbColor('#ff5733', 0.7);
-      expect(result).not.toBeNull();
-      expect(result).toMatch(/^#[0-9a-f]{6}$/);
-    });
-
-    it('should handle edge case lightness values', () => {
-      expect(service.createSrgbColor('#ff5733', 0.0)).not.toBeNull();
-      expect(service.createSrgbColor('#ff5733', 1.0)).not.toBeNull();
-    });
-  });
-
-  describe('calcDeltaE', () => {
-    it('should calculate delta E between identical colors', () => {
-      const result = service.calcDeltaE('#ff5733', '#ff5733');
-      expect(result).toBe(0);
-    });
-
-    it('should calculate delta E between different colors', () => {
-      const result = service.calcDeltaE('#000000', '#ffffff');
-      expect(result).toBeGreaterThan(0);
-    });
-
-    it('should return null for invalid colors', () => {
-      const result = service.calcDeltaE('invalid', '#ffffff');
-      expect(result).toBeNull();
-    });
-  });
-
-  describe('getMinObjectDimension', () => {
-    it('should return 0.25px for APCA >= 100', () => {
-      expect(service.getMinObjectDimension(106)).toBe(0.25);
-    });
-
-    it('should return appropriate size for medium contrast', () => {
-      const result = service.getMinObjectDimension(60);
-      expect(result).toBeGreaterThan(0);
-      expect(result).toBeLessThan(15);
-    });
-
-    it('should return NaN for insufficient contrast', () => {
-      const result = service.getMinObjectDimension(10);
-      expect(result).toBeNaN();
+    it('returns null for an unparseable string', () => {
+      expect(service.parseColor('not-a-color')).toBeNull();
     });
   });
 });
 ```
 
-### Testing Async Service Methods
+### Async methods
 
-```typescript
-describe('ColorUtilService - Async Methods', () => {
-  let service: ColorUtilService;
+Gamut checks are asynchronous, so several `ColorUtilService` methods return promises:
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(ColorUtilService);
-  });
+```ts
+it('generates a random color pair', async () => {
+  const pair = await service.getRandomColorPair();
 
-  it('should generate random color pair', async () => {
-    const pair = await service.getRandomColorPair();
+  expect(pair).toHaveLength(2);
+  expect(pair[0]).toMatch(/^#[0-9a-f]{6}$/);
+});
 
-    expect(pair).toBeDefined();
-    expect(pair.length).toBe(2);
-    expect(pair[0]).toMatch(/^#[0-9a-f]{6}$/);
-    expect(pair[1]).toMatch(/^#[0-9a-f]{6}$/);
-  });
+it('keeps the lightness range inside the gamut', async () => {
+  const result = await service.getMinMaxLight('#ff5733');
 
-  it('should match chromas successfully', async () => {
-    const result = await service.matchChromas(['#ff5733', '#e0e0e0']);
-
-    expect(result.success).toBeDefined();
-    if (result.success) {
-      expect(result.colors).not.toBeNull();
-      expect(result.chroma).not.toBeNaN();
-    }
-  });
-
-  it('should get min max light', async () => {
-    const result = await service.getMinMaxLight('#ff5733');
-
-    expect(result).not.toBeNull();
-    expect(result!.lightMin).toBeGreaterThanOrEqual(0);
-    expect(result!.lightMax).toBeLessThanOrEqual(1);
-    expect(result!.lightMin).toBeLessThanOrEqual(result!.lightMax);
-  });
+  expect(result!.lightMin).toBeLessThanOrEqual(result!.lightMax);
 });
 ```
 
-### Mocking Dependencies
+### Mocking a collaborator
 
-```typescript
-describe('ColorMetricsService', () => {
-  let service: ColorMetricsService;
-  let mockColorUtil: jasmine.SpyObj<ColorUtilService>;
-  let mockBpca: jasmine.SpyObj<BpcaService>;
+`vi.spyOn` on the imported singleton. The Jasmine equivalents
+(`spyOn(...).and.returnValue`, `jasmine.createSpyObj`, `jasmine.objectContaining`) do
+not exist here — use `vi.spyOn(...).mockReturnValue(...)`, `expect.objectContaining`,
+and `expect.any`.
 
-  beforeEach(() => {
-    // Create mocks
-    mockColorUtil = jasmine.createSpyObj('ColorUtilService', ['getRgb255Array']);
-    mockBpca = jasmine.createSpyObj('BpcaService', ['calcBPCA', 'sRGBtoY', 'bridgeRatio']);
+```ts
+import { vi } from 'vitest';
+import { colorUtil } from './color-util.service';
 
-    TestBed.configureTestingModule({
-      providers: [
-        ColorMetricsService,
-        { provide: ColorUtilService, useValue: mockColorUtil },
-        { provide: BpcaService, useValue: mockBpca }
-      ]
-    });
+it('returns null when the color cannot be converted', () => {
+  vi.spyOn(colorUtil, 'getRgb255Array').mockReturnValue(null);
 
-    service = TestBed.inject(ColorMetricsService);
-  });
-
-  it('should calculate BPCA contrast', () => {
-    // Setup mocks
-    mockBpca.calcBPCA.and.returnValue(60);
-    mockColorUtil.getRgb255Array.and.returnValue([255, 255, 255]);
-    mockBpca.sRGBtoY.and.returnValue(1.0);
-    mockBpca.bridgeRatio.and.returnValue('4.5');
-
-    // Test
-    const result = service.calcRawBpcaContrast('#000000', '#ffffff');
-
-    expect(result).toBe(4.5);
-    expect(mockBpca.calcBPCA).toHaveBeenCalled();
-  });
+  expect(colorMetrics.calcRawApcaContrast('#000000', '#ffffff')).toBeNull();
 });
 ```
+
+Prefer a spy over feeding a component input that makes it throw. A spec that drives a
+real error through the component prints a stack trace on every run, which trains you to
+ignore stderr.
 
 ---
 
-## Component Testing
+## Testing components
 
-### Basic Component Test Template
+Components are custom elements. Mounting one means creating it, appending it, and
+waiting for Lit's render — which `src/app/test-utils.ts` wraps.
 
-```typescript
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MyComponent } from './my-component.component';
+Import the module for its `@customElement` side effect before mounting:
 
-describe('MyComponent', () => {
-  let component: MyComponent;
-  let fixture: ComponentFixture<MyComponent>;
+```ts
+import { describe, it, expect, afterEach } from 'vitest';
+import './color-slider';
+import { mount, flush, cleanup } from '../../test-utils';
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MyComponent]  // Standalone component
-    }).compileComponents();
+afterEach(cleanup);
 
-    fixture = TestBed.createComponent(MyComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+describe('cc-color-slider', () => {
+  it('gives the range input a name the label actually reaches', async () => {
+    const el = await mount('cc-color-slider', {
+      id: 'slider-0',
+      label: 'Foreground lightness',
+      color: '#639066',
+    });
+    const input = el.querySelector('input[type="range"]') as HTMLInputElement;
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+    // `labels` is the browser's own view of the association.
+    expect(input.labels).toHaveLength(1);
   });
 });
 ```
 
-### ColorPickerComponent Example Tests
+Every component here renders into the **light DOM**, so rendered markup is queryable
+directly off the element — no shadow-root traversal. `candor-*` elements do use shadow
+DOM, so reaching inside one means `el.shadowRoot!.querySelector(...)`.
 
-```typescript
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ColorPickerComponent } from './color-picker.component';
+### Asserting on events
 
-describe('ColorPickerComponent', () => {
-  let component: ColorPickerComponent;
-  let fixture: ComponentFixture<ColorPickerComponent>;
+Listen before you act. Events are dispatched with `bubbles: true, composed: true`.
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ColorPickerComponent]
-    }).compileComponents();
+```ts
+it('emits the picked color', async () => {
+  const el = await mount('cc-color-picker', { inputId: 'fg-color' });
+  const input = el.querySelector('input[type="color"]') as HTMLInputElement;
 
-    fixture = TestBed.createComponent(ColorPickerComponent);
-    component = fixture.componentInstance;
-  });
+  const events: CustomEvent[] = [];
+  el.addEventListener('selected-color', (e) => events.push(e as CustomEvent));
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  input.value = '#ff5733';
+  input.dispatchEvent(new Event('input'));
+  await flush(el);
 
-  describe('Inputs', () => {
-    it('should accept color input', () => {
-      fixture.componentRef.setInput('color', '#ff5733');
-      fixture.detectChanges();
-
-      expect(component.color()).toBe('#ff5733');
-    });
-
-    it('should accept inputId', () => {
-      fixture.componentRef.setInput('inputId', 'custom-id');
-      fixture.detectChanges();
-
-      expect(component.inputId()).toBe('custom-id');
-    });
-  });
-
-  describe('Outputs', () => {
-    it('should emit selectedColor event', (done) => {
-      component.selectedColor.subscribe(event => {
-        expect(event.color).toBe('#ff5733');
-        expect(event.pickerId).toBe(component.inputId());
-        done();
-      });
-
-      // Simulate user interaction
-      component.handleColorInput('#ff5733');
-    });
-  });
-
-  describe('Template', () => {
-    it('should render color input', () => {
-      fixture.detectChanges();
-      const input = fixture.nativeElement.querySelector('input[type="color"]');
-
-      expect(input).toBeTruthy();
-    });
-
-    it('should bind input value to color signal', () => {
-      fixture.componentRef.setInput('color', '#ff5733');
-      fixture.detectChanges();
-
-      const input = fixture.nativeElement.querySelector('input[type="color"]');
-      expect(input.value).toBe('#ff5733');
-    });
-  });
+  expect(events[0].detail).toBe('#ff5733');
 });
 ```
 
-### Testing User Interactions
+### Driving user interaction
 
-```typescript
-describe('ColorSliderComponent - User Interactions', () => {
-  let component: ColorSliderComponent;
-  let fixture: ComponentFixture<ColorSliderComponent>;
+Do what the browser does: write the value, then dispatch the event.
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ColorSliderComponent]
-    }).compileComponents();
+```ts
+input.value = '0.42';
+input.dispatchEvent(new Event('input'));
+await flush(el);
 
-    fixture = TestBed.createComponent(ColorSliderComponent);
-    component = fixture.componentInstance;
-    fixture.componentRef.setInput('color', '#ff5733');
-    fixture.detectChanges();
-  });
-
-  it('should update value on slider change', () => {
-    const slider = fixture.nativeElement.querySelector('input[type="range"]');
-
-    slider.value = '75';
-    slider.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
-
-    expect(component.value()).toBe(75);
-  });
-
-  it('should emit colorVariant on slider change', (done) => {
-    component.colorVariant.subscribe(event => {
-      expect(event.sliderId).toBe(component.id());
-      expect(event.color).toBeDefined();
-      done();
-    });
-
-    const slider = fixture.nativeElement.querySelector('input[type="range"]');
-    slider.value = '75';
-    slider.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
-  });
-});
+expect(input.getAttribute('aria-valuetext')).toBe('42%');
 ```
+
+### Waiting for async renders
+
+Some components resolve data before they can render — `cc-color-slider` computes its
+lightness range asynchronously, so the range input does not exist on the first render.
+Settle the promise chain, then the re-render it queues:
+
+```ts
+async function settled(el: Element) {
+  await flush(el);
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  await flush(el);
+  return el.querySelector('input[type="range"]') as HTMLInputElement;
+}
+```
+
+Prefer this over a fixed `setTimeout(…, 50)`, which passes until the machine is busy.
 
 ---
 
-## Testing with Signals
+## The test helpers
 
-### Testing Signal State
+`src/app/test-utils.ts`:
 
-```typescript
-describe('Component with Signals', () => {
-  let component: MyComponent;
-  let fixture: ComponentFixture<MyComponent>;
+| Helper | Purpose |
+|---|---|
+| `mount(tag, props?)` | Creates the element, assigns properties, appends it, awaits the first render, returns it |
+| `flush(el)` | Awaits the element's pending render (`updateComplete`) |
+| `update(el, props)` | Assigns properties and awaits the re-render |
+| `cleanup()` | Empties `document.body` — call it from `afterEach` |
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MyComponent]
-    }).compileComponents();
+`mount` **assigns properties, it does not set attributes**, so booleans and objects
+reach the component as-is rather than as strings. It is typed off
+`HTMLElementTagNameMap`, which is why every component declares itself there at the
+bottom of its file:
 
-    fixture = TestBed.createComponent(MyComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should update signal value', () => {
-    component.mySignal.set('new value');
-    expect(component.mySignal()).toBe('new value');
-  });
-
-  it('should update signal with update method', () => {
-    component.count.set(5);
-    component.count.update(val => val + 1);
-    expect(component.count()).toBe(6);
-  });
-});
+```ts
+declare global {
+  interface HTMLElementTagNameMap {
+    'cc-color-slider': CcColorSlider;
+  }
+}
 ```
 
-### Testing Computed Signals
-
-```typescript
-describe('Computed Signals', () => {
-  let component: MetadataComponent;
-  let fixture: ComponentFixture<MetadataComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MetadataComponent]
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(MetadataComponent);
-    component = fixture.componentInstance;
-  });
-
-  it('should compute metadata from color input', () => {
-    fixture.componentRef.setInput('colorOne', '#ff5733');
-    fixture.detectChanges();
-
-    const meta = component.colorOneMeta();
-
-    expect(meta).not.toBeNull();
-    expect(meta!.lightness).toBeDefined();
-    expect(meta!.chroma).toBeDefined();
-    expect(meta!.hue).toBeDefined();
-  });
-
-  it('should recompute when input changes', () => {
-    fixture.componentRef.setInput('colorOne', '#ff5733');
-    fixture.detectChanges();
-    const meta1 = component.colorOneMeta();
-
-    fixture.componentRef.setInput('colorOne', '#0000ff');
-    fixture.detectChanges();
-    const meta2 = component.colorOneMeta();
-
-    expect(meta2).not.toEqual(meta1);
-  });
-});
-```
-
-### Testing Effects
-
-```typescript
-describe('Effects', () => {
-  it('should run effect when signal changes', fakeAsync(() => {
-    let effectRan = false;
-
-    TestBed.runInInjectionContext(() => {
-      const mySignal = signal('initial');
-
-      effect(() => {
-        mySignal();  // Track signal
-        effectRan = true;
-      });
-
-      flush();  // Run effect
-      expect(effectRan).toBe(true);
-
-      effectRan = false;
-      mySignal.set('updated');
-      flush();  // Run effect again
-      expect(effectRan).toBe(true);
-    });
-  }));
-});
-```
+Skip that declaration and `mount('cc-your-thing', { … })` loses its types.
 
 ---
 
-## Test Patterns
+## Test patterns
 
-### AAA Pattern (Arrange, Act, Assert)
+### Arrange, act, assert
 
-```typescript
-it('should calculate contrast correctly', () => {
+```ts
+it('scores a saturated pair below the WCAG equivalent', () => {
   // Arrange
-  const colorOne = '#000000';
-  const colorTwo = '#ffffff';
-  const service = TestBed.inject(ColorMetricsService);
+  const fg = '#ff69b4';
+  const bg = '#1a1a1a';
 
   // Act
-  const result = service.getContrast(colorOne, colorTwo, 'apca');
+  const okca = colorMetrics.getContrast(fg, bg, 'okca');
 
-  // Assert
-  expect(result).toBeGreaterThan(100);
+  // Assert — WCAG gives this pair 6.6, a known false pass
+  expect(okca).toBeLessThan(4.5);
 });
 ```
 
-### Testing Edge Cases
+### Edge cases
 
-```typescript
-describe('Edge Cases', () => {
-  it('should handle empty string', () => {
-    const result = service.parseColor('');
-    expect(result).toBeNull();
+```ts
+describe('edge cases', () => {
+  it('returns null for an empty string', () => {
+    expect(service.parseColor('')).toBeNull();
   });
 
-  it('should handle null input', () => {
-    const result = service.parseColor(null as any);
-    expect(result).toBeNull();
+  it('returns 0 for identical colors', () => {
+    expect(service.calcDeltaE('#ff5733', '#ff5733')).toBe(0);
   });
 
-  it('should handle extreme lightness values', () => {
-    expect(service.createSrgbColor('#ff5733', -0.1)).toBeDefined();
-    expect(service.createSrgbColor('#ff5733', 1.5)).toBeDefined();
-  });
-
-  it('should handle identical colors', () => {
-    const result = service.calcDeltaE('#ff5733', '#ff5733');
-    expect(result).toBe(0);
+  it('returns NaN when contrast is too low for any object', () => {
+    expect(service.getMinObjectDimension(10)).toBeNaN();
   });
 });
 ```
 
-### Testing Error Handling
+### Descriptive names
 
-```typescript
-describe('Error Handling', () => {
-  it('should handle parsing errors gracefully', () => {
-    spyOn(console, 'error');
-    const result = service.parseColor('invalid');
+Name the behaviour, not the method:
 
-    expect(result).toBeNull();
-    expect(console.error).toHaveBeenCalled();
-  });
+```ts
+// Good
+it('keeps the input id distinct from the host id', () => {});
+it('re-announces an identical message', () => {});
 
-  it('should not throw on invalid input', () => {
-    expect(() => {
-      service.getRgb255Array('invalid');
-    }).not.toThrow();
-  });
-});
+// Avoid
+it('works', () => {});
+it('tests parseColor', () => {});
 ```
+
+### Isolation
+
+`cleanup()` in `afterEach` is not optional for component specs. Elements left in
+`document.body` leak into the next test, and duplicate ids are exactly the class of bug
+these specs exist to catch.
 
 ---
 
-## Best Practices
+## The guard specs
 
-### 1. Test Isolation
+Two specs test the repo's rules rather than its behaviour. Both encode a failure that
+already happened once, and both are cheap to keep passing.
 
-Each test should be independent:
+### `src/app/candor-package.spec.ts` (26 tests)
 
-```typescript
-// Good
-beforeEach(() => {
-  service = TestBed.inject(MyService);
-});
+Pins the facts about `@candor-design/web-components` that this app's workarounds depend
+on, so the workarounds can be deleted when upstream changes rather than lingering
+forever. Among them:
 
-// Avoid
-let service: MyService;
-service = TestBed.inject(MyService);  // Shared state
-```
+- The `cc-*` / `candor-*` split. The package has one entry point with
+  `sideEffects: true`, so importing it registers all 41 of its elements at once. A local
+  element reclaiming a `candor-*` name throws on registration and takes the rest of the
+  package down with it, leaving a half-registered app.
+- `candor-card` sets `overflow: hidden` on a shadow node exposed neither as a `::part`
+  nor through a custom property, which clips an absolutely-positioned tooltip bubble
+  (`pawn002/candor#259`).
+- `candor-radio` resolves its group as `closest('fieldset')` then `parentElement`, which
+  is why the group markup needs a real `<fieldset>`.
 
-### 2. Descriptive Test Names
+**When you add a pin, comment what breaks if it fails.** A pin whose purpose is not
+written down gets deleted by whoever sees it fail.
 
-```typescript
-// Good
-it('should return null when color parsing fails', () => {});
-it('should emit selectedColor event with correct picker ID', () => {});
+### `src/app/_components/styles-scoping.spec.ts` (10 tests)
 
-// Avoid
-it('test 1', () => {});
-it('works', () => {});
-```
-
-### 3. One Assertion Per Concept
-
-```typescript
-// Good
-it('should parse valid hex color', () => {
-  const result = service.parseColor('#ff5733');
-  expect(result).not.toBeNull();
-});
-
-it('should parse rgb color', () => {
-  const result = service.parseColor('rgb(255, 87, 51)');
-  expect(result).not.toBeNull();
-});
-
-// Avoid
-it('should parse colors', () => {
-  expect(service.parseColor('#ff5733')).not.toBeNull();
-  expect(service.parseColor('rgb(255, 87, 51)')).not.toBeNull();
-  expect(service.parseColor('hsl(10, 100%, 60%)')).not.toBeNull();
-  // Too many concerns in one test
-});
-```
-
-### 4. Use `beforeEach` Wisely
-
-```typescript
-// Good - Setup common to all tests
-beforeEach(() => {
-  TestBed.configureTestingModule({});
-  service = TestBed.inject(MyService);
-});
-
-// Avoid - Test-specific setup in beforeEach
-beforeEach(() => {
-  // This might not be needed for all tests
-  specialConfig = setupComplexScenario();
-});
-```
-
-### 5. Clean Up After Tests
-
-```typescript
-afterEach(() => {
-  // Clean up subscriptions, timers, etc.
-  fixture.destroy();
-});
-```
+Every `*.component.scss` is a plain global stylesheet, because the component importing
+it renders into the light DOM. This spec asserts that top-level selectors are prefixed
+with the component's own tag — `cc-metadata .comp-container`, not `.comp-container`.
+Seven files once declared a bare `.comp-container` and silently overwrote each other.
 
 ---
 
 ## Coverage
 
-### Current Test Coverage
-
-The project has comprehensive test coverage across all services and components. Run `npm test` to see the current test count and pass rate.
-
-**Coverage by area**:
-- **Services**: ColorUtilService, BpcaService, ColorMetricsService
-- **App components**: ColorPickerComponent, AlertComponent, CopyToClipboardButtonComponent, ColorContrastComponent, MetadataComponent, ColorSliderComponent, PaletteTableComponent, TonePickerComponent
-- **Candor components**: AccordionItemComponent, ButtonComponent, CardComponent, CheckboxComponent, RadioComponent, TableComponent, ToastComponent
-
-### Running Coverage
+Coverage is not wired into CI and there is no enforced threshold. To look at it locally:
 
 ```bash
-ng test --code-coverage
+npx vitest run --coverage
 ```
 
-Coverage reports are generated in `coverage/` directory.
+Reports land in `coverage/`, which is git-ignored. Open `coverage/index.html` to browse.
 
-### Viewing Coverage
-
-Open `coverage/index.html` in a browser to see:
-- Line coverage
-- Branch coverage
-- Function coverage
-- Statement coverage
-
-### Coverage Goals
-
-- **Services**: 80%+ coverage ✅ (achieved)
-- **Components**: 70%+ coverage ✅ (achieved)
-- **Critical paths**: 100% coverage ✅ (achieved)
+The suite covers all three services and the components with logic worth pinning —
+`cc-alert`, `cc-color-contrast`, `cc-color-slider`, `cc-metadata` — plus the two guard
+specs. `cc-color-picker`, `cc-copy-to-clipboard-button`, `cc-palette-table` and
+`cc-table` have no specs of their own yet; they are the obvious place to add coverage.
 
 ---
 
-## Continuous Integration
+## Continuous integration
 
-### Future CI Setup
+`.github/workflows/ci.yml` runs on every push and PR to `main`:
 
-When CI is configured, tests should:
+- **`test` job**, on Node 20 and 22: `npm ci`, `npm run build`, `npm test`
+- **`typecheck` job**, on Node 22: `npm ci`, `npm run typecheck`
 
-1. Run on every push
-2. Run on every pull request
-3. Block merge if tests fail
-4. Generate coverage reports
-5. Fail if coverage drops below threshold
+Type-checking is a separate job because it is not per-Node-version — the compiler's
+answer does not change with the runtime.
 
-### Example GitHub Actions
+**`npm run build` does not type-check.** `vite build` transpiles and strips types
+without ever invoking the compiler, so a type error passes the build and ships. Only
+`npm run typecheck` (`tsc --noEmit`) checks them, and when that job was added it
+immediately reported two genuine errors in `candor-package.spec.ts` that had been
+sitting in the tree unread.
 
-```yaml
-name: Tests
+Run all three before pushing — locally is cheaper than a red PR:
 
-on: [push, pull_request]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '18'
-      - run: npm install
-      - run: npm test -- --watch=false --code-coverage
+```bash
+npm run typecheck
+npm test
+npm run build
 ```
 
----
-
-## Next Steps
-
-1. Start writing tests for existing code
-2. Ensure all new code includes tests
-3. Aim for 80% coverage on services
-4. Add integration tests
-5. Consider E2E tests with Playwright or Cypress
+`.github/workflows/deploy.yml` re-runs the typecheck and test gates before publishing.
+CI and the deploy workflow are triggered independently by the same push, so nothing
+otherwise stops a red CI run and a green deploy from racing.
 
 ---
 
 ## Resources
 
-- [Jasmine Documentation](https://jasmine.github.io/)
-- [Angular Testing Guide](https://angular.dev/guide/testing)
-- [Testing Angular Signals](https://angular.dev/guide/signals#testing)
-- [Karma Documentation](https://karma-runner.github.io/)
-
----
-
-## Questions?
-
-- Review [Contributing Guide](./contributing.md) for development workflow
-- Check [Services](./services.md) and [Components](./components.md) for API documentation
-- Open an issue for testing-related questions
+- [Vitest documentation](https://vitest.dev/)
+- [Lit testing guide](https://lit.dev/docs/tools/testing/)
+- [Contributing Guide](./contributing.md) — the workflow around a change
+- [Components](./components.md) and [Services](./services.md) — the APIs under test

@@ -1,8 +1,33 @@
-# Candor Design System — Release Findings from CQPI Migration
+# Candor Design System — Release Findings from the CPQI Migration
+
+> **Historical document — March 2026. Do not act on it as current guidance.**
+>
+> This records findings from the era when CPQI carried a **local `_candor/` directory** of
+> Angular components copied from the design system. That directory no longer exists: in
+> August 2026 the app migrated to the published `@candor-design/web-components` 5.0.1 and
+> `@candor-design/tokens` 5.0.1 packages, and the app itself had already been rewritten
+> from Angular to Lit.
+>
+> Consequently:
+>
+> - The **file paths** below (`table.component.scss`, `card.component.scss`,
+>   `semantics.scss`) refer to files in the Candor repository, not this one. There is
+>   nothing here to patch.
+> - The **proposed APIs** are written in Angular's `input()` syntax, which is how Candor
+>   was authored at the time. Candor 5 ships web components.
+> - Section 4's **integration patterns** describe Angular's `ViewEncapsulation` and
+>   emulated style encapsulation. Candor now uses real shadow DOM, so the constraints are
+>   different — see [architecture.md](./architecture.md) and
+>   [components.md](./components.md) for what actually applies.
+>
+> It is kept for provenance: it is the record of what this app fed back upstream, and
+> several items here shaped Candor 5. For **live** upstream issues affecting CPQI, see
+> the workaround table in [architecture.md](./architecture.md#upstream-workarounds-carried-here)
+> — `candor#257`, `#258`, `#259`, `#260`, `#262`, `#265`, `#266`.
 
 ## Overview
 
-Color Pair Quick Iterator (CQPI) completed a full migration to the Candor design system in March 2026 across 18 commits. The migration consumed 7 Candor components (Accordion, Button, Card, Checkbox, Radio, Table, Toast), adopted the full Candor token set, and replaced all legacy local CSS variable aliases with direct Candor semantic tokens.
+Color Pair Quick Iterator (CPQI) completed a full migration to the Candor design system in March 2026 across 18 commits. The migration consumed 7 Candor components (Accordion, Button, Card, Checkbox, Radio, Table, Toast), adopted the full Candor token set, and replaced all legacy local CSS variable aliases with direct Candor semantic tokens.
 
 During the migration, several confirmed bugs, API gaps, missing tokens, and non-obvious integration patterns were discovered. This document consolidates those findings as concrete proposals for the next Candor release.
 
@@ -28,7 +53,7 @@ In dark mode:
 background: var(--color-bg-surface);  // was --color-bg-elevated
 ```
 
-**Evidence:** CQPI applied this fix locally to make tables readable in dark mode.
+**Evidence:** CPQI applied this fix locally to make tables readable in dark mode.
 
 ---
 
@@ -50,7 +75,7 @@ background: var(--color-bg-surface);  // was --color-bg-elevated
 
 **Scope:** Light mode only. Dark mode already works because elevation uses distinct OKLCH lightness values.
 
-**Evidence:** CQPI added this locally; without it, elevated cards on a light-mode surface were invisible to users.
+**Evidence:** CPQI added this locally; without it, elevated cards on a light-mode surface were invisible to users.
 
 ---
 
@@ -64,7 +89,7 @@ background: var(--color-bg-surface);  // was --color-bg-elevated
 - Rename to `--color-text-toast` to group it with other text tokens, and add a comment: `// intentionally subtle in dark mode`
 - Or keep the name but add an inline comment in `semantics.scss` explaining the light/dark intentionality
 
-**Evidence:** CQPI substituted `--color-text-default` directly, unknowingly losing the dark-mode dimming behaviour.
+**Evidence:** CPQI substituted `--color-text-default` directly, unknowingly losing the dark-mode dimming behaviour.
 
 ---
 
@@ -85,7 +110,7 @@ variant = input<'default' | 'subtle' | 'quiet'>('default');
 | `subtle` | `--font-weight-regular` | `--font-size-md` | `--color-text-subtle` |
 | `quiet` | `--font-weight-regular` | `--font-size-sm` | `--color-text-subtle` |
 
-**Evidence:** CQPI added this locally and applied it across three accordion groups in the same card — primary LCH controls (`default`), secondary LCH limits (`subtle`), and help text (`quiet`).
+**Evidence:** CPQI added this locally and applied it across three accordion groups in the same card — primary LCH controls (`default`), secondary LCH limits (`subtle`), and help text (`quiet`).
 
 ---
 
@@ -97,7 +122,7 @@ variant = input<'default' | 'subtle' | 'quiet'>('default');
 - Remove `overflow: hidden` from the default card styles entirely (it was likely added to enforce `border-radius` clipping, which modern browsers handle without it in most cases)
 - Add an `overflow` input: `overflow = input<'visible' | 'hidden' | 'auto'>('visible')`
 
-**Evidence:** CQPI removed `overflow: hidden` with an explicit comment after discovering it prevented a sticky header from working inside a card. The border-radius still renders correctly without it.
+**Evidence:** CPQI removed `overflow: hidden` with an explicit comment after discovering it prevented a sticky header from working inside a card. The border-radius still renders correctly without it.
 
 ---
 
@@ -105,7 +130,7 @@ variant = input<'default' | 'subtle' | 'quiet'>('default');
 
 ### 3.1 Touch target size tokens
 
-**Gap:** No minimum interactive hit target tokens exist in Candor. CQPI defined these locally to ensure WCAG compliance:
+**Gap:** No minimum interactive hit target tokens exist in Candor. CPQI defined these locally to ensure WCAG compliance:
 
 ```scss
 --min-hit-dimension-aaa: 2.75rem;  // 44px — WCAG 2.5.5 AAA
@@ -170,15 +195,15 @@ In light mode, `--color-bg-page` and `--color-bg-elevated` are both near-white. 
 
 ## 5. Out of Scope
 
-The following CQPI-specific items were identified during the migration but are not appropriate for the Candor token/component system:
+The following CPQI-specific items were identified during the migration but are not appropriate for the Candor token/component system:
 
 | Item | Reason |
 |------|--------|
 | `--fluid-padding` | App-specific responsive padding using `clamp()` for the app container; not a general-purpose token |
-| `--grad-stop-*` | Perceptual lightness gradient stop values for colour palette visualisation; CQPI-specific |
+| `--grad-stop-*` | Perceptual lightness gradient stop values for colour palette visualisation; CPQI-specific |
 | Range input (slider) thumb styling | Custom styling for `<input type="range">`; no Candor slider component exists |
 | Contrast score container-query scaling (`55cqh`) | App-specific container query font-size trick for the sticky header |
-| `TonePickerComponent` API delta | CQPI added `hideHeaders`, Candor has `caption`. These serve overlapping but distinct use cases and should be aligned as a separate discussion |
+| `TonePickerComponent` API delta | CPQI added `hideHeaders`, Candor has `caption`. These serve overlapping but distinct use cases and should be aligned as a separate discussion |
 
 ---
 

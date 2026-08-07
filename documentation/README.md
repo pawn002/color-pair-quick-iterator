@@ -1,125 +1,158 @@
-# Color Pair Quick Iterator - Documentation
+# Color Pair Quick Iterator — Documentation
 
-Welcome to the developer documentation for the Color Pair Quick Iterator (CPQI) project.
-
-> [!WARNING]
-> **Much of this folder predates the Lit migration and is out of date.** The app was rewritten from Angular 20 to Lit web components, and these guides still describe the Angular setup in places — `ng serve`, port 4200, Karma/Jasmine, `angular.json`, `*.component.ts` files, `input()`/`output()`/`signal()`. Commands and API examples here may not match the repo.
->
-> **The design-system sections are current.** The Candor parts of [`architecture.md`](./architecture.md) and [`components.md`](./components.md) were rewritten for the migration to `@candor-design/web-components` (#149). The local `_candor/` directory they used to describe no longer exists.
->
-> Accurate sources meanwhile: [`CLAUDE.md`](../CLAUDE.md) and the root [`README.md`](../README.md), both kept current. A full rewrite of the remaining Angular-era prose is tracked separately.
+Developer documentation for the Color Pair Quick Iterator (CPQI) project.
 
 ## Overview
 
-Color Pair Quick Iterator is a Lit web components application designed for exploring and iterating on accessible color pairs. Its primary contrast algorithm is **OKCA** — an OKLCH-native ratio that outputs on the familiar 1–21 scale with zero false passes against WCAG 2.x. APCA and Bridge-PCA are also supported for comparison.
+CPQI is a **Lit 3** web-components application for exploring and iterating on accessible
+color pairs. Its primary contrast algorithm is **OKCA** — an OKLCH-native ratio on the
+familiar 1–21 scale with zero false passes against WCAG 2.x. APCA, Bridge-PCA, and
+Delta E are also available for comparison.
 
-**Live Application**: https://pawn002.github.io/color-pair-quick-iterator/
+**Live application**: https://pawn002.github.io/color-pair-quick-iterator/
 
-## Documentation Structure
+> **There is no Angular here.** The app was rewritten as Lit web components in commit
+> `36bd8e2`, and later migrated from a local `_candor/` directory to the published
+> `@candor-design/*` packages. If you find a reference to `angular.json`, `ng build`,
+> `ng serve`, NgModules, signals, `inject()`, Karma, or Jasmine, it describes a version
+> of this repo that no longer exists.
 
-This documentation is organized into the following sections:
+## Documentation structure
 
 ### 1. [Getting Started](./getting-started.md)
-Quick start guide for new developers including:
-- Prerequisites and system requirements
-- Installation and setup instructions
-- Running the development server
-- First steps with the codebase
 
-### 2. [Architecture](./architecture.md)
-High-level architecture overview covering:
-- Project structure and organization
-- Architectural patterns and decisions
-- Data flow and state management
-- Module and component hierarchy
-- URL state management with Location service
+Setup for a new developer:
 
-### 3. [Services](./services.md)
-Detailed documentation for core services:
-- ColorUtilService - Color manipulation and utilities
-- ColorMetricsService - Contrast calculation
-- BpcaService - Bridge-PCA implementation
-
-### 4. [Components](./components.md)
-Component library documentation including:
-- App-specific components (`_components/`) — responsibilities and usage
-- Candor design system components (`candor-*`, from `@candor-design/web-components`) and design tokens
-- Input/Output interfaces
-- Signal-based state management
-- Integration patterns
-
-### 5. [Contributing](./contributing.md)
-Guidelines for contributing to the project:
-- Code style and conventions
-- Candor design system conventions and token usage
-- Angular 20 best practices
-- TypeScript standards
-- Pull request process
-
-### 6. [Testing](./testing.md)
-Testing strategy and guidelines:
-- Unit testing with Karma and Jasmine
-- Component testing patterns
-- Running tests
-- Writing new tests
-
-### 7. [Deployment](./deployment.md)
-Deployment process and configuration:
-- Building for production
-- GitHub Pages deployment
-- Configuration management
+- Prerequisites — Node 20 or 22, no browser needed for tests
+- Installation and verification
+- Running the Vite dev server on port 5173
+- First steps: reading a component, reading a service
 - Troubleshooting
 
-## Quick Reference
+### 2. [Architecture](./architecture.md)
 
-### Essential Commands
+How the pieces fit:
+
+- Project structure and the light-DOM decision
+- Component communication — properties down, custom events up
+- Candor integration and the `cc-*` / `candor-*` split
+- Service architecture as module singletons
+- URL state via `URLSearchParams` and `history.replaceState`
+- Build, deployment, dependencies, accessibility
+
+### 3. [Services](./services.md)
+
+The business logic:
+
+- **ColorUtilService** — parsing, conversion, gamut work, variant generation
+- **ColorMetricsService** — contrast across OKCA, APCA, Bridge-PCA, and Delta E
+- **BpcaService** — the Bridge-PCA implementation
+- Error-handling conventions and testing patterns
+
+### 4. [Components](./components.md)
+
+The UI:
+
+- The eight `cc-*` elements, with their real properties and event names
+- `candor-*` design-system elements, and the upstream gotchas this app works around
+- Communication patterns, styling rules, accessibility details
+
+### 5. [Contributing](./contributing.md)
+
+Before you change anything:
+
+- Development workflow and the verification steps
+- **Lit conventions** — registration, light DOM, properties, templates, events
+- Candor conventions, tokens, typography, icons, tooltip placement
+- TypeScript standards
+- Testing requirements, PR process, commit format
+
+### 6. [Testing](./testing.md)
+
+- vitest in jsdom — no browser, no Karma, no `TestBed`
+- The `mount` / `flush` / `update` / `cleanup` helpers
+- Service and component patterns
+- The two guard specs, and why they exist
+- CI
+
+### 7. [Deployment](./deployment.md)
+
+- Push to `main`; GitHub Actions does the rest
+- Pages configuration, and why a green deploy job is not proof the site updated
+- Verifying a deployment, rolling back, tagging a release
+
+### 8. [Candor Release Findings](./candor-release-findings.md)
+
+A historical record of the March 2026 design-system migration, kept for provenance. See
+the note at the top of that file before acting on anything in it.
+
+## Quick reference
+
+### Commands
 
 ```bash
-npm start              # Development server (vite)
-npm run build          # Production build
-npm test               # Run unit tests once with vitest
-npm run test:watch     # Run vitest in watch mode
+npm start                  # Vite dev server on http://localhost:5173
+npm run build              # Production build to dist/ (portable, root-relative)
+npm run build:gh-pages     # Build with the /color-pair-quick-iterator/ base path
+npm run typecheck          # tsc --noEmit — the ONLY thing that type-checks this repo
+npm test                   # Single vitest run, exits with a status code
+npm run test:watch         # vitest in watch mode
+npm run preview            # Serve the production build locally
 ```
 
-### Key Technologies
+**`npm run build` does not type-check.** `vite build` transpiles and strips types without
+invoking the compiler, so a type error passes the build and ships. Run `npm run typecheck`
+separately — CI does.
 
-- **Angular 20.3.0** - Modern Angular framework with signals and standalone components
-- **Angular CLI 20.3.4** - Build tooling and development server
-- **TypeScript 5.9.2** - Strict type checking enabled
-- **colorjs.io 0.5.2** - Color space conversions and manipulation in OKLCH
-- **@pawn002/okca** - OKCA contrast algorithm (primary) — OKLCH-native, zero WCAG false passes
-- **apca-w3 0.1.9** - APCA contrast calculation algorithm
-- **bridge-pca 0.1.6** - WCAG 2.x ratio approximation (partial implementation)
-- **d3 7.9.0** - Scale utilities for contrast-to-size mapping
-- **lodash-es 4.17.21** - Utility functions (ESM-compatible)
+### Key technologies
 
-## Project Goals
+- **Lit 3.2** — web components; every locally-authored element renders into the light DOM
+- **Vite 6** — build tooling and dev server; also carries the vitest config
+- **vitest 3.2** with **jsdom** — tests, in Node, with no browser
+- **TypeScript 5.7** — strict mode
+- **@candor-design/web-components 5.0.1** — design-system primitives (shadow DOM)
+- **@candor-design/tokens 5.0.1** — design tokens as CSS custom properties
+- **colorjs.io 0.5.2** — color space conversions and gamut mapping in OKLCH
+- **@pawn002/okca 2.0.2** — OKCA, the primary contrast algorithm
+- **apca-w3 0.1.9** — APCA
+- **bridge-pca 0.1.6** — WCAG 2.x ratio approximation (partially reimplemented in
+  `BpcaService`)
+- **d3 7.9** — scale utilities for contrast-to-size mapping
+- **lodash-es 4.17** — utility functions
 
-1. **Accessibility First**: Help designers create color combinations that meet and exceed WCAG guidelines
-2. **Zero False Passes**: OKCA is the primary algorithm — stricter than WCAG for saturated chromatic colors, never approves what WCAG rejects
-3. **Developer Experience**: Provide intuitive tools for exploring color accessibility
-4. **Education**: Help users understand the relationship between color contrast and accessibility
-5. **Shareable Results**: URL-based state management allows sharing specific color combinations
+## Project goals
 
-## Getting Help
+1. **Accessibility first** — help designers create color combinations that meet and
+   exceed WCAG guidelines
+2. **Zero false passes** — OKCA is stricter than WCAG for saturated chromatic colors and
+   never approves what WCAG rejects
+3. **Developer experience** — intuitive tools for exploring color accessibility
+4. **Education** — help users understand how color contrast and accessibility relate
+5. **Shareable results** — URL-based state so a link reproduces exactly what you see
 
-- Check the [Getting Started](./getting-started.md) guide for setup issues
-- Review [Architecture](./architecture.md) for understanding the codebase structure
-- Consult [CLAUDE.md](../CLAUDE.md) for AI-assisted development guidance
-- See [best-practices.md](../best-practices.md) for Angular and TypeScript conventions
+## Getting help
+
+- [Getting Started](./getting-started.md) for setup problems
+- [Architecture](./architecture.md) to understand the codebase
+- [CLAUDE.md](../CLAUDE.md) — the project conventions in the form the AI tooling reads.
+  It is kept current and is authoritative where these guides disagree with it
+- Read the comments in the source. Where the code looks arbitrary it is usually recording
+  a bug it is shaped to avoid, with an issue number attached
 
 ## Contributing
 
-We welcome contributions! Please read the [Contributing Guidelines](./contributing.md) before submitting pull requests.
+Please read the [Contributing Guidelines](./contributing.md) before opening a pull
+request.
 
 ## License
 
-This project is licensed under the **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0)**.
+Licensed under **Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+International (CC BY-NC-SA 4.0)**:
 
-This means:
-- ✅ You may use, modify, and build upon this work non-commercially
-- ✅ You must give appropriate credit to the original author
-- ✅ Derivative works must be licensed under the same terms
-- ❌ Commercial use is not permitted without explicit permission
+- ✅ Use, modify, and build upon this work non-commercially
+- ✅ Give appropriate credit to the original author
+- ✅ Share derivative works under the same license
+- ❌ Commercial use requires explicit permission
 
-See the [LICENSE](../LICENSE) file for full details or visit [creativecommons.org/licenses/by-nc-sa/4.0/](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+See [LICENSE](../LICENSE) or
+[creativecommons.org/licenses/by-nc-sa/4.0/](https://creativecommons.org/licenses/by-nc-sa/4.0/).
