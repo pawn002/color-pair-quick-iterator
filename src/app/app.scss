@@ -245,11 +245,19 @@
      * Layout only. The typography belongs to `candor-text[variant="caption"]` —
      * Candor's voice for supplementary context, which is Noto Sans italic by
      * definition. Setting a font here would fork the type system. */
+    /* Candor's callout treatment — "the action-oriented sibling of blockquote:
+       upright, default-colour guidance the reader should act on", which is what
+       this note is. The indigo wash and decorative left border are the only
+       chroma in the Options card, and it sits far from the swatches, so it
+       brands the chrome without biasing any colour the user is judging. */
     .radio-group-note {
       display: block;
-      margin: var(--spacing-xs) 0 0;
-      padding-inline: var(--focus-ring-clearance);
+      margin: var(--spacing-sm) 0 0;
+      padding: var(--spacing-xs) var(--spacing-sm);
       max-width: 32rem;
+      border-inline-start: var(--border-width-thick) solid var(--color-highlight-decorative);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      background-color: var(--color-callout-bg);
     }
   }
 

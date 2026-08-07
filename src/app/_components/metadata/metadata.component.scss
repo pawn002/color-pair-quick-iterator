@@ -17,6 +17,20 @@ cc-metadata .comp-container {
     text-align: center;
   }
 
+  /* Pass/fail outcomes. Colour is additive — the cell still says "pass" or
+     "fail", so hue is a scanning aid rather than the meaning (WCAG 1.4.1).
+     Both outcomes previously rendered in --color-text-default, which made the
+     table unscannable in an app whose whole subject is legibility.
+     The `-text` variants are the ones tuned for text on a light surface;
+     --color-status-success itself is the UI-component fill. */
+  .outcome--pass {
+    color: var(--color-status-success-text);
+  }
+
+  .outcome--fail {
+    color: var(--color-status-error-text);
+  }
+
   td.label--with-info {
     display: flex;
     flex-direction: row-reverse;
