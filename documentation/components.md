@@ -1,884 +1,742 @@
-# Components Documentation
+# Components
 
-This document provides detailed documentation for all UI components in the Color Pair Quick Iterator application.
+Reference for the UI components in Color Pair Quick Iterator (CPQI).
 
 ## Overview
 
-The application contains two groups of components:
+There are two groups:
 
-- **App-specific components** (`src/app/_components/`) — 8 standalone components that implement the application's features
-- **Design system components** (`candor-*`) — imported from `@candor-design/web-components`; not in this repo
+- **App components** (`src/app/_components/`) — eight Lit elements authored here, all
+  prefixed `cc-*`
+- **Design-system components** — `candor-*` elements from
+  `@candor-design/web-components`; **not** in this repo
 
-The app's own components are Lit elements with co-located `.ts` and `.component.scss` files.
-
-## Component File Structure
-
-App-specific components follow this pattern:
+Every app component is a Lit element with co-located files:
 
 ```
 component-name/
-├── component-name.ts               # Lit element: logic and template
-└── component-name.component.scss   # Styles, imported by the .ts file
+├── component-name.ts               # Lit element: logic and template together
+├── component-name.component.scss   # Styles, imported by the .ts file
+└── component-name.spec.ts          # vitest spec (where one exists)
 ```
 
-Components render into the light DOM and reference Candor CSS custom property tokens for all visual values.
+There is no `.component.ts` and no separate `.html`. Those were the Angular versions and
+have been removed; only the `.component` in the *stylesheet* name survives as a historical
+leftover.
+
+## Conventions used throughout
+
+Every app component:
+
+- Renders into the **light DOM** (`createRenderRoot()` returns `this`), so the global
+  token stylesheet applies
+- Declares itself in `HTMLElementTagNameMap`, which keeps `document.createElement` and
+  the `mount()` test helper typed
+- Dispatches `CustomEvent`s with `bubbles: true, composed: true`, named for what happened
+
+Bindings in a parent's template:
+
+| Syntax | Sets |
+|---|---|
+| `.prop=${value}` | a property — **required** for objects, arrays, and booleans passed as values |
+| `attr=${value}` | an attribute |
+| `?attr=${value}` | toggles an attribute |
+| `@event=${handler}` | an event listener |
+
+Several properties declare a lowercase `attribute:` name, because HTML attributes are
+case-insensitive — `colorOne` is the property, `colorone` the attribute. Prefer the
+property form (`.colorOne=${…}`) in templates.
 
 ---
 
-## Root Component
+## Root element
 
-### AppComponent
+### `<cc-app>`
 
 **Location**: `src/app/app.ts`
 
-The root component that orchestrates the entire application, managing global state and coordinating child components.
+The root element. Owns all application state, synchronises it with the URL, and
+orchestrates every child.
 
 #### Responsibilities
 
-- Manages primary color pairs (foreground/background, selected/compared)
-- Handles contrast type selection (OKCA, APCA, Bridge-PCA, Object, or Delta E)
-- Coordinates UI toggles (constant chroma, show gradient)
-- Manages alert notifications and contextual note modals
-- Handles user interactions (swapping colors, matching chromas, resetting sliders)
+- Owns the foreground/background color pair (selected and compared)
+- Owns the contrast type: OKCA, APCA, Bridge-PCA, APCA object, or Delta E
+- Owns the UI toggles: constant chroma, show gradient
+- Reads state from the query string on connect; writes it back on every change
+- Handles swap, match-chromas, reset-sliders, and random-pair generation
+- Manages alert messages and the contextual note modals
 
-#### State Signals
+#### State
 
-```typescript
-// Color selections
-colorPickerOneSelectedColor = signal<string>('#2d5a3f');
-colorPickerOneComparedColor = signal<string>('#2d5a3f');
-colorPickerTwoSelectedColor = signal<string>('#f4f7f5');
-colorPickerTwoComparedColor = signal<string>('#f4f7f5');
+All `@state()`, all private:
 
-// UI state
-contrastType = signal<ContrastType | 'apca object'>('okca');
-constantChroma = signal<boolean>(true);
-showGradient = signal<boolean>(true);
-activeNoteModal = signal<string | null>(null);
-currentAlertMessage = signal<AlertMessagObj>(new AlertMessagObj());
+```ts
+@state() private fgColor = '';
+@state() private bgColor = '';
+@state() private fgComparedColor = '';
+@state() private bgComparedColor = '';
+@state() private contrastType: ContrastType | 'apca object' = 'okca';
+@state() private constantChroma = true;
+@state() private showGradient = true;
+@state() private activeNoteModal: string | null = null;
+@state() private currentAlertMessage: AlertMessageObj = { message: '' };
+@state() private resetSlider: ResetObject | null = null;
 ```
 
-#### Key Methods
+#### Notable internals
 
-**handleColorInputInput(inputNumber: 'One' | 'Two', event: string)**: Updates color signals when user selects colors in color pickers.
+**`_updateUrl()`** — writes the query string with `history.replaceState`. Guarded by
+`isInitializing` so startup does not write a URL before the app has settled. Defaults are
+omitted, so the common case yields a short URL.
 
-**handleSliderInputInput(inputNumber: 'One' | 'Two', event: string | null)**: Updates compared colors when user adjusts sliders.
+**`_loadStateFromUrl()`** — reads the query string in `connectedCallback()`, validates
+`type` against the known set, and returns whether any *color* state was present. Toggles
+alone do not count, so `?gradient=false` still gets a random pair.
 
-**swapColors()**: Swaps foreground and background colors.
+**`_applyRovingTabIndex()`** — makes the contrast-type radio group a single tab stop.
+`candor-radio` implements arrow-key movement but leaves `tabindex="0"` on every option's
+inner input, so five options would cost five tab stops. This reaches through each
+element's shadow root to set `-1` on the unselected ones. Delete it when
+`pawn002/candor#262` lands.
 
-**matchChromas()**: Calls ColorUtilService to match chroma values between colors.
+**`_setPageScrollLock()`** — locks document scrolling while a note modal is open.
+`showModal()` makes the page inert, but inert does not mean unscrollable, so arrow keys
+reached the page behind the note. Also compensates for the scrollbar the lock removes, or
+the page jumps sideways as the modal opens. Upstream as `pawn002/candor#265`.
 
-**setRandomColorPair()**: Generates and sets a random accessible color pair on initialization.
-
-**resetSliders()**: Resets all slider positions by toggling the resetSlider signal.
-
-**toggleConstantChroma()**: Toggles whether sliders maintain constant chroma.
-
-**toggleShowGradient()**: Toggles gradient display in sliders.
-
-#### Usage
-
-The AppComponent is bootstrapped in `main.ts` and serves as the entry point for the application.
+**Icon constants** — `_INFO_SVG` and `_ACCESSIBILITY_SVG` are inlined `<path>` data.
+Candor stipulates Phosphor but exports no icon set (`pawn002/candor#260`), so new glyphs
+are pasted in beside these, sourced from `@phosphor-icons/core` at the `fill` weight with
+Phosphor's `viewBox="0 0 256 256"`.
 
 ---
 
-## App-Specific Components (`_components/`)
+## App components
 
-### 1. ColorPickerComponent
+### 1. `<cc-color-picker>`
 
 **Location**: `src/app/_components/color-picker/`
 
-HTML color input for selecting colors with two-way data binding.
+An `<input type="color">` with a label and an optional "compared color" swatch.
 
-#### Inputs
+#### Properties
 
-```typescript
-inputId = input<string>('fg-color');        // HTML input id
-inputName = input<string>('foreground color');  // HTML input name
-label = input<string>('Color');             // Accessible label text
-color = input<string>('');                  // Initial color value
-debug = input<boolean>(false);              // Debug mode flag
+```ts
+@property({ attribute: 'inputid' }) inputId = 'fg-color';
+@property({ attribute: 'inputname' }) inputName = 'foreground color';
+@property() label = 'Color';
+@property() color = '';
+@property({ attribute: 'comparedcolor' }) comparedColor = '';
+@property({ type: Boolean }) debug = false;
 ```
 
-#### Model (Two-way Binding)
+#### Events
 
-```typescript
-comparedColor = model<string>('');  // Two-way bound compared color
-```
-
-#### Outputs
-
-```typescript
-selectedColor = output<string>();
-```
-
-#### Internal State
-
-```typescript
-uiColor = signal<string>('');
-uiComparedColor = signal<string>('');
-```
+| Event | `detail` | Fired when |
+|---|---|---|
+| `selected-color` | `string` — the hex value | The user picks a color |
 
 #### Behavior
 
-- Displays an HTML color input
-- Emits `selectedColor` event when user picks a color
-- Supports two-way binding via `comparedColor` model
-- Automatically syncs internal state with input signals
+- Emits `selected-color` on the input's `input` event, so dragging in the OS picker
+  reports continuously
+- Clears the compared swatch to `transparent` whenever a new color is picked
+- Syncs the native input's value when the `color` property changes from outside
 
-#### Example Usage
+#### Usage
 
-```html
-<app-color-picker
-  [inputId]="'picker-one'"
-  [inputName]="'foreground-color'"
-  [color]="foregroundColor()"
-  [(comparedColor)]="comparedForeground"
-  (selectedColor)="handleColorChange($event)"
-/>
+```ts
+html`
+  <cc-color-picker
+    inputid="picker-one"
+    inputname="foreground-color"
+    label="Foreground"
+    .color=${this.fgColor}
+    .comparedColor=${this.fgComparedColor}
+    @selected-color=${this._handleFgColorInput}
+  ></cc-color-picker>
+`;
 ```
+
+> **Known gap**: there is no way to type a hex value. `<input type="color">` opens an
+> OS-level picker with no text entry. Tracked as #120/#119.
 
 ---
 
-### 2. ColorSliderComponent
+### 2. `<cc-color-slider>`
 
 **Location**: `src/app/_components/color-slider/`
 
-Interactive range slider for adjusting color tone (lightness) while optionally maintaining constant chroma.
+A range slider that varies a color's lightness, optionally holding chroma constant.
 
-#### Inputs
+#### Properties
 
-```typescript
-id = input<string>('slider-0');             // Slider HTML id
-name = input<string>('color-slider');       // Slider HTML name
-label = input<string>('Lightness');         // Accessible label text
-color = input<string>('');                  // Base color to vary
-constantChroma = input<boolean>(false);     // Lock chroma during adjustment
-showGradient = input<boolean>(false);       // Display gradient background
-resetSlider = input<ResetObject | null>(null); // Signal to reset slider
+```ts
+@property() override id = 'slider-0';
+@property() name = 'color-slider';
+@property() label = 'Lightness';
+@property() color = '';
+@property({ type: Boolean, attribute: 'constantchroma' }) constantChroma = false;
+@property({ type: Boolean, attribute: 'showgradient' }) showGradient = false;
+@property({ type: Object, attribute: false }) resetSlider: ResetObject | null = null;
+@property({ type: Boolean }) debug = false;
 ```
 
-#### Outputs
+#### Types
 
-```typescript
-colorVariant = output<string | null>();
+```ts
+export interface ResetObject {
+  reset: boolean;
+}
 ```
 
-#### Internal State
+`resetSlider` is an object rather than a boolean because a new object identity is what
+signals "reset again" — a boolean that is already `true` cannot re-trigger.
 
-```typescript
-slideMin = signal<number>(NaN);
-slideMax = signal<number>(NaN);
-slideInterval = signal<number>(NaN);
-value = signal<number>(NaN);
-initValue = signal<number>(NaN);
-devColorVariant = signal<string>('');
-```
+#### Events
+
+| Event | `detail` | Fired when |
+|---|---|---|
+| `color-variant` | `string \| null` — the hex variant | On first range resolution, and on every slide |
 
 #### Behavior
 
-- Generates color variants along the lightness axis
-- Optionally maintains constant chroma (preserves saturation)
-- Displays gradient of available colors as slider background (optional)
-- Emits `colorVariant` event as user adjusts slider
-- Can reset to initial position via `resetSlider` input
-- Uses `effect()` to watch for reset signal
-- Uses ColorUtilService to calculate min/max lightness values in gamut
+- Asks `ColorUtilService` for the in-gamut lightness range, which is asynchronous — so
+  **the range input does not exist on the first render**
+- With `constantChroma`, holds chroma and hue and moves only lightness
+- With `showGradient`, paints the available range as a linear-gradient background
+- Emits `color-variant` as the thumb moves
 
-#### Gradient Generation
+#### Accessibility
 
-When `showGradient` is true, the component:
-1. Calculates available lightness range for the color
-2. Generates intermediate color stops
-3. Creates a linear gradient as slider background
-4. Updates dynamically when base color changes
+Two details here exist because of specific defects:
 
-#### Example Usage
+- **The inner input's id is derived (`${this.id}-input`), not shared with the host.** A
+  duplicate made `label[for]` resolve to the host — the first match in document order —
+  leaving the range input with no accessible name at all.
+- **`aria-valuetext` tracks the thumb**, reported as a percentage. The component's
+  `value` is assigned on every slide specifically to keep it in step; it was previously
+  frozen at the initial position.
 
-```html
-<app-color-slider
-  [id]="'slider-foreground'"
-  [name]="'foreground-slider'"
-  [color]="foregroundColor()"
-  [constantChroma]="lockChroma()"
-  [showGradient]="displayGradient()"
-  [resetSlider]="shouldReset()"
-  (colorVariant)="handleVariantChange($event)"
-/>
+The input also carries `aria-describedby` pointing at a description of the available
+range, formatted as `Lightness range: {min}% to {max}%`. The range is genuinely narrow
+for saturated colors — high chroma is only displayable across a small band of lightness —
+so this is information the user needs, not decoration.
+
+#### Usage
+
+```ts
+html`
+  <cc-color-slider
+    id="slider-0"
+    label="Foreground lightness"
+    .color=${this.fgColor}
+    ?constantchroma=${this.constantChroma}
+    ?showgradient=${this.showGradient}
+    .resetSlider=${this.resetSlider}
+    @color-variant=${this._handleFgSliderInput}
+  ></cc-color-slider>
+`;
 ```
 
 ---
 
-### 3. ColorContrastComponent
+### 3. `<cc-color-contrast>`
 
 **Location**: `src/app/_components/color-contrast/`
 
-Displays the contrast score between two colors. The score header uses container queries (`55cqh`) to fill the sticky header box height responsively.
+The contrast score in the sticky header. The score text uses a container query (`55cqh`)
+so it fills the header box responsively.
 
-#### Inputs
+#### Properties
 
-```typescript
-colorOne = input<string>('');                                                      // Foreground color
-colorTwo = input<string>('');                                                      // Background color
-contrastType = input<'okca' | 'apca' | 'bpca' | 'deltaE' | 'apca object'>('okca'); // Contrast algorithm
-debug = input<boolean>(false);                                                     // Debug mode
-```
-
-#### Internal State
-
-```typescript
-contrastScore = signal<number>(NaN);
-contrastAnnouncement = computed(() => ...); // Screen-reader announcement string
+```ts
+@property({ attribute: 'colorone' }) colorOne = '';
+@property({ attribute: 'colortwo' }) colorTwo = '';
+@property({ attribute: 'contrasttype' }) contrastType: ContrastType | 'apca object' = 'okca';
+@property({ type: Boolean }) debug = false;
 ```
 
 #### Behavior
 
-- Uses `effect()` to reactively calculate contrast when inputs change
-- Calls ColorMetricsService to get contrast score
-- Visually hidden from assistive technology (`aria-hidden="true"`); announces score changes via an `aria-live="polite"` region
-- Displays different metrics based on `contrastType`:
-  - **'okca'**: OKCA ratio (OKLCH-based, polarity-aware WCAG-compatible)
-  - **'apca'**: APCA Lc score
-  - **'bpca'**: WCAG 2.x compatible ratio
-  - **'deltaE'**: Perceptual color difference
-  - **'apca object'**: Minimum object pixel dimension
+Recomputes the score whenever the colors or the type change, via `ColorMetricsService`.
+What it displays depends on `contrastType`:
 
-#### Example Usage
+| `contrastType` | Shows |
+|---|---|
+| `okca` | OKCA ratio — OKLCH-native, polarity-aware, WCAG-compatible |
+| `apca` | APCA Lc score |
+| `bpca` | WCAG 2.x-compatible ratio |
+| `deltaE` | Perceptual color difference |
+| `apca object` | Minimum object dimension, in pixels |
 
-```html
-<app-color-contrast
-  [colorOne]="foreground()"
-  [colorTwo]="background()"
-  [contrastType]="contrastMode()"
-/>
+#### Accessibility
+
+The visual score is `aria-hidden="true"`. Announcements go through a **persistent**
+`role="status"` live region that is rendered empty and written into afterwards — a region
+created already-populated does not reliably announce.
+
+The announcement is mode-aware, because "Contrast score: 3" means nothing in object mode:
+
+```ts
+get contrastAnnouncement() {
+  if (!this.colorOne || !this.colorTwo) return '';
+  const score = this.contrastScore;
+  if (this.contrastType === 'apca object') {
+    return score ? `Minimum object dimension: ${score} pixels` : 'Contrast too low for any object';
+  }
+  if (isNaN(score)) return 'Contrast score unavailable';
+  if (this.contrastType === 'deltaE') return `Delta E: ${score}`;
+  return `Contrast score: ${score}`;
+}
+```
+
+#### Usage
+
+```ts
+html`
+  <cc-color-contrast
+    .colorOne=${this.fgComparedColor || this.fgColor}
+    .colorTwo=${this.bgComparedColor || this.bgColor}
+    .contrastType=${this.contrastType}
+  ></cc-color-contrast>
+`;
 ```
 
 ---
 
-### 4. MetadataComponent
+### 4. `<cc-metadata>`
 
 **Location**: `src/app/_components/metadata/`
 
-Displays detailed color information and differences between two colors. Metadata tables are wrapped with `<app-table [compact]="true">` from the Candor design system for consistent table styling.
+Detailed OKLCH values for both colors, the differences between them, and pass/fail
+outcomes. Renders four `<cc-table compact>` tables.
 
-#### Inputs
+#### Properties
 
-```typescript
-colorOne = input<string>('');  // First color
-colorTwo = input<string>('');  // Second color
-debug = input<boolean>(false); // Debug mode
+```ts
+@property({ attribute: 'colorone' }) colorOne = '';
+@property({ attribute: 'colortwo' }) colorTwo = '';
+@property({ type: Boolean }) debug = false;
 ```
 
-#### Outputs
+#### Events
 
-```typescript
-noteRequested = output<string>(); // Emits a note key ('okca', 'apca', 'bpca', 'apca object', 'deltaE', 'wcag2') when an info button is clicked
-```
+| Event | `detail` | Fired when |
+|---|---|---|
+| `note-requested` | `string` — a note key | An info button is clicked |
 
-#### Computed Signals
+Note keys: `okca`, `apca`, `bpca`, `apca object`, `deltaE`, `wcag2`. `<cc-app>` maps the
+key to a `candor-modal`.
 
-```typescript
-colorOneMeta = computed(() => this.colorUtilService.getColorMeta(this.colorOne()));
-colorTwoMeta = computed(() => this.colorUtilService.getColorMeta(this.colorTwo()));
+#### Displays
 
-differences = computed(() => {
-  // Returns:
-  // - Delta E (perceptual difference)
-  // - WCAG 2 contrast ratios (old and new)
-  // - APCA contrast score
-});
+**Per color** — lightness, chroma, hue, and a calculated saturation percentage.
 
-successes = computed(() => {
-  // Returns pass/fail for:
-  // - Text contrast
-  // - Large text contrast
-  // - Minimum object dimension
-});
-```
+**Differences** — Delta E 2000, WCAG 2.1 contrast ratio, APCA score, minimum object
+dimension.
 
-#### Display Information
+**Outcomes** — text contrast (WCAG AA, 4.5:1), large-text contrast (AA, 3:1), and minimum
+object size. Result cells carry `outcome--pass` / `outcome--fail`.
 
-**For Each Color**:
-- Lightness (OKLCH L)
-- Chroma (OKLCH C)
-- Hue (OKLCH H)
-- Saturation (calculated percentage)
-
-**Differences**:
-- Delta E 2000 (perceptual color difference)
-- WCAG 2.1 contrast ratio
-- APCA contrast score
-- Minimum object dimension (pixels)
-
-**Accessibility**:
-- Text pass/fail (WCAG AA: 4.5:1)
-- Large text pass/fail (WCAG AA: 3:1)
-- Object minimum size
-
-#### Example Usage
-
-```html
-<app-metadata
-  [colorOne]="foreground()"
-  [colorTwo]="background()"
-/>
-```
+Tooltips inside this component use `position="right"` so the bubble points into the card
+rather than off its edge.
 
 ---
 
-### 5. PaletteTableComponent
+### 5. `<cc-palette-table>`
 
 **Location**: `src/app/_components/palette-table/`
 
-Displays a grid of color variants with different lightness and chroma values, allowing users to select specific variants.
+A grid of color variants across lightness and chroma. Wraps `<candor-tone-picker>` and
+translates between it and the app's own cell data.
 
-#### Inputs
+#### Properties
 
-```typescript
-color = input.required<string>();  // Base color
-debug = input<boolean>(false);     // Debug mode
+```ts
+@property() color = '';
+@property({ type: Boolean }) debug = false;
 ```
 
-#### Outputs
+#### Events
 
-```typescript
-selectedColor = output<TableColorCell>();
-```
-
-#### Internal State
-
-```typescript
-dataStruct = signal<TableData>([]);  // 2D array of color cells
-tableHeaders = signal<string[]>([]);  // Column headers
-```
+| Event | `detail` | Fired when |
+|---|---|---|
+| `selected-color` | `TableColorCell` | A grid cell is activated |
 
 #### Types
 
-```typescript
+Exported from `services/color-util.service.ts`:
+
+```ts
 export interface TableColorCell {
-  color: string;           // Hex color value
-  lightness: number;       // OKLCH lightness
-  chroma: number;          // OKLCH chroma
-  hue: number;            // OKLCH hue
-  deltaE: number;         // Perceptual difference from base
-  deltaChroma: number;    // Percentage change in chroma
-  deltaLightness: number; // Percentage change in lightness
+  color: string;           // Hex value
+  lightness: number;       // OKLCH L
+  chroma: number;          // OKLCH C
+  hue: number;             // OKLCH H
+  deltaE: number;          // Perceptual difference from the base color
+  deltaChroma: number;     // Percentage change in chroma
+  deltaLightness: number;  // Percentage change in lightness
 }
 
-export type TableData = Array<Array<TableColorCell>>;
+export type TableRow = Array<TableColorCell>;
+export type TableData = Array<TableRow>;
 ```
 
 #### Behavior
 
-- Generates a grid (default: 5 lightness × 14 chroma steps)
-- Centers the grid on the base color's lightness and chroma
-- Only includes colors within sRGB gamut (empty cells for out-of-gamut)
-- Calculates Delta E for each variant
-- Allows clicking cells to select that color variant
-- Updates reactively when base color changes
+- Generates variants via `ColorUtilService.generateAdaptiveVariants()`, centred on the
+  base color
+- Out-of-gamut coordinates become disabled cells, which render blank and are not
+  focusable
+- Builds a lookup index from OKLCH coordinates back to cells, so a selection from
+  `candor-tone-picker` (which reports an OKLCH string) resolves to the full
+  `TableColorCell`
+- Regenerates when `color` changes
 
-#### Grid Layout
-
-```
-Rows: Lightness levels (light to dark)
-Columns: Chroma levels (low to high saturation)
-Center: Base color
-```
-
-#### Example Usage
-
-```html
-<app-palette-table
-  [color]="baseColor()"
-  (selectedColor)="handlePaletteSelection($event)"
-/>
-```
+The grid keyboard model, roving tabindex, and live-region announcements all belong to
+`candor-tone-picker`. There is no local tone-picker component — the Angular-era
+`TonePickerComponent` was replaced by the upstream element in the migration.
 
 ---
 
-### 6. TonePickerComponent
+### 6. `<cc-table>`
 
-**Location**: `src/app/_components/tone-picker/`
+**Location**: `src/app/_components/table/`
 
-An accessible grid-based tone selector that lets users navigate and select a color from a 2D grid using keyboard or pointer. Implements ARIA `role="grid"` with roving tabindex and live region announcements.
+A styling wrapper around an authored `<table>`.
 
-#### Inputs
+#### Properties
 
-```typescript
-rows = input.required<GridRow[]>();          // Grid row data
-columnHeaders = input.required<string[]>();  // Column header labels
-ariaLabel = input<string>('');               // Accessible label for the grid
-size = input<'small' | 'normal'>('normal'); // Grid size variant
-selectedValue = input<string | null>(null);  // Currently selected color (OKLCH or hex)
-hideHeaders = input<boolean>(false);         // Hide visual row/column headers
-hideUi = input<boolean>(false);             // Hide preview/hint UI below the grid
+```ts
+@property({ type: Boolean, reflect: true }) compact = false;
 ```
 
-#### Outputs
+`reflect: true` so the stylesheet can select on the attribute without a class hook.
 
-```typescript
-colorSelect = output<string>();  // Emits hex color when a cell is activated
+#### How it works
+
+The component renders `<slot></slot>`, which in the light DOM **does nothing** — Lit
+appends it *after* the authored children. That is fine here, and is the whole trick: the
+authored `<table>` stays in the light DOM, where the component's global stylesheet
+(`cc-table table { … }`) reaches it directly. Nothing is being projected.
+
+Do not read this as a working example of slots. It works because the content does not
+need to move.
+
+#### Usage
+
+```ts
+html`
+  <cc-table .compact=${true}>
+    <table>
+      <caption class="sr-only">Color one</caption>
+      <tbody>
+        <tr><th scope="row">Lightness</th><td class="numeric">0.63</td></tr>
+      </tbody>
+    </table>
+  </cc-table>
+`;
 ```
 
-#### Types
+#### Why not `candor-table`
 
-```typescript
-export interface GridCell {
-  label: string;
-  value?: unknown;
-  background?: string;
-  disabled?: boolean;     // true = outside sRGB gamut (renders blank cell)
-}
+`candor-table` is data-driven: `headers: string[]`, `rows: { cells: string[] }[]`. Half
+the tables in `cc-metadata` put an interactive tooltip and info button inside a cell, and
+a cell that can only be text has nowhere to put one — nor can it carry the
+`outcome--pass` / `outcome--fail` class the results table needs.
 
-export interface GridRow {
-  rowHeader?: string;
-  cells: GridCell[];
-}
-```
-
-#### Behavior
-
-- Full keyboard navigation (arrow keys, Enter/Space to activate)
-- Live region announces selected color for screen readers
-- Disabled cells (out-of-gamut) are rendered blank and are not focusable
-- Syncs selection state when `selectedValue` input changes
-
-#### Example Usage
-
-```html
-<app-tone-picker
-  [rows]="toneRows()"
-  [columnHeaders]="chromaHeaders()"
-  [ariaLabel]="'Foreground tone picker'"
-  [selectedValue]="currentColor()"
-  [hideHeaders]="true"
-  (colorSelect)="handleToneSelect($event)"
-/>
-```
+**Do not half-migrate.** Two of the four tables have no interactive cells and could move
+today, but that would put two implementations side by side in one card with mismatched
+headings: `candor-table` renders its `caption` visibly with no `::part` to hide it, while
+ours sits `sr-only` under an `<h3>`. Decided 2026-08-07 to wait for
+`pawn002/candor#258`, which would let all four migrate at once and delete `cc-table`
+entirely. Everything else already matches — including the zebra stripe, which uses
+`--color-bg-surface`, the same token `candor-table` stripes with. Keep them pointed at
+the same token rather than reintroducing a literal.
 
 ---
 
-### 7. AlertComponent
+### 7. `<cc-alert>`
 
 **Location**: `src/app/_components/alert/`
 
-Displays temporary user notifications that auto-dismiss after 5 seconds. Uses `ToastComponent` from the Candor design system for its visual output.
+Transient notifications, auto-dismissed after five seconds.
 
-#### Inputs
+#### Properties
 
-```typescript
-alertMessage = input<AlertMessagObj>(new AlertMessagObj());
+```ts
+@property({ type: Object, attribute: false }) alertMessage: AlertMessageObj = { message: '' };
 ```
 
 #### Types
 
-```typescript
-export class AlertMessagObj {
-  message: string = '';
+```ts
+export interface AlertMessageObj {
+  message: string;
 }
 ```
 
-#### Outputs
+#### Events
 
-```typescript
-alertClosed = output<boolean>();
-```
+| Event | `detail` | Fired when |
+|---|---|---|
+| `alert-closed` | `true` | The alert is dismissed |
 
-#### Internal State
+#### Behavior and accessibility
 
-```typescript
-showAlert = signal<boolean>(false);
-uniqId = signal<string>('');
-```
+This component is mostly accessibility plumbing, and each piece is deliberate:
 
-#### Behavior
+- **The live region is always in the DOM**, separate from the toast, and rendered empty.
+  `candor-toast` carries its own `role="status"`, but it is created along with its text
+  and torn down five seconds later — a live region must be present and observed *before*
+  its contents change. `candor-toast-container` does not close that gap: its shadow root
+  is a bare `<slot>`, so the region still arrives with each toast.
+- **The toast is `aria-hidden="true"`**, so the message is not queued twice.
+  `aria-hidden` covers its shadow root too. Upstream as `pawn002/candor#266`; drop the
+  `aria-hidden` and the local region if the container grows one of its own.
+- **`_announce()` clears the region, then sets it on a later task.** A live region only
+  announces when its contents *change*, so copying the same color twice would otherwise
+  be silent the second time — and the clear/set pair must land in separate tasks or the
+  mutations coalesce into no net change.
+- **`candor-toast-container` is Candor's documented outlet** — `position: fixed` to a
+  viewport corner at `z-index: 2000`. It stays mounted whether or not a toast is showing,
+  so the stack has somewhere to land. Auto-dismissal is the consumer's job by design;
+  that is the five-second timer here, not something the container does.
 
-- Displays alert message using `candor-toast`
-- Auto-hides after 5 seconds using `setTimeout`
-- Generates unique IDs using lodash `random` for each alert
-- Emits `alertClosed` event when dismissed
-
-#### Example Usage
-
-```html
-<app-alert
-  [alertMessage]="currentAlert()"
-  (alertClosed)="handleAlertClose()"
-/>
-```
+`<cc-alert>` is placed **outside** `<main>` in `app.ts`. `.app-container` uses
+`transform: translateX(-50%)`, and a transformed ancestor becomes the containing block
+for `position: fixed` descendants — inside, the toast rendered over 1300px below the
+fold.
 
 ---
 
-### 8. CopyToClipboardButtonComponent
+### 8. `<cc-copy-to-clipboard-button>`
 
 **Location**: `src/app/_components/copy-to-clipboard-button/`
 
-Button that copies a color's hex value to the clipboard.
+Copies a color's hex value to the clipboard.
 
-#### Inputs
+#### Properties
 
-```typescript
-color = input<string>('');                    // Color to copy
-label = input<string>('Copy to Clipboard');   // Accessible button label
-debug = input<boolean>(true);                 // Debug mode
+```ts
+@property() color = '';
+@property() label = 'Copy to Clipboard';
+@property({ type: Boolean }) debug = false;
 ```
 
-#### Outputs
+#### Events
 
-```typescript
-copyEvent = output<CopyToClipboardEvent>();
-```
-
-#### Types
-
-```typescript
-export interface CopyToClipboardEvent {
-  copied: boolean;
-  color: string;
-}
-```
+| Event | `detail` | Fired when |
+|---|---|---|
+| `copy-event` | `{ copied: boolean; color: string }` | A copy succeeds or fails |
 
 #### Behavior
 
-- Uses Clipboard API (`navigator.clipboard.writeText()`)
-- Emits success/failure event
-- Handles clipboard permission errors gracefully
-- Provides visual feedback (button text/state change)
+- Uses `navigator.clipboard.writeText()`
+- **Copies the hex without the leading `#`** — `#ff5733` is written as `ff5733`, and the
+  event `detail.color` carries the same stripped form
+- Disables itself when `color` is empty
+- Emits `copy-event` with `copied: false` on failure rather than throwing
 
-#### Implementation
-
-```typescript
-async copyToClipboard() {
-  try {
-    await navigator.clipboard.writeText(this.color());
-    this.copyEvent.emit({ copied: true, color: this.color() });
-  } catch (error) {
-    console.error('Failed to copy:', error);
-    this.copyEvent.emit({ copied: false, color: this.color() });
-  }
-}
-```
-
-#### Example Usage
-
-```html
-<app-copy-to-clipboard-button
-  [color]="hexColor()"
-  (copyEvent)="handleCopy($event)"
-/>
-```
+Its tooltip uses `position="left"`, since the button sits at the right edge of its card.
 
 ---
 
-## Design System Components (`candor-*`)
+## Design-system components (`candor-*`)
 
 These are **not** in this repo. They come from `@candor-design/web-components`, which
-`src/main.ts` imports once; that single import registers every element the package
-ships. The package publishes its own hosted catalog — consult that for the full API
-rather than a copy maintained here, which is what went stale last time.
+`src/main.ts` imports once — a single import that registers every element the package
+ships. The package publishes its own hosted catalog; consult that for the full API rather
+than a copy maintained here, which is what went stale last time.
 
-The app renders these: `candor-accordion-item`, `candor-button`, `candor-card`,
-`candor-checkbox`, `candor-modal`, `candor-radio`, `candor-toast`, `candor-tone-picker`,
-`candor-tooltip`.
+The app renders: `candor-accordion-item`, `candor-button`, `candor-card`,
+`candor-checkbox`, `candor-modal`, `candor-radio`, `candor-text`, `candor-toast`,
+`candor-toast-container`, `candor-tone-picker`, `candor-tooltip`.
 
 They use shadow DOM, unlike the `cc-*` components above. Two consequences:
 
-- **Design tokens still apply.** They are custom properties on `:root`, and custom
-  properties inherit through shadow boundaries.
-- **Global SCSS does not.** A selector cannot reach inside one. Use the documented
-  `--candor-*` custom properties or `::part()`. `styles.scss` uses the former to
-  rebuild the icon-only button that upstream has no size for.
+- **Design tokens still apply** — they are custom properties on `:root`, and custom
+  properties inherit through shadow boundaries
+- **Global SCSS does not** — a selector cannot reach inside one. Use the documented
+  `--candor-*` custom properties or `::part()`
 
-### Differences from the primitives this app used to carry
+### API differences worth knowing
 
-The local `_candor/` directory was removed in the migration to the published package
-(#149). If you are reading older code or docs, the API changed:
+| Instead of | Use | Because |
+|---|---|---|
+| `title=` | `heading=` | `title` is a global HTML attribute and renders a browser tooltip |
+| `@changed` | `@change` | Form controls emit `change`, with the value/state as `detail` |
+| `@clicked` | `@click` | `candor-button` emits nothing; the inner button's click retargets to the host |
+| `@open-change` | `@close` | Fires only on close, so it carries no state |
+| `size="icon"` | `class="button--icon"` | Sets the `--candor-button-*` hooks from `styles.scss` |
 
-| was | now |
-|---|---|
-| `title=` | `heading=` — `title` is a global HTML attribute |
-| `@changed` | `@change` |
-| `@clicked` | `@click` — `candor-button` emits no custom event |
-| `@open-change` | `@close` — fires only on close, so carries no state |
-| `size="icon"` | `class="button--icon"` |
+### Gotchas this app works around
 
-### `cc-table` is deliberately not `candor-table`
+- **`candor-card` clips overflow**, and `candor-tooltip` positions its bubble absolutely,
+  so a tooltip inside a card is cut off at the card's edge. The card sets
+  `overflow: hidden` on a shadow node exposed neither as a `::part` nor through a custom
+  property — there is no CSS fix from this side. `candor-toolbar` is no better; its
+  `overflow-x: auto` computes `overflow-y` to `auto`. Upstream as `pawn002/candor#259`.
+  **Point edge-adjacent tooltips inward** — `position="right"` on the color pickers (left
+  edge), `position="left"` on the copy buttons and Options info buttons (right edge).
+  Only reach for a structural fix when no direction works.
+- **A group of `candor-radio`s always gets a `<fieldset>` and a `<legend>`.** The legend
+  supplies the question context screen readers announce before each option, and
+  `candor-radio` resolves its group as `closest('fieldset')` then `parentElement`. Every
+  option in `app.ts` sits in its own `.radio-item` wrapper for the info button, so the
+  fieldset is the only thing letting the group find itself — remove it and arrow keys
+  *and* mutual exclusion both die, with no error.
+- **`candor-radio` leaves `tabindex="0"` on every option**, which would make the group N
+  tab stops. See `_applyRovingTabIndex()` above.
 
-`candor-table` is data-driven: `headers: string[]`, `rows: { cells: string[] }[]`. Half
-the tables in `cc-metadata` put an interactive tooltip and info button inside a cell,
-and that API has nowhere to put one. `cc-table` stays as a light-DOM wrapper that styles
-whatever `<table>` markup it is given.
+`src/app/candor-package.spec.ts` pins each of these so the workaround can be deleted when
+upstream fixes it.
 
-## Component Communication Patterns
+---
 
-### Parent-to-Child (Inputs)
+## Communication patterns
 
-Using the `input()` function:
+### Parent to child
 
-```typescript
+```ts
 // Parent
-<app-color-picker [color]="myColor()" />
+html`<cc-color-picker .color=${this.fgColor}></cc-color-picker>`;
 
 // Child
-color = input.required<string>();
+@property() color = '';
 ```
 
-### Child-to-Parent (Outputs)
+Use `.prop` for anything that is not a string. An object passed as an attribute
+stringifies to `[object Object]`.
 
-Using the `output()` function:
+### Child to parent
 
-```typescript
+```ts
 // Child
-selectedColor = output<string>();
-this.selectedColor.emit(newColor);
+this.dispatchEvent(
+  new CustomEvent('selected-color', { detail: color, bubbles: true, composed: true }),
+);
 
 // Parent
-<app-color-picker (selectedColor)="handleSelection($event)" />
+html`<cc-color-picker @selected-color=${this._handleFgColorInput}></cc-color-picker>`;
 ```
 
-### Two-Way Binding (Model)
+There is no two-way binding. A child never writes to a property the parent owns; it
+reports, and the parent decides.
 
-Using the `model()` function:
+### Derived values
 
-```typescript
-// Child
-comparedColor = model<string>();
+Plain getters, re-evaluated on each render:
 
-// Parent
-<app-color-picker [(comparedColor)]="compared" />
-```
-
-### Reactive Updates
-
-Using `computed()` for derived state:
-
-```typescript
-export class MetadataComponent {
-  colorOne = input.required<string>();
-  colorMeta = computed(() => this.service.getColorMeta(this.colorOne()));
+```ts
+get contrastAnnouncement() {
+  return `Contrast score: ${this.contrastScore}`;
 }
 ```
 
-Using `effect()` for side effects:
+### Reacting to a specific change
 
-```typescript
-export class ColorSliderComponent {
-  resetSlider = input<boolean>();
-
-  constructor() {
-    effect(() => {
-      if (this.resetSlider()) {
-        this.value.set(this.initValue());
-      }
-    });
+```ts
+override updated(changed: PropertyValues) {
+  if (changed.has('activeNoteModal')) {
+    this._setPageScrollLock(this.activeNoteModal !== null);
   }
 }
 ```
 
 ---
 
-## Component Best Practices
+## Component best practices
 
-### 1. Signal-Based State
-
-Always use signals for component state:
-
-```typescript
-// Good
-uiColor = signal<string>('#000000');
-
-// Avoid
-uiColor: string = '#000000';
-```
-
-### 2. Computed for Derived Values
-
-Use `computed()` instead of getters:
-
-```typescript
-// Good
-contrastScore = computed(() => this.calculate(this.colorOne(), this.colorTwo()));
-
-// Avoid
-get contrastScore() {
-  return this.calculate(this.colorOne(), this.colorTwo());
-}
-```
-
-### 3. Effects for Side Effects
-
-Use `effect()` for reactive side effects:
-
-```typescript
-constructor() {
-  effect(() => {
-    // React to signal changes
-    console.log('Color changed:', this.color());
-  });
-}
-```
-
-### 4. OnPush Change Detection
-
-All components should use OnPush:
-
-```typescript
-@Component({
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-```
-
-With signals, OnPush works automatically.
-
-### 5. Native Control Flow
-
-Use `@if`, `@for`, `@switch` instead of structural directives:
-
-```html
-<!-- Good -->
-@if (isVisible()) {
-  <div>Content</div>
-}
-
-<!-- Avoid -->
-<div *ngIf="isVisible()">Content</div>
-```
-
-### 6. Inject Function
-
-Use `inject()` instead of constructor injection:
-
-```typescript
-// Good
-export class MyComponent {
-  private service = inject(MyService);
-}
-
-// Avoid
-export class MyComponent {
-  constructor(private service: MyService) {}
-}
-```
-
-### 7. Use Candor tokens in styles
-
-Reference Candor CSS custom properties rather than hard-coded values:
-
-```scss
-// Good
-color: var(--color-text-default);
-font-family: var(--font-family-mono);
-
-// Avoid
-color: #1a1a1a;
-font-family: 'Source Code Pro', monospace;
-```
+1. **`cc-*` prefix, never `candor-*`** — a collision breaks registration for every
+   element after it
+2. **`createRenderRoot()` returns `this`** — light DOM, so tokens and global styles apply
+3. **No `<slot>`** — it does nothing in the light DOM
+4. **Declare the tag in `HTMLElementTagNameMap`** — or the test helpers lose their types
+5. **Name events for what happened** — `note-requested`, not `showNote`
+6. **Prefix stylesheet selectors with the component's tag** — the stylesheets are global
+7. **Reference Candor tokens, not literals**
 
 ---
 
-## Testing Components
+## Testing
 
-### Unit Testing Pattern
+```ts
+import { describe, it, expect, afterEach } from 'vitest';
+import './color-picker';
+import { mount, flush, cleanup } from '../../test-utils';
 
-```typescript
-describe('ColorPickerComponent', () => {
-  let component: ColorPickerComponent;
-  let fixture: ComponentFixture<ColorPickerComponent>;
+afterEach(cleanup);
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ColorPickerComponent]  // Standalone component
-    }).compileComponents();
+it('emits the picked color', async () => {
+  const el = await mount('cc-color-picker', { inputId: 'fg-color' });
+  const input = el.querySelector('input[type="color"]') as HTMLInputElement;
 
-    fixture = TestBed.createComponent(ColorPickerComponent);
-    component = fixture.componentInstance;
-  });
+  const events: CustomEvent[] = [];
+  el.addEventListener('selected-color', (e) => events.push(e as CustomEvent));
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  input.value = '#ff5733';
+  input.dispatchEvent(new Event('input'));
+  await flush(el);
 
-  it('should emit selected color', () => {
-    const emitSpy = jasmine.createSpy('selectedColor');
-    component.selectedColor.subscribe(emitSpy);
-
-    component.handleColorChange('#ff5733');
-
-    expect(emitSpy).toHaveBeenCalledWith({
-      color: '#ff5733',
-      pickerId: component.inputId()
-    });
-  });
+  expect(events[0].detail).toBe('#ff5733');
 });
 ```
 
-See [Testing Guide](./testing.md) for more examples.
+See the [Testing Guide](./testing.md).
 
 ---
 
 ## Styling
 
-### Component-Scoped Styles
-
-Each app-specific component has its own `.scss` file:
+**Component stylesheets are global.** Each `*.component.scss` is imported by its `.ts`
+file and becomes a plain global stylesheet, because the component renders into the light
+DOM. Every top-level selector must be prefixed with the component's own tag:
 
 ```scss
-// color-picker.component.scss
-:host {
-  display: block;
-}
+// Good
+cc-metadata .comp-container { … }
+
+// Wrong — collides with every other component's .comp-container
+.comp-container { … }
 ```
 
-### Candor Component Styles
+Seven files once declared a bare `.comp-container` and silently overwrote each other.
+`_components/styles-scoping.spec.ts` enforces the prefix.
 
-Candor components use `ViewEncapsulation.None` and a dedicated `.scss` file. Their styles rely entirely on Candor design token variables rather than hard-coded values.
+`:host` does nothing here either — there is no shadow root. Style the tag directly:
+`cc-table { display: block; }`.
 
-### Global Styles
-
-Global styles are in `src/styles.scss` and include:
-- Font imports (Atkinson Hyperlegible, Roboto Flex, Roboto Mono)
-- Layout-specific CSS custom properties (not covered by Candor tokens)
-- Base element styles using Candor token references
+**Global styles** live in `src/styles.scss`: font imports, the typography rules, the
+`sr-only` utility, and base element styles built from tokens.
 
 ---
 
 ## Accessibility
 
-Components follow accessibility best practices:
+Beyond semantic markup and keyboard support, the specific things this app does:
 
-1. **Semantic HTML**: Proper use of form controls, labels, and buttons
-2. **ARIA attributes**: Where appropriate (e.g., `aria-label`, `role`)
-3. **Keyboard navigation**: All interactive elements are keyboard accessible
-4. **Color contrast**: The app itself promotes accessible color contrast
-5. **Focus management**: Visible focus indicators
-6. **Live regions**: TonePickerComponent uses `aria-live` to announce selections
-
----
-
-## Performance Optimization
-
-### Signals and OnPush
-
-Signals + OnPush change detection provides optimal performance:
-- Fine-grained reactivity
-- Only update when signals change
-- No unnecessary re-renders
-
-### Async Operations
-
-Color calculations can be heavy. Use:
-- `computed()` for automatic caching
-- Debouncing for rapid user input
-- Web Workers for intensive calculations (future enhancement)
+1. **A skip link** to `#main-content`, whose target carries `tabindex="-1"` — without it
+   the fragment only sets Chrome's sequential-focus starting point and leaves a screen
+   reader's virtual cursor behind
+2. **Live regions rendered empty and written into afterwards**, in `cc-alert` and
+   `cc-color-contrast`
+3. **Mode-aware announcements** — the contrast readout says what the number *means*
+4. **`aria-valuetext` on sliders**, kept in step with the thumb
+5. **Distinct host and input ids**, so `label[for]` reaches the control
+6. **One tab stop per radio group**, via the roving-tabindex workaround
+7. **Page scroll locked behind an open modal**
 
 ---
 
-## Next Steps
+## Next steps
 
-- Review [Services Documentation](./services.md) for service APIs
-- Check [Contributing Guide](./contributing.md) for component development patterns
-- See [Testing Guide](./testing.md) for component testing strategies
-- Read [Architecture](./architecture.md) for overall system design
+- [Services](./services.md) — the APIs these components call
+- [Architecture](./architecture.md) — how it all fits together
+- [Contributing](./contributing.md) — conventions for adding a component
+- [Testing](./testing.md) — patterns for exercising one
 
 ## References
 

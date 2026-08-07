@@ -20,21 +20,32 @@ A Lit web-component application for exploring and iterating on accessible color 
 # Install dependencies
 npm install
 
-# Start development server
+# Start development server (Vite)
 npm start
 
-# Run tests
+# Run tests once (vitest, exits with a status code)
 npm test
+
+# Type-check — `npm run build` does NOT do this
+npm run typecheck
 
 # Build for production
 npm run build
 ```
 
-Visit `http://localhost:4200` after starting the development server.
+Visit `http://localhost:5173` after starting the development server.
 
-## Test Coverage
+Requires Node 20 or 22. Tests run in Node under jsdom — no browser needed.
 
-The project has comprehensive test coverage across all services and components. See [Testing Documentation](./documentation/testing.md) for details.
+## Tests
+
+238 tests across 9 files, on vitest. See the [Testing Documentation](./documentation/testing.md).
+
+Run all three gates before pushing — CI runs the same ones:
+
+```bash
+npm run typecheck && npm test && npm run build
+```
 
 ## Documentation
 
@@ -45,18 +56,20 @@ Comprehensive documentation is available in the [`documentation/`](./documentati
 - **[Components](./documentation/components.md)** - Component API reference
 - **[Services](./documentation/services.md)** - Service documentation and color algorithms
 - **[Contributing](./documentation/contributing.md)** - Code style and contribution guidelines
-- **[Testing](./documentation/testing.md)** - Testing strategies
+- **[Testing](./documentation/testing.md)** - vitest patterns and the guard specs
 - **[Deployment](./documentation/deployment.md)** - Build and deployment process
+- **[Candor Release Findings](./documentation/candor-release-findings.md)** - Historical record of the March 2026 design-system migration
 
 For AI-assisted development, see [CLAUDE.md](./CLAUDE.md) for project-specific guidance.
 
 ## Technology Stack
 
-- **Lit 3** - Web components; every element renders into the light DOM
-- **Vite** - Build tooling and development server
-- **@candor-design/web-components 5** - Design-system primitives (shadow DOM)
-- **@candor-design/tokens 5** - Design tokens as CSS custom properties
-- **TypeScript 5.9.2** - Strict type checking
+- **Lit 3.2** - Web components; every locally-authored element renders into the light DOM
+- **Vite 6** - Build tooling and development server; also carries the vitest config
+- **vitest 3.2** + **jsdom** - Tests, in Node, with no browser
+- **@candor-design/web-components 5.0.1** - Design-system primitives (shadow DOM)
+- **@candor-design/tokens 5.0.1** - Design tokens as CSS custom properties
+- **TypeScript 5.7** - Strict type checking
 - **colorjs.io 0.5.2** - Color space conversions in OKLCH
 - **@pawn002/okca** - OKCA contrast algorithm (primary)
 - **apca-w3 0.1.9** - APCA contrast algorithm
@@ -90,16 +103,33 @@ The app persists state in query parameters (`fg`, `bg`, `type`, `chroma`, `gradi
 ## Project Structure
 
 ```
-src/app/
-├── _components/          # App components, all `cc-*` (color picker, slider, contrast, metadata, table)
-├── services/             # Business logic (ColorUtil, ColorMetrics, Bpca)
-└── app.ts                # Root component with state management
+index.html                # Vite entry point — loads src/main.ts
+src/
+├── main.ts               # Registers Candor elements; imports fonts and global styles
+├── styles.scss           # Global styles and typography rules
+└── app/
+    ├── app.ts            # <cc-app> root element — owns all state and URL sync
+    ├── _components/      # App components, all `cc-*` (picker, slider, contrast, metadata, table)
+    └── services/         # Business logic (ColorUtil, ColorMetrics, Bpca)
 
 Design-system primitives are `candor-*` elements imported from
 @candor-design/web-components in src/main.ts — there is no local copy.
 ```
 
-See [Architecture Documentation](./documentation/architecture.md) for complete structure.
+The `cc-*` / `candor-*` prefix split is load-bearing, not cosmetic: the package has a
+single entry point, so one import registers all of its elements, and a local element
+reclaiming a `candor-*` name throws on registration and takes the rest down with it.
+
+See [Architecture Documentation](./documentation/architecture.md) for the complete
+structure.
+
+## Deployment
+
+Push to `main`. `.github/workflows/deploy.yml` type-checks, tests, builds, and publishes
+to GitHub Pages via `actions/deploy-pages` using OIDC — no stored secrets, no manual
+deploy script, and no committed build output.
+
+See [Deployment Documentation](./documentation/deployment.md).
 
 ## Contributing
 
@@ -150,3 +180,7 @@ See [LICENSE](./LICENSE) for full details.
 - **2026-04**: Fixed checkbox double-toggle bug; fixed tooltip mobile overflow via `@media (hover: none)`
 - **2026-08**: Migrated to the published Candor design system. `@candor-design/tokens` 1.0.1 → 5.0.1 (which fixed a latent bug where `--font-sans` named a font family that was never registered, so the app had been silently falling back to `serif`), and the nine local `_candor/` primitives were replaced by `@candor-design/web-components` 5.0.1. Local components moved to the `cc-*` prefix, which is load-bearing: the package registers all of its elements from one entry point, so a shared name breaks registration. The swap also fixed #151 — `<slot>` does nothing in the light DOM, so every local primitive had been dropping its authored content beside the control instead of inside it
 - **2026-08**: Upgraded `@pawn002/okca` to 2.0.2. v2.0.0 recalibrated the algorithm — mid-tone neutrals and brand chromatics score roughly +0.4–0.5 higher, the white/`#767676` anchor moved 3.5 → 3.9, and the light-on-dark cap dropped from 21 to 20.9 so every score sits strictly below WCAG. Saturated-colour catches are unchanged; AA (4.5) and AAA (7.0) thresholds are unchanged
+- **2026-08**: Screen-reader pass fixed six defects — a skip link whose target now takes focus, persistent live regions in `cc-alert` and `cc-color-contrast` (a region created already-populated does not reliably announce), mode-aware contrast announcements, `aria-valuetext` that tracks the slider thumb, and distinct host/input ids so `label[for]` reaches the range input. Toasts moved to `candor-toast-container`, Candor's documented outlet
+- **2026-08**: Added CI/CD. Three workflows: `ci.yml` (build + test on Node 20 and 22, plus a separate `typecheck` job), `deploy.yml` (Pages via `actions/deploy-pages` and OIDC), and `draft-release.yml`. Adding `npm run typecheck` revealed that **nothing in this repo had ever type-checked** — `vite build` strips types without invoking the compiler — and immediately surfaced two real errors that had been sitting unread
+- **2026-08**: Retired the manual deploy path. Pages now builds from Actions rather than a committed `docs/` directory; both the directory and the `deploy:gh-pages` script are gone
+- **2026-08**: Rewrote `documentation/` for the current stack. The guides had described Angular 20, Karma, and `ng serve` across two framework migrations

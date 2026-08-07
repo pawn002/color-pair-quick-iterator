@@ -1,274 +1,303 @@
 # Getting Started
 
-This guide will help you set up the Color Pair Quick Iterator development environment and get your first development session running.
+This guide gets the Color Pair Quick Iterator (CPQI) development environment running.
 
 ## Prerequisites
 
-Before you begin, ensure you have the following installed on your system:
+### Required
 
-### Required Software
+- **Node.js** — version 20 or 22 (CI tests both; Vite 6 does not target Node 18)
+  - https://nodejs.org/ — verify with `node --version`
+- **npm** — ships with Node — verify with `npm --version`
+- **Git** — https://git-scm.com/ — verify with `git --version`
 
-- **Node.js** - Version 18.x or higher (LTS recommended)
-  - Download from: https://nodejs.org/
-  - Verify installation: `node --version`
+No browser is required for tests: they run in Node under jsdom.
 
-- **npm** - Version 9.x or higher (comes with Node.js)
-  - Verify installation: `npm --version`
+### Recommended
 
-- **Git** - Latest version
-  - Download from: https://git-scm.com/
-  - Verify installation: `git --version`
+- **Visual Studio Code**, with:
+  - **lit-plugin** — syntax highlighting and type-checking inside `html` templates
+  - **Prettier**
+  - **EditorConfig for VS Code**
+- Any modern browser for manual checks. The app uses `<input type="color">`, whose
+  picker UI is supplied by the OS and differs between platforms.
 
-### Recommended Tools
-
-- **Visual Studio Code** - Recommended IDE with excellent Angular support
-  - Download from: https://code.visualstudio.com/
-  - Recommended extensions:
-    - Angular Language Service
-    - Prettier - Code formatter
-    - ESLint
-    - EditorConfig for VS Code
-
-- **Google Chrome** - Required for running tests with Karma
-  - Download from: https://www.google.com/chrome/
+---
 
 ## Installation
 
-### 1. Clone the Repository
+### 1. Clone
 
 ```bash
 git clone https://github.com/pawn002/color-pair-quick-iterator.git
 cd color-pair-quick-iterator
 ```
 
-### 2. Install Dependencies
+### 2. Install
 
 ```bash
 npm install
 ```
 
-This will install all required dependencies including:
-- Angular 20 framework
-- Color manipulation libraries (colorjs.io)
-- Contrast calculation libraries (apca-w3, bridge-pca)
-- Development tools (vite, vitest)
+This pulls Lit, Vite, vitest, the Candor packages, and the color-science libraries
+(colorjs.io, `@pawn002/okca`, apca-w3, bridge-pca, d3).
 
-**Note**: Installation may take 2-5 minutes depending on your internet connection.
-
-### 3. Verify Installation
-
-Verify that everything is installed correctly:
+### 3. Verify
 
 ```bash
-npm run build
+npm run typecheck && npm test && npm run build
 ```
 
-If the build completes successfully, your environment is ready!
+All three should pass. If they do, your environment is ready.
 
-## Running the Development Server
+Run all three — they check different things. `npm run build` does **not** type-check:
+`vite build` transpiles and strips types without ever invoking the compiler, so a type
+error passes the build and ships.
 
-### Start the Application
+---
+
+## Running the development server
 
 ```bash
 npm start
 ```
 
-This runs `ng serve` and starts the development server. You should see output similar to:
+This runs `vite`, which prints something like:
 
 ```
-** Angular Live Development Server is listening on localhost:4200 **
-✔ Compiled successfully.
+  VITE v6.3.5  ready in 412 ms
+
+  ➜  Local:   http://localhost:5173/
 ```
 
-Open your browser and navigate to:
-- **Local**: http://localhost:4200/
+Open http://localhost:5173/. Vite serves the root `index.html`, which loads
+`src/main.ts`. Edits hot-reload.
 
-The application will automatically reload when you make changes to source files.
+### Options
 
-### Development Server Options
+Vite flags pass straight through:
 
 ```bash
-# Start with a specific port
-ng serve --port 4201
-
-# Start and open browser automatically
-ng serve --open
-
-# Start with production configuration
-ng serve --configuration production
+npm start -- --port 4300   # different port
+npm start -- --open        # open a browser automatically
+npm start -- --host        # expose on the local network, for device testing
 ```
 
-## Project Structure Overview
+To preview a real production build:
 
-Here's a quick overview of the key directories:
+```bash
+npm run build && npm run preview
+```
+
+---
+
+## Project structure
 
 ```
 color-pair-quick-iterator/
+├── index.html                 # Vite entry point — loads src/main.ts
 ├── src/
-│   ├── app/
-│   │   ├── _components/       # App-specific UI components (8 standalone components)
-│   │   ├── services/          # Core business logic (3 services)
-│   │   ├── app.ts             # Root application component
-│   │   └── app.config.ts      # Application configuration
-│   ├── main.ts                # Application bootstrap
-│   └── styles.scss            # Global styles
+│   ├── main.ts                # Registers Candor elements, imports fonts and globals
+│   ├── styles.scss            # Global styles and typography rules
+│   └── app/
+│       ├── app.ts             # <cc-app> root element: all app state
+│       ├── app.scss           # Root layout styles
+│       ├── test-utils.ts      # mount / flush / update / cleanup helpers for specs
+│       ├── candor-package.spec.ts    # Pins the upstream facts the app depends on
+│       ├── _components/       # The app's own cc-* elements
+│       │   ├── alert/
+│       │   ├── color-contrast/
+│       │   ├── color-picker/
+│       │   ├── color-slider/
+│       │   ├── copy-to-clipboard-button/
+│       │   ├── metadata/
+│       │   ├── palette-table/
+│       │   ├── table/
+│       │   └── styles-scoping.spec.ts
+│       └── services/          # ColorUtil, ColorMetrics, Bpca
 ├── documentation/             # Developer documentation (you are here)
-├── public/                    # Static assets
-├── angular.json               # Angular CLI configuration
-├── package.json               # Dependencies and scripts
-└── tsconfig.json              # TypeScript configuration
+├── public/                    # Static assets, copied verbatim
+├── .github/workflows/         # ci.yml, deploy.yml, draft-release.yml
+├── vite.config.ts             # Build config AND vitest config
+├── tsconfig.json
+└── package.json               # Dependencies, scripts, and the Prettier config
 ```
 
-## Your First Code Changes
+There is no `angular.json`, no `app.config.ts`, and no `app.html`. Each component keeps
+its logic and template together in one `.ts` file.
 
-### 1. Explore the Application
+---
 
-1. Start the dev server: `npm start`
-2. Open http://localhost:4200/
-3. Interact with the color pickers and sliders
-4. Notice how contrast scores update in real-time
-5. Try the "Swap Colors" and "Match Chromas" buttons
+## Your first changes
 
-### 2. Make a Simple Change
+### 1. Explore the app
 
-Let's make a small change to see the hot-reload in action:
+1. `npm start`, then open http://localhost:5173/
+2. Adjust the color pickers and the lightness sliders
+3. Watch the contrast score in the sticky header update
+4. Try **Swap Colors** and **Match Chromas**
+5. Change the contrast algorithm in Options and note the score change
+6. Copy the URL and open it in a new tab — the state comes back
 
-1. Open `src/app/app.html`
-2. Find the `<h1>` tag near the top
-3. Change the title text (e.g., add " - Dev Mode")
-4. Save the file
-5. Watch the browser automatically reload with your changes
+### 2. Make a small change
 
-### 3. Explore a Component
+1. Open `src/app/app.ts`
+2. Find the `<h1>` in `render()`
+3. Change the title text
+4. Save — the browser hot-reloads
 
-1. Open `src/app/_components/color-picker/color-picker.component.ts`
-2. Review the component structure:
-   - Signal-based inputs using `input()`
-   - Two-way binding with `model()`
-   - Output events using `output()`
-3. Open the corresponding `color-picker.html` template
-4. Notice the use of `@if` for conditional rendering
+### 3. Read a component
 
-### 4. Explore a Service
+Open `src/app/_components/color-slider/color-slider.ts` and note:
 
-1. Open `src/app/services/color-util.service.ts`
-2. Review the `parseColor()` method - core color parsing logic
-3. Explore `getRandomColorPair()` - generates accessible random colors
-4. Notice the use of `inject()` for dependency injection
+- `@customElement('cc-color-slider')` registers the tag
+- `createRenderRoot()` returns `this`, so it renders into the light DOM
+- `@property()` declares public API, `@state()` internal reactive state
+- The template is an `html` tagged template with `.prop` / `?attr` / `@event` bindings
+- `inputId` is a getter that deliberately differs from the host's `id` — a comment
+  explains that the duplicate once made `label[for]` resolve to the host and left the
+  range input with no accessible name at all
 
-## Common Development Tasks
+Then read `color-slider.spec.ts` beside it to see how it is exercised.
 
-### Building for Production
+### 4. Read a service
+
+Open `src/app/services/color-util.service.ts`:
+
+- It is a plain class, exported at the bottom as `export const colorUtil = new ColorUtilService()`
+- There is no DI container — consumers import that instance
+- `parseColor()` is the entry point for everything else
+- `getRandomColorPair()` produces the pair you see on a fresh load
+- Several methods are `async` because sRGB gamut checks are
+
+---
+
+## Common tasks
+
+### Building
 
 ```bash
-npm run build
+npm run build           # portable build to dist/, for hosting at a root
+npm run build:gh-pages  # adds --base=/color-pair-quick-iterator/ — what CI deploys
 ```
 
-Output will be in the `docs/` directory (configured for GitHub Pages deployment).
+Output goes to `dist/`, which is git-ignored. There is no committed build output; a
+`docs/` directory in an old checkout predates the Actions-based deploy.
 
-### Running Tests
+### Testing
 
 ```bash
-npm test
+npm test              # single run, exits with a status code
+npm run test:watch    # watch mode
 ```
 
-This launches the Karma test runner with Chrome browser.
+Tests run in Node under jsdom — no browser, no Karma. Currently 238 tests across 9
+files. See the [Testing Guide](./testing.md).
 
-**Test Coverage**: The project has comprehensive passing tests. See [Testing Guide](./testing.md) for details.
+### Type-checking
 
-### Formatting Code
+```bash
+npm run typecheck     # tsc --noEmit
+```
 
-The project uses Prettier for code formatting. Configuration is in `package.json`:
-- 100 character line width
-- Single quotes
-- Angular HTML parser for templates
+The only thing in this repo that checks types. Run it before pushing.
 
-Most IDEs can be configured to format on save using the Prettier configuration.
+### Formatting
+
+Prettier, configured in `package.json`: 100-character width, single quotes. Configure
+your editor to format on save.
 
 ### Linting
 
-```bash
-ng lint
-```
+ESLint is not configured. Strict TypeScript plus the guard specs
+(`candor-package.spec.ts`, `styles-scoping.spec.ts`) cover the rules that matter here.
 
-**Note**: ESLint is not currently configured. TypeScript strict mode provides compile-time validation.
+---
 
-## Understanding the Color Science
+## Understanding the color science
 
-The application works with colors in the **OKLCH color space**, which is perceptually uniform:
+The app works in the **OKLCH color space**, which is perceptually uniform — equal
+numeric changes produce roughly equal perceived changes:
 
-- **L** (Lightness): 0 to 1 (0 = black, 1 = white)
-- **C** (Chroma): 0 to ~0.4 (0 = gray, higher = more saturated)
-- **H** (Hue): 0 to 360 degrees (0/360 = red, 120 = green, 240 = blue)
+- **L** (lightness): 0 to 1 — 0 is black, 1 is white
+- **C** (chroma): 0 to ~0.4 — 0 is gray, higher is more saturated
+- **H** (hue): 0 to 360 degrees — 0/360 red, 120 green, 240 blue
 
-### Contrast Algorithms
+### The contrast algorithms
 
-1. **APCA (Accessible Perceptual Contrast Algorithm)**
-   - Modern contrast algorithm
-   - Perceptually accurate
-   - Polarity-aware (light-on-dark vs dark-on-light)
-   - Scores range from approximately -108 to +108
+1. **OKCA** — the default. An OKLCH-native ratio on the familiar 1–21 scale, with the
+   same AA (4.5) and AAA (7.0) thresholds as WCAG. It is polarity-aware and applies a
+   chroma penalty, so it catches saturated pairs that WCAG passes but that are
+   demonstrably hard to read. It never approves a pair WCAG rejects.
+2. **APCA** — Accessible Perceptual Contrast Algorithm. Signed scores on roughly a
+   −108 to +108 scale; polarity matters.
+3. **Bridge-PCA** — converts an APCA score to a WCAG 2.x-style ratio, for backward
+   compatibility.
+4. **Delta E** — CIE Delta E 2000 perceptual color difference, not a contrast measure.
+5. **APCA object** — the minimum object dimension in pixels for a given APCA score.
 
-2. **Bridge-PCA**
-   - Converts APCA scores to WCAG 2.x ratios
-   - Provides backward compatibility
-   - Format: "4.5 to 1" ratios
+[Services](./services.md) documents the implementations.
 
-## Next Steps
-
-Now that you have the development environment running:
-
-1. Read [Architecture](./architecture.md) to understand the system design
-2. Review [Services](./services.md) for core business logic details
-3. Explore [Components](./components.md) for UI component documentation
-4. Check [Contributing](./contributing.md) before making changes
-5. Review [CLAUDE.md](../CLAUDE.md) for AI-assisted development guidance
-6. See [best-practices.md](../best-practices.md) for coding conventions
+---
 
 ## Troubleshooting
 
-### Common Issues
+**`npm install` fails with permission errors**
+Do not use `sudo npm install`. Fix npm's permissions:
+https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally
 
-**Issue**: `npm install` fails with permission errors
-- **Solution**: Never use `sudo npm install`. Fix npm permissions: https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally
+**Port 5173 is already in use**
+Vite picks the next free port automatically and prints it. To pin one:
+`npm start -- --port 4300`
 
-**Issue**: Port 4200 is already in use
-- **Solution**: Stop the other process or use a different port: `ng serve --port 4201`
+**Blank page, console error about a duplicate custom element**
+A local element has reclaimed a `candor-*` name. The package registers all its elements
+from one entry point, so the collision throws and takes the rest down with it. Local
+elements must use `cc-*`; `npm test` catches this.
 
-**Issue**: Browser shows blank page
-- **Solution**: Check the browser console for errors. Ensure `npm install` completed successfully.
+**Styles from one component leaking into another**
+Components render into the light DOM, so their stylesheets are global. Every top-level
+selector must be prefixed with the component's own tag. `styles-scoping.spec.ts` catches
+this.
 
-**Issue**: Changes not reflecting in browser
-- **Solution**: Hard refresh the browser (Ctrl+Shift+R or Cmd+Shift+R)
+**A component drops its children**
+`<slot>` does nothing in the light DOM — Lit appends its template after the authored
+children instead of projecting them. Use a `candor-*` element, or give the component a
+shadow root.
 
-**Issue**: TypeScript errors in IDE
-- **Solution**: Restart the TypeScript language server or reload your IDE
+**The build passes but the app breaks at runtime**
+Run `npm run typecheck`. The build does not type-check.
 
-### Getting Help
+**Changes not reflecting**
+Hard-refresh (Ctrl+Shift+R / Cmd+Shift+R). If that fails, restart the dev server —
+Vite's dependency cache occasionally needs it after a dependency change.
 
-- Check the [Architecture](./architecture.md) documentation
-- Review existing code in `src/app/` for examples
-- Consult [Angular documentation](https://angular.dev/)
-- Open an issue on GitHub for bugs or questions
+---
 
-## Development Workflow Tips
+## Next steps
 
-1. **Use `npm run test:watch` while iterating**
-   - Re-runs affected specs on save
-   - Faster feedback than a full app reload
+1. [Architecture](./architecture.md) — how the pieces fit together
+2. [Components](./components.md) — the `cc-*` element APIs
+3. [Services](./services.md) — the color and contrast logic
+4. [Contributing](./contributing.md) — conventions to follow before changing anything
+5. [Testing](./testing.md) — how to exercise what you wrote
+6. [CLAUDE.md](../CLAUDE.md) — the same conventions, in the form the AI tooling reads
 
-2. **Inspect custom elements in DevTools**
-   - Components render into the light DOM, so their markup is visible directly in the Elements panel
-   - Candor tokens resolve as CSS custom properties you can inspect and override live
+---
 
-3. **Use TypeScript Strictly**
-   - Let the compiler catch errors
-   - Hover over functions to see types
-   - Use "Go to Definition" (F12) frequently
+## Workflow tips
 
-4. **Read the Existing Code**
-   - The codebase follows consistent patterns
-   - Learn from existing components
-   - Ask "how is this done elsewhere?"
+1. **Keep `npm run test:watch` running while you iterate.** Faster feedback than
+   reloading the app.
+2. **Inspect elements directly in DevTools.** The app's own components render into the
+   light DOM, so their markup appears in the Elements panel as-is. `candor-*` elements
+   have shadow roots you can expand. Tokens resolve as CSS custom properties you can
+   override live.
+3. **Check both color schemes.** Toggle `prefers-color-scheme` in DevTools rendering
+   options — several Candor surfaces differ meaningfully between them.
+4. **Read the comments.** Where the code looks arbitrary it is usually recording a bug
+   it is shaped to avoid, with an issue number attached.
+5. **Ask "how is this done elsewhere?"** The codebase follows consistent patterns; the
+   nearest neighbour is usually the answer.
 
 Happy coding!

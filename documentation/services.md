@@ -1,34 +1,48 @@
-# Services Documentation
+# Services
 
-This document provides detailed documentation for the three core services that handle business logic in the Color Pair Quick Iterator application.
+The three classes that carry the business logic in Color Pair Quick Iterator (CPQI).
 
 ## Overview
 
-The application follows a service-oriented architecture where business logic is centralized in three singleton services:
+1. **ColorUtilService** — color parsing, conversion, gamut work, variant generation
+2. **ColorMetricsService** — contrast scores across four algorithms
+3. **BpcaService** — the Bridge-PCA implementation
 
-1. **ColorUtilService** - Color manipulation and utilities
-2. **ColorMetricsService** - Contrast calculation and metrics
-3. **BpcaService** - Bridge-PCA algorithm implementation
+Each is a plain class in `src/app/services/`, exported as a **module-level singleton**:
 
-All services use `providedIn: 'root'` for singleton behavior and the `inject()` function for dependency injection.
+```ts
+export class ColorUtilService { /* … */ }
+export const colorUtil = new ColorUtilService();
+```
+
+There is no DI container, no `providedIn: 'root'`, and no `inject()`. Consumers import
+the instance:
+
+```ts
+import { colorUtil } from '../services/color-util.service';
+import { colorMetrics } from '../services/color-metrics.service';
+```
+
+Specs construct their own where isolation matters (`new ColorUtilService()`), or spy on
+the shared instance with `vi.spyOn`.
 
 ---
 
 ## ColorUtilService
 
 **Location**: `src/app/services/color-util.service.ts`
+**Singleton**: `colorUtil`
 
-The primary service for all color manipulation operations using the colorjs.io library in OKLCH color space.
+Color manipulation via colorjs.io, working in OKLCH.
 
 ### Dependencies
 
-- `colorjs.io` - Color parsing, conversion, and manipulation
-- `d3` - Scale utilities for contrast-to-size mapping
-- `lodash-es` - Utility functions
+- `colorjs.io` — parsing, conversion, gamut mapping, Delta E
+- `d3` — scale utilities for contrast-to-size mapping
 
-### Types and Interfaces
+### Types
 
-```typescript
+```ts
 export type ColorPair = [string, string];
 export type ColorCoordArray = [number, number, number];
 
@@ -50,409 +64,361 @@ export interface ColorMetaObj {
   hue: number | string;
   saturation: number | string;
 }
+
+export interface TableColorCell {
+  color: string;
+  lightness: number;
+  chroma: number;
+  hue: number;
+  deltaE: number;
+  deltaChroma: number;
+  deltaLightness: number;
+}
+
+export type TableRow = Array<TableColorCell>;
+export type TableData = Array<TableRow>;
 ```
 
-### Core Methods
+### Parsing and conversion
 
-#### parseColor(color: string): ColorConstructor | null
+#### `parseColor(color: string): ColorConstructor | null`
 
-Parses a color string into a Color object.
+Parses any CSS color string into a colorjs.io color. Returns `null` — and logs — if the
+string cannot be parsed. Every other method here goes through it.
 
-**Parameters**:
-- `color` - Color string in any format (hex, rgb, hsl, etc.)
-
-**Returns**: Color object or null if parsing fails
-
-**Example**:
-```typescript
-const color = colorUtilService.parseColor('#ff5733');
-```
-
----
-
-#### getRgb255Array(color: string): [number, number, number] | null
-
-Converts a color string to RGB values in 0-255 range.
-
-**Parameters**:
-- `color` - Color string
-
-**Returns**: Array of [R, G, B] values (0-255) or null
-
-**Example**:
-```typescript
-const rgb = colorUtilService.getRgb255Array('#ff5733');
-// Returns: [255, 87, 51]
+```ts
+colorUtil.parseColor('#ff5733');          // Color
+colorUtil.parseColor('rgb(255, 87, 51)'); // Color
+colorUtil.parseColor('red');              // Color
+colorUtil.parseColor('not-a-color');      // null
 ```
 
 ---
 
-#### createSrgbColor(color: string, lightness: number): string | null
+#### `toHexString(color: string): string | null`
 
-Creates a new sRGB color with the same chroma and hue but different lightness.
+Converts to a hex string in sRGB, expanding three-digit shorthand to six so downstream
+comparisons are consistent.
 
-**Parameters**:
-- `color` - Base color string
-- `lightness` - Target lightness (0-1)
-
-**Returns**: Hex color string or null
-
-**Process**:
-1. Parse color to OKLCH
-2. Extract chroma and hue
-3. Create new color with target lightness
-4. Map to sRGB gamut (reducing chroma if needed)
-5. Return as hex string
-
-**Example**:
-```typescript
-const lighter = colorUtilService.createSrgbColor('#ff5733', 0.7);
-// Returns: '#ff9d8b' (lighter version with same chroma/hue)
+```ts
+colorUtil.toHexString('rgb(255, 87, 51)'); // '#ff5733'
+colorUtil.toHexString('#fff');             // '#ffffff'
 ```
 
 ---
 
-#### getRandomColorPair(): Promise<ColorPair>
+#### `hexToOklchString(color: string): string`
 
-Generates a random accessible color pair with matched chromas.
+Formats a color as an `oklch(...)` string at fixed precision — 2 decimals for lightness,
+3 for chroma, 1 for hue.
 
-**Returns**: Promise resolving to [foreground, background] color pair
+**Throws** on an unparseable color, unlike its neighbours. It is used where the input is
+already known-good, principally to talk to `candor-tone-picker`.
 
-**Process**:
-1. Generate random chroma between 0.11-0.34
-2. Create dark color (lightness 0.25-0.26)
-3. Create light color (lightness 0.94-0.95)
-4. Apply chroma matching
-5. Return pair
-
-**Example**:
-```typescript
-const pair = await colorUtilService.getRandomColorPair();
-// Returns: ['#2d5a3f', '#f4f7f5']
+```ts
+colorUtil.hexToOklchString('#ff5733'); // 'oklch(0.68 0.210 33.7)'
 ```
 
 ---
 
-#### matchChromas(colorPair: ColorPair): Promise<ChromaMatchObject>
+#### `getRgb255Array(color: string): [number, number, number] | null`
 
-Attempts to match the chroma values between two colors while keeping them in sRGB gamut.
+RGB channels in the 0–255 range, for the APCA and Bridge-PCA implementations, which want
+integers.
 
-**Parameters**:
-- `colorPair` - Array of two color strings [foreground, background]
+```ts
+colorUtil.getRgb255Array('#ff5733'); // [255, 87, 51]
+colorUtil.getRgb255Array('invalid'); // null
+```
 
-**Returns**: Promise resolving to ChromaMatchObject with:
-- `success` - Whether matching succeeded
-- `colors` - Adjusted color pair (or null)
-- `chroma` - Matched chroma value
+---
 
-**Logic**:
+#### `createSrgbColor(color: string, lightness: number): string | null`
+
+A new color with the same chroma and hue at a different lightness, gamut-mapped to sRGB.
+
+1. Parse to OKLCH
+2. Keep chroma and hue, substitute the target lightness
+3. Gamut-map to sRGB, which reduces chroma as needed
+4. Return hex
+
+```ts
+colorUtil.createSrgbColor('#ff5733', 0.7); // a lighter variant, same hue family
+```
+
+This is what the lightness sliders call on every movement.
+
+---
+
+### Gamut work
+
+#### `isInSrgbGamut(oklchColorCoord: ColorCoordArray): Promise<boolean>`
+
+Whether an `[L, C, H]` coordinate is displayable in sRGB.
+
+---
+
+#### `createVariants(color: string): Array<ColorCoordArray> | null`
+
+1001 lightness variants from 0.0 to 1.0 in 0.001 steps, holding chroma and hue constant.
+
+---
+
+#### `filterOutOfGamutVariants(variants): Promise<Array<ColorCoordArray>>`
+
+Keeps only the in-gamut coordinates from a variant list.
+
+---
+
+#### `getMinMaxLight(color: string): Promise<MinMaxLightObject | null>`
+
+The lightness range over which a color stays inside sRGB, given its chroma and hue.
+
+```ts
+const range = await colorUtil.getMinMaxLight('#ff5733');
+// { originalCoords: [0.68, 0.21, 33.69], lightMin: 0.58, lightMax: 0.68 }
+```
+
+This is why `cc-color-slider` cannot render its input on the first pass — the slider's
+bounds are not known synchronously.
+
+---
+
+### Pair generation and matching
+
+#### `getRandomColorPair(): Promise<ColorPair>`
+
+A random pair that already passes, with matched chromas.
+
+1. Pick a random chroma between 0.11 and 0.34
+2. Build a dark color (lightness 0.25–0.26)
+3. Build a light color (lightness 0.94–0.95)
+4. Match chromas
+5. Return `[foreground, background]`
+
+```ts
+const pair = await colorUtil.getRandomColorPair(); // ['#2d5a3f', '#f4f7f5']
+```
+
+Called on first load when the URL carries no color state.
+
+---
+
+#### `matchChromas(colorPair: ColorPair): Promise<ChromaMatchObject>`
+
+Gives both colors the same chroma, if sRGB allows it.
+
 1. Try giving color one the chroma of color two
 2. Try giving color two the chroma of color one
-3. If both are possible, choose the higher chroma
-4. If only one works, use that one
-5. Return the result
+3. If both work, take the higher chroma
+4. If only one works, take that
+5. Otherwise report failure
 
-**Example**:
-```typescript
-const result = await colorUtilService.matchChromas(['#ff5733', '#e0e0e0']);
-// result.success: true
-// result.colors: ['#ff5733', '#dee0dd']
-// result.chroma: 0.11
+```ts
+const result = await colorUtil.matchChromas(['#ff5733', '#e0e0e0']);
+// { success: true, colors: ['#ff5733', '#dee0dd'], chroma: 0.11 }
 ```
 
 ---
 
-#### getColorMeta(color: string): ColorMetaObj | null
+#### `adjustColorPairForPresentation(pair: ColorPair): Promise<ColorPair>`
 
-Extracts detailed color metadata in OKLCH space.
+Moves the first color to the midpoint of its available lightness range, so a generated
+pair starts somewhere with room to move in both directions.
 
-**Parameters**:
-- `color` - Color string
+---
 
-**Returns**: Object containing:
-- `lightness` - OKLCH lightness (0-1)
-- `chroma` - OKLCH chroma (0-~0.4)
-- `hue` - OKLCH hue (0-360)
-- `saturation` - Calculated saturation percentage
+### Measurement
 
-**Example**:
-```typescript
-const meta = colorUtilService.getColorMeta('#ff5733');
-// Returns: {
-//   lightness: '0.63',
-//   chroma: '0.18',
-//   hue: '27.45',
-//   saturation: '28.57'
-// }
+#### `calcDeltaE(colorOne: string, colorTwo: string): number | null`
+
+CIE Delta E 2000 perceptual difference, rounded to an integer. Lower is more similar;
+below 1 is imperceptible.
+
+```ts
+colorUtil.calcDeltaE('#ff5733', '#ff6744'); // 3
+colorUtil.calcDeltaE('#ff5733', '#ff5733'); // 0
 ```
 
 ---
 
-#### calcDeltaE(colorOne: string, colorTwo: string): number | null
+#### `calcWcag2(colorOne: string, colorTwo: string): number | null`
 
-Calculates perceptual color difference using CIE Delta E 2000.
+The WCAG 2.1 contrast ratio. Shown in `cc-metadata` for comparison — it is not one of the
+selectable contrast modes.
 
-**Parameters**:
-- `colorOne` - First color string
-- `colorTwo` - Second color string
+```ts
+colorUtil.calcWcag2('#000000', '#ffffff'); // 21
+```
 
-**Returns**: Delta E value (rounded to integer) or null
+AA text is 4.5:1, AA large text 3:1, AAA text 7:1.
 
-**Reference**: Lower values = more similar colors. Values < 1 are imperceptible.
+---
 
-**Example**:
-```typescript
-const difference = colorUtilService.calcDeltaE('#ff5733', '#ff6744');
-// Returns: 3 (small but noticeable difference)
+#### `getMinObjectDimension(apca: number): number`
+
+Minimum object size in pixels for a given APCA score, via a d3 scale.
+
+| APCA | Minimum dimension |
+|---|---|
+| ≥ 100 | 0.25px |
+| 90 | 1px |
+| 75 | 1.5px |
+| 60 | 2px |
+| 50 | 3px |
+| 45 | 4px |
+| 30 | 6px |
+| 25 | 8px |
+| 20 | 10px |
+| 15 | 15px |
+| < 15 | `NaN` — insufficient for any object |
+
+```ts
+colorUtil.getMinObjectDimension(60); // 2
+colorUtil.getMinObjectDimension(10); // NaN
+```
+
+`NaN` is the meaningful answer here, not an error — it is what `cc-color-contrast`
+announces as "Contrast too low for any object".
+
+---
+
+#### `getColorMeta(color: string): ColorMetaObj | null`
+
+OKLCH values plus a calculated saturation percentage, formatted for display.
+
+```ts
+colorUtil.getColorMeta('#ff5733');
+// { lightness: '0.68', chroma: '0.21', hue: '33.69', saturation: '30.87' }
 ```
 
 ---
 
-#### calcWcag2(colorOne: string, colorTwo: string): number | null
+### Variant generation
 
-Calculates WCAG 2.1 contrast ratio.
+#### `generateAdaptiveVariants(color: string, minDelta = 11): TableData`
 
-**Parameters**:
-- `colorOne` - First color string
-- `colorTwo` - Second color string
+The variant grid behind `cc-palette-table`. Walks outward from the base color along the
+chroma axis and then, for each chroma level, along the lightness axis — stepping until
+each successive variant is at least `minDelta` Delta E from the last, and dropping
+anything outside sRGB.
 
-**Returns**: WCAG 2.1 ratio (e.g., 4.5) or null
+**Adaptive, not fixed-step**: the spacing is perceptual rather than numeric, so the grid
+carries roughly even visual separation instead of clustering where the color space is
+dense.
 
-**Reference**:
-- AA text: 4.5:1 minimum
-- AA large text: 3:1 minimum
-- AAA text: 7:1 minimum
+**Throws** if the color cannot be parsed.
 
-**Example**:
-```typescript
-const ratio = colorUtilService.calcWcag2('#000000', '#ffffff');
-// Returns: 21.0 (maximum contrast)
+```ts
+const variants = colorUtil.generateAdaptiveVariants('#ff5733');
+// TableData — columns of TableColorCell, each with deltaE from the base
 ```
 
----
-
-#### getMinObjectDimension(apca: number): number
-
-Calculates minimum object size in pixels based on APCA contrast score.
-
-**Parameters**:
-- `apca` - APCA contrast score
-
-**Returns**: Minimum dimension in pixels, or NaN if contrast is too low
-
-**Scale**:
-- APCA ≥ 100: 0.25px (any size acceptable)
-- APCA 90: 1px
-- APCA 75: 1.5px
-- APCA 60: 2px
-- APCA 50: 3px
-- APCA 45: 4px
-- APCA 30: 6px
-- APCA 25: 8px
-- APCA 20: 10px
-- APCA 15: 15px
-- APCA < 15: NaN (insufficient contrast)
-
-**Example**:
-```typescript
-const minSize = colorUtilService.getMinObjectDimension(60);
-// Returns: 2 (2px minimum dimension)
-```
-
----
-
-#### generateAllOklchVariants(color: string, lightSteps: number, chromaSteps: number): Promise<TableData>
-
-Generates a 2D grid of color variants with different lightness and chroma values.
-
-**Parameters**:
-- `color` - Base color string
-- `lightSteps` - Number of lightness steps
-- `chromaSteps` - Number of chroma steps
-
-**Returns**: Promise resolving to TableData (2D array of TableColorCell objects)
-
-**Process**:
-1. Parse base color to OKLCH
-2. Generate lightness levels (centered on base, ±steps)
-3. Generate chroma levels (0 to 0.33, centered on base)
-4. Create color variant for each combination
-5. Filter to sRGB gamut
-6. Calculate delta E and percentage changes
-7. Return sorted array (light to dark)
-
-**Example**:
-```typescript
-const variants = await colorUtilService.generateAllOklchVariants('#ff5733', 5, 14);
-// Returns: 6 rows × 15 columns grid of color variants
-```
-
----
-
-### Helper Methods
-
-#### isInSrgbGamut(oklchColorCoord: ColorCoordArray): Promise<boolean>
-
-Checks if an OKLCH color coordinate is within the sRGB gamut.
-
-**Parameters**:
-- `oklchColorCoord` - Array of [lightness, chroma, hue]
-
-**Returns**: Promise resolving to boolean
-
----
-
-#### createVariants(color: string): Array<ColorCoordArray> | null
-
-Creates 1001 lightness variants (0.0 to 1.0 in 0.001 steps) with constant chroma and hue.
-
-**Parameters**:
-- `color` - Base color string
-
-**Returns**: Array of OKLCH coordinate arrays or null
-
----
-
-#### filterOutOfGamutVariants(variants: Array<ColorCoordArray> | null): Promise<Array<ColorCoordArray>>
-
-Filters color variants to include only those within sRGB gamut.
-
-**Parameters**:
-- `variants` - Array of OKLCH coordinate arrays
-
-**Returns**: Promise resolving to filtered array
-
----
-
-#### getMinMaxLight(color: string): Promise<MinMaxLightObject | null>
-
-Calculates the minimum and maximum lightness values that keep the color in sRGB gamut.
-
-**Parameters**:
-- `color` - Color string
-
-**Returns**: Promise resolving to object with originalCoords, lightMin, and lightMax
-
----
-
-#### adjustColorPairForPresentation(pair: ColorPair): Promise<ColorPair>
-
-Adjusts the first color in a pair to use the midpoint of its available lightness range.
-
-**Parameters**:
-- `pair` - Color pair [foreground, background]
-
-**Returns**: Promise resolving to adjusted color pair
+> This replaced `generateAllOklchVariants(color, lightSteps, chromaSteps)`, which took
+> fixed step counts. If you find that name, it predates the current implementation.
 
 ---
 
 ## ColorMetricsService
 
 **Location**: `src/app/services/color-metrics.service.ts`
+**Singleton**: `colorMetrics`
 
-Calculates contrast scores between two colors. **OKCA is the primary and default algorithm.** APCA, Bridge-PCA, and Delta E are also supported.
+Contrast scores. **OKCA is the primary and default algorithm.**
 
 ### Dependencies
 
-- `@pawn002/okca` - OKCA contrast calculation (primary)
-- `apca-w3` - APCA contrast calculation
-- `d3` - Scale utilities
-- `ColorUtilService` - Color parsing and conversion
-- `BpcaService` - Bridge-PCA calculation
+- `@pawn002/okca` — OKCA (primary)
+- `apca-w3` — APCA
+- `colorUtil` — parsing and conversion
+- `BpcaService` — constructed internally with `colorUtil`
 
 ### Types
 
-```typescript
+```ts
 export type ContrastType = 'apca' | 'bpca' | 'deltaE' | 'okca';
-
-export interface NumberKeyLookup {
-  [key: number]: number;
-}
 ```
+
+`<cc-app>` and `<cc-color-contrast>` widen this to `ContrastType | 'apca object'` — the
+object mode is a presentation of an APCA score via
+`ColorUtilService.getMinObjectDimension()`, not a fifth algorithm here.
 
 ### Methods
 
-#### getContrast(colorOne: string, colorTwo: string, contrastType: ContrastType): number | null
+#### `getContrast(colorOne, colorTwo, contrastType): number | null`
 
-Main method to get contrast score between two colors. The app defaults to `'okca'`.
-
-**Parameters**:
-- `colorOne` - Foreground color string
-- `colorTwo` - Background color string
-- `contrastType` - Algorithm to use: `'okca'` (default), `'apca'`, `'bpca'`, or `'deltaE'`
-
-**Returns**: Contrast score as number or null
-
-**Contrast type summary**:
+The single entry point. `colorOne` is the foreground, `colorTwo` the background.
 
 | Type | Scale | Notes |
-|------|-------|-------|
-| `okca` | 1–21 (20.9 ceiling) | OKLCH-native, polarity-aware, zero WCAG false passes, default |
-| `apca` | ~0–108 | Perceptual contrast, signed (polarity matters) |
+|---|---|---|
+| `okca` | 1–21 (20.9 ceiling) | OKLCH-native, polarity-aware, zero WCAG false passes — the default |
+| `apca` | ~0–108 | Perceptual, signed; returned rounded to an integer |
 | `bpca` | 1–21 | WCAG 2.x ratio via Bridge-PCA |
-| `deltaE` | 0–100 | CIE Delta E 2000 perceptual color difference |
+| `deltaE` | 0–100 | CIE Delta E 2000 — a difference measure, not a contrast one |
 
-**Example**:
-```typescript
-const okca = colorMetricsService.getContrast('#ff69b4', '#1a1a1a', 'okca');
-// Returns: 3.6 (WCAG gives 6.6 — a known false pass)
+Dispatch order matters: `deltaE` and `okca` are handled first and return directly. Both
+`apca` and `bpca` go through a raw APCA calculation, so if that fails, both return
+`null`.
 
-const apca = colorMetricsService.getContrast('#000000', '#ffffff', 'apca');
-// Returns: 106 (very high contrast)
+For `okca`, both colors are normalised through `toHexString()` first; if either fails to
+parse, the result is `null` rather than a wrong number.
 
-const bpca = colorMetricsService.getContrast('#000000', '#ffffff', 'bpca');
-// Returns: 21.0 (WCAG 2.x ratio)
+```ts
+colorMetrics.getContrast('#ff69b4', '#1a1a1a', 'okca'); // 3.6 — WCAG gives 6.6
+colorMetrics.getContrast('#000000', '#ffffff', 'apca'); // 106
+colorMetrics.getContrast('#000000', '#ffffff', 'bpca'); // 21
 ```
 
 ---
 
-#### calcRawApcaContrast(colorOne: string, colorTwo: string): number | null
+#### `calcRawApcaContrast(colorOne, colorTwo): number | null`
 
-Calculates raw APCA (Accessible Perceptual Contrast Algorithm) score.
+The unrounded APCA score, straight from `apca-w3`.
 
-**Parameters**:
-- `colorOne` - Foreground color string (text color)
-- `colorTwo` - Background color string
+- **Positive** — dark text on a light background
+- **Negative** — light text on a dark background
 
-**Returns**: Raw APCA score (approximately -108 to +108) or null
+Polarity is meaningful; magnitude is the contrast.
 
-**Notes**:
-- Positive values: Dark text on light background
-- Negative values: Light text on dark background
-- Polarity matters! Higher absolute value = better contrast
-
-**Example**:
-```typescript
-const score = colorMetricsService.calcRawApcaContrast('#000000', '#ffffff');
-// Returns: 106.04 (dark on light)
-
-const score2 = colorMetricsService.calcRawApcaContrast('#ffffff', '#000000');
-// Returns: -107.86 (light on dark)
+```ts
+colorMetrics.calcRawApcaContrast('#000000', '#ffffff'); //  106.04
+colorMetrics.calcRawApcaContrast('#ffffff', '#000000'); // -107.86
 ```
 
 ---
 
-#### calcRawBpcaContrast(colorOne: string, colorTwo: string): number
+#### `calcRawBpcaContrast(colorOne, colorTwo): number`
 
-Calculates Bridge-PCA contrast, which converts APCA scores to WCAG 2.x ratios.
+The WCAG 2.x-compatible ratio.
 
-**Parameters**:
-- `colorOne` - Foreground color string
-- `colorTwo` - Background color string
+1. `BpcaService.calcBPCA()` for the Lc score
+2. Both colors to 0–255 RGB, then to luminance via `sRGBtoY()`
+3. `bridgeRatio()` to convert Lc plus luminances into a ratio
+4. `parseFloat` the result
 
-**Returns**: WCAG 2.x-compatible ratio (e.g., 4.5, 7.0, 21.0)
+Returns `NaN` — and warns — if either color fails to convert.
 
-**Process**:
-1. Calculate APCA score
-2. Convert to luminance values (Y)
-3. Apply Bridge-PCA algorithm to get WCAG 2.x ratio
-4. Return as decimal number
-
-**Example**:
-```typescript
-const ratio = colorMetricsService.calcRawBpcaContrast('#000000', '#ffffff');
-// Returns: 21.0 (equivalent to WCAG 2.1 maximum)
+```ts
+colorMetrics.calcRawBpcaContrast('#000000', '#ffffff'); // 21
 ```
+
+---
+
+### About OKCA
+
+OKCA outputs on the familiar 1–21 scale with the same AA (4.5) and AAA (7.0) thresholds
+as WCAG, while correcting a known WCAG failure mode.
+
+**Saturated chromatic false passes** — hot pink on near-black scores 6.6:1 under WCAG but
+is demonstrably harder to read. OKCA applies a chroma penalty that reduces the ratio for
+vivid colors; that pair scores 3.6.
+
+It is also **polarity-aware**: light-on-dark and dark-on-light pairs score differently,
+capped at 20.9 and 20 respectively. The light-on-dark ceiling sits just below WCAG's 21
+so that every OKCA score is *strictly* under the WCAG equivalent.
+
+OKCA never approves a pair that WCAG rejects (FP = 0, proven for sRGB), which makes it a
+strictly stricter drop-in alternative.
 
 ---
 
@@ -460,254 +426,234 @@ const ratio = colorMetricsService.calcRawBpcaContrast('#000000', '#ffffff');
 
 **Location**: `src/app/services/bpca.service.ts`
 
-Implements the Bridge-PCA algorithm for converting APCA scores to WCAG 2.x-compatible contrast ratios.
+Bridge-PCA: converting APCA scores into WCAG 2.x-compatible ratios.
 
-### Dependencies
+### Construction
 
-- `ColorUtilService` - Color parsing and RGB conversion
+Unlike the other two, this one takes a dependency and is **not** exported as a singleton.
+`ColorMetricsService` constructs it:
 
-### Notes
+```ts
+constructor() {
+  this.bpca = new BpcaService(colorUtil);
+}
+```
 
-This service contains a partial implementation of the bridge-pca algorithm because the original npm package has dependency issues with colorparsely. The code is adapted from the [Bridge-PCA repository](https://github.com/Myndex/bridge-pca/).
+### Why it is reimplemented here
+
+The published `bridge-pca` package has dependency problems with colorparsely, so the
+algorithm is partially reimplemented from the
+[Bridge-PCA repository](https://github.com/Myndex/bridge-pca/). This is BPCA 0.1.6 G-4g,
+with the 2.4 exponent for monitor perception.
 
 ### Methods
 
-#### calcBPCA(textColor: string, bgColor: string, places = -1, isInt = true): string | number
+#### `calcBPCA(textColor: string, bgColor: string, places = -1): string | number`
 
-Main entry point for Bridge-PCA calculation.
+Entry point. Converts both colors to 0–255 RGB, then to luminance, then runs
+`BPCAcontrast`.
 
-**Parameters**:
-- `textColor` - Foreground color string
-- `bgColor` - Background color string
-- `places` - Decimal places (-1 for float, 0 for rounded with polarity, >0 for fixed decimals)
-- `isInt` - Whether to use integer RGB values
+`places`: `-1` for a float, `0` for rounded with polarity preserved, greater than 0 for
+fixed decimals.
 
-**Returns**: BPCA score as string or number
-
-**Example**:
-```typescript
-const score = bpcaService.calcBPCA('#000000', '#ffffff');
-// Returns: 106.04 (as number)
+```ts
+bpca.calcBPCA('#000000', '#ffffff'); // 106.04
 ```
 
 ---
 
-#### BPCAcontrast(txtY: number, bgY: number, places = -1): string | number
+#### `BPCAcontrast(txtY: number, bgY: number, places = -1): string | number`
 
-Core Bridge-PCA contrast calculation using luminance values.
+The core calculation, from luminance values.
 
-**Parameters**:
-- `txtY` - Text luminance (0.0-1.0)
-- `bgY` - Background luminance (0.0-1.0)
-- `places` - Decimal places for output
-
-**Returns**: Contrast score
-
-**Algorithm**:
 1. Soft-clamp black values
-2. Return 0 for very similar luminances
-3. Calculate SAPC (Simple Accessible Perceptual Contrast)
-4. Apply different scaling for normal polarity (BoW) vs reverse (WoB)
-5. Apply low clip to prevent polarity reversal
-6. Return signed numeric value
-
-**Reference**: This is the BPCA 0.1.6 G-4g implementation with 2.4 exponent for monitor perception.
+2. Return 0 for luminances too close to distinguish
+3. Compute SAPC (Simple Accessible Perceptual Contrast)
+4. Scale differently for normal polarity (black-on-white) than reverse (white-on-black)
+5. Apply a low clip, so the result cannot cross zero and flip polarity
+6. Return a signed value
 
 ---
 
-#### sRGBtoY(rgba = [0, 0, 0]): number
+#### `sRGBtoY(rgba = [0, 0, 0]): number`
 
-Converts sRGB color to luminance (Y) value.
+sRGB to luminance.
 
-**Parameters**:
-- `rgba` - RGB array with 0-255 values [R, G, B]
+1. Linearise each channel with the 2.4 exponent
+2. Apply the sRGB coefficients (0.2126, 0.7152, 0.0722)
+3. Sum
 
-**Returns**: Luminance value (0.0-1.0)
-
-**Process**:
-1. Linearize each channel using 2.4 exponent
-2. Apply sRGB coefficients (0.2126, 0.7152, 0.0722)
-3. Sum to get luminance
-
-**Example**:
-```typescript
-const luminance = bpcaService.sRGBtoY([255, 255, 255]);
-// Returns: 1.0 (white has maximum luminance)
+```ts
+bpca.sRGBtoY([255, 255, 255]); // 1.0
+bpca.sRGBtoY([0, 0, 0]);       // 0.0
 ```
 
 ---
 
-#### bridgeRatio(contrastLc, txtY: number, bgY: number, ratioStr = ' to 1', places = 1): string
+#### `bridgeRatio(contrastLc, txtY, bgY, ratioStr = ' to 1', places = 1): string`
 
-Converts APCA Lc score to WCAG 2.x-style ratio string.
+APCA Lc into a WCAG 2.x-style ratio **string**.
 
-**Parameters**:
-- `contrastLc` - APCA Lc score (0-108)
-- `txtY` - Text luminance
-- `bgY` - Background luminance
-- `ratioStr` - Suffix string (default: ' to 1')
-- `places` - Decimal places
+1. Compute a trim adjustment from the higher luminance
+2. Convert Lc to a base WCAG contrast with a polynomial fit
+3. Apply a separate curve below 3:1
+4. Scale by 10
+5. Format to `places` decimals with `ratioStr` appended
 
-**Returns**: Ratio string (e.g., '4.5 to 1')
-
-**Algorithm**:
-1. Calculate trim adjustment based on max luminance
-2. Convert Lc to base WCAG contrast using polynomial formula
-3. Adjust ratios under 3:1 with special curve
-4. Multiply by 10 to get final ratio
-5. Format as string with specified precision
-
-**Example**:
-```typescript
-const ratio = bpcaService.bridgeRatio(60, 0.0, 1.0, ' to 1', 1);
-// Returns: '4.5 to 1'
+```ts
+bpca.bridgeRatio(60, 0.0, 1.0, ' to 1', 1); // '4.5 to 1'
+bpca.bridgeRatio(60, 0.0, 1.0, '');         // '4.5'
 ```
+
+`ColorMetricsService` passes `''` and calls `parseFloat` on the result, which is why the
+suffix is a parameter.
 
 ---
 
-#### alphaBlend(rgbaFG, rgbBG, isInt = true): number[]
+#### `alphaBlend(rgbaFG, rgbBG, isInt = true): number[]`
 
-Alpha-blends a foreground color with transparency over a background color.
-
-**Parameters**:
-- `rgbaFG` - Foreground RGBA array [R, G, B, A]
-- `rgbBG` - Background RGB array [R, G, B]
-- `isInt` - Whether to return integer values
-
-**Returns**: Blended RGB array
-
-**Note**: Currently not used in the main application flow but available for future alpha channel support.
+Blends a translucent foreground over an opaque background. Not used in the current flow;
+retained for future alpha support.
 
 ---
 
-## Service Dependencies
+## Dependency graph
 
 ```
-ColorMetricsService
-    ├── ColorUtilService
-    └── BpcaService
-            └── ColorUtilService
+ColorMetricsService  ──uses──▶  colorUtil (ColorUtilService)
+        │
+        └──constructs──▶  BpcaService  ──uses──▶  colorUtil
 
-ColorUtilService (standalone)
+ColorUtilService  ──▶  colorjs.io, d3   (no internal dependencies)
 ```
 
-## Usage Patterns
+`colorUtil` and `colorMetrics` are exported instances. `BpcaService` is not — it is
+constructed with its dependency.
 
-### Pattern 1: Calculate Contrast
+---
 
-```typescript
-// In a component
-export class ColorContrastComponent {
-  private colorMetrics = inject(ColorMetricsService);
+## Usage patterns
 
-  contrastScore = computed(() => {
-    return this.colorMetrics.getContrast(
-      this.colorOne(),
-      this.colorTwo(),
-      'apca'
-    );
-  });
+### Calculating contrast in a component
+
+```ts
+import { colorMetrics } from '../../services/color-metrics.service';
+
+private _computeScore() {
+  const score = colorMetrics.getContrast(this.colorOne, this.colorTwo, this.contrastType);
+  this.contrastScore = score ?? NaN;
 }
 ```
 
-### Pattern 2: Generate Random Colors
+### Generating a starting pair
 
-```typescript
-// In root component
-export class AppComponent {
-  private colorUtil = inject(ColorUtilService);
+```ts
+import { colorUtil } from '../services/color-util.service';
 
-  async ngAfterViewInit() {
-    const pair = await this.colorUtil.getRandomColorPair();
-    this.colorPickerOneSelectedColor.set(pair[0]);
-    this.colorPickerTwoSelectedColor.set(pair[1]);
+private async _setRandomColorPair() {
+  const [fg, bg] = await colorUtil.getRandomColorPair();
+  this.fgColor = fg;
+  this.bgColor = bg;
+}
+```
+
+### Matching chromas
+
+```ts
+private async _matchChromas() {
+  const matched = await colorUtil.matchChromas([this.fgColor, this.bgColor]);
+
+  if (matched.success && matched.colors) {
+    this.fgComparedColor = matched.colors[0];
+    this.bgComparedColor = matched.colors[1];
   }
 }
 ```
 
-### Pattern 3: Match Chromas
+### Reading metadata
 
-```typescript
-// In root component
-async matchChromas() {
-  const pair: ColorPair = [
-    this.colorPickerOneSelectedColor(),
-    this.colorPickerTwoSelectedColor()
-  ];
-
-  const matchedObj = await this.colorUtilService.matchChromas(pair);
-
-  if (matchedObj.success && matchedObj.colors) {
-    this.colorPickerOneComparedColor.set(matchedObj.colors[0]);
-    this.colorPickerTwoComparedColor.set(matchedObj.colors[1]);
-  }
+```ts
+get colorOneMeta() {
+  return colorUtil.getColorMeta(this.colorOne);
 }
 ```
 
-### Pattern 4: Get Color Metadata
+A getter, not a cached computation — it re-evaluates on each render, which is what you
+want.
 
-```typescript
-// In metadata component
-colorOneMeta = computed(() => {
-  return this.colorUtilService.getColorMeta(this.colorOne());
-});
-```
+---
 
-## Testing Services
+## Error handling conventions
 
-When writing unit tests for services:
+- **Return `null` for a failure a caller can reasonably handle** — an unparseable color,
+  a conversion that cannot proceed. Most methods here do this, and log
+- **Return `NaN` where it is a meaningful value** — `getMinObjectDimension` below the
+  threshold, `calcRawBpcaContrast` when conversion fails
+- **Throw only where the input is already known-good** — `hexToOklchString` and
+  `generateAdaptiveVariants` throw, because reaching them with an unparseable color is a
+  programming error, not user input
 
-```typescript
+When testing an error path, prefer `vi.spyOn(...).mockReturnValue(null)` over feeding a
+value that makes the code genuinely throw. A spec that drives a real error prints a stack
+trace on every run and trains you to ignore stderr.
+
+---
+
+## Testing
+
+Services are plain classes — instantiate directly, no `TestBed`:
+
+```ts
+import { describe, it, expect, vi } from 'vitest';
+import { ColorUtilService, colorUtil } from './color-util.service';
+
 describe('ColorUtilService', () => {
-  let service: ColorUtilService;
+  const service = new ColorUtilService();
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(ColorUtilService);
+  it('parses a valid hex color', () => {
+    expect(service.parseColor('#ff5733')).not.toBeNull();
   });
 
-  it('should parse valid hex color', () => {
-    const result = service.parseColor('#ff5733');
-    expect(result).not.toBeNull();
+  it('returns null for an unparseable string', () => {
+    expect(service.parseColor('not-a-color')).toBeNull();
   });
+});
 
-  it('should return null for invalid color', () => {
-    const result = service.parseColor('invalid');
-    expect(result).toBeNull();
-  });
+// Mocking a collaborator on the shared singleton
+it('returns null when conversion fails', () => {
+  vi.spyOn(colorUtil, 'getRgb255Array').mockReturnValue(null);
+  expect(colorMetrics.calcRawApcaContrast('#000000', '#ffffff')).toBeNull();
 });
 ```
 
-See [Testing Guide](./testing.md) for more examples.
+The service specs are the largest part of the suite — 78 tests for `ColorUtilService`, 48
+for `BpcaService`, 44 for `ColorMetricsService`. See the [Testing Guide](./testing.md).
 
-## Performance Considerations
+---
 
-1. **Async Operations**: Many methods return Promises due to gamut checking
-2. **Caching**: Consider caching frequently calculated values in components
-3. **Computed Signals**: Use computed() to automatically cache derived values
-4. **Avoid Repeated Parsing**: Parse colors once and reuse the Color objects when possible
+## Performance notes
 
-## Future Enhancements
+1. **Several methods are async** because sRGB gamut checks are — `isInSrgbGamut`,
+   `getMinMaxLight`, `matchChromas`, `getRandomColorPair`,
+   `adjustColorPairForPresentation`
+2. **`generateAdaptiveVariants` is the expensive synchronous call.** It walks two axes
+   with a Delta E computation per step; it is called on a color change, not per render
+3. **Parse once, reuse.** `parseColor` is not memoised, so a method that needs a color
+   several times should hold the parsed object
 
-Potential improvements for the services:
-
-1. **Memoization**: Cache parsed colors to avoid repeated parsing
-2. **Web Workers**: Move heavy calculations (variant generation) to web workers
-3. **Batch Operations**: Add methods for batch color processing
-4. **Color Palettes**: Methods for generating complementary/analogous color schemes
-5. **Export/Import**: Serialization methods for saving color configurations
+---
 
 ## References
 
-- [OKCA on GitHub](https://github.com/pawn002/okca) — primary contrast algorithm
-- [colorjs.io Documentation](https://colorjs.io/)
-- [APCA on GitHub](https://github.com/Myndex/apca-w3)
-- [Bridge-PCA on GitHub](https://github.com/Myndex/bridge-pca)
-- [OKLCH Color Space](https://oklch.com/)
-- [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
+- [OKCA](https://github.com/pawn002/okca) — the primary contrast algorithm
+- [colorjs.io](https://colorjs.io/)
+- [APCA](https://github.com/Myndex/apca-w3)
+- [Bridge-PCA](https://github.com/Myndex/bridge-pca)
+- [OKLCH color space](https://oklch.com/)
+- [WCAG 2.1](https://www.w3.org/WAI/WCAG21/quickref/)
 
-## Next Steps
+## Next steps
 
-- Review [Components Documentation](./components.md) to see how services are used
-- Check [Architecture](./architecture.md) for service integration patterns
-- See [Testing Guide](./testing.md) for service testing strategies
+- [Components](./components.md) — how these APIs are consumed
+- [Architecture](./architecture.md) — where services sit in the whole
+- [Testing](./testing.md) — patterns for exercising them
