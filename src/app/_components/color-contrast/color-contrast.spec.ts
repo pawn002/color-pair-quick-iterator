@@ -1,5 +1,6 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import './color-contrast';
+import { colorMetrics } from '../../services/color-metrics.service';
 import { mount, update, cleanup } from '../../test-utils';
 
 afterEach(cleanup);
@@ -74,5 +75,58 @@ describe('cc-color-contrast', () => {
   it('leaves the announcement empty when there is no score', async () => {
     const el = await mount('cc-color-contrast');
     expect(el.contrastAnnouncement).toBe('');
+  });
+
+  // The number means a different thing per mode; announcing all five as
+  // "Contrast score" mislabelled three of them.
+  describe('announcement wording per contrast type', () => {
+    it('names the object dimension rather than calling it a score', async () => {
+      const el = await mount('cc-color-contrast', {
+        colorOne: '#000000',
+        colorTwo: '#ffffff',
+        contrastType: 'apca object',
+      });
+
+      expect(el.contrastAnnouncement).toMatch(/^Minimum object dimension: [\d.]+ pixels$/);
+    });
+
+    it('names Delta E rather than calling it a score', async () => {
+      const el = await mount('cc-color-contrast', {
+        colorOne: '#000000',
+        colorTwo: '#ffffff',
+        contrastType: 'deltaE',
+      });
+
+      expect(el.contrastAnnouncement).toBe('Delta E: 100');
+    });
+
+    it('still calls the ratio modes a contrast score', async () => {
+      const el = await mount('cc-color-contrast', { colorOne: '#ffffff', colorTwo: '#000000' });
+      expect(el.contrastAnnouncement).toBe('Contrast score: 20.9');
+    });
+  });
+
+  // The display shows "!" when no object is renderable at any size. The
+  // announcement used to say "Contrast score: 0" for the same state.
+  it('announces the object fallback to match the "!" on screen', async () => {
+    const el = await mount('cc-color-contrast', {
+      colorOne: '#808080',
+      colorTwo: '#808080',
+      contrastType: 'apca object',
+    });
+
+    expect(score(el)).toBe('!');
+    expect(el.contrastAnnouncement).toBe('Contrast too low for any object');
+  });
+
+  it('says so when a pair is present but will not score', async () => {
+    // The "!" marker's other cause: a pair is set, but no score comes back.
+    const spy = vi.spyOn(colorMetrics, 'getContrast').mockReturnValue(null);
+
+    const el = await mount('cc-color-contrast', { colorOne: '#000000', colorTwo: '#ffffff' });
+
+    expect(score(el)).toBe('!');
+    expect(el.contrastAnnouncement).toBe('Contrast score unavailable');
+    spy.mockRestore();
   });
 });

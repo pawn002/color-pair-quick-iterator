@@ -4,12 +4,12 @@ This document describes the high-level architecture and design patterns used in 
 
 ## Overview
 
-Color Pair Quick Iterator is built using **Angular 20** with modern patterns including signals, standalone components, and zoneless change detection. The architecture follows a service-oriented design where business logic is centralized in services, and components focus on presentation and user interaction.
+Color Pair Quick Iterator is built with **Lit 3** web components on Vite. The architecture follows a service-oriented design where business logic is centralized in services, and components focus on presentation and user interaction.
 
 ## Architectural Principles
 
 ### 1. Standalone Components
-- **No NgModules**: All components are standalone (default in Angular 20)
+- **No framework runtime**: components are custom elements; there is no DI container or module system beyond ES modules
 - **Direct imports**: Components import their dependencies directly
 - **Simpler mental model**: No need to manage module hierarchies
 
@@ -59,14 +59,16 @@ Color Pair Quick Iterator is built using **Angular 20** with modern patterns inc
 │ - CopyButton │  │              │  │                     │
 ├──────────────┤  └──────────────┘  └─────────────────────┘
 │ Candor DS    │
-│ (_candor)    │
+│ (npm pkg)    │
 │ - Accordion  │
 │ - Button     │
 │ - Card       │
 │ - Checkbox   │
 │ - Radio      │
-│ - Table      │
+│ - Modal      │
 │ - Toast      │
+│ - TonePicker │
+│ - Tooltip    │
 └──────────────┘
 ```
 
@@ -83,16 +85,7 @@ src/
 │   │   ├── copy-to-clipboard-button/
 │   │   ├── metadata/
 │   │   ├── palette-table/
-│   │   └── tone-picker/
-│   ├── _candor/                  # Candor design system components
-│   │   ├── accordion/
-│   │   ├── button/
-│   │   ├── card/
-│   │   ├── form/
-│   │   │   ├── checkbox/
-│   │   │   └── radio/
-│   │   ├── table/
-│   │   └── toast/
+│   │   └── table/
 │   ├── services/                 # Business logic services
 │   │   ├── color-util.service.ts
 │   │   ├── color-metrics.service.ts
@@ -117,11 +110,11 @@ component-name/
 └── component-name.component.scss     # Styles, imported by the .ts file
 ```
 
-Candor design system components in `_candor/` are local Lit reimplementations of the Candor design system and render into the light DOM so Candor design tokens apply globally.
+The app's own components render into the light DOM so the global token stylesheet applies. Design-system primitives are `candor-*` elements from `@candor-design/web-components` and use shadow DOM; tokens still reach them because custom properties inherit through shadow boundaries.
 
 ### Component Communication
 
-Components communicate using modern Angular patterns:
+Components communicate through properties down and custom events up:
 
 1. **Inputs**: Using `input()` function for one-way data binding
    ```typescript
@@ -173,31 +166,44 @@ AppComponent (Root)
 
 ## Candor Design System Integration
 
-The `_candor/` directory contains a set of UI primitives copied from the Candor design system. These components provide visual consistency through shared design tokens and serve as the presentational building blocks for the application's interface.
+Design-system primitives come from `@candor-design/web-components`. `src/main.ts`
+imports the package once; that registers every element it ships. Nothing is copied
+into this repo.
 
-### Key conventions for Candor components
+### Key conventions
 
-- **`ViewEncapsulation.None`**: Styles are applied globally so that Candor CSS custom property tokens cascade normally.
-- **Design tokens only**: All color, spacing, typography, and border values reference Candor CSS custom properties (e.g., `--color-text-default`, `--font-family-mono`, `--border-width-medium`) rather than hard-coded values.
-- **OnPush change detection**: All Candor components use `ChangeDetectionStrategy.OnPush`.
-- **No app-specific logic**: Candor components are presentational and contain no application business logic.
+- **Shadow DOM**: the `candor-*` elements encapsulate their own styles, unlike the
+  app's `cc-*` components, which render into the light DOM.
+- **Design tokens cross the boundary**: tokens are custom properties on `:root`, and
+  custom properties inherit into shadow trees. Colour, spacing, typography, and border
+  values all reference them (`--color-text-default`, `--font-family-mono`,
+  `--border-width-medium`) rather than literals.
+- **Global SCSS does not cross it**: a descendant selector cannot reach a component's
+  internals. Use the documented `--candor-*` hooks or `::part()`. `styles.scss` uses
+  the former to rebuild the icon-only button, which upstream has no size for.
+- **The `candor-*` / `cc-*` split is enforced**: the package registers all its elements
+  from one entry point, so a local element reclaiming a `candor-*` name breaks
+  registration for everything after it. `src/app/candor-package.spec.ts` guards this.
 
-### Available Candor components
+### Elements the app renders
 
-| Component | Selector | Location | Description |
-|-----------|----------|----------|-------------|
-| `AccordionItemComponent` | `app-accordion-item` | `_candor/accordion/` | Collapsible section with `title`, `open`, and `variant` (`'default' \| 'subtle' \| 'quiet'`) inputs |
-| `ButtonComponent` | `app-button` | `_candor/button/` | Action button with `variant`, `size`, `disabled`, `type`, and `ariaLabel` inputs |
-| `CardComponent` | `app-card` | `_candor/card/` | Surface container with `variant` and `padding` inputs; supports header/body/footer slots |
-| `CheckboxComponent` | `app-checkbox` | `_candor/form/checkbox/` | Checkbox implementing `ControlValueAccessor` with `label`, `id`, `name`, `required`, `checked`, and `disabled` |
-| `RadioComponent` | `app-radio` | `_candor/form/radio/` | Radio button implementing `ControlValueAccessor` with `label`, `value`, `name`, `id`, `checked`, and `disabled` |
-| `TableComponent` | `app-table` | `_candor/table/` | Styled table wrapper with optional `compact` input for dense data panels |
-| `ToastComponent` | `app-toast` | `_candor/toast/` | Notification banner with `variant` (`'info' \| 'success' \| 'warning' \| 'error'`), `title`, `message`, `dismissible` inputs, and `dismissed` output |
-| `ModalComponent` | `app-modal` | `_candor/modal/` | Native `<dialog>`-based modal with `title` input and two-way `open` model; handles focus trap, Escape, and backdrop click |
+`candor-accordion-item`, `candor-button`, `candor-card`, `candor-checkbox`,
+`candor-modal`, `candor-radio`, `candor-toast`, `candor-tone-picker`, `candor-tooltip`.
+
+Their APIs are documented in Candor's own hosted catalog rather than duplicated here.
+Two things differ from the local primitives this app used to carry: the visible label
+is `heading` (never `title`, which is a global HTML attribute), and form controls emit
+`change` rather than `changed`. `candor-button` emits nothing at all — bind `@click`.
+
+`cc-table` stays local on purpose. `candor-table` is data-driven
+(`headers: string[]`, `rows: { cells: string[] }[]`) and half the tables in
+`cc-metadata` put an interactive tooltip and info button inside a cell.
 
 ### Design token conventions
 
-After the Candor migration, all style files reference Candor tokens directly. The old application-level alias variables (`--mono-font`, `--body-font`, `--header-font`, `--ideal-body-text-black`, etc.) have been removed. Use Candor tokens instead:
+All style files reference Candor tokens directly. The old application-level alias
+variables (`--mono-font`, `--body-font`, `--header-font`, `--ideal-body-text-black`,
+etc.) have been removed. Use Candor tokens instead:
 
 | Old alias (removed) | Candor token |
 |---------------------|--------------|
@@ -205,7 +211,6 @@ After the Candor migration, all style files reference Candor tokens directly. Th
 | `--body-font` | `--font-family-accessible` |
 | `--header-font` | `--font-family-display` |
 | `--ideal-body-text-black` | `--color-text-default` |
-
 ## Service Architecture
 
 ### Service Responsibilities

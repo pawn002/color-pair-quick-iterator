@@ -7,9 +7,9 @@ This document provides detailed documentation for all UI components in the Color
 The application contains two groups of components:
 
 - **App-specific components** (`src/app/_components/`) — 8 standalone components that implement the application's features
-- **Candor design system components** (`src/app/_candor/`) — 8 copied UI primitives that provide visual consistency via shared design tokens
+- **Design system components** (`candor-*`) — imported from `@candor-design/web-components`; not in this repo
 
-All components follow Angular 20 patterns with signals, modern control flow (`@if`, `@for`), and co-located files.
+The app's own components are Lit elements with co-located `.ts` and `.component.scss` files.
 
 ## Component File Structure
 
@@ -493,7 +493,7 @@ uniqId = signal<string>('');
 
 #### Behavior
 
-- Displays alert message using `ToastComponent` from `_candor/toast/`
+- Displays alert message using `candor-toast`
 - Auto-hides after 5 seconds using `setTimeout`
 - Generates unique IDs using lodash `random` for each alert
 - Emits `alertClosed` event when dismissed
@@ -570,202 +570,44 @@ async copyToClipboard() {
 
 ---
 
-## Candor Design System Components (`_candor/`)
-
-These components are copied from the Candor design system and live in `src/app/_candor/`. They provide consistent, token-driven UI primitives. All use `ViewEncapsulation.None` so Candor CSS custom property tokens cascade naturally, and all use `ChangeDetectionStrategy.OnPush`.
-
-### AccordionItemComponent
-
-**Location**: `src/app/_candor/accordion/`
-
-Collapsible section with a title header and projected content body.
-
-#### Inputs
-
-```typescript
-title = input('');
-open = input(false);
-variant = input<'default' | 'subtle' | 'quiet'>('default');
-```
-
-The `variant` input controls the visual weight of the accordion border/background. Use `'subtle'` or `'quiet'` for less prominent sections.
-
----
-
-### ButtonComponent
-
-**Location**: `src/app/_candor/button/`
-
-Styled action button with multiple variants and sizes.
-
-#### Inputs
-
-```typescript
-variant = input<'primary' | 'secondary' | 'tertiary' | 'ghost' | 'destructive'>('primary');
-size = input<'small' | 'medium' | 'large' | 'icon'>('medium');
-disabled = input(false);
-type = input<'button' | 'submit' | 'reset'>('button');
-ariaLabel = input<string>();
-```
-
-#### Outputs
-
-```typescript
-clicked = output<Event>();
-```
-
-Emits a click event only when the button is not disabled.
-
----
-
-### CardComponent
-
-**Location**: `src/app/_candor/card/`
-
-Surface container that wraps content in a styled card with optional header and footer slots.
-
-#### Inputs
-
-```typescript
-variant = input<'default' | 'elevated' | 'outlined'>('default');
-padding = input<'none' | 'sm' | 'md' | 'lg'>('md');
-```
-
-#### Content Projection
-
-- Default slot: card body content
-- `slot="header"`: card header content
-- `slot="footer"`: card footer content
-
----
-
-### CheckboxComponent
-
-**Location**: `src/app/_candor/form/checkbox/`
-
-Styled checkbox implementing Angular's `ControlValueAccessor` for use with reactive forms.
-
-#### Inputs
-
-```typescript
-label = input<string>();
-id = input<string>();
-required = input(false);
-name = input<string>();
-checked = false;    // @Input (mutable via CVA)
-disabled = false;   // @Input (mutable via CVA)
-```
-
-#### Outputs
-
-```typescript
-changed = output<boolean>();
-```
-
----
-
-### RadioComponent
-
-**Location**: `src/app/_candor/form/radio/`
-
-Styled radio button implementing Angular's `ControlValueAccessor` for use with reactive forms.
-
-#### Inputs
-
-```typescript
-label = input<string>();
-value = input<unknown>();
-name = input<string>();
-id = input<string>();
-checked = false;    // @Input (mutable via CVA)
-disabled = false;   // @Input (mutable via CVA)
-```
-
-#### Outputs
-
-```typescript
-changed = output<unknown>();
-```
-
----
-
-### TableComponent
-
-**Location**: `src/app/_candor/table/`
-
-Styled table wrapper. Wraps `<ng-content>` (your `<table>` markup) in a host element with Candor table token classes.
-
-#### Inputs
-
-```typescript
-compact = input(false);  // Reduces cell padding for dense data panels
-```
-
-#### Example Usage
-
-```html
-<app-table [compact]="true">
-  <table>
-    <tr><th>Color</th><th>Lightness</th></tr>
-    <tr><td>#ff5733</td><td>0.63</td></tr>
-  </table>
-</app-table>
-```
-
-The `MetadataComponent` uses `<app-table [compact]="true">` to wrap its measurement tables.
-
----
-
-### ToastComponent
-
-**Location**: `src/app/_candor/toast/`
-
-Notification banner with icon, title, message, and optional dismiss button. Used directly by `AlertComponent`.
-
-#### Inputs
-
-```typescript
-variant = input<'info' | 'success' | 'warning' | 'error'>('info');
-title = input('');
-message = input('');
-dismissible = input(true);
-```
-
-#### Outputs
-
-```typescript
-dismissed = output<void>();
-```
-
-The icon and `role` attribute (`'alert'` for warning/error, `'status'` for others) are set automatically based on `variant`.
-
----
-
-### ModalComponent
-
-**Location**: `src/app/_candor/modal/`
-
-Modal dialog using the native `<dialog>` element. Provides focus trapping, Escape-to-close, and a styled backdrop automatically.
-
-#### Inputs
-
-```typescript
-title = input('');       // Displayed in the modal header
-open = model(false);     // Two-way: set true to open; modal sets false on close
-```
-
-#### Behavior
-
-- Opens via `dialog.showModal()` when `open` becomes `true`
-- Closes on: close button click, Escape key, or backdrop click
-- On close the `open` model is set to `false`, keeping the parent signal in sync
-- `aria-labelledby` wired to the title heading
-
-#### Content Projection
-
-Default slot: modal body content.
-
----
+## Design System Components (`candor-*`)
+
+These are **not** in this repo. They come from `@candor-design/web-components`, which
+`src/main.ts` imports once; that single import registers every element the package
+ships. The package publishes its own hosted catalog — consult that for the full API
+rather than a copy maintained here, which is what went stale last time.
+
+The app renders these: `candor-accordion-item`, `candor-button`, `candor-card`,
+`candor-checkbox`, `candor-modal`, `candor-radio`, `candor-toast`, `candor-tone-picker`,
+`candor-tooltip`.
+
+They use shadow DOM, unlike the `cc-*` components above. Two consequences:
+
+- **Design tokens still apply.** They are custom properties on `:root`, and custom
+  properties inherit through shadow boundaries.
+- **Global SCSS does not.** A selector cannot reach inside one. Use the documented
+  `--candor-*` custom properties or `::part()`. `styles.scss` uses the former to
+  rebuild the icon-only button that upstream has no size for.
+
+### Differences from the primitives this app used to carry
+
+The local `_candor/` directory was removed in the migration to the published package
+(#149). If you are reading older code or docs, the API changed:
+
+| was | now |
+|---|---|
+| `title=` | `heading=` — `title` is a global HTML attribute |
+| `@changed` | `@change` |
+| `@clicked` | `@click` — `candor-button` emits no custom event |
+| `@open-change` | `@close` — fires only on close, so carries no state |
+| `size="icon"` | `class="button--icon"` |
+
+### `cc-table` is deliberately not `candor-table`
+
+`candor-table` is data-driven: `headers: string[]`, `rows: { cells: string[] }[]`. Half
+the tables in `cc-metadata` put an interactive tooltip and info button inside a cell,
+and that API has nowhere to put one. `cc-table` stays as a light-DOM wrapper that styles
+whatever `<table>` markup it is given.
 
 ## Component Communication Patterns
 

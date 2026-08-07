@@ -7,7 +7,6 @@ cc-color-slider,
 cc-copy-to-clipboard-button,
 cc-metadata,
 cc-palette-table,
-cc-tone-picker,
 cc-table {
   display: block;
 }
@@ -30,9 +29,40 @@ candor-button.button--icon {
   --fluid-padding: clamp(0.313rem, 4.5vw + -0.25rem, 2rem);
 }
 
+/* Keyboard focus needs breathing room at the edges of the scrollport.
+ *
+ * Sequential focus navigation scrolls the *minimum* distance that makes the
+ * control technically visible, so tabbing forward parks it flush on the bottom
+ * edge and tabbing backward parks it flush on the top — measured at 375x600,
+ * the Options accordion landed at 532..600 in a 600px viewport, and "About
+ * Object" at 0..32. It reads as the page failing to scroll, and the half of the
+ * focus ring on that edge is cut off by the viewport.
+ *
+ * `scroll-padding` is the fix rather than `scroll-margin` on the controls: the
+ * ones that need it are inside shadow roots (`candor-button`'s inner button,
+ * `candor-accordion-item`'s summary) and mostly expose no `::part`, so there is
+ * nowhere to hang a margin. Padding belongs to the scrollport, which is ours.
+ *
+ * The top value also clears `.title-and-score`, which is `position: sticky;
+ * top: 0` and would otherwise cover anything scrolled to the top of the page. */
+html {
+  scroll-padding-block: 5rem var(--spacing-md);
+}
+
+/* The document voice. Without this, anything not matched by a rule below falls
+   to the UA default — a bare `div` in the app rendered Times New Roman. Every
+   text-bearing element happened to be covered, but only by hand: the `legend`
+   added for the radio group needed an explicit rule for exactly this reason.
+ *
+ * Roboto Flex is Candor's execution voice — "navigation, UI scaffolding,
+ * data-dense components", which is this whole app. Atkinson Hyperlegible is
+ * applied deliberately below, to instructional text only. */
 body {
   margin: 0;
   background-color: var(--color-bg-surface);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  color: var(--color-text-default);
 }
 
 hr {
@@ -54,7 +84,8 @@ h1,
 h2,
 h3,
 h4,
-th {
+th,
+legend {
   margin: 0;
   line-height: var(--line-height-tight);
   font-weight: var(--font-weight-semibold);
@@ -64,9 +95,18 @@ th {
   }
 }
 
+/* Headings take Candor's heading tokens, shifted one level down: this is a
+   dense single-screen utility, so `--font-size-h1` (39px) would dominate a
+   sticky bar that has to share its row with the contrast readout. Shifting
+   keeps the compact feel while restoring the ratios — h1 and h2 both sat at
+   20px before, which is no hierarchy at all.
+ *
+ * `font-optical-sizing: auto` matters here: Roboto Flex's opsz axis adds
+ * stroke weight as size grows, so the steps read further apart than the
+ * numbers suggest. */
 h1 {
   font-family: var(--font-family-display);
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-h3);
   font-weight: var(--font-weight-bold);
   font-optical-sizing: auto;
   font-style: normal;
@@ -75,16 +115,21 @@ h1 {
 h2 {
   font-family: var(--font-family-display);
   color: var(--color-text-default);
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-h4);
+  font-optical-sizing: auto;
   font-style: normal;
   margin-bottom: 0.3em;
 }
 
-h3 {
+/* `legend` tracks `h3`: the only one in the app labels the contrast-type radio
+   group, which reads at the same level as the `h3` headings beside it. */
+h3,
+legend {
   line-height: unset;
   color: var(--color-text-default);
   font-family: var(--font-family-display);
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-h5);
+  font-optical-sizing: auto;
   font-style: normal;
 }
 
@@ -92,7 +137,8 @@ h4 {
   line-height: unset;
   color: var(--color-text-subtle);
   font-family: var(--font-family-display);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-h6);
+  font-optical-sizing: auto;
   font-style: normal;
 }
 
@@ -109,8 +155,14 @@ th {
   font-weight: var(--font-weight-semibold);
 }
 
+/* Prose and data values inherit the base voice from `body`.
+ *
+ * These were Atkinson Hyperlegible. Candor reserves Atkinson for *instructional*
+ * text — "does the user need to read this precisely to know what to do next?":
+ * form labels, validation errors, status changes. Contrast scores, metric names
+ * and explanatory prose are comprehension text, which the docs put in Roboto
+ * Flex. See `cc-alert` below for what stayed. */
 td {
-  font-family: var(--font-family-accessible);
   font-size: var(--font-size-base);
   color: var(--color-text-default);
   font-style: normal;
@@ -121,7 +173,6 @@ td {
 
 p,
 li {
-  font-family: var(--font-family-accessible);
   font-size: var(--font-size-base);
   color: var(--color-text-default);
   font-style: normal;
@@ -143,6 +194,14 @@ li {
 }
 
 
+/* The one place Atkinson Hyperlegible belongs: `cc-alert` announces what just
+   happened and what to do about it — "Copied to clipboard", a gamut warning —
+   which is the instructional register Candor designates it for. Everything else
+   in the app is comprehension text and stays in the base voice above. */
+cc-alert {
+  font-family: var(--font-family-accessible);
+}
+
 button,
 input {
   cursor: pointer;
@@ -153,6 +212,13 @@ strong {
   font-size: var(--font-size-sm);
   text-transform: uppercase;
   letter-spacing: var(--letter-spacing-wide);
+}
+
+// The skip-link target. It is focusable only so the skip link can move focus
+// there, never by Tab, so the ring would frame the whole page for a landmark
+// that is not a control — the destination heading is the actual feedback.
+#main-content:focus {
+  outline: none;
 }
 
 .sr-only:not(:focus, :active) {

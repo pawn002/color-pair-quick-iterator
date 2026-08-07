@@ -27,3 +27,29 @@ if (internals && typeof internals.setFormValue !== 'function') {
   internals.checkValidity = () => true;
   internals.reportValidity = () => true;
 }
+
+/**
+ * jsdom's <dialog> has no `showModal()`/`close()`. candor-modal calls one or the
+ * other from `updated()` on every change to `open` — including the first, where
+ * `open` is false and it calls `close()` — so mounting one throws before it
+ * renders at all.
+ *
+ * Enough to let the element render and toggle. The top-layer and inertness
+ * behaviour is not emulated, and no test here asserts on it — the modal
+ * assertions read structure and stylesheets, not layout.
+ */
+const dialog = globalThis.HTMLDialogElement?.prototype as
+  | (HTMLDialogElement & Record<string, unknown>)
+  | undefined;
+
+if (dialog && typeof dialog.showModal !== 'function') {
+  dialog.showModal = function showModal(this: HTMLDialogElement) {
+    this.open = true;
+  };
+  dialog.show = function show(this: HTMLDialogElement) {
+    this.open = true;
+  };
+  dialog.close = function close(this: HTMLDialogElement) {
+    this.open = false;
+  };
+}

@@ -1,4 +1,4 @@
-import { LitElement, html } from 'lit';
+import { LitElement, html, type PropertyValues } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { colorUtil } from './services/color-util.service';
 import type { ContrastType } from './services/color-metrics.service';
@@ -209,18 +209,134 @@ export class CcApp extends LitElement {
     this._updateUrl();
   }
 
+  override updated(changed: PropertyValues) {
+    super.updated(changed);
+    void this._applyRovingTabIndex();
+    if (changed.has('activeNoteModal')) this._setPageScrollLock(this.activeNoteModal !== null);
+  }
+
+  // A modal that is torn down while open would otherwise leave the page locked.
+  override disconnectedCallback() {
+    this._setPageScrollLock(false);
+    super.disconnectedCallback();
+  }
+
+  /**
+   * Stop the page scrolling behind an open modal.
+   *
+   * `showModal()` puts the dialog in the top layer and makes everything behind
+   * it inert, but inert does not mean unscrollable — that is per spec, and the
+   * page keeps its own scrollport. So arrow keys reached the page instead of the
+   * note, by two separate routes:
+   *
+   * 1. `candor-modal` focuses its close button on open, which sits in the header
+   *    and so is outside `.modal__body` — the scrollable region. The very first
+   *    arrow key went to the page, before the reader had touched anything.
+   * 2. Even with focus in the body, `overscroll-behavior` there is `auto`, so
+   *    reaching either end chained the remaining scroll to the page.
+   *
+   * Both measured at 79px of background travel per two presses. Locking the
+   * document closes both, and covers wheel and touch as well; the dialog is in
+   * the top layer, so its own scrolling is unaffected.
+   *
+   * The padding compensates for the scrollbar the lock removes — without it the
+   * page widens by its width (15px here) and everything jumps sideways as the
+   * modal opens. `scrollbar-gutter: stable` does not help: the gutter is only
+   * reserved while overflow is `auto` or `scroll`.
+   *
+   * Both routes are `candor-modal`'s to fix — initial focus belongs in the
+   * scrollable region, which already carries `tabindex="0"`, and that region
+   * wants `overscroll-behavior: contain`. Upstream as `pawn002/candor#265`;
+   * this stays until that lands.
+   */
+  private _setPageScrollLock(locked: boolean) {
+    const html = document.documentElement;
+    if (locked) {
+      // Measure before locking — afterwards the scrollbar is already gone.
+      const gutter = window.innerWidth - html.clientWidth;
+      html.style.paddingInlineEnd = `${gutter}px`;
+      html.style.overflow = 'hidden';
+    } else {
+      html.style.overflow = '';
+      html.style.paddingInlineEnd = '';
+    }
+  }
+
+  /**
+   * Make the contrast-type radios a single tab stop.
+   *
+   * A radio group is one tab stop, with arrows moving between options — native
+   * behaviour, and what the ARIA APG specifies. `candor-radio` implements the
+   * arrow half but leaves `tabindex="0"` on every option's inner input, so the
+   * five options cost five tab stops. This supplies the missing half: only the
+   * selected option is tabbable, so Tab enters the group at the current choice
+   * and leaves it in one press.
+   *
+   * Reaching through another element's shadow root is not something to do
+   * lightly, and it is the reason this is a handful of lines rather than one
+   * attribute — there is no `::part` or property for the inner input. Delete it
+   * when `pawn002/candor#262` lands; the spec below fails when that happens.
+   */
+  private async _applyRovingTabIndex() {
+    const radios = Array.from(
+      this.querySelectorAll<HTMLElement & { updateComplete?: Promise<unknown>; value?: string }>(
+        'candor-radio[name="contrastType"]',
+      ),
+    );
+    if (!radios.length) return;
+
+    // The inner input only exists once each element has rendered its shadow root.
+    await Promise.all(radios.map((radio) => radio.updateComplete ?? Promise.resolve()));
+
+    // Fall back to the first option so the group stays reachable if nothing is
+    // selected — a group with every option at -1 is unreachable by keyboard.
+    const selected = radios.findIndex((radio) => radio.getAttribute('value') === this.contrastType);
+    const tabbable = selected === -1 ? 0 : selected;
+
+    radios.forEach((radio, index) => {
+      const input = radio.shadowRoot?.querySelector('input');
+      if (input) input.tabIndex = index === tabbable ? 0 : -1;
+    });
+  }
+
   private readonly _INFO_SVG = html`
     <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
     </svg>
   `;
 
+  /**
+   * Phosphor `PersonArmsSpread` (fill), inlined from `@phosphor-icons/core`.
+   *
+   * Candor stipulates Phosphor, and its own components inline the path data the
+   * same way — the font-class route does not cross a shadow boundary (candor#171).
+   * Inlining is the permanent pattern, not a stopgap: the `ph*` constants in the
+   * package's `icons.d.ts` are Candor's own chrome and are deliberately not
+   * exported, so there is nothing to import here (candor#260).
+   */
+  private readonly _ACCESSIBILITY_SVG = html`
+    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+      <path
+        d="M100,36a28,28,0,1,1,28,28A28,28,0,0,1,100,36ZM227.6,92.57A15.7,15.7,0,0,0,212,80H44a16,16,0,0,0-6.7,30.53l.06,0,53.89,23.73-21.92,83.3a16,16,0,0,0,7.9,20.91A15.83,15.83,0,0,0,84,240a16,16,0,0,0,14.44-9.06L128,180l29.58,51a16,16,0,0,0,29.07-13.35l-21.92-83.3,54-23.76A15.7,15.7,0,0,0,227.6,92.57Z"
+      />
+    </svg>
+  `;
+
   override render() {
     return html`
       <a class="sr-only" href="#main-content">Skip to main content</a>
-      <main class="app-container" id="main-content">
+      <!-- tabindex="-1" so the skip link actually moves focus. Without it the
+           fragment only sets Chrome's sequential-focus starting point, which
+           puts the *next* Tab in the right place but leaves the virtual cursor
+           where it was on AT that does not implement that behaviour. -->
+      <main class="app-container" id="main-content" tabindex="-1">
         <div class="primary-stack">
-          <candor-card class="title-and-sliders" variant="elevated" padding="none">
+          <!-- Not a candor-card: the card sets overflow: hidden, which makes it a
+               scroll container, and a position: sticky descendant is constrained
+               to its nearest scrollport — so the header below stuck to the card,
+               which scrolls away with the page, rather than to the viewport.
+               See app.scss. -->
+          <div class="title-and-sliders">
             <div class="title-and-score">
               <h1>Colors Contrast</h1>
               <cc-color-contrast
@@ -237,8 +353,13 @@ export class CcApp extends LitElement {
                   Input a foreground and background color. Use the sliders to adjust tone until you reach
                   your target contrast, then copy each color to the clipboard.
                 </p>
-                <candor-button variant="secondary" size="small" @click=${() => (this.activeNoteModal = 'accessibility')}>
-                  Screen reader and low vision workflows
+                <candor-button
+                  variant="ghost"
+                  size="small"
+                  class="note-button"
+                  @click=${() => (this.activeNoteModal = 'accessibility')}
+                >
+                  ${this._ACCESSIBILITY_SVG} Screen reader and low vision workflows
                 </candor-button>
               </candor-accordion-item>
 
@@ -247,7 +368,7 @@ export class CcApp extends LitElement {
               <h3>Foreground Color</h3>
 
               <div class="slide-group">
-                <candor-tooltip text="Choose foreground color" position="bottom">
+                <candor-tooltip text="Choose foreground color" position="right">
                   <cc-color-picker
                     inputid="cp-0"
                     inputname="Foreground Color"
@@ -267,7 +388,7 @@ export class CcApp extends LitElement {
                   .resetSlider=${this.resetSlider}
                   @color-variant=${this._handleFgSliderInput}
                 ></cc-color-slider>
-                <candor-tooltip text="Copy foreground color" position="bottom">
+                <candor-tooltip text="Copy foreground color" position="left">
                   <cc-copy-to-clipboard-button
                     color=${this.fgComparedColor}
                     label="Copy foreground color"
@@ -292,7 +413,7 @@ export class CcApp extends LitElement {
               <h3>Background Color</h3>
 
               <div class="slide-group">
-                <candor-tooltip text="Choose background color" position="bottom">
+                <candor-tooltip text="Choose background color" position="right">
                   <cc-color-picker
                     inputid="cp-1"
                     inputname="Background Color"
@@ -312,7 +433,7 @@ export class CcApp extends LitElement {
                   .resetSlider=${this.resetSlider}
                   @color-variant=${this._handleBgSliderInput}
                 ></cc-color-slider>
-                <candor-tooltip text="Copy background color" position="bottom">
+                <candor-tooltip text="Copy background color" position="left">
                   <cc-copy-to-clipboard-button
                     color=${this.bgComparedColor}
                     label="Copy background color"
@@ -334,9 +455,10 @@ export class CcApp extends LitElement {
                 </p>
               </candor-accordion-item>
             </div>
-          </candor-card>
+          </div>
 
-          <candor-card class="quick-actions" variant="elevated" padding="sm">
+          <!-- Not a candor-card: the card clips these tooltips. See app.scss. -->
+          <div class="quick-actions">
             <div class="quick-actions__buttons">
               <candor-tooltip text="Swap foreground and background">
                 <candor-button
@@ -395,49 +517,45 @@ export class CcApp extends LitElement {
                 </candor-button>
               </candor-tooltip>
             </div>
-          </candor-card>
+          </div>
 
           <candor-card class="options" variant="elevated" padding="md">
             <h2>Options</h2>
 
             <candor-accordion-item heading="Change how Colors Contrast works.">
-              <div>
-                <h3>Colors Contrast Value</h3>
+              <!-- fieldset + legend is Candor's documented pattern for a radio group,
+                   and the legend gives each option its question context for screen
+                   readers. Nothing else goes in these rows: the per-option "About"
+                   buttons live on the matching rows of cc-metadata, which is where the
+                   value each one explains is actually shown. Keeping them out of here
+                   is what makes the group a contiguous run of radios. -->
+              <fieldset class="radio-fieldset">
+                <legend>Colors Contrast Value</legend>
                 <div class="radio-section">
-                  ${['okca', 'apca', 'bpca', 'apca object', 'deltaE'].map((type) => {
-                    const labels: Record<string, string> = {
-                      okca: 'OKCA',
-                      apca: 'Perceptual',
-                      bpca: 'WCAG 2 compatible',
-                      'apca object': 'Object',
-                      deltaE: 'Delta E',
-                    };
-                    const aboutLabels: Record<string, string> = {
-                      okca: 'About OKCA',
-                      apca: 'About Perceptual contrast',
-                      bpca: 'About WCAG 2 compatible',
-                      'apca object': 'About Object contrast',
-                      deltaE: 'About Delta E',
-                    };
-                    return html`
-                      <div class="radio-item">
-                        <candor-radio
-                          name="contrastType"
-                          value=${type}
-                          label=${labels[type]}
-                          ?checked=${this.contrastType === type}
-                          @change=${this._handleContrastTypeChange}
-                        ></candor-radio>
-                        <candor-tooltip text=${aboutLabels[type]} position="left">
-                          <candor-button variant="ghost" class="button--icon" aria-label=${aboutLabels[type]} @click=${() => (this.activeNoteModal = type)}>
-                            ${this._INFO_SVG}
-                          </candor-button>
-                        </candor-tooltip>
-                      </div>
-                    `;
-                  })}
+                  ${(
+                    [
+                      ['okca', 'OKCA'],
+                      ['apca', 'Perceptual'],
+                      ['bpca', 'WCAG 2 compatible'],
+                      ['apca object', 'Object'],
+                      ['deltaE', 'Delta E'],
+                    ] as const
+                  ).map(
+                    ([type, label]) => html`
+                      <candor-radio
+                        name="contrastType"
+                        value=${type}
+                        label=${label}
+                        ?checked=${this.contrastType === type}
+                        @change=${this._handleContrastTypeChange}
+                      ></candor-radio>
+                    `,
+                  )}
                 </div>
-              </div>
+                <candor-text class="radio-group-note" variant="caption" size="sm" color="secondary">
+                  Info buttons in Color Metadata explain what each value measures.
+                </candor-text>
+              </fieldset>
 
               <div>
                 <h3>Color Sliders</h3>
@@ -538,10 +656,16 @@ export class CcApp extends LitElement {
             : ''}
         </candor-modal>
 
-        <div class="alert">
-          <cc-alert .alertMessage=${this.currentAlertMessage}></cc-alert>
-        </div>
       </main>
+
+      <!-- Outside <main>, and that placement is load-bearing. cc-alert renders a
+           candor-toast-container, which is position: fixed — but .app-container
+           centres itself with translateX(-50%), and a transformed ancestor
+           becomes the containing block for fixed descendants. Inside main the
+           toast pinned to the bottom of the *document* instead of the viewport,
+           1379px below the fold. The old wrapper used position: sticky, which is
+           why this never came up before. -->
+      <cc-alert .alertMessage=${this.currentAlertMessage}></cc-alert>
     `;
   }
 }

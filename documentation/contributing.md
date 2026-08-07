@@ -210,23 +210,33 @@ Prettier runs automatically via IDE integration. Configuration in `package.json`
 
 ## Candor Design System Conventions
 
-The project uses the **Candor design system** for UI primitives. Components from Candor live in `src/app/_candor/` and must be used as-is for consistent visuals.
+The project uses the **Candor design system** for UI primitives, via the published `@candor-design/web-components` package. `src/main.ts` imports it once, which registers every element it ships — there is no local copy to edit.
 
 ### When to use Candor components
 
 Use Candor components for any standard UI primitive:
 
-- Buttons → `<app-button>`
-- Cards/surfaces → `<app-card>`
-- Accordions → `<app-accordion-item>`
-- Checkboxes → `<app-checkbox>`
-- Radio buttons → `<app-radio>`
-- Data tables → `<app-table>`
-- Notifications → `<app-toast>` (via `AlertComponent`)
+- Buttons → `<candor-button>`
+- Cards/surfaces → `<candor-card>`
+- Accordions → `<candor-accordion-item>`
+- Checkboxes → `<candor-checkbox>`
+- Radio buttons → `<candor-radio>`
+- Modals → `<candor-modal>`
+- Tooltips → `<candor-tooltip>`
+- Notifications → `<candor-toast>` (via `cc-alert`)
+
+Data tables are the exception: use the app's own `<cc-table>`. `candor-table` is
+data-driven (`headers`, `rows`) and the metadata tables need interactive content
+inside cells.
+
+**Never name a local element `candor-*`.** The package registers all its elements from
+one entry point with no duplicate guard, so a collision throws and takes every
+registration after it down with it. App components use the `cc-*` prefix;
+`src/app/candor-package.spec.ts` enforces the split.
 
 ### Styling with Candor tokens
 
-All styles in both `_components/` and `_candor/` must reference Candor CSS custom properties. Do **not** use hard-coded color, font, or spacing values:
+All styles in `_components/` must reference Candor CSS custom properties. Do **not** use hard-coded color, font, or spacing values:
 
 ```scss
 // Good
@@ -253,9 +263,27 @@ border: 1px solid #ccc;
 | Border | `--border-width-thin`, `--border-width-medium` |
 | Line height | `--line-height-tight`, `--line-height-normal` |
 
-### Modifying Candor components
+### Adjusting a Candor component
 
-Candor components are copied into `_candor/` and can be modified if needed. However, keep changes minimal and focused on the application's specific requirements. Use `ViewEncapsulation.None` (already set on all Candor components) to allow parent-scope token overrides if necessary.
+You cannot edit them — they are a dependency, and they render into shadow roots that
+global CSS cannot reach. Two supported ways to adjust one from the outside:
+
+- **Custom properties.** Each component documents its own hooks, e.g.
+  `--candor-button-padding-x`, `--candor-modal-max-width`. `styles.scss` uses these to
+  rebuild the icon-only button that upstream has no size for.
+- **`::part()`.** Components expose parts such as `button`, `input`, `label`, `panel`.
+
+If neither is enough, the fix belongs upstream in `pawn002/candor`, not in a local
+fork.
+
+### Component stylesheets are global
+
+Each `*.component.scss` becomes a plain global stylesheet, because the component that
+imports it renders into the light DOM. **Prefix every top-level selector with the
+component's own tag** — `cc-metadata .comp-container`, not `.comp-container`. Seven
+files once declared a bare `.comp-container` and silently overwrote each other, which
+collapsed `cc-metadata` to 2px tall. `_components/styles-scoping.spec.ts` enforces
+this.
 
 ### Old alias variables
 

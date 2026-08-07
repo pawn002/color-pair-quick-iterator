@@ -107,7 +107,6 @@ color-pair-quick-iterator/
 ├── src/
 │   ├── app/
 │   │   ├── _components/       # App-specific UI components (8 standalone components)
-│   │   ├── _candor/           # Candor design system components (7 UI primitives)
 │   │   ├── services/          # Core business logic (3 services)
 │   │   ├── app.ts             # Root application component
 │   │   └── app.config.ts      # Application configuration

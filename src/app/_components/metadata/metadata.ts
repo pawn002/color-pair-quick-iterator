@@ -2,7 +2,7 @@ import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { colorUtil, type ColorMetaObj } from '../../services/color-util.service';
 import { colorMetrics } from '../../services/color-metrics.service';
-import '../../_candor/table/table';
+import '../table/table';
 import './metadata.component.scss';
 
 interface DifferencesDataObj {
@@ -18,6 +18,20 @@ interface SuccessesObj {
   largeText: 'pass' | 'fail' | null;
   nonText: 'pass' | 'fail' | null;
   objectMinDimension: number | string;
+}
+
+/**
+ * Colour class for a pass/fail outcome.
+ *
+ * Colour is a *second* channel here, never the only one — the cell still reads
+ * "pass" or "fail" in words, so this satisfies WCAG 1.4.1 rather than leaning
+ * on hue. Before this, both outcomes rendered in `--color-text-default` and the
+ * table could not be scanned without reading every row.
+ */
+function outcomeClass(outcome: 'pass' | 'fail' | null): string {
+  if (outcome === 'pass') return 'outcome--pass';
+  if (outcome === 'fail') return 'outcome--fail';
+  return '';
 }
 
 const INFO_SVG = html`
@@ -112,9 +126,9 @@ export class CcMetadata extends LitElement {
               <caption class="sr-only">Various pass, fails or minimum dimensions related to visual elements.</caption>
               <thead class="sr-only"><tr><th>Criteria</th><th>Value</th></tr></thead>
               <tbody>
-                <tr><td class="label">Text</td><td class="numeric">${s.text}</td></tr>
-                <tr><td class="label">Large Text</td><td class="numeric">${s.largeText}</td></tr>
-                <tr><td class="label">Non-text</td><td class="numeric">${s.nonText}</td></tr>
+                <tr><td class="label">Text</td><td class="numeric ${outcomeClass(s.text)}">${s.text}</td></tr>
+                <tr><td class="label">Large Text</td><td class="numeric ${outcomeClass(s.largeText)}">${s.largeText}</td></tr>
+                <tr><td class="label">Non-text</td><td class="numeric ${outcomeClass(s.nonText)}">${s.nonText}</td></tr>
                 <tr>
                   <td class="label label--with-info">
                     Object

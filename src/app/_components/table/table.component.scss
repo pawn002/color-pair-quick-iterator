@@ -1,0 +1,86 @@
+cc-table {
+    display: block;
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+
+        th,
+        td {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            text-align: left;
+            border-bottom: var(--border-width-thin) solid var(--color-border-strong);
+            /* No font-family: metric names and scores are comprehension text, so
+               they inherit the base voice from `body`. Atkinson Hyperlegible is
+               Candor's instructional voice and does not belong on data. The
+               `.numeric` columns below still take mono, for digit alignment. */
+            font-size: var(--font-size-sm);
+            color: var(--color-text-default);
+            letter-spacing: 0.02em;
+        }
+
+        th {
+            font-weight: var(--font-weight-bold);
+        }
+
+        thead th {
+            color: var(--color-text-subtle-on-surface);
+            font-weight: var(--font-weight-bold);
+            border-bottom: var(--border-width-medium) solid var(--color-border-strong);
+        }
+
+        td {
+            font-variant-numeric: tabular-nums;
+        }
+
+        // Numeric columns — mono + right-align for value-heavy columns
+        th.numeric,
+        td.numeric {
+            font-family: var(--font-family-mono);
+            text-align: right;
+            letter-spacing: 0;
+        }
+
+        // Label column (left side of key-value tables)
+        td.label {
+            color: var(--color-text-subtle-on-surface);
+        }
+
+        // Zebra striping. `--color-bg-surface` is what candor-table itself
+        // stripes with, and it already resolves per theme — so this one
+        // declaration replaces the four blocks that used to hand-maintain a
+        // literal for light and a token for dark. The literal was also the
+        // worse colour: text-default over it measured 8.0:1, against 9.7:1
+        // over the token.
+        tbody tr:nth-child(even) td,
+        tbody tr:nth-child(even) th {
+            background: var(--color-bg-surface);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+    }
+
+    // ─── Compact variant ─────────────────────────────────────────────────────
+
+    &[compact] {
+        table {
+            th,
+            td {
+                padding: 0.25rem var(--spacing-sm);
+            }
+
+            // Compact starts with the stripe on row 1 (odd) instead of row 2
+            tbody tr:nth-child(even) td,
+            tbody tr:nth-child(even) th {
+                background: transparent;
+            }
+
+            tbody tr:nth-child(odd) td,
+            tbody tr:nth-child(odd) th {
+                background: var(--color-bg-surface);
+            }
+        }
+    }
+}
