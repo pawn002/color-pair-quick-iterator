@@ -110,7 +110,13 @@ Components are Lit elements and live in `src/app/_components/` (app-specific) an
 
 There is no Storybook in this repo. The Candor design system publishes its own hosted component catalog, so the `_candor/` primitives are documented upstream rather than here.
 
-Components render into the light DOM (`createRenderRoot() { return this; }`) so the global Candor token stylesheet applies.
+Locally-authored components render into the light DOM (`createRenderRoot() { return this; }`) so the global Candor token stylesheet applies. Note this is why every `<slot>` in `_candor/` is inert — see #151.
+
+### Two namespaces: `cc-*` and `candor-*`
+
+`candor-*` elements come from `@candor-design/web-components` and use shadow DOM. `cc-*` elements are authored in this repo. **The prefixes are load-bearing, not cosmetic:** the package has a single entry point with `sideEffects: true`, so importing it in `src/main.ts` registers all of its elements at once — there is no way to import just one. Any local element that reclaims a `candor-*` name throws on registration and takes the rest of the package's elements down with it, leaving a half-registered app. `src/app/candor-package.spec.ts` guards this.
+
+The migration (#149) is replacing the `_candor/` primitives with their upstream equivalents one at a time; `_candor/` shrinks to nothing when it finishes. Design tokens are plain custom properties on `:root`, so they inherit through shadow boundaries and styling works the same on both sides. Global SCSS that reaches *inside* a component does not.
 
 ### Key Dependencies
 

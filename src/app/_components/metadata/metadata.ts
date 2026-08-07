@@ -109,7 +109,7 @@ export class CcMetadata extends LitElement {
       <div class="comp-container">
         <div>
           <h3>Successes and Minimums</h3>
-          <candor-table .compact=${true}>
+          <cc-table .compact=${true}>
             <table>
               <caption class="sr-only">Various pass, fails or minimum dimensions related to visual elements.</caption>
               <thead class="sr-only"><tr><th>Criteria</th><th>Value</th></tr></thead>
@@ -120,20 +120,20 @@ export class CcMetadata extends LitElement {
                 <tr>
                   <td class="label label--with-info">
                     Object
-                    <candor-tooltip text="About Object" position="right">
-                      <candor-button variant="ghost" size="icon" aria-label="About Object" @clicked=${() => this._emitNote('apca object')}>${INFO_SVG}</candor-button>
-                    </candor-tooltip>
+                    <cc-tooltip text="About Object" position="right">
+                      <cc-button variant="ghost" size="icon" aria-label="About Object" @clicked=${() => this._emitNote('apca object')}>${INFO_SVG}</cc-button>
+                    </cc-tooltip>
                   </td>
                   <td class="numeric">${s.objectMinDimension}</td>
                 </tr>
               </tbody>
             </table>
-          </candor-table>
+          </cc-table>
         </div>
 
         <div>
           <h3>Differences</h3>
-          <candor-table .compact=${true}>
+          <cc-table .compact=${true}>
             <table>
               <caption class="sr-only">Differences between Foreground Color and Background Color.</caption>
               <thead class="sr-only"><tr><th>Measurement</th><th>Value</th></tr></thead>
@@ -141,56 +141,56 @@ export class CcMetadata extends LitElement {
                 <tr>
                   <td class="label label--with-info">
                     Delta E
-                    <candor-tooltip text="About Delta E" position="right">
-                      <candor-button variant="ghost" size="icon" aria-label="About Delta E" @clicked=${() => this._emitNote('deltaE')}>${INFO_SVG}</candor-button>
-                    </candor-tooltip>
+                    <cc-tooltip text="About Delta E" position="right">
+                      <cc-button variant="ghost" size="icon" aria-label="About Delta E" @clicked=${() => this._emitNote('deltaE')}>${INFO_SVG}</cc-button>
+                    </cc-tooltip>
                   </td>
                   <td class="numeric">${d.deltaE}</td>
                 </tr>
                 <tr>
                   <td class="label label--with-info">
                     OKCA
-                    <candor-tooltip text="About OKCA" position="right">
-                      <candor-button variant="ghost" size="icon" aria-label="About OKCA" @clicked=${() => this._emitNote('okca')}>${INFO_SVG}</candor-button>
-                    </candor-tooltip>
+                    <cc-tooltip text="About OKCA" position="right">
+                      <cc-button variant="ghost" size="icon" aria-label="About OKCA" @clicked=${() => this._emitNote('okca')}>${INFO_SVG}</cc-button>
+                    </cc-tooltip>
                   </td>
                   <td class="numeric">${d.okca}</td>
                 </tr>
                 <tr>
                   <td class="label label--with-info">
                     Perceptual contrast
-                    <candor-tooltip text="About Perceptual contrast" position="right">
-                      <candor-button variant="ghost" size="icon" aria-label="About Perceptual contrast" @clicked=${() => this._emitNote('apca')}>${INFO_SVG}</candor-button>
-                    </candor-tooltip>
+                    <cc-tooltip text="About Perceptual contrast" position="right">
+                      <cc-button variant="ghost" size="icon" aria-label="About Perceptual contrast" @clicked=${() => this._emitNote('apca')}>${INFO_SVG}</cc-button>
+                    </cc-tooltip>
                   </td>
                   <td class="numeric">${d.apca}</td>
                 </tr>
                 <tr>
                   <td class="label label--with-info">
                     WCAG 2 compatible
-                    <candor-tooltip text="About WCAG 2 compatible" position="right">
-                      <candor-button variant="ghost" size="icon" aria-label="About WCAG 2 compatible" @clicked=${() => this._emitNote('bpca')}>${INFO_SVG}</candor-button>
-                    </candor-tooltip>
+                    <cc-tooltip text="About WCAG 2 compatible" position="right">
+                      <cc-button variant="ghost" size="icon" aria-label="About WCAG 2 compatible" @clicked=${() => this._emitNote('bpca')}>${INFO_SVG}</cc-button>
+                    </cc-tooltip>
                   </td>
                   <td class="numeric">${d.wcag2New}</td>
                 </tr>
                 <tr>
                   <td class="label label--with-info">
                     WCAG 2
-                    <candor-tooltip text="About WCAG 2" position="right">
-                      <candor-button variant="ghost" size="icon" aria-label="About WCAG 2" @clicked=${() => this._emitNote('wcag2')}>${INFO_SVG}</candor-button>
-                    </candor-tooltip>
+                    <cc-tooltip text="About WCAG 2" position="right">
+                      <cc-button variant="ghost" size="icon" aria-label="About WCAG 2" @clicked=${() => this._emitNote('wcag2')}>${INFO_SVG}</cc-button>
+                    </cc-tooltip>
                   </td>
                   <td class="numeric">${d.wcag2Old}</td>
                 </tr>
               </tbody>
             </table>
-          </candor-table>
+          </cc-table>
         </div>
 
         <div>
           <h3>Foreground Color</h3>
-          <candor-table .compact=${true}>
+          <cc-table .compact=${true}>
             <table>
               <caption class="sr-only">Foreground Color Metadata</caption>
               <thead class="sr-only"><tr><th>Measurement</th><th>Value</th></tr></thead>
@@ -201,12 +201,12 @@ export class CcMetadata extends LitElement {
                 <tr><td class="label">Hue</td><td class="numeric">${m1?.hue}</td></tr>
               </tbody>
             </table>
-          </candor-table>
+          </cc-table>
         </div>
 
         <div>
           <h3>Background Color</h3>
-          <candor-table .compact=${true}>
+          <cc-table .compact=${true}>
             <table>
               <caption class="sr-only">Background Color Metadata</caption>
               <thead class="sr-only"><tr><th>Measurement</th><th>Value</th></tr></thead>
@@ -217,7 +217,7 @@ export class CcMetadata extends LitElement {
                 <tr><td class="label">Hue</td><td class="numeric">${m2?.hue}</td></tr>
               </tbody>
             </table>
-          </candor-table>
+          </cc-table>
         </div>
       </div>
     `;

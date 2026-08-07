@@ -26,6 +26,7 @@
   "private": true,
   "dependencies": {
     "@candor-design/tokens": "^5.0.1",
+    "@candor-design/web-components": "^5.0.1",
     "@fontsource-variable/roboto-flex": "^5.2.8",
     "@fontsource-variable/roboto-mono": "^5.2.8",
     "@fontsource-variable/source-code-pro": "^5.2.7",

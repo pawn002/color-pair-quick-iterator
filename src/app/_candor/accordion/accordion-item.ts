@@ -2,8 +2,8 @@ import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import './accordion-item.component.scss';
 
-@customElement('candor-accordion-item')
-export class CandorAccordionItem extends LitElement {
+@customElement('cc-accordion-item')
+export class CcAccordionItem extends LitElement {
   override createRenderRoot(): this {
     return this;
   }
@@ -44,6 +44,6 @@ export class CandorAccordionItem extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'candor-accordion-item': CandorAccordionItem;
+    'cc-accordion-item': CcAccordionItem;
   }
 }

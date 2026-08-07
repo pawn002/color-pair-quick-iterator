@@ -2,8 +2,8 @@ import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import './checkbox.component.scss';
 
-@customElement('candor-checkbox')
-export class CandorCheckbox extends LitElement {
+@customElement('cc-checkbox')
+export class CcCheckbox extends LitElement {
   override createRenderRoot(): this {
     return this;
   }
@@ -54,6 +54,6 @@ export class CandorCheckbox extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'candor-checkbox': CandorCheckbox;
+    'cc-checkbox': CcCheckbox;
   }
 }

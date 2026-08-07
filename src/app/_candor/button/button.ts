@@ -5,8 +5,8 @@ import './button.component.scss';
 type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'ghost' | 'destructive';
 type ButtonSize = 'small' | 'medium' | 'large' | 'icon';
 
-@customElement('candor-button')
-export class CandorButton extends LitElement {
+@customElement('cc-button')
+export class CcButton extends LitElement {
   override createRenderRoot(): this {
     return this;
   }
@@ -40,6 +40,6 @@ export class CandorButton extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'candor-button': CandorButton;
+    'cc-button': CcButton;
   }
 }

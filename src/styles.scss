@@ -8,18 +8,17 @@ cc-copy-to-clipboard-button,
 cc-metadata,
 cc-palette-table,
 cc-tone-picker,
-candor-accordion-item,
-candor-button,
-candor-card,
-candor-checkbox,
-candor-modal,
-candor-radio,
-candor-table,
-candor-toast {
+cc-accordion-item,
+cc-button,
+cc-checkbox,
+cc-modal,
+cc-radio,
+cc-table,
+cc-toast {
   display: block;
 }
 
-candor-tooltip {
+cc-tooltip {
   display: inline-block;
   position: relative;
 }
