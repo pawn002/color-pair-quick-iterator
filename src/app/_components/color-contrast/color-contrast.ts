@@ -50,8 +50,31 @@ export class CcColorContrast extends LitElement {
     this.contrastScore = score === null || score === undefined ? NaN : score;
   }
 
+  /**
+   * What the live region says.
+   *
+   * The number means a different thing in three of the five modes, so a bare
+   * "Contrast score" mislabelled it: in Object mode it is a minimum pixel
+   * dimension, in Delta E a perceptual difference. Object mode also has to match
+   * the `!` the sighted user sees — that marker means the contrast is too low to
+   * render an object at any size, and announcing "Contrast score: 0" for it
+   * described the display rather than the result.
+   */
   get contrastAnnouncement() {
-    return isNaN(this.contrastScore) ? '' : `Contrast score: ${this.contrastScore}`;
+    if (!this.colorOne || !this.colorTwo) return '';
+
+    const score = this.contrastScore;
+
+    if (this.contrastType === 'apca object') {
+      // Falsy rather than NaN-only, to track the `!` in the template: a
+      // dimension of 0 is as unrenderable as one that failed to compute.
+      return score ? `Minimum object dimension: ${score} pixels` : 'Contrast too low for any object';
+    }
+
+    if (isNaN(score)) return 'Contrast score unavailable';
+    if (this.contrastType === 'deltaE') return `Delta E: ${score}`;
+
+    return `Contrast score: ${score}`;
   }
 
   override render() {
