@@ -1,5 +1,6 @@
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { TooltipController } from '../../tooltip-controller';
 import { colorUtil, type ColorMetaObj } from '../../services/color-util.service';
 import { colorMetrics } from '../../services/color-metrics.service';
 import { INFO } from '../../icons';
@@ -37,6 +38,8 @@ function outcomeClass(outcome: 'pass' | 'fail' | null): string {
 
 @customElement('cc-metadata')
 export class CcMetadata extends LitElement {
+  private readonly _tooltips = new TooltipController(this);
+
   override createRenderRoot(): this {
     return this;
   }
@@ -125,9 +128,13 @@ export class CcMetadata extends LitElement {
                 <tr>
                   <td class="label label--with-info">
                     Object
-                    <candor-tooltip text="About Object" position="right">
+                    ${this._tooltips.wrap(
+                      'About Object',
+                      html`
                       <candor-button variant="ghost" class="button--icon" aria-label="About Object" @click=${() => this._emitNote('apca object')}>${INFO}</candor-button>
-                    </candor-tooltip>
+                      `,
+                      'right',
+                    )}
                   </td>
                   <td class="numeric">${s.objectMinDimension}</td>
                 </tr>
@@ -146,45 +153,65 @@ export class CcMetadata extends LitElement {
                 <tr>
                   <td class="label label--with-info">
                     Delta E
-                    <candor-tooltip text="About Delta E" position="right">
+                    ${this._tooltips.wrap(
+                      'About Delta E',
+                      html`
                       <candor-button variant="ghost" class="button--icon" aria-label="About Delta E" @click=${() => this._emitNote('deltaE')}>${INFO}</candor-button>
-                    </candor-tooltip>
+                      `,
+                      'right',
+                    )}
                   </td>
                   <td class="numeric">${d.deltaE}</td>
                 </tr>
                 <tr>
                   <td class="label label--with-info">
                     OKCA
-                    <candor-tooltip text="About OKCA" position="right">
+                    ${this._tooltips.wrap(
+                      'About OKCA',
+                      html`
                       <candor-button variant="ghost" class="button--icon" aria-label="About OKCA" @click=${() => this._emitNote('okca')}>${INFO}</candor-button>
-                    </candor-tooltip>
+                      `,
+                      'right',
+                    )}
                   </td>
                   <td class="numeric">${d.okca}</td>
                 </tr>
                 <tr>
                   <td class="label label--with-info">
                     Perceptual contrast
-                    <candor-tooltip text="About Perceptual contrast" position="right">
+                    ${this._tooltips.wrap(
+                      'About Perceptual contrast',
+                      html`
                       <candor-button variant="ghost" class="button--icon" aria-label="About Perceptual contrast" @click=${() => this._emitNote('apca')}>${INFO}</candor-button>
-                    </candor-tooltip>
+                      `,
+                      'right',
+                    )}
                   </td>
                   <td class="numeric">${d.apca}</td>
                 </tr>
                 <tr>
                   <td class="label label--with-info">
                     WCAG 2 compatible
-                    <candor-tooltip text="About WCAG 2 compatible" position="right">
+                    ${this._tooltips.wrap(
+                      'About WCAG 2 compatible',
+                      html`
                       <candor-button variant="ghost" class="button--icon" aria-label="About WCAG 2 compatible" @click=${() => this._emitNote('bpca')}>${INFO}</candor-button>
-                    </candor-tooltip>
+                      `,
+                      'right',
+                    )}
                   </td>
                   <td class="numeric">${d.wcag2New}</td>
                 </tr>
                 <tr>
                   <td class="label label--with-info">
                     WCAG 2
-                    <candor-tooltip text="About WCAG 2" position="right">
+                    ${this._tooltips.wrap(
+                      'About WCAG 2',
+                      html`
                       <candor-button variant="ghost" class="button--icon" aria-label="About WCAG 2" @click=${() => this._emitNote('wcag2')}>${INFO}</candor-button>
-                    </candor-tooltip>
+                      `,
+                      'right',
+                    )}
                   </td>
                   <td class="numeric">${d.wcag2Old}</td>
                 </tr>

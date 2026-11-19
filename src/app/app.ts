@@ -1,5 +1,6 @@
 import { LitElement, html, type PropertyValues } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import { TooltipController } from './tooltip-controller';
 import { colorUtil } from './services/color-util.service';
 import type { ContrastType } from './services/color-metrics.service';
 import type { TableColorCell } from './services/color-util.service';
@@ -38,6 +39,8 @@ const NOTE_MODAL_TITLES: Record<string, string> = {
 
 @customElement('cc-app')
 export class CcApp extends LitElement {
+  private readonly _tooltips = new TooltipController(this);
+
   override createRenderRoot(): this {
     return this;
   }
@@ -308,7 +311,9 @@ export class CcApp extends LitElement {
               <h3>Foreground Color</h3>
 
               <div class="slide-group">
-                <candor-tooltip text="Choose foreground color" position="right">
+                ${this._tooltips.wrap(
+                  'Choose foreground color',
+                  html`
                   <cc-color-picker
                     inputid="cp-0"
                     inputname="Foreground Color"
@@ -317,7 +322,9 @@ export class CcApp extends LitElement {
                     color=${this.fgColor}
                     @selected-color=${this._handleFgColorInput}
                   ></cc-color-picker>
-                </candor-tooltip>
+                  `,
+                  'right',
+                )}
                 <cc-color-slider
                   id="slider-0"
                   name="Foreground Slider"
@@ -328,13 +335,17 @@ export class CcApp extends LitElement {
                   .resetSlider=${this.resetSlider}
                   @color-variant=${this._handleFgSliderInput}
                 ></cc-color-slider>
-                <candor-tooltip text="Copy foreground color" position="left">
+                ${this._tooltips.wrap(
+                  'Copy foreground color',
+                  html`
                   <cc-copy-to-clipboard-button
                     color=${this.fgComparedColor}
                     label="Copy foreground color"
                     @copy-event=${this._handleCopyEvent}
                   ></cc-copy-to-clipboard-button>
-                </candor-tooltip>
+                  `,
+                  'left',
+                )}
               </div>
 
               <candor-accordion-item heading="Foreground LCH Limits" variant="subtle">
@@ -353,7 +364,9 @@ export class CcApp extends LitElement {
               <h3>Background Color</h3>
 
               <div class="slide-group">
-                <candor-tooltip text="Choose background color" position="right">
+                ${this._tooltips.wrap(
+                  'Choose background color',
+                  html`
                   <cc-color-picker
                     inputid="cp-1"
                     inputname="Background Color"
@@ -362,7 +375,9 @@ export class CcApp extends LitElement {
                     color=${this.bgColor}
                     @selected-color=${this._handleBgColorInput}
                   ></cc-color-picker>
-                </candor-tooltip>
+                  `,
+                  'right',
+                )}
                 <cc-color-slider
                   id="slider-1"
                   name="Background Slider"
@@ -373,13 +388,17 @@ export class CcApp extends LitElement {
                   .resetSlider=${this.resetSlider}
                   @color-variant=${this._handleBgSliderInput}
                 ></cc-color-slider>
-                <candor-tooltip text="Copy background color" position="left">
+                ${this._tooltips.wrap(
+                  'Copy background color',
+                  html`
                   <cc-copy-to-clipboard-button
                     color=${this.bgComparedColor}
                     label="Copy background color"
                     @copy-event=${this._handleCopyEvent}
                   ></cc-copy-to-clipboard-button>
-                </candor-tooltip>
+                  `,
+                  'left',
+                )}
               </div>
 
               <candor-accordion-item heading="Background LCH Limits" variant="subtle">
@@ -399,7 +418,9 @@ export class CcApp extends LitElement {
 
           <candor-card class="quick-actions" variant="elevated" padding="sm">
             <div class="quick-actions__buttons">
-              <candor-tooltip text="Swap foreground and background">
+              ${this._tooltips.wrap(
+                'Swap foreground and background',
+                html`
                 <candor-button
                   variant="tertiary"
                   class="button--icon"
@@ -409,25 +430,35 @@ export class CcApp extends LitElement {
                 >
                   ${ARROWS_DOWN_UP}
                 </candor-button>
-              </candor-tooltip>
+                `,
+              )}
 
-              <candor-tooltip text="Match chromas">
+              ${this._tooltips.wrap(
+                'Match chromas',
+                html`
                 <candor-button variant="tertiary" class="button--icon" aria-label="Harmonize Color Pair To Same Chroma" @click=${this._matchChromas}>
                   ${DROP_HALF}
                 </candor-button>
-              </candor-tooltip>
+                `,
+              )}
 
-              <candor-tooltip text="Reset sliders">
+              ${this._tooltips.wrap(
+                'Reset sliders',
+                html`
                 <candor-button variant="tertiary" class="button--icon" aria-label="Reset Color Sliders" @click=${this._resetSliders}>
                   ${ARROW_COUNTER_CLOCKWISE}
                 </candor-button>
-              </candor-tooltip>
+                `,
+              )}
 
-              <candor-tooltip text="New random pair">
+              ${this._tooltips.wrap(
+                'New random pair',
+                html`
                 <candor-button variant="tertiary" class="button--icon" aria-label="Create Random Color Pair" @click=${() => this._setRandomColorPair()}>
                   ${DICE_FIVE}
                 </candor-button>
-              </candor-tooltip>
+                `,
+              )}
             </div>
           </candor-card>
 
@@ -480,11 +511,15 @@ export class CcApp extends LitElement {
                       ?checked=${this.constantChroma}
                       @change=${this._toggleConstantChroma}
                     ></candor-checkbox>
-                    <candor-tooltip text="About Constant chroma" position="left">
+                    ${this._tooltips.wrap(
+                      'About Constant chroma',
+                      html`
                       <candor-button variant="ghost" class="button--icon" aria-label="About Constant chroma" @click=${() => (this.activeNoteModal = 'constantChroma')}>
                         ${INFO}
                       </candor-button>
-                    </candor-tooltip>
+                      `,
+                      'left',
+                    )}
                   </div>
                   <div class="checkbox-item">
                     <candor-checkbox
@@ -494,11 +529,15 @@ export class CcApp extends LitElement {
                       ?checked=${this.showGradient}
                       @change=${this._toggleShowGradient}
                     ></candor-checkbox>
-                    <candor-tooltip text="About Show Gradient" position="left">
+                    ${this._tooltips.wrap(
+                      'About Show Gradient',
+                      html`
                       <candor-button variant="ghost" class="button--icon" aria-label="About Show Gradient" @click=${() => (this.activeNoteModal = 'showGradient')}>
                         ${INFO}
                       </candor-button>
-                    </candor-tooltip>
+                      `,
+                      'left',
+                    )}
                   </div>
                 </div>
               </div>

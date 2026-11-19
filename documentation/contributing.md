@@ -378,16 +378,29 @@ button's text size.
 
 ### Tooltip placement
 
-**Point edge-adjacent tooltips inward.** A bubble is centred on its trigger, so a control
-at the edge of a card overhangs it and gets clipped. Every tooltip on an edge control
-names the direction that puts the bubble *into* the card — `position="right"` on the
-color pickers (left edge), `position="left"` on the copy buttons and the Options info
-buttons (right edge).
+**Tooltips render only at desktop widths.** Never write `<candor-tooltip>` directly; wrap
+the control with the host's `TooltipController`:
 
-Only reach for a structural fix when no direction works. The quick-actions row is a
-tight horizontal group in a short card, where every bubble either overhangs the card or
-covers the neighbouring button, so it is a plain `<div>` styled from card tokens instead
-(see `app.scss`).
+```ts
+private readonly _tooltips = new TooltipController(this);
+// in render():
+${this._tooltips.wrap('Copy foreground color', html`<cc-copy-to-clipboard-button ...>`, 'left')}
+```
+
+Below 900px — the breakpoint where the layout becomes one column — `wrap()` renders the
+control bare. `candor-tooltip` opens on `mouseenter` and on focus, and a tap fires both,
+so on a phone a tapped button kept its bubble over the controls until the next tap
+somewhere else. The element has no property, `::part` or custom property to switch that
+off, and its bubble is a popover inside the shadow root, so leaving the wrapper out is
+the only way. The bubble is `aria-hidden`, so every wrapped control must carry its own
+accessible name; that is what screen readers get at every width.
+
+**Point edge-adjacent tooltips inward.** A bubble is centred on its trigger. Through
+Candor 5.x a control at the edge of a card had its bubble clipped by the card; since 6.0
+the bubble renders in the top layer, so that no longer happens, but every tooltip on an
+edge control still names the direction that points *into* the card, which keeps it off
+the viewport edge — `position="right"` on the color pickers (left edge),
+`position="left"` on the copy buttons and the Options info buttons (right edge).
 
 ### Component stylesheets are global
 
