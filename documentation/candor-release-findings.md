@@ -21,9 +21,10 @@
 >   [components.md](./components.md) for what actually applies.
 >
 > It is kept for provenance: it is the record of what this app fed back upstream, and
-> several items here shaped Candor 5. For **live** upstream issues affecting CPQI, see
-> the workaround table in [architecture.md](./architecture.md#upstream-workarounds-carried-here)
-> — `candor#257`, `#258`, `#259`, `#260`, `#262`, `#265`, `#266`.
+> several items here shaped Candor 5. The issues filed during the move to 5.0.1 —
+> `candor#257`, `#258`, `#259`, `#260`, `#261`, `#262`, `#265`, `#266` — all closed in
+> Candor 6.0; see the workaround table in
+> [architecture.md](./architecture.md#upstream-workarounds-carried-here) for what remains.
 
 ## Overview
 

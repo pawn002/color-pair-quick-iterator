@@ -253,10 +253,10 @@ Data tables are the exception — use the app's own `<cc-table>`. See
 [Components](./components.md#why-not-candor-table) for why, and for why the metadata
 tables should not be half-migrated.
 
-**Never name a local element `candor-*`.** The package has a single entry point with
-`sideEffects: true`, so one import registers all 41 of its elements and there is no
-duplicate guard. A collision throws on registration and takes every element after it
-down with it, leaving a half-registered app. Local elements use the `cc-*` prefix;
+**Never name a local element `candor-*`.** Importing the package root registers every
+element at once. Since Candor 6.0 a tag that is already defined is skipped with a console
+warning rather than throwing, so a collision is silent: whichever definition loads first
+owns the tag. Local elements use the `cc-*` prefix;
 `src/app/candor-package.spec.ts` enforces the split.
 
 ### Upstream API differences worth knowing
@@ -269,10 +269,11 @@ down with it, leaving a half-registered app. Local elements use the `cc-*` prefi
   retargets to the host
 - **No `size="icon"`.** Use `class="button--icon"`, which sets the `--candor-button-*`
   hooks from `styles.scss`
-- **`candor-card` clips whatever overflows it**, and `candor-tooltip` positions its
-  bubble absolutely, so a tooltip inside a card is cut off at the card's edge. There is
-  no CSS fix from this side — the card sets `overflow: hidden` on a shadow node exposed
-  neither as a `::part` nor through a custom property. Tracked as `pawn002/candor#259`
+- **`candor-card` clips with `overflow: clip`**, overridable through
+  `--candor-card-overflow`. Never set it to `hidden` or `auto` on a card holding a
+  `position: sticky` element: either makes the card a scroll container, and the sticky
+  element then scrolls away with the card. Tooltips are unaffected — since Candor 6.0 the
+  bubble renders in the top layer (`pawn002/candor#259`)
 
 ### Radio groups need a fieldset
 

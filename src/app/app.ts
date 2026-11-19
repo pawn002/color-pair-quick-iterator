@@ -211,7 +211,6 @@ export class CcApp extends LitElement {
 
   override updated(changed: PropertyValues) {
     super.updated(changed);
-    void this._applyRovingTabIndex();
     if (changed.has('activeNoteModal')) this._setPageScrollLock(this.activeNoteModal !== null);
   }
 
@@ -226,28 +225,25 @@ export class CcApp extends LitElement {
    *
    * `showModal()` puts the dialog in the top layer and makes everything behind
    * it inert, but inert does not mean unscrollable — that is per spec, and the
-   * page keeps its own scrollport. So arrow keys reached the page instead of the
-   * note, by two separate routes:
+   * page keeps its own scrollport. Through Candor 5.x arrow keys reached the
+   * page by two routes — initial focus on the close button, outside the
+   * scrollable `.modal__body`, and overscroll chaining from that body — measured
+   * at 79px of background travel per two presses.
    *
-   * 1. `candor-modal` focuses its close button on open, which sits in the header
-   *    and so is outside `.modal__body` — the scrollable region. The very first
-   *    arrow key went to the page, before the reader had touched anything.
-   * 2. Even with focus in the body, `overscroll-behavior` there is `auto`, so
-   *    reaching either end chained the remaining scroll to the page.
-   *
-   * Both measured at 79px of background travel per two presses. Locking the
-   * document closes both, and covers wheel and touch as well; the dialog is in
-   * the top layer, so its own scrolling is unaffected.
+   * Candor 6.0 closed most of that (`pawn002/candor#265`): the body contains its
+   * overscroll, and on open focus moves into the body *when it scrolls*. A note
+   * short enough not to scroll still leaves focus on the close button, so arrow
+   * keys there scroll the page, and wheel and touch reach the page regardless.
+   * Locking the document covers all of it; the dialog is in the top layer, so
+   * its own scrolling is unaffected.
    *
    * The padding compensates for the scrollbar the lock removes — without it the
    * page widens by its width (15px here) and everything jumps sideways as the
    * modal opens. `scrollbar-gutter: stable` does not help: the gutter is only
    * reserved while overflow is `auto` or `scroll`.
    *
-   * Both routes are `candor-modal`'s to fix — initial focus belongs in the
-   * scrollable region, which already carries `tabindex="0"`, and that region
-   * wants `overscroll-behavior: contain`. Upstream as `pawn002/candor#265`;
-   * this stays until that lands.
+   * Kept as a deliberate choice rather than a workaround: a page that does not
+   * move behind a modal is what this app wants, whatever Candor does.
    */
   private _setPageScrollLock(locked: boolean) {
     const html = document.documentElement;
@@ -260,43 +256,6 @@ export class CcApp extends LitElement {
       html.style.overflow = '';
       html.style.paddingInlineEnd = '';
     }
-  }
-
-  /**
-   * Make the contrast-type radios a single tab stop.
-   *
-   * A radio group is one tab stop, with arrows moving between options — native
-   * behaviour, and what the ARIA APG specifies. `candor-radio` implements the
-   * arrow half but leaves `tabindex="0"` on every option's inner input, so the
-   * five options cost five tab stops. This supplies the missing half: only the
-   * selected option is tabbable, so Tab enters the group at the current choice
-   * and leaves it in one press.
-   *
-   * Reaching through another element's shadow root is not something to do
-   * lightly, and it is the reason this is a handful of lines rather than one
-   * attribute — there is no `::part` or property for the inner input. Delete it
-   * when `pawn002/candor#262` lands; the spec below fails when that happens.
-   */
-  private async _applyRovingTabIndex() {
-    const radios = Array.from(
-      this.querySelectorAll<HTMLElement & { updateComplete?: Promise<unknown>; value?: string }>(
-        'candor-radio[name="contrastType"]',
-      ),
-    );
-    if (!radios.length) return;
-
-    // The inner input only exists once each element has rendered its shadow root.
-    await Promise.all(radios.map((radio) => radio.updateComplete ?? Promise.resolve()));
-
-    // Fall back to the first option so the group stays reachable if nothing is
-    // selected — a group with every option at -1 is unreachable by keyboard.
-    const selected = radios.findIndex((radio) => radio.getAttribute('value') === this.contrastType);
-    const tabbable = selected === -1 ? 0 : selected;
-
-    radios.forEach((radio, index) => {
-      const input = radio.shadowRoot?.querySelector('input');
-      if (input) input.tabIndex = index === tabbable ? 0 : -1;
-    });
   }
 
   private readonly _INFO_SVG = html`
@@ -331,12 +290,9 @@ export class CcApp extends LitElement {
            where it was on AT that does not implement that behaviour. -->
       <main class="app-container" id="main-content" tabindex="-1">
         <div class="primary-stack">
-          <!-- Not a candor-card: the card sets overflow: hidden, which makes it a
-               scroll container, and a position: sticky descendant is constrained
-               to its nearest scrollport — so the header below stuck to the card,
-               which scrolls away with the page, rather than to the viewport.
-               See app.scss. -->
-          <div class="title-and-sliders">
+          <!-- The sticky header below depends on the card clipping with
+               overflow: clip, not hidden — see app.scss. -->
+          <candor-card class="title-and-sliders" variant="elevated" padding="none">
             <div class="title-and-score">
               <h1>Colors Contrast</h1>
               <cc-color-contrast
@@ -455,10 +411,9 @@ export class CcApp extends LitElement {
                 </p>
               </candor-accordion-item>
             </div>
-          </div>
+          </candor-card>
 
-          <!-- Not a candor-card: the card clips these tooltips. See app.scss. -->
-          <div class="quick-actions">
+          <candor-card class="quick-actions" variant="elevated" padding="sm">
             <div class="quick-actions__buttons">
               <candor-tooltip text="Swap foreground and background">
                 <candor-button
@@ -517,7 +472,7 @@ export class CcApp extends LitElement {
                 </candor-button>
               </candor-tooltip>
             </div>
-          </div>
+          </candor-card>
 
           <candor-card class="options" variant="elevated" padding="md">
             <h2>Options</h2>
