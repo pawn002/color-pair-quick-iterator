@@ -6,10 +6,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Color Pair Quick Iterator (CPQI) is a Lit 3 web-components application, built with Vite, for exploring and iterating on accessible color pairs. It uses OKCA as its primary contrast algorithm — a polarity-aware, WCAG-compatible ratio in OKLCH color space — alongside APCA, Bridge-PCA, and Delta E to help designers find color combinations that meet accessibility standards.
 
-## Developer Preferences
-
-- Automatically use context7 for code generation and library documentation.
-
 ## Testing Requirements
 
 **CRITICAL**: When modifying or adding code, ALWAYS update the corresponding test files.
@@ -28,21 +24,6 @@ Tests run on **vitest** (not Karma/Jasmine). Use `vi.spyOn(...).mockReturnValue(
 3. **Adding new parameters or types**: Add test cases for all new values/types
 4. **Changing service methods**: Update service tests and component tests that use those services
 
-### What to Test
-
-- **Services**:
-  - Each public method with various inputs
-  - Edge cases (null, undefined, empty strings, boundary values)
-  - Integration with other services
-  - Error handling
-
-- **Components**:
-  - Input/output behavior
-  - User interactions and event handling
-  - Integration with services (use spies)
-  - Component state changes
-  - Edge cases and error states
-
 ### Testing Workflow
 
 1. Make code changes
@@ -56,33 +37,7 @@ CI runs steps 3–5 on every push and PR to `main` (`.github/workflows/ci.yml`),
 
 `npm test` is configured with `passWithNoTests: false`: a run that collects zero tests fails. This is deliberate — the Angular-era specs sat dead and uncollected for months after the Lit migration because `npm test` was watch mode and never exited.
 
-### Test Coverage Examples
-
-When adding a new option to a type union (e.g., adding 'deltaE' to ContrastType):
-- Update the type definition
-- Add tests in the service that handles the type
-- Add tests in components that consume the type
-- Add integration tests that verify the new option produces expected results
-- Add edge case tests (e.g., null handling, identical inputs)
-
-## Documentation Updates
-
-When the user requests that the project's documentation be updated:
-
-1. **Review and update all files in `documentation/`** - Ensure all markdown files reflect current implementation
-2. **Update `README.md`** - Keep the main README in sync with detailed documentation
-3. **Maintain consistency** - Ensure terminology, examples, and references are consistent across all documentation files
-
-## Commands
-
-```bash
-npm start                  # Development server (vite)
-npm run build              # Production build (generic, works anywhere) — does NOT type-check
-npm run typecheck          # tsc --noEmit; the only thing that type-checks this repo
-npm run build:gh-pages     # Build with the /color-pair-quick-iterator/ base path (what CI deploys)
-npm test                   # Run unit tests once with vitest (exits with a status code)
-npm run test:watch         # Run vitest in watch mode
-```
+## Deployment
 
 **Deployment is automatic — push to `main`.** `.github/workflows/deploy.yml` type-checks, tests, builds, and publishes to GitHub Pages via `actions/deploy-pages`. There is no manual deploy script and no committed build output; the old `deploy:gh-pages` script and the `docs/` directory were removed once Pages moved to an Actions source. See `documentation/deployment.md`.
 
@@ -97,11 +52,7 @@ State lives in query parameters so a URL restores the exact app state:
 - **Initial load**: restores from the URL, or generates a random passing pair
 - **Shareable URLs**: users can hand someone a link that reproduces what they see
 
-### Core Services (`src/app/services/`)
-
-- **ColorUtilService** - Color manipulation using colorjs.io in OKLCH color space. Handles color parsing, gamut mapping, variant generation, and chroma matching.
-- **ColorMetricsService** - Calculates contrast scores using OKCA (primary, @pawn002/okca), APCA (apca-w3), Bridge-PCA, and Delta E algorithms.
-- **BpcaService** - Bridge-PCA implementation for WCAG 2.x ratio approximation from APCA scores.
+`BpcaService` is a partial implementation of bridge-pca, because of dependency issues with the package.
 
 ### Component Pattern
 
@@ -142,19 +93,6 @@ Upstream API differences worth knowing before reaching for a `candor-*` element:
 
 Every `_components/*.component.scss` is a plain global stylesheet, because the component that imports it renders into the light DOM. **Top-level selectors must be prefixed with the component's own tag** (`cc-metadata .comp-container`, not `.comp-container`). Seven files once declared a bare `.comp-container` and silently overwrote each other. `_components/styles-scoping.spec.ts` enforces this.
 
-### Key Dependencies
-
-- **colorjs.io** - Color space conversions and gamut mapping
-- **apca-w3** - APCA contrast calculation
-- **bridge-pca** - WCAG ratio approximation (partial implementation in BpcaService due to dependency issues)
-- **d3** - Scale utilities for contrast-to-size mapping
-
-## TypeScript Best Practices
-
-- Use strict type checking
-- Prefer type inference when the type is obvious
-- Avoid the `any` type; use `unknown` when type is uncertain
-
 ## Lit Conventions
 
 There is no Angular here. The app was rewritten as Lit web components in commit `36bd8e2`; anything describing NgModules, signals, `inject()`, or the async pipe is describing a version of this repo that no longer exists.
@@ -165,11 +103,6 @@ There is no Angular here. The app was rewritten as Lit web components in commit 
 - **`@property({ type: Boolean, reflect: true })`** when a stylesheet needs to select on it — reflecting beats adding a class in `connectedCallback`
 - **`override createRenderRoot() { return this; }`** — every locally-authored component renders into the light DOM. See the slot caveat above
 
-### Templates
-- Native JS in the `html` tagged template: ternaries and `.map()`, not control-flow directives
-- **`.prop=${}`** sets a property, **`attr=${}`** sets an attribute, **`?attr=${}`** toggles it, **`@event=${}`** listens. Objects and arrays must use `.prop`
-- Derived values go in getters — they re-evaluate on each render, which is what you want
-
 ### Events
 - Dispatch `CustomEvent` with `bubbles: true, composed: true` so it escapes nested markup and shadow roots
 - Name events for what happened, not what to do: `note-requested`, `selected-color`
@@ -177,7 +110,3 @@ There is no Angular here. The app was rewritten as Lit web components in commit 
 ### Services
 - Plain classes in `src/app/services/`, exported as a module-level singleton (`export const colorUtil = new ColorUtilService()`). There is no DI container — import the instance
 - One responsibility per service
-
-## Formatting
-
-Prettier config in package.json: 100 char width, single quotes, Angular HTML parser.
