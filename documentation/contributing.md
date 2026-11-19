@@ -378,8 +378,8 @@ button's text size.
 
 ### Tooltip placement
 
-**Tooltips render only at desktop widths.** Never write `<candor-tooltip>` directly; wrap
-the control with the host's `TooltipController`:
+**Tooltips render everywhere except phones.** Never write `<candor-tooltip>` directly;
+wrap the control with the host's `TooltipController`:
 
 ```ts
 private readonly _tooltips = new TooltipController(this);
@@ -387,8 +387,10 @@ private readonly _tooltips = new TooltipController(this);
 ${this._tooltips.wrap('Copy foreground color', html`<cc-copy-to-clipboard-button ...>`, 'left')}
 ```
 
-Below 900px — the breakpoint where the layout becomes one column — `wrap()` renders the
-control bare. `candor-tooltip` opens on `mouseenter` and on focus, and a tap fires both,
+On a phone `wrap()` renders the control bare. `PHONE_MEDIA_QUERY` is under 600px wide, or
+under 600px tall on a touch screen: the short side is what separates a phone (under
+600px) from a tablet (744px and up) in either orientation, since a landscape phone is
+wider than a portrait iPad. Tablets keep their tooltips by choice. `candor-tooltip` opens on `mouseenter` and on focus, and a tap fires both,
 so on a phone a tapped button kept its bubble over the controls until the next tap
 somewhere else. The element has no property, `::part` or custom property to switch that
 off, and its bubble is a popover inside the shadow root, so leaving the wrapper out is

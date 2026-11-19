@@ -1,15 +1,16 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { html, render, type ReactiveControllerHost } from 'lit';
-import { TooltipController, TOOLTIP_MEDIA_QUERY } from './tooltip-controller';
+import { TooltipController, PHONE_MEDIA_QUERY } from './tooltip-controller';
 import './_components/metadata/metadata';
 import { mount, cleanup } from './test-utils';
 
 /**
- * jsdom has no `matchMedia`, so each test installs one it controls. `setWide`
- * flips the result and fires `change`, as a resize across the breakpoint would.
+ * jsdom has no `matchMedia`, so each test installs one it controls. `setPhone`
+ * flips the result and fires `change`, as a resize or rotation across the
+ * breakpoint would. The query matches on a phone.
  */
-function stubMatchMedia(initiallyWide: boolean) {
-  let matches = initiallyWide;
+function stubMatchMedia(initiallyPhone: boolean) {
+  let matches = initiallyPhone;
   const listeners = new Set<(event: MediaQueryListEvent) => void>();
   const queries: string[] = [];
 
@@ -28,9 +29,9 @@ function stubMatchMedia(initiallyWide: boolean) {
   return {
     queries,
     listeners,
-    setWide(wide: boolean) {
-      matches = wide;
-      for (const fn of listeners) fn({ matches: wide } as MediaQueryListEvent);
+    setPhone(phone: boolean) {
+      matches = phone;
+      for (const fn of listeners) fn({ matches: phone } as MediaQueryListEvent);
     },
   };
 }
@@ -54,16 +55,20 @@ afterEach(() => {
 });
 
 describe('TooltipController', () => {
-  it('uses the same breakpoint as the two-column layout', () => {
-    expect(TOOLTIP_MEDIA_QUERY).toBe('(min-width: 900px)');
+  it('treats a phone as under 600px wide, or under 600px tall on a touch screen', () => {
+    // The short side is what separates a phone (under 600px) from a tablet
+    // (744px and up) in either orientation.
+    expect(PHONE_MEDIA_QUERY).toBe(
+      '(max-width: 599.98px), (max-height: 599.98px) and (pointer: coarse)',
+    );
   });
 
-  it('wraps content in a candor-tooltip at desktop widths', () => {
-    const media = stubMatchMedia(true);
+  it('wraps content in a candor-tooltip on tablets and desktops', () => {
+    const media = stubMatchMedia(false);
     const controller = new TooltipController(fakeHost());
     controller.hostConnected();
 
-    expect(media.queries).toEqual([TOOLTIP_MEDIA_QUERY]);
+    expect(media.queries).toEqual([PHONE_MEDIA_QUERY]);
     const tooltip = rendered(controller).querySelector('candor-tooltip')!;
     expect(tooltip).not.toBeNull();
     expect(tooltip.getAttribute('text')).toBe('Copy foreground color');
@@ -72,7 +77,7 @@ describe('TooltipController', () => {
   });
 
   it('omits the position attribute when none is given, leaving candor-tooltip its default', () => {
-    stubMatchMedia(true);
+    stubMatchMedia(false);
     const controller = new TooltipController(fakeHost());
     controller.hostConnected();
 
@@ -81,8 +86,8 @@ describe('TooltipController', () => {
     expect(host.querySelector('candor-tooltip')!.hasAttribute('position')).toBe(false);
   });
 
-  it('renders the content bare at mobile widths, so no bubble can open on tap', () => {
-    stubMatchMedia(false);
+  it('renders the content bare on a phone, so no bubble can open on tap', () => {
+    stubMatchMedia(true);
     const controller = new TooltipController(fakeHost());
     controller.hostConnected();
 
@@ -92,7 +97,7 @@ describe('TooltipController', () => {
   });
 
   it('decides before the first render, so a phone never sees a tooltip flash', () => {
-    stubMatchMedia(false);
+    stubMatchMedia(true);
     const controller = new TooltipController(fakeHost());
     expect(controller.enabled).toBe(true); // default, before connection
     controller.hostConnected();
@@ -100,22 +105,22 @@ describe('TooltipController', () => {
   });
 
   it('follows the viewport across the breakpoint and re-renders the host', () => {
-    const media = stubMatchMedia(true);
+    const media = stubMatchMedia(false);
     const host = fakeHost();
     const controller = new TooltipController(host);
     controller.hostConnected();
 
-    media.setWide(false);
+    media.setPhone(true);
     expect(controller.enabled).toBe(false);
     expect(host.requestUpdate).toHaveBeenCalledTimes(1);
 
-    media.setWide(true);
+    media.setPhone(false);
     expect(controller.enabled).toBe(true);
     expect(host.requestUpdate).toHaveBeenCalledTimes(2);
   });
 
   it('stops listening when the host disconnects', () => {
-    const media = stubMatchMedia(true);
+    const media = stubMatchMedia(false);
     const controller = new TooltipController(fakeHost());
     controller.hostConnected();
     expect(media.listeners.size).toBe(1);
@@ -135,8 +140,8 @@ describe('TooltipController', () => {
 });
 
 describe('tooltips in a real component', () => {
-  it('cc-metadata keeps every info button, with its name, but drops the tooltips on mobile', async () => {
-    stubMatchMedia(false);
+  it('cc-metadata keeps every info button, with its name, but drops the tooltips on a phone', async () => {
+    stubMatchMedia(true);
     const el = await mount('cc-metadata', { colorOne: '#000000', colorTwo: '#ffffff' });
 
     expect(el.querySelector('candor-tooltip')).toBeNull();
@@ -145,8 +150,8 @@ describe('tooltips in a real component', () => {
     for (const button of buttons) expect(button.getAttribute('aria-label')).toMatch(/^About /);
   });
 
-  it('cc-metadata wraps each info button in a tooltip at desktop widths', async () => {
-    stubMatchMedia(true);
+  it('cc-metadata wraps each info button in a tooltip on tablets and desktops', async () => {
+    stubMatchMedia(false);
     const el = await mount('cc-metadata', { colorOne: '#000000', colorTwo: '#ffffff' });
 
     const buttons = el.querySelectorAll('candor-button.button--icon');
