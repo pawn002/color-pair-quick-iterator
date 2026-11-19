@@ -253,10 +253,10 @@ Data tables are the exception — use the app's own `<cc-table>`. See
 [Components](./components.md#why-not-candor-table) for why, and for why the metadata
 tables should not be half-migrated.
 
-**Never name a local element `candor-*`.** The package has a single entry point with
-`sideEffects: true`, so one import registers all 41 of its elements and there is no
-duplicate guard. A collision throws on registration and takes every element after it
-down with it, leaving a half-registered app. Local elements use the `cc-*` prefix;
+**Never name a local element `candor-*`.** Importing the package root registers every
+element at once. Since Candor 6.0 a tag that is already defined is skipped with a console
+warning rather than throwing, so a collision is silent: whichever definition loads first
+owns the tag. Local elements use the `cc-*` prefix;
 `src/app/candor-package.spec.ts` enforces the split.
 
 ### Upstream API differences worth knowing
@@ -269,10 +269,11 @@ down with it, leaving a half-registered app. Local elements use the `cc-*` prefi
   retargets to the host
 - **No `size="icon"`.** Use `class="button--icon"`, which sets the `--candor-button-*`
   hooks from `styles.scss`
-- **`candor-card` clips whatever overflows it**, and `candor-tooltip` positions its
-  bubble absolutely, so a tooltip inside a card is cut off at the card's edge. There is
-  no CSS fix from this side — the card sets `overflow: hidden` on a shadow node exposed
-  neither as a `::part` nor through a custom property. Tracked as `pawn002/candor#259`
+- **`candor-card` clips with `overflow: clip`**, overridable through
+  `--candor-card-overflow`. Never set it to `hidden` or `auto` on a card holding a
+  `position: sticky` element: either makes the card a scroll container, and the sticky
+  element then scrolls away with the card. Tooltips are unaffected — since Candor 6.0 the
+  bubble renders in the top layer (`pawn002/candor#259`)
 
 ### Radio groups need a fieldset
 
@@ -344,15 +345,36 @@ Candor's four-voice system; the rules live in `styles.scss`.
 
 ### Icons
 
-**Phosphor, inlined as raw `<path>` data.** Candor stipulates Phosphor but ships no icon
-set — the `ph*` constants in its `icons.d.ts` are its own component chrome and are not
-exported, so there is nothing to import (`pawn002/candor#260`).
+**Phosphor, inlined as raw `<path>` data, all in `src/app/icons.ts`.** Candor uses
+Phosphor but ships no icon set — its bundled glyphs are component chrome and are not
+exported (`pawn002/candor#260`).
 
-Source new glyphs from `@phosphor-icons/core` and paste the path into an `html` template
-next to `_INFO_SVG` in `app.ts`. Prefer the `fill` weight to match what is already
-there, and keep the `viewBox="0 0 256 256"` Phosphor uses. Do not add the package as a
-dependency for one glyph, and do not hand-draw one — an off-system icon renders fine and
-never announces itself.
+To add one, copy the path from `@phosphor-icons/core`
+(`assets/<weight>/<name>-<weight>.svg`, `viewBox="0 0 256 256"`) into a new export in
+`icons.ts`. Do not add the package as a dependency, and do not hand-draw a glyph — an
+off-system icon renders fine and never announces itself. `icons.spec.ts` fails on any
+`<svg>` outside `icons.ts`.
+
+**Choose the weight by role, not by look** — Candor's "Icon weight semantics". A filled
+shape means you can act on it:
+
+| Weight | Class | Use for |
+|---|---|---|
+| fill | `icon--fill` | Actions whose glyph has an enclosed shape: info, copy, dice, drop |
+| bold | `icon--bold` | Actions drawn only in strokes (arrows, ✕, +, ✓), and icons that inform: status, carets, direction |
+| regular | `icon--regular` | Beside text whose words carry the meaning |
+
+To tell fill from bold for an action, look at Phosphor's fill version: if it is a real
+filled shape, use fill; if it is still strokes (arrows) or a box with the glyph cut out
+(✕, +), use bold.
+
+**Sizes come from the class.** `styles.scss` draws icon-only buttons
+(`candor-button.button--icon`) 32px square: a fill glyph at 1.75rem with 2px padding, so
+its cut-out detail stays legible, and a bold glyph at 1.25rem, so its strokes do not
+outweigh the fills beside it. Colour goes on the button: ghost buttons set
+`--candor-button-ghost-color` to `--color-text-subtle`, darkening on hover; a tertiary
+button's glyph follows its own text colour. An icon inside a labelled button follows the
+button's text size.
 
 ### Tooltip placement
 

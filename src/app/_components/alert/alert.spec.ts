@@ -1,60 +1,67 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
+import '@candor-design/web-components';
 import './alert';
 import { mount, update, flush, cleanup } from '../../test-utils';
 
 afterEach(cleanup);
 
-const liveRegion = (el: Element) => el.querySelector('[role="status"]') as HTMLElement;
+/** The polite region `candor-toast-container` keeps in its shadow root. */
+const politeRegion = (el: Element) =>
+  el.querySelector('candor-toast-container')!.shadowRoot!.querySelector(
+    '[aria-live="polite"]',
+  ) as HTMLElement;
 
-/** The announcement is deliberately deferred — see `_announce()`. */
-async function announced(el: Element) {
-  await new Promise((resolve) => setTimeout(resolve, 150));
+/** Lines the container has written into its region, oldest first. */
+async function announcements(el: Element) {
   await flush(el);
-  return liveRegion(el).textContent!.trim();
+  const toast = el.querySelector('candor-toast') as (HTMLElement & { updateComplete?: Promise<unknown> }) | null;
+  await toast?.updateComplete;
+  // The container writes each line after the toast's own update settles.
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  return Array.from(politeRegion(el).children).map((line) => line.textContent!.trim());
 }
 
-describe('cc-alert live region', () => {
-  it('keeps the region in the DOM before any message arrives', async () => {
+describe('cc-alert announcements', () => {
+  it('keeps the container, and so its live region, in the DOM before any message', async () => {
     const el = await mount('cc-alert');
 
-    // The whole point: assistive tech has to be observing the region *before*
-    // its contents change. A region created alongside its text announces
-    // nothing, which is what the toast on its own was doing.
-    const live = liveRegion(el);
+    // Assistive tech has to be observing the region *before* its contents
+    // change; a region created alongside its text announces nothing.
+    const live = politeRegion(el);
     expect(live).toBeTruthy();
-    expect(live.getAttribute('aria-live')).toBe('polite');
     expect(live.textContent!.trim()).toBe('');
   });
 
-  it('announces a message', async () => {
+  it('announces a message through the container', async () => {
     const el = await mount('cc-alert');
     await update(el, { alertMessage: { message: '639066 copied to clipboard.' } });
 
-    expect(await announced(el)).toBe('639066 copied to clipboard.');
+    expect(await announcements(el)).toEqual(['639066 copied to clipboard.']);
   });
 
   it('re-announces the same message twice in a row', async () => {
     const el = await mount('cc-alert');
-
     await update(el, { alertMessage: { message: 'ffffff copied to clipboard.' } });
-    expect(await announced(el)).toBe('ffffff copied to clipboard.');
+    const first = el.querySelector('candor-toast');
+    expect(await announcements(el)).toEqual(['ffffff copied to clipboard.']);
 
-    // Copying the same colour again must not be silent. A live region only
-    // fires on a change, so the text is cleared before it is re-set.
+    // Copying the same colour again must not be silent. The container announces
+    // on insertion, so the toast is keyed to render a fresh element.
     await update(el, { alertMessage: { message: 'ffffff copied to clipboard.' } });
-    expect(liveRegion(el).textContent!.trim()).toBe('');
-    expect(await announced(el)).toBe('ffffff copied to clipboard.');
+    expect(el.querySelector('candor-toast')).not.toBe(first);
+    expect(await announcements(el)).toEqual(['ffffff copied to clipboard.']);
   });
 
-  it('hides the toast from assistive tech so nothing is queued twice', async () => {
+  it('leaves the toast exposed — the container, not the app, handles announcing', async () => {
     const el = await mount('cc-alert');
     await update(el, { alertMessage: { message: 'Swapped foreground and background colors.' } });
 
     const toast = el.querySelector('candor-toast')!;
-    // candor-toast carries its own role="status" in shadow DOM; aria-hidden on
-    // the host covers that too.
-    expect(toast.getAttribute('aria-hidden')).toBe('true');
+    expect(toast.hasAttribute('aria-hidden')).toBe(false);
     expect(toast.getAttribute('message')).toBe('Swapped foreground and background colors.');
+    // Inside the container the toast drops its own live role, so nothing is
+    // queued twice.
+    expect(toast.shadowRoot!.querySelector('[role="status"], [role="alert"]')).toBeNull();
   });
 
   it('still shows the toast visually', async () => {
@@ -69,8 +76,6 @@ describe('cc-alert live region', () => {
     const el = await mount('cc-alert');
     const container = el.querySelector('candor-toast-container')!;
 
-    // Candor's documented outlet, and it is the toast's parent — the app no
-    // longer positions the stack itself.
     expect(container).toBeTruthy();
     expect(container.getAttribute('position')).toBe('bottom-right');
 
@@ -79,7 +84,7 @@ describe('cc-alert live region', () => {
     expect(el.querySelector('candor-toast-container')).toBe(container);
   });
 
-  it('drops its timers when torn down mid-announcement', async () => {
+  it('drops its timer when torn down while a toast is showing', async () => {
     const el = await mount('cc-alert');
     await update(el, { alertMessage: { message: 'Resetted color sliders to initial states.' } });
 

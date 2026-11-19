@@ -1,16 +1,4 @@
 .app-container {
-  /* A focus ring paints *outside* the border box, so a control sitting flush
-     against a clipping ancestor loses its ring entirely — not partly.
-     `candor-accordion-item` keeps `overflow: hidden` on its content box even
-     while open (it needs it for the height transition) and exposes neither a
-     `::part` nor an overflow custom property, so the only fix from this side is
-     to stop putting controls flush against that edge. Eight were: the seven
-     Options info buttons at the right edge, and the note button at the left.
-
-     Expressed from the ring's own tokens rather than a literal 4px, so it stays
-     correct if Candor retunes them. Upstream as `pawn002/candor#261`. */
-  --focus-ring-clearance: calc(var(--focus-ring-width, 2px) + var(--focus-ring-offset, 2px));
-
   display: grid;
   position: relative;
   left: 50%;
@@ -74,38 +62,26 @@
       /* A legend carries UA `padding-inline: 2px`, and this stylesheet has no
          global border-box reset — so `width: 100%` plus that padding, plus the
          2px nudge the shared h3 rule applies, overflowed the accordion by 6px.
-         Invisible today only because the accordion clips it. */
+         The accordion stopped clipping in Candor 6, so that overflow would now
+         show. */
       box-sizing: border-box;
       padding-inline: 0;
       margin-left: 0;
     }
   }
 
-  /* Stands in for `candor-card[variant="elevated"][padding="none"]`, reproducing
-     it from the tokens the card itself uses — the same workaround as
-     `.quick-actions` below, for the same unreachable rule.
-   *
-   * The card cannot be used here. It sets `overflow: hidden` on an inner
-   * shadow-DOM node, which makes that node a scroll container; a `position:
-   * sticky` descendant is constrained to its nearest scrollport, so the score
-   * header stuck to the *card* rather than the viewport. The card's scrollable
-   * overflow exactly equals its client box, so the sticky range was zero and
-   * the header tracked the card 1:1 off the top of the screen. Measured: sticky
-   * top and card top were identical at every scroll position.
-   *
-   * That header is the app's core readout — on a short viewport it is how you
-   * watch the contrast score change while reaching for a slider further down —
-   * so it has to outrank dogfooding the card here.
-   *
-   * `overflow: hidden` is exposed neither as a `::part` nor as a custom
-   * property, so there is nothing to override from this side. Upstream as
-   * `pawn002/candor#259`; `candor-package.spec.ts` fails when it lands, and
-   * then this block reverts to a card. */
+  /* A candor-card, and the score header inside it is `position: sticky`. That
+     only works because the card clips with `overflow: clip`. `hidden` (Candor
+     5.x) made the card a scroll container, and a sticky descendant is held to
+     its nearest scrollport, so the header rode the card off the top of the
+     screen instead of pinning to the viewport. This was a plain div until
+     Candor 6.0 (`pawn002/candor#259`). Never set `--candor-card-overflow` to
+     `hidden` or `auto` here; `candor-package.spec.ts` pins the `clip` default.
+
+     That header is the app's core readout: on a short viewport it is how you
+     watch the contrast score change while reaching for a slider further down. */
   .title-and-sliders {
     position: relative;
-    border-radius: var(--radius-md);
-    background-color: var(--color-bg-elevated);
-    box-shadow: var(--shadow-md);
   }
 
 
@@ -118,9 +94,9 @@
     padding: 0.5rem var(--spacing-md) 0.6rem;
     margin-bottom: 0.6rem;
     background-color: var(--color-bg-elevated);
-    /* The card's clip used to round these corners for free. Matching the
-       container's radius keeps the header's square background from poking
-       past the top corners while it is scrolled to rest. */
+    /* The card's clip rounds these corners at rest, but not once the header
+       sticks mid-card. Matching the card's radius keeps the stuck header's
+       corners consistent with it. */
     border-radius: var(--radius-md) var(--radius-md) 0 0;
     z-index: 2;
 
@@ -166,19 +142,13 @@
      and only `font-weight` separates a control from prose. The icon carries the
      affordance instead — and it matches the other ghost buttons, which are all
      icons opening the same kind of note modal. */
-  /* Flush against the accordion's clip edge — see --focus-ring-clearance. Both
-     sides, not just the start: below ~400px the label wraps and the button fills
-     the content box, so the end edge clips too. */
-  .note-button {
-    margin-inline: var(--focus-ring-clearance);
-  }
-
-  .note-button svg {
-    width: 1.4em;
-    height: auto;
+  /* An icon inside a labelled button follows the button's text size and
+     colour (Candor, "Icon weight semantics"); only icon-only buttons get the
+     larger sizes in styles.scss. */
+  .note-button .icon {
+    width: 1em;
+    height: 1em;
     margin-inline-end: var(--spacing-2xs);
-    fill: currentColor;
-    flex-shrink: 0;
   }
 
   /* candor-button sets `white-space: nowrap`, so this label cannot shrink and
@@ -199,43 +169,16 @@
     padding-bottom: 0.875rem;
   }
 
-  /* Stands in for `candor-card[variant="elevated"][padding="sm"]`, reproducing it
-     from the tokens the card itself uses.
-   *
-   * The card cannot be used here. It sets `overflow: hidden` on an inner
-   * shadow-DOM node exposed neither as a `::part` nor through a custom property,
-   * and `candor-tooltip` positions its bubble absolutely — so it cannot escape a
-   * clipping ancestor. Every tooltip in this row was cut to a sliver by the
-   * card's top edge (17px of a 25px bubble, all of the text).
-   *
-   * `candor-toolbar` is not an alternative: it sets `overflow-x: auto`, which
-   * computes `overflow-y` to `auto` and clips the same way.
-   *
-   * Delete this and go back to the card once the bubble renders in the top layer
-   * upstream — `candor-package.spec.ts` fails when that lands. */
+  /* A candor-card. Its tooltips render in the top layer since Candor 6.0
+     (`pawn002/candor#259`), so the card's clip no longer cuts them off. */
   .quick-actions {
     margin: calc(var(--spacing-md) * -0.5) 0 0;
-    padding: var(--spacing-sm);
-    border-radius: var(--radius-md);
-    background-color: var(--color-bg-elevated);
-    box-shadow: var(--shadow-md);
 
     .quick-actions__buttons {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: var(--spacing-xs);
-    }
-
-    svg {
-      display: inline-block;
-      width: 22px;
-      height: auto;
-      fill: currentColor;
-
-      &.swap-colors {
-        transform: rotateZ(90deg);
-      }
     }
   }
 
@@ -245,11 +188,6 @@
       flex-direction: column;
       gap: var(--spacing-xs);
       max-width: 32rem;
-      /* Both edges. `justify-content: space-between` puts the info button on the
-         accordion's right clip edge, and the checkbox sits flush on the left —
-         its ring is painted on `.checkbox-box`, whose border box starts exactly
-         at the content edge. See --focus-ring-clearance. */
-      padding-inline: var(--focus-ring-clearance);
 
       .checkbox-item {
         display: flex;
@@ -258,13 +196,6 @@
 
         candor-checkbox {
           flex: 1;
-        }
-
-        svg {
-          display: block;
-          width: 18px;
-          height: 18px;
-          fill: currentColor;
         }
       }
     }
@@ -276,9 +207,6 @@
       flex-direction: column;
       gap: var(--spacing-xs);
       max-width: 32rem;
-      /* The ring is painted on `.radio-circle`, whose left edge is flush with the
-         accordion's clip edge — see --focus-ring-clearance. */
-      padding-inline: var(--focus-ring-clearance);
     }
 
     /* Says where the per-option explanations went when they moved to cc-metadata.
@@ -288,18 +216,16 @@
      * Layout only. The typography belongs to `candor-text[variant="caption"]` —
      * Candor's voice for supplementary context, which is Noto Sans italic by
      * definition. Setting a font here would fork the type system. */
-    /* Candor's callout treatment — "the action-oriented sibling of blockquote:
+    /* Candor's callout treatment: "the action-oriented sibling of blockquote:
        upright, default-colour guidance the reader should act on", which is what
-       this note is. The indigo wash and decorative left border are the only
-       chroma in the Options card, and it sits far from the swatches, so it
-       brands the chrome without biasing any colour the user is judging. */
+       this note is. Since Candor 6.0 a callout is a plain surface panel with no
+       side bar or tint (#292), and `--color-highlight-decorative` is gone. */
     .radio-group-note {
       display: block;
       margin: var(--spacing-sm) 0 0;
       padding: var(--spacing-xs) var(--spacing-sm);
       max-width: 32rem;
-      border-inline-start: var(--border-width-thick) solid var(--color-highlight-decorative);
-      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      border-radius: var(--radius-sm);
       background-color: var(--color-callout-bg);
     }
   }
