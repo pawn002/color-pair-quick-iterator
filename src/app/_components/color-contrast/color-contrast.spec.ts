@@ -22,16 +22,18 @@ describe('cc-color-contrast', () => {
     expect(score(el)).toBe('20.9');
   });
 
-  it('renders the OKCA dark-on-light ceiling for black on white', async () => {
+  it('renders the OKCA cap for black on white', async () => {
     const el = await mount('cc-color-contrast', { colorOne: '#000000', colorTwo: '#ffffff' });
-    expect(score(el)).toBe('20');
+    expect(score(el)).toBe('20.9');
   });
 
-  it('is polarity-aware — swapping the pair changes the score', async () => {
-    const el = await mount('cc-color-contrast', { colorOne: '#ffffff', colorTwo: '#000000' });
+  it('is polarity-aware on dark backgrounds — swapping the pair changes the score', async () => {
+    // OKCA v3 scores the two directions alike unless the darker colour is
+    // darker than #767676, so this needs a dark pair rather than black/white.
+    const el = await mount('cc-color-contrast', { colorOne: '#ffffff', colorTwo: '#333333' });
     const lightOnDark = score(el);
 
-    await update(el, { colorOne: '#000000', colorTwo: '#ffffff' });
+    await update(el, { colorOne: '#333333', colorTwo: '#ffffff' });
     expect(score(el)).not.toBe(lightOnDark);
   });
 

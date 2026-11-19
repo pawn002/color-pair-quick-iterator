@@ -492,7 +492,7 @@ evidence that the site updated.
 
 **Color science**
 - `colorjs.io` (^0.5.2) — conversions, gamut mapping, Delta E
-- `@pawn002/okca` (^2.0.2) — OKCA, the primary contrast algorithm
+- `@pawn002/okca` (^3.0.0) — OKCA, the primary contrast algorithm
 - `apca-w3` (^0.1.9) — APCA
 - `bridge-pca` (^0.1.6) — WCAG 2.x bridge (partially reimplemented in `BpcaService`
   because the published package has dependency problems with colorparsely)

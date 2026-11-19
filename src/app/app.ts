@@ -623,7 +623,7 @@ export class CcApp extends LitElement {
           @close=${this._handleModalClose}
         >
           ${this.activeNoteModal === 'okca'
-            ? html`<p>A WCAG-compatible ratio (1–21) in OKLCH color space. Unlike WCAG 2, OKCA is polarity-aware — light-on-dark and dark-on-light score differently, topping out at 20.9 and 20 respectively. Chroma compression reduces scores for saturated lighter colors (e.g. vivid pink on dark), addressing common WCAG false passes. Scores are always at or below the WCAG 2 equivalent — the 20.9 ceiling is what keeps that strict.</p>`
+            ? html`<p>A WCAG-compatible ratio (1–21) in OKLCH color space. Both directions top out at 20.9 and score alike, except on dark backgrounds (darker than #767676), where light-on-dark scores a little lower — a darker surround flattens perceived lightness. A hue-weighted chroma penalty reduces scores for saturated colors, strongest for reds and magentas (e.g. vivid pink on dark), addressing common WCAG false passes. Scores are always below the WCAG 2 equivalent — the 20.9 ceiling is what keeps that strict.</p>`
             : ''}
           ${this.activeNoteModal === 'apca'
             ? html`<p>Gauges inclusive contrast better than WCAG 2. For more information on why, refer to the Myndex article, <a href="https://git.apcacontrast.com/documentation/WhyAPCA.html">Why APCA?</a></p>`
