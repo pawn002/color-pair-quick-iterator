@@ -5,7 +5,14 @@ import type { ContrastType } from './services/color-metrics.service';
 import type { TableColorCell } from './services/color-util.service';
 import type { ResetObject } from './_components/color-slider/color-slider';
 import type { AlertMessageObj } from './_components/alert/alert';
-
+import {
+  ARROW_COUNTER_CLOCKWISE,
+  ARROWS_DOWN_UP,
+  DICE_FIVE,
+  DROP_HALF,
+  INFO,
+  PERSON_ARMS_SPREAD,
+} from './icons';
 
 import './_components/alert/alert';
 import './_components/color-contrast/color-contrast';
@@ -211,7 +218,6 @@ export class CcApp extends LitElement {
 
   override updated(changed: PropertyValues) {
     super.updated(changed);
-    void this._applyRovingTabIndex();
     if (changed.has('activeNoteModal')) this._setPageScrollLock(this.activeNoteModal !== null);
   }
 
@@ -226,28 +232,25 @@ export class CcApp extends LitElement {
    *
    * `showModal()` puts the dialog in the top layer and makes everything behind
    * it inert, but inert does not mean unscrollable — that is per spec, and the
-   * page keeps its own scrollport. So arrow keys reached the page instead of the
-   * note, by two separate routes:
+   * page keeps its own scrollport. Through Candor 5.x arrow keys reached the
+   * page by two routes — initial focus on the close button, outside the
+   * scrollable `.modal__body`, and overscroll chaining from that body — measured
+   * at 79px of background travel per two presses.
    *
-   * 1. `candor-modal` focuses its close button on open, which sits in the header
-   *    and so is outside `.modal__body` — the scrollable region. The very first
-   *    arrow key went to the page, before the reader had touched anything.
-   * 2. Even with focus in the body, `overscroll-behavior` there is `auto`, so
-   *    reaching either end chained the remaining scroll to the page.
-   *
-   * Both measured at 79px of background travel per two presses. Locking the
-   * document closes both, and covers wheel and touch as well; the dialog is in
-   * the top layer, so its own scrolling is unaffected.
+   * Candor 6.0 closed most of that (`pawn002/candor#265`): the body contains its
+   * overscroll, and on open focus moves into the body *when it scrolls*. A note
+   * short enough not to scroll still leaves focus on the close button, so arrow
+   * keys there scroll the page, and wheel and touch reach the page regardless.
+   * Locking the document covers all of it; the dialog is in the top layer, so
+   * its own scrolling is unaffected.
    *
    * The padding compensates for the scrollbar the lock removes — without it the
    * page widens by its width (15px here) and everything jumps sideways as the
    * modal opens. `scrollbar-gutter: stable` does not help: the gutter is only
    * reserved while overflow is `auto` or `scroll`.
    *
-   * Both routes are `candor-modal`'s to fix — initial focus belongs in the
-   * scrollable region, which already carries `tabindex="0"`, and that region
-   * wants `overscroll-behavior: contain`. Upstream as `pawn002/candor#265`;
-   * this stays until that lands.
+   * Kept as a deliberate choice rather than a workaround: a page that does not
+   * move behind a modal is what this app wants, whatever Candor does.
    */
   private _setPageScrollLock(locked: boolean) {
     const html = document.documentElement;
@@ -262,66 +265,6 @@ export class CcApp extends LitElement {
     }
   }
 
-  /**
-   * Make the contrast-type radios a single tab stop.
-   *
-   * A radio group is one tab stop, with arrows moving between options — native
-   * behaviour, and what the ARIA APG specifies. `candor-radio` implements the
-   * arrow half but leaves `tabindex="0"` on every option's inner input, so the
-   * five options cost five tab stops. This supplies the missing half: only the
-   * selected option is tabbable, so Tab enters the group at the current choice
-   * and leaves it in one press.
-   *
-   * Reaching through another element's shadow root is not something to do
-   * lightly, and it is the reason this is a handful of lines rather than one
-   * attribute — there is no `::part` or property for the inner input. Delete it
-   * when `pawn002/candor#262` lands; the spec below fails when that happens.
-   */
-  private async _applyRovingTabIndex() {
-    const radios = Array.from(
-      this.querySelectorAll<HTMLElement & { updateComplete?: Promise<unknown>; value?: string }>(
-        'candor-radio[name="contrastType"]',
-      ),
-    );
-    if (!radios.length) return;
-
-    // The inner input only exists once each element has rendered its shadow root.
-    await Promise.all(radios.map((radio) => radio.updateComplete ?? Promise.resolve()));
-
-    // Fall back to the first option so the group stays reachable if nothing is
-    // selected — a group with every option at -1 is unreachable by keyboard.
-    const selected = radios.findIndex((radio) => radio.getAttribute('value') === this.contrastType);
-    const tabbable = selected === -1 ? 0 : selected;
-
-    radios.forEach((radio, index) => {
-      const input = radio.shadowRoot?.querySelector('input');
-      if (input) input.tabIndex = index === tabbable ? 0 : -1;
-    });
-  }
-
-  private readonly _INFO_SVG = html`
-    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
-    </svg>
-  `;
-
-  /**
-   * Phosphor `PersonArmsSpread` (fill), inlined from `@phosphor-icons/core`.
-   *
-   * Candor stipulates Phosphor, and its own components inline the path data the
-   * same way — the font-class route does not cross a shadow boundary (candor#171).
-   * Inlining is the permanent pattern, not a stopgap: the `ph*` constants in the
-   * package's `icons.d.ts` are Candor's own chrome and are deliberately not
-   * exported, so there is nothing to import here (candor#260).
-   */
-  private readonly _ACCESSIBILITY_SVG = html`
-    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-      <path
-        d="M100,36a28,28,0,1,1,28,28A28,28,0,0,1,100,36ZM227.6,92.57A15.7,15.7,0,0,0,212,80H44a16,16,0,0,0-6.7,30.53l.06,0,53.89,23.73-21.92,83.3a16,16,0,0,0,7.9,20.91A15.83,15.83,0,0,0,84,240a16,16,0,0,0,14.44-9.06L128,180l29.58,51a16,16,0,0,0,29.07-13.35l-21.92-83.3,54-23.76A15.7,15.7,0,0,0,227.6,92.57Z"
-      />
-    </svg>
-  `;
-
   override render() {
     return html`
       <a class="sr-only" href="#main-content">Skip to main content</a>
@@ -331,12 +274,9 @@ export class CcApp extends LitElement {
            where it was on AT that does not implement that behaviour. -->
       <main class="app-container" id="main-content" tabindex="-1">
         <div class="primary-stack">
-          <!-- Not a candor-card: the card sets overflow: hidden, which makes it a
-               scroll container, and a position: sticky descendant is constrained
-               to its nearest scrollport — so the header below stuck to the card,
-               which scrolls away with the page, rather than to the viewport.
-               See app.scss. -->
-          <div class="title-and-sliders">
+          <!-- The sticky header below depends on the card clipping with
+               overflow: clip, not hidden — see app.scss. -->
+          <candor-card class="title-and-sliders" variant="elevated" padding="none">
             <div class="title-and-score">
               <h1>Colors Contrast</h1>
               <cc-color-contrast
@@ -359,7 +299,7 @@ export class CcApp extends LitElement {
                   class="note-button"
                   @click=${() => (this.activeNoteModal = 'accessibility')}
                 >
-                  ${this._ACCESSIBILITY_SVG} Screen reader and low vision workflows
+                  ${PERSON_ARMS_SPREAD} Screen reader and low vision workflows
                 </candor-button>
               </candor-accordion-item>
 
@@ -455,10 +395,9 @@ export class CcApp extends LitElement {
                 </p>
               </candor-accordion-item>
             </div>
-          </div>
+          </candor-card>
 
-          <!-- Not a candor-card: the card clips these tooltips. See app.scss. -->
-          <div class="quick-actions">
+          <candor-card class="quick-actions" variant="elevated" padding="sm">
             <div class="quick-actions__buttons">
               <candor-tooltip text="Swap foreground and background">
                 <candor-button
@@ -468,56 +407,29 @@ export class CcApp extends LitElement {
                   ?disabled=${!this.fgColor || !this.bgColor}
                   @click=${this._swapColors}
                 >
-                  <svg class="swap-colors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-                    <g>
-                      <path d="M6.29,8.71a1,1,0,0,1,0-1.42l4-4a1,1,0,1,1,1.42,1.42L9.41,7H19a7,7,0,0,1,7,7,1,1,0,0,1-2,0,5,5,0,0,0-5-5H9.41l2.3,2.29a1,1,0,0,1,0,1.42,1,1,0,0,1-1.42,0ZM21.71,19.29a1,1,0,0,0-1.42,1.42L22.59,23H13a5,5,0,0,1-5-5,1,1,0,0,0-2,0,7,7,0,0,0,7,7h9.59l-2.3,2.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0l4-4a1,1,0,0,0,0-1.42Z" />
-                    </g>
-                  </svg>
+                  ${ARROWS_DOWN_UP}
                 </candor-button>
               </candor-tooltip>
 
               <candor-tooltip text="Match chromas">
                 <candor-button variant="tertiary" class="button--icon" aria-label="Harmonize Color Pair To Same Chroma" @click=${this._matchChromas}>
-                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" xml:space="preserve">
-                    <path d="M43,39c1.66,0,3,1.34,3,3s-1.34,3-3,3H33c-1.66,0-3-1.34-3-3s1.34-3,3-3H43z" />
-                    <path d="M20,17v3h-3c-1.66,0-3,1.34-3,3s1.34,3,3,3h3v3c0,1.66,1.34,3,3,3s3-1.34,3-3v-3h3c1.66,0,3-1.34,3-3s-1.34-3-3-3h-3v-3  c0-1.66-1.34-3-3-3S20,15.34,20,17z M56,12v40c0,2.21-1.79,4-4,4H12c-2.21,0-4-1.79-4-4V12c0-2.21,1.79-4,4-4h40  C54.21,8,56,9.79,56,12z M50,50V14L14,50H50z" />
-                  </svg>
+                  ${DROP_HALF}
                 </candor-button>
               </candor-tooltip>
 
               <candor-tooltip text="Reset sliders">
                 <candor-button variant="tertiary" class="button--icon" aria-label="Reset Color Sliders" @click=${this._resetSliders}>
-                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M12,3A8.92277,8.92277,0,0,0,4.5,7.05823V5H3v5H8V8.5H5.38165A7.4775,7.4775,0,1,1,4.5,12H3a9,9,0,1,0,9-9Z" />
-                  </svg>
+                  ${ARROW_COUNTER_CLOCKWISE}
                 </candor-button>
               </candor-tooltip>
 
               <candor-tooltip text="New random pair">
                 <candor-button variant="tertiary" class="button--icon" aria-label="Create Random Color Pair" @click=${() => this._setRandomColorPair()}>
-                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 333 333" fill-rule="evenodd" clip-rule="evenodd">
-                    <g>
-                      <rect fill="none" stroke="currentColor" stroke-width="14" x="24" y="167" width="138" height="138" rx="26" ry="26" />
-                      <g>
-                        <g>
-                          <circle cx="118" cy="199" r="12" />
-                          <circle cx="118" cy="236" r="12" />
-                          <circle cx="118" cy="272" r="12" />
-                        </g>
-                        <g>
-                          <circle cx="67" cy="199" r="12" />
-                          <circle cx="67" cy="236" r="12" />
-                          <circle cx="67" cy="272" r="12" />
-                        </g>
-                      </g>
-                      <rect fill="none" stroke="currentColor" stroke-width="14" transform="matrix(0.707107 -0.707107 0.707107 0.707107 125.466 115.35)" width="138" height="138" rx="26" ry="26" />
-                      <circle transform="matrix(0.876112 -0.876112 0.876112 0.876112 222.904 115.349)" r="10" />
-                    </g>
-                  </svg>
+                  ${DICE_FIVE}
                 </candor-button>
               </candor-tooltip>
             </div>
-          </div>
+          </candor-card>
 
           <candor-card class="options" variant="elevated" padding="md">
             <h2>Options</h2>
@@ -570,7 +482,7 @@ export class CcApp extends LitElement {
                     ></candor-checkbox>
                     <candor-tooltip text="About Constant chroma" position="left">
                       <candor-button variant="ghost" class="button--icon" aria-label="About Constant chroma" @click=${() => (this.activeNoteModal = 'constantChroma')}>
-                        ${this._INFO_SVG}
+                        ${INFO}
                       </candor-button>
                     </candor-tooltip>
                   </div>
@@ -584,7 +496,7 @@ export class CcApp extends LitElement {
                     ></candor-checkbox>
                     <candor-tooltip text="About Show Gradient" position="left">
                       <candor-button variant="ghost" class="button--icon" aria-label="About Show Gradient" @click=${() => (this.activeNoteModal = 'showGradient')}>
-                        ${this._INFO_SVG}
+                        ${INFO}
                       </candor-button>
                     </candor-tooltip>
                   </div>
@@ -623,7 +535,7 @@ export class CcApp extends LitElement {
           @close=${this._handleModalClose}
         >
           ${this.activeNoteModal === 'okca'
-            ? html`<p>A WCAG-compatible ratio (1–21) in OKLCH color space. Unlike WCAG 2, OKCA is polarity-aware — light-on-dark and dark-on-light score differently, topping out at 20.9 and 20 respectively. Chroma compression reduces scores for saturated lighter colors (e.g. vivid pink on dark), addressing common WCAG false passes. Scores are always at or below the WCAG 2 equivalent — the 20.9 ceiling is what keeps that strict.</p>`
+            ? html`<p>A WCAG-compatible ratio (1–21) in OKLCH color space. Both directions top out at 20.9 and score alike, except on dark backgrounds (darker than #767676), where light-on-dark scores a little lower — a darker surround flattens perceived lightness. A hue-weighted chroma penalty reduces scores for saturated colors, strongest for reds and magentas (e.g. vivid pink on dark), addressing common WCAG false passes. Scores are always below the WCAG 2 equivalent — the 20.9 ceiling is what keeps that strict.</p>`
             : ''}
           ${this.activeNoteModal === 'apca'
             ? html`<p>Gauges inclusive contrast better than WCAG 2. For more information on why, refer to the Myndex article, <a href="https://git.apcacontrast.com/documentation/WhyAPCA.html">Why APCA?</a></p>`

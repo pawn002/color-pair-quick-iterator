@@ -47,3 +47,19 @@ describe('cc-metadata outcome colouring', () => {
     expect(el.querySelectorAll('.outcome--pass, .outcome--fail')).toHaveLength(0);
   });
 });
+
+describe('cc-metadata info buttons', () => {
+  it('draws the Phosphor info glyph at fill weight in every icon-only button', async () => {
+    const el = await mount('cc-metadata', { colorOne: '#000000', colorTwo: '#ffffff' });
+    const buttons = Array.from(el.querySelectorAll('candor-button.button--icon'));
+
+    expect(buttons.length).toBeGreaterThan(0);
+    for (const button of buttons) {
+      // Icon-only, so the button carries the name and the glyph is hidden.
+      expect(button.getAttribute('aria-label')).toMatch(/^About /);
+      const svg = button.querySelector(':scope > svg.icon')!;
+      expect(svg.classList.contains('icon--fill')).toBe(true);
+      expect(svg.getAttribute('aria-hidden')).toBe('true');
+    }
+  });
+});

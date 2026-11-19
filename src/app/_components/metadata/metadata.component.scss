@@ -37,12 +37,5 @@ cc-metadata .comp-container {
     justify-content: flex-end;
     align-items: center;
     gap: var(--spacing-xs);
-
-    svg {
-      display: block;
-      width: 16px;
-      height: 16px;
-      fill: currentColor;
-    }
   }
 }

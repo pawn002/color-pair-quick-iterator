@@ -52,18 +52,18 @@ describe('ColorMetricsService', () => {
       expect(typeof result).toBe('number');
     });
 
-    // OKCA v2 anchors. The scale is nominally 1–21, but light-on-dark is capped
-    // at LOD_CAP = 20.9 so every score sits strictly below the WCAG equivalent.
-    // Dark-on-light is uncapped and tops out at 20.0.
-    it('should return the OKCA v2 dark-on-light ceiling for black on white', () => {
-      expect(service.getContrast('#000000', '#ffffff', 'okca')).toBe(20);
+    // OKCA v3 anchors. The scale is nominally 1–21, but both polarities share a
+    // single CAP = 20.9 so every score sits strictly below the WCAG equivalent.
+    // (v2 capped dark-on-light at 20.0; v3.0.0 unified the two.)
+    it('should return the OKCA v3 cap (20.9) for black on white', () => {
+      expect(service.getContrast('#000000', '#ffffff', 'okca')).toBe(20.9);
     });
 
-    it('should return the OKCA v2 light-on-dark cap (20.9) for white on black', () => {
+    it('should return the OKCA v3 cap (20.9) for white on black', () => {
       expect(service.getContrast('#ffffff', '#000000', 'okca')).toBe(20.9);
     });
 
-    it('should never exceed the light-on-dark cap of 20.9', () => {
+    it('should never exceed the cap of 20.9', () => {
       const pairs: Array<[string, string]> = [
         ['#ffffff', '#000000'],
         ['#ffff00', '#000000'],
@@ -78,23 +78,33 @@ describe('ColorMetricsService', () => {
       });
     });
 
-    it('should score the WCAG AA boundary grey at the v2 anchor', () => {
-      // POL_K recalibration in v2.0.0 moved this anchor from 3.5 to 3.9.
+    it('should score the WCAG AA boundary grey at the 3.9 anchor in both directions', () => {
+      // 3.9 is OKCA's one policy-set anchor. In v3 both polarities share a scale,
+      // so the pair scores the same either way (v2 had 3.9 / 3.7).
       expect(service.getContrast('#ffffff', '#767676', 'okca')).toBe(3.9);
-      expect(service.getContrast('#767676', '#ffffff', 'okca')).toBe(3.7);
+      expect(service.getContrast('#767676', '#ffffff', 'okca')).toBe(3.9);
     });
 
     it('should still catch saturated chromatic false passes', () => {
       // WCAG rates hot pink on near-black 6.6:1; OKCA keeps it below AA.
+      // v3's hue-weighted penalty moved it 3.6 → 4.1 — still a fail.
       const result = service.getContrast('#ff69b4', '#1a1a1a', 'okca');
-      expect(result).toBe(3.6);
+      expect(result).toBe(4.1);
       expect(result!).toBeLessThan(4.5);
     });
 
-    it('should be polarity-aware', () => {
-      const lightOnDark = service.getContrast('#ffffff', '#000000', 'okca');
-      const darkOnLight = service.getContrast('#000000', '#ffffff', 'okca');
-      expect(lightOnDark).not.toBe(darkOnLight);
+    it('should be polarity-aware when the darker colour is darker than #767676', () => {
+      // v3 background induction scores light-on-dark lower on dark backgrounds.
+      const lightOnDark = service.getContrast('#ffffff', '#333333', 'okca');
+      const darkOnLight = service.getContrast('#333333', '#ffffff', 'okca');
+      expect(lightOnDark).toBe(9.6);
+      expect(darkOnLight).toBe(12);
+    });
+
+    it('should score both polarities alike when the darker colour is #767676 or lighter', () => {
+      expect(service.getContrast('#ffffff', '#767676', 'okca')).toBe(
+        service.getContrast('#767676', '#ffffff', 'okca'),
+      );
     });
 
     it('should return 1 for identical colors with okca', () => {

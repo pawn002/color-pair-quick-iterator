@@ -94,21 +94,17 @@ omitted, so the common case yields a short URL.
 `type` against the known set, and returns whether any *color* state was present. Toggles
 alone do not count, so `?gradient=false` still gets a random pair.
 
-**`_applyRovingTabIndex()`** — makes the contrast-type radio group a single tab stop.
-`candor-radio` implements arrow-key movement but leaves `tabindex="0"` on every option's
-inner input, so five options would cost five tab stops. This reaches through each
-element's shadow root to set `-1` on the unselected ones. Delete it when
-`pawn002/candor#262` lands.
-
 **`_setPageScrollLock()`** — locks document scrolling while a note modal is open.
-`showModal()` makes the page inert, but inert does not mean unscrollable, so arrow keys
-reached the page behind the note. Also compensates for the scrollbar the lock removes, or
-the page jumps sideways as the modal opens. Upstream as `pawn002/candor#265`.
+`showModal()` makes the page inert, but inert does not mean unscrollable. Candor 6.0
+contains the modal's overscroll and focuses its body on open when the body scrolls
+(`pawn002/candor#265`), but a short note still starts on the close button, and wheel and
+touch reach the page regardless, so the lock stays by choice. Also compensates for the
+scrollbar the lock removes, or the page jumps sideways as the modal opens.
 
-**Icon constants** — `_INFO_SVG` and `_ACCESSIBILITY_SVG` are inlined `<path>` data.
-Candor stipulates Phosphor but exports no icon set (`pawn002/candor#260`), so new glyphs
-are pasted in beside these, sourced from `@phosphor-icons/core` at the `fill` weight with
-Phosphor's `viewBox="0 0 256 256"`.
+**Icons** — every glyph comes from `src/app/icons.ts`: Phosphor path data, one export per
+glyph, each `<svg>` classed `icon` plus its weight (`icon--fill` or `icon--bold`).
+Candor uses Phosphor but exports no icon set (`pawn002/candor#260`). See
+[contributing.md](./contributing.md#icons) for how weight is chosen and sized.
 
 ---
 
@@ -445,14 +441,15 @@ html`
 `candor-table` is data-driven: `headers: string[]`, `rows: { cells: string[] }[]`. Half
 the tables in `cc-metadata` put an interactive tooltip and info button inside a cell, and
 a cell that can only be text has nowhere to put one — nor can it carry the
-`outcome--pass` / `outcome--fail` class the results table needs.
+`outcome--pass` / `outcome--fail` class the results table needs. That was Candor 5.x;
+6.0 lets a cell hold a string, a `TemplateResult` or a `Node` (`pawn002/candor#258`).
 
 **Do not half-migrate.** Two of the four tables have no interactive cells and could move
 today, but that would put two implementations side by side in one card with mismatched
 headings: `candor-table` renders its `caption` visibly with no `::part` to hide it, while
 ours sits `sr-only` under an `<h3>`. Decided 2026-08-07 to wait for
-`pawn002/candor#258`, which would let all four migrate at once and delete `cc-table`
-entirely. Everything else already matches — including the zebra stripe, which uses
+`pawn002/candor#258`. It landed in 6.0, so all four can now migrate at once and
+`cc-table` can be deleted — not done yet. Everything else already matches — including the zebra stripe, which uses
 `--color-bg-surface`, the same token `candor-table` stripes with. Keep them pointed at
 the same token rather than reintroducing a literal.
 
@@ -488,18 +485,15 @@ export interface AlertMessageObj {
 
 This component is mostly accessibility plumbing, and each piece is deliberate:
 
-- **The live region is always in the DOM**, separate from the toast, and rendered empty.
-  `candor-toast` carries its own `role="status"`, but it is created along with its text
-  and torn down five seconds later — a live region must be present and observed *before*
-  its contents change. `candor-toast-container` does not close that gap: its shadow root
-  is a bare `<slot>`, so the region still arrives with each toast.
-- **The toast is `aria-hidden="true"`**, so the message is not queued twice.
-  `aria-hidden` covers its shadow root too. Upstream as `pawn002/candor#266`; drop the
-  `aria-hidden` and the local region if the container grows one of its own.
-- **`_announce()` clears the region, then sets it on a later task.** A live region only
-  announces when its contents *change*, so copying the same color twice would otherwise
-  be silent the second time — and the clear/set pair must land in separate tasks or the
-  mutations coalesce into no net change.
+- **Announcing is `candor-toast-container`'s job.** Since Candor 6.0 it keeps persistent
+  polite and assertive live regions in its shadow root and writes each slotted toast's
+  text into one, and a toast inside it drops its own `role="status"`
+  (`pawn002/candor#266`). A live region must be present and observed *before* its
+  contents change, which is why the container stays mounted. Through 5.x the container
+  was a bare `<slot>`, and `cc-alert` kept its own region and hid the toast.
+- **The toast is keyed to a counter that bumps per message.** The container announces a
+  toast when the element is *inserted*, not when its text changes, so without a fresh
+  element copying the same color twice in a row would be silent the second time.
 - **`candor-toast-container` is Candor's documented outlet** — `position: fixed` to a
   viewport corner at `z-index: 2000`. It stays mounted whether or not a toast is showing,
   so the stack has somewhere to land. Auto-dismissal is the consumer's job by design;
@@ -574,22 +568,23 @@ They use shadow DOM, unlike the `cc-*` components above. Two consequences:
 
 ### Gotchas this app works around
 
-- **`candor-card` clips overflow**, and `candor-tooltip` positions its bubble absolutely,
-  so a tooltip inside a card is cut off at the card's edge. The card sets
-  `overflow: hidden` on a shadow node exposed neither as a `::part` nor through a custom
-  property — there is no CSS fix from this side. `candor-toolbar` is no better; its
-  `overflow-x: auto` computes `overflow-y` to `auto`. Upstream as `pawn002/candor#259`.
-  **Point edge-adjacent tooltips inward** — `position="right"` on the color pickers (left
-  edge), `position="left"` on the copy buttons and Options info buttons (right edge).
-  Only reach for a structural fix when no direction works.
+- **`candor-card` clips with `overflow: clip`** (overridable through
+  `--candor-card-overflow`). Never set it to `hidden` or `auto` on `.title-and-sliders`:
+  either makes the card a scroll container, and the sticky score header inside it then
+  rides the card off the screen — what Candor 5.x did. Tooltips are unaffected: since
+  6.0 the bubble renders in the top layer (`pawn002/candor#259`). Edge-adjacent tooltips
+  still point inward — `position="right"` on the color pickers (left edge),
+  `position="left"` on the copy buttons and Options info buttons (right edge) — which
+  keeps bubbles off the viewport edge at narrow widths.
 - **A group of `candor-radio`s always gets a `<fieldset>` and a `<legend>`.** The legend
   supplies the question context screen readers announce before each option, and
   `candor-radio` resolves its group as `closest('fieldset')` then `parentElement`. Every
   option in `app.ts` sits in its own `.radio-item` wrapper for the info button, so the
   fieldset is the only thing letting the group find itself — remove it and arrow keys
   *and* mutual exclusion both die, with no error.
-- **`candor-radio` leaves `tabindex="0"` on every option**, which would make the group N
-  tab stops. See `_applyRovingTabIndex()` above.
+- **The fieldset also makes the group one tab stop.** Since Candor 6.0 `candor-radio`
+  manages the roving tabindex itself and gives a fieldset holding one group
+  `role="radiogroup"` (`pawn002/candor#262`).
 
 `src/app/candor-package.spec.ts` pins each of these so the workaround can be deleted when
 upstream fixes it.

@@ -364,7 +364,7 @@ For `okca`, both colors are normalised through `toHexString()` first; if either 
 parse, the result is `null` rather than a wrong number.
 
 ```ts
-colorMetrics.getContrast('#ff69b4', '#1a1a1a', 'okca'); // 3.6 — WCAG gives 6.6
+colorMetrics.getContrast('#ff69b4', '#1a1a1a', 'okca'); // 4.1 — WCAG gives 6.6
 colorMetrics.getContrast('#000000', '#ffffff', 'apca'); // 106
 colorMetrics.getContrast('#000000', '#ffffff', 'bpca'); // 21
 ```
@@ -410,12 +410,13 @@ OKCA outputs on the familiar 1–21 scale with the same AA (4.5) and AAA (7.0) t
 as WCAG, while correcting a known WCAG failure mode.
 
 **Saturated chromatic false passes** — hot pink on near-black scores 6.6:1 under WCAG but
-is demonstrably harder to read. OKCA applies a chroma penalty that reduces the ratio for
-vivid colors; that pair scores 3.6.
+is demonstrably harder to read. OKCA applies a hue-weighted chroma penalty that reduces the
+ratio for vivid colors — strongest for reds and magentas; that pair scores 4.1, still below AA.
 
-It is also **polarity-aware**: light-on-dark and dark-on-light pairs score differently,
-capped at 20.9 and 20 respectively. The light-on-dark ceiling sits just below WCAG's 21
-so that every OKCA score is *strictly* under the WCAG equivalent.
+It is also **polarity-aware** on dark backgrounds: both directions share one cap of 20.9 and
+score alike, unless the darker colour is darker than `#767676` — then light-on-dark scores a
+little lower. The 20.9 ceiling sits just below WCAG's 21 so that every OKCA score is
+*strictly* under the WCAG equivalent.
 
 OKCA never approves a pair that WCAG rejects (FP = 0, proven for sRGB), which makes it a
 strictly stricter drop-in alternative.

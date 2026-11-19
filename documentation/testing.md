@@ -361,13 +361,12 @@ Pins the facts about `@candor-design/web-components` that this app's workarounds
 on, so the workarounds can be deleted when upstream changes rather than lingering
 forever. Among them:
 
-- The `cc-*` / `candor-*` split. The package has one entry point with
-  `sideEffects: true`, so importing it registers all 41 of its elements at once. A local
-  element reclaiming a `candor-*` name throws on registration and takes the rest of the
-  package down with it, leaving a half-registered app.
-- `candor-card` sets `overflow: hidden` on a shadow node exposed neither as a `::part`
-  nor through a custom property, which clips an absolutely-positioned tooltip bubble
-  (`pawn002/candor#259`).
+- The `cc-*` / `candor-*` split. Importing the package root registers every element at
+  once. Since Candor 6.0 a tag that is already defined is skipped with a warning rather
+  than throwing, so a local `candor-*` element would silently win or lose the tag.
+- `candor-card` clips with `overflow: clip`, not `hidden` — the reason the sticky score
+  header can live inside a card. Before 6.0 these pins recorded the bugs the app worked
+  around; the 6.0 upgrade turned them into pins of the fixes it now relies on.
 - `candor-radio` resolves its group as `closest('fieldset')` then `parentElement`, which
   is why the group markup needs a real `<fieldset>`.
 

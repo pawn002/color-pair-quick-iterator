@@ -2,6 +2,7 @@ import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { colorUtil, type ColorMetaObj } from '../../services/color-util.service';
 import { colorMetrics } from '../../services/color-metrics.service';
+import { INFO } from '../../icons';
 import '../table/table';
 import './metadata.component.scss';
 
@@ -33,14 +34,6 @@ function outcomeClass(outcome: 'pass' | 'fail' | null): string {
   if (outcome === 'fail') return 'outcome--fail';
   return '';
 }
-
-const INFO_SVG = html`
-  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <path
-      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-    />
-  </svg>
-`;
 
 @customElement('cc-metadata')
 export class CcMetadata extends LitElement {
@@ -133,7 +126,7 @@ export class CcMetadata extends LitElement {
                   <td class="label label--with-info">
                     Object
                     <candor-tooltip text="About Object" position="right">
-                      <candor-button variant="ghost" class="button--icon" aria-label="About Object" @click=${() => this._emitNote('apca object')}>${INFO_SVG}</candor-button>
+                      <candor-button variant="ghost" class="button--icon" aria-label="About Object" @click=${() => this._emitNote('apca object')}>${INFO}</candor-button>
                     </candor-tooltip>
                   </td>
                   <td class="numeric">${s.objectMinDimension}</td>
@@ -154,7 +147,7 @@ export class CcMetadata extends LitElement {
                   <td class="label label--with-info">
                     Delta E
                     <candor-tooltip text="About Delta E" position="right">
-                      <candor-button variant="ghost" class="button--icon" aria-label="About Delta E" @click=${() => this._emitNote('deltaE')}>${INFO_SVG}</candor-button>
+                      <candor-button variant="ghost" class="button--icon" aria-label="About Delta E" @click=${() => this._emitNote('deltaE')}>${INFO}</candor-button>
                     </candor-tooltip>
                   </td>
                   <td class="numeric">${d.deltaE}</td>
@@ -163,7 +156,7 @@ export class CcMetadata extends LitElement {
                   <td class="label label--with-info">
                     OKCA
                     <candor-tooltip text="About OKCA" position="right">
-                      <candor-button variant="ghost" class="button--icon" aria-label="About OKCA" @click=${() => this._emitNote('okca')}>${INFO_SVG}</candor-button>
+                      <candor-button variant="ghost" class="button--icon" aria-label="About OKCA" @click=${() => this._emitNote('okca')}>${INFO}</candor-button>
                     </candor-tooltip>
                   </td>
                   <td class="numeric">${d.okca}</td>
@@ -172,7 +165,7 @@ export class CcMetadata extends LitElement {
                   <td class="label label--with-info">
                     Perceptual contrast
                     <candor-tooltip text="About Perceptual contrast" position="right">
-                      <candor-button variant="ghost" class="button--icon" aria-label="About Perceptual contrast" @click=${() => this._emitNote('apca')}>${INFO_SVG}</candor-button>
+                      <candor-button variant="ghost" class="button--icon" aria-label="About Perceptual contrast" @click=${() => this._emitNote('apca')}>${INFO}</candor-button>
                     </candor-tooltip>
                   </td>
                   <td class="numeric">${d.apca}</td>
@@ -181,7 +174,7 @@ export class CcMetadata extends LitElement {
                   <td class="label label--with-info">
                     WCAG 2 compatible
                     <candor-tooltip text="About WCAG 2 compatible" position="right">
-                      <candor-button variant="ghost" class="button--icon" aria-label="About WCAG 2 compatible" @click=${() => this._emitNote('bpca')}>${INFO_SVG}</candor-button>
+                      <candor-button variant="ghost" class="button--icon" aria-label="About WCAG 2 compatible" @click=${() => this._emitNote('bpca')}>${INFO}</candor-button>
                     </candor-tooltip>
                   </td>
                   <td class="numeric">${d.wcag2New}</td>
@@ -190,7 +183,7 @@ export class CcMetadata extends LitElement {
                   <td class="label label--with-info">
                     WCAG 2
                     <candor-tooltip text="About WCAG 2" position="right">
-                      <candor-button variant="ghost" class="button--icon" aria-label="About WCAG 2" @click=${() => this._emitNote('wcag2')}>${INFO_SVG}</candor-button>
+                      <candor-button variant="ghost" class="button--icon" aria-label="About WCAG 2" @click=${() => this._emitNote('wcag2')}>${INFO}</candor-button>
                     </candor-tooltip>
                   </td>
                   <td class="numeric">${d.wcag2Old}</td>

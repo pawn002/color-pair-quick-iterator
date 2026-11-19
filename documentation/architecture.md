@@ -194,10 +194,11 @@ repo.
 
 ### The `cc-*` / `candor-*` split is load-bearing
 
-The package has a single entry point with `sideEffects: true`, so importing it registers
-all 41 of its elements at once — there is no way to import just one. Any local element
-that reclaims a `candor-*` name throws on registration and takes the rest of the
-package's elements down with it, leaving a half-registered app.
+`src/main.ts` imports the package root, which registers every element at once. Since
+Candor 6.0 that registration is guarded: a tag that is already defined is skipped with a
+console warning instead of throwing. A collision no longer takes the package down, but
+it is quieter, not harmless — whichever definition loads first owns the tag, so a local
+`candor-*` element would silently replace Candor's or be replaced by it.
 `src/app/candor-package.spec.ts` guards this.
 
 ### Tokens cross the shadow boundary; stylesheets do not
@@ -226,28 +227,33 @@ have bitten this app.
 
 `candor-table` is data-driven (`headers: string[]`, `rows: { cells: string[] }[]`), and
 half the tables in `cc-metadata` put an interactive tooltip and info button inside a
-cell. A cell can only be text, so it also cannot carry the `outcome--pass` /
-`outcome--fail` class the results table needs. `cc-table` is a light-DOM wrapper that
-styles whatever `<table>` markup it is handed.
+cell. Through Candor 5.x a cell could only be text, so it also could not carry the
+`outcome--pass` / `outcome--fail` class the results table needs. `cc-table` is a
+light-DOM wrapper that styles whatever `<table>` markup it is handed. Candor 6.0 lets a
+cell hold a string, a `TemplateResult` or a `Node` (`pawn002/candor#258`).
 
 **The tables should not be half-migrated.** Two of the four in `cc-metadata` have no
 interactive cells and could move today, but that would put two implementations side by
 side in one card with mismatched headings — `candor-table` renders its `caption` visibly
 with no `::part` to hide it, while ours sits `sr-only` under an `<h3>`. Decided
-2026-08-07 to wait for `pawn002/candor#258`, which would let all four migrate at once and
-delete `cc-table` entirely. Everything else already matches, including the zebra stripe,
+2026-08-07 to wait for `pawn002/candor#258`. That landed in Candor 6.0, so all four can
+now migrate at once and `cc-table` can be deleted — not done yet. Everything else already matches, including the zebra stripe,
 which uses `--color-bg-surface` — the same token `candor-table` stripes with.
 
 ### Upstream workarounds carried here
 
-Each is pinned by a spec so it can be deleted when upstream lands the fix:
+Candor 6.0 closed every upstream issue this app had open. What remains:
 
 | Workaround | Why | Upstream |
 |---|---|---|
-| Roving tabindex on the contrast-type radios (`_applyRovingTabIndex` in `app.ts`) | `candor-radio` leaves `tabindex="0"` on every option, making the group N tab stops instead of one | `candor#262` |
-| Page scroll lock while a modal is open (`_setPageScrollLock`) | `showModal()` makes the page inert but not unscrollable; arrow keys reached the page behind the note | `candor#265` |
-| Tooltips on edge controls point inward | `candor-card` clips its overflow on a shadow node exposed neither as a `::part` nor a custom property, so a centred bubble is cut off | `candor#259` |
-| Icons inlined as raw `<path>` data | Candor stipulates Phosphor but exports no icon set | `candor#260` |
+| Page scroll lock while a modal is open (`_setPageScrollLock`) | 6.0 contains the modal's overscroll and focuses its body when it scrolls, but a short note still starts on the close button, and wheel/touch reach the page. Kept by choice | `candor#265` (closed) |
+| Tooltips on edge controls point inward | Through 5.x the card clipped a centred bubble. 6.0 renders it in the top layer; the directions now only keep bubbles off the viewport edge | `candor#259` (closed) |
+| Icons inlined as raw `<path>` data, all in `src/app/icons.ts` | Candor uses Phosphor but exports no icon set, by design | `candor#260` (closed; no export, documented) |
+
+Removed in the 6.0 upgrade: the roving-tabindex patch on the contrast-type radios
+(`candor#262`), `cc-alert`'s own live region and `aria-hidden` toast (`candor#266`), the
+focus-ring clearance around accordion content (`candor#261`), and the plain-div stand-ins
+for `.title-and-sliders` and `.quick-actions` (`candor#259`), which are cards again.
 
 ### Design token conventions
 
@@ -492,7 +498,7 @@ evidence that the site updated.
 
 **Color science**
 - `colorjs.io` (^0.5.2) — conversions, gamut mapping, Delta E
-- `@pawn002/okca` (^2.0.2) — OKCA, the primary contrast algorithm
+- `@pawn002/okca` (^3.0.0) — OKCA, the primary contrast algorithm
 - `apca-w3` (^0.1.9) — APCA
 - `bridge-pca` (^0.1.6) — WCAG 2.x bridge (partially reimplemented in `BpcaService`
   because the published package has dependency problems with colorparsely)
@@ -520,10 +526,11 @@ evidence that the site updated.
 - **Tree shaking** removes unused code in production builds
 - **Async gamut work** keeps the expensive range-finding off the synchronous render path
 
-The main outstanding cost is the design system: the single-entry-point import ships all
-41 Candor elements for the ~12 the app uses. The production bundle is 405 kB raw / 106 kB
-gzipped, and most of it is elements that never render. Tracked as `pawn002/candor#257`;
-it is the only upstream issue with direct bundle impact.
+The main outstanding cost is the design system: `src/main.ts` imports the package root,
+which ships every Candor element for the ~12 the app uses, and most of the bundle is
+elements that never render. Candor 6.0 closed `pawn002/candor#257` with per-component
+entry points (`@candor-design/web-components/<name>`), so importing only what the app
+renders is now possible — not done yet.
 
 ## Security
 
@@ -549,7 +556,7 @@ is deliberate rather than incidental:
 - **Distinct ids for host and inner input** in `cc-color-slider` — a duplicate made
   `label[for]` resolve to the host, the first match in document order, leaving the range
   input with no accessible name at all
-- **One tab stop for the radio group**, via the roving-tabindex workaround above
+- **One tab stop for the radio group**, which `candor-radio` provides itself since Candor 6.0
 - **Page scroll locked behind an open modal**, so arrow keys reach the note rather than
   the page
 

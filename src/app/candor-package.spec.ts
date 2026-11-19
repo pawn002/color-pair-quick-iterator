@@ -2,12 +2,12 @@
  * Guards the boundary between the app's own primitives and the upstream
  * Candor package.
  *
- * The package ships a single entry point with `sideEffects: true`, so importing
- * it registers all of its elements at once — there is no way to pull in just
- * one. Any local element that reclaims a `candor-*` name throws
- * "This name has already been registered in the registry." on import and takes
- * the rest of the package's registrations down with it, leaving a
- * half-registered app.
+ * The app imports the package root, which registers all of its elements at
+ * once. Since 6.0 that registration is guarded: a tag that is already defined
+ * is skipped with a console warning rather than throwing. That makes a
+ * collision quieter, not harmless — whichever definition loads first wins the
+ * tag, so a local element named `candor-*` would silently replace Candor's (or
+ * be replaced by it). Hence the `cc-*` prefix, and the namespace test below.
  *
  * The rest of this file pins the parts of the upstream contract the app depends
  * on. These are not tests of Candor — they are the assumptions app.ts makes
@@ -102,24 +102,19 @@ describe('candor-card', () => {
   });
 
   /**
-   * `overflow: hidden` costs the app twice, and the second cost is the one that
-   * is easy to miss. It clips (the tooltips, below), but it also makes `.card` a
-   * scroll container — and a `position: sticky` descendant is constrained to its
-   * nearest scrollport. The card's scrollable overflow equals its client box, so
-   * the sticky range is zero: the score header in app.ts stuck to the card and
-   * rode it off the top of the screen instead of pinning to the viewport.
+   * Why `.title-and-sliders` can be a card.
    *
-   * That is why `.title-and-sliders` is a plain div. Both it and `.quick-actions`
-   * revert to a card when this test fails.
+   * The score header inside it is `position: sticky`, and a sticky element is
+   * held to its nearest scroll container. Candor 5.x clipped with `overflow:
+   * hidden`, which makes `.card` one, so the header rode the card off the top of
+   * the screen. 6.0 clips with `overflow: clip`, which does not create a scroll
+   * container, so the header pins to the viewport. If this default ever goes
+   * back to `hidden` or `auto`, the header breaks with no error anywhere.
    */
-  it('clips its content, and offers no way to stop it', async () => {
-    expect(styleSheetOf('candor-card')).toMatch(/\.card\s*\{[^}]*overflow:\s*hidden/);
-
-    // No `::part` and no custom property, so the rule above is unreachable from
-    // the app — hence the workaround documented in app.scss.
-    const el = await mount('candor-card');
-    expect(el.shadowRoot!.querySelector('[part]')).toBeNull();
-    expect(styleSheetOf('candor-card')).not.toMatch(/overflow:\s*var\(/);
+  it('clips with overflow: clip by default, so a sticky descendant still pins to the viewport', () => {
+    expect(styleSheetOf('candor-card')).toMatch(
+      /\.card\s*\{[^}]*overflow:\s*var\(--candor-card-overflow,\s*clip\)/,
+    );
   });
 });
 
@@ -127,18 +122,16 @@ describe('candor-modal', () => {
   /**
    * Why `_setPageScrollLock()` exists in app.ts.
    *
-   * `showModal()` makes the background inert but not unscrollable, so the two
-   * facts below let arrow keys scroll the page behind an open note — measured at
-   * 79px of background travel per two presses, by either route.
+   * `showModal()` makes the background inert but not unscrollable, so arrow
+   * keys could scroll the page behind an open note — measured at 79px of
+   * background travel per two presses.
    *
-   * Route 1: the scrollable region is `.modal__body`, and it is already
-   * focusable — but initial focus goes to the close button, which sits in the
-   * header outside it. Route 2: that region does not contain its overscroll, so
-   * reaching either end chains the rest to the page.
-   *
-   * Upstream as `pawn002/candor#265`, which covers candor-drawer too — it has
-   * the same structure and the same two gaps. Drop the lock when both of these
-   * fail.
+   * Through Candor 5.x there were two routes: initial focus on the close button,
+   * outside the scrollable `.modal__body`, and overscroll chaining from that
+   * body. 6.0 closed `pawn002/candor#265` — the body contains its overscroll,
+   * and focus moves into it on open, but only when it scrolls. A short note still
+   * starts on the close button, and wheel and touch reach the page regardless,
+   * which is why app.ts keeps its lock.
    */
   it('leaves its scroll region focusable but does not start focus there', async () => {
     const styles = styleSheetOf('candor-modal');
@@ -157,58 +150,76 @@ describe('candor-modal', () => {
     expect(body.contains(closeButton)).toBe(false);
   });
 
-  it('does not contain its overscroll, so scrolling chains to the page', () => {
-    expect(styleSheetOf('candor-modal')).not.toMatch(/overscroll-behavior/);
+  it('contains its overscroll, so reaching either end no longer chains to the page', () => {
+    expect(styleSheetOf('candor-modal')).toMatch(
+      /\.modal__body\s*\{[^}]*overscroll-behavior:\s*contain/,
+    );
   });
 });
 
 describe('candor-tooltip', () => {
   /**
-   * These two facts together are why `.quick-actions` in app.ts is a plain div
-   * rather than a candor-card: an absolutely-positioned bubble cannot escape an
-   * ancestor's `overflow: hidden`, and the card sets exactly that. The card cut
-   * 17px off a 25px bubble — all of the text.
+   * Why `.quick-actions` can be a card.
    *
-   * When this suite starts failing because the bubble moved to the top layer,
-   * the workaround in app.scss can be deleted and the card restored.
+   * Through Candor 5.x the bubble was positioned absolutely, so a clipping
+   * ancestor cut it off: the card took 17px of a 25px bubble, all of the text.
+   * Since 6.0 it is a manual popover, so it renders in the top layer and escapes
+   * every ancestor's clip (`pawn002/candor#259`).
    */
-  it('positions its bubble absolutely, so a clipping ancestor hides it', () => {
-    const styles = styleSheetOf('candor-tooltip');
-    expect(styles).toMatch(/\.tooltip__bubble\s*\{[^}]*position:\s*absolute/);
-    expect(styles).not.toMatch(/popover|:popover-open|position-area/);
+  it('renders its bubble as a popover, in the top layer', async () => {
+    const el = await mount('candor-tooltip', { text: 'Swap foreground and background' });
+    const bubble = el.shadowRoot!.querySelector('.tooltip__bubble');
+    expect(bubble).not.toBeNull();
+    expect(bubble!.getAttribute('popover')).toBe('manual');
   });
 });
 
 /**
- * The toast's live region arrives with its text, and the container does not
- * supply one of its own.
+ * Why cc-alert has no live region of its own.
  *
  * A region has to be in the DOM and observed *before* its contents change for
- * assistive tech to announce reliably. `candor-toast` renders `role="status"`
- * inside its own shadow root, so the region is created already populated; the
- * documented outlet, `candor-toast-container`, is a positioning shell whose
- * shadow root is a bare `<slot>`. Following the documented pattern therefore
- * gives the same structure as not using the container at all.
+ * assistive tech to announce reliably. Through Candor 5.x the container was a
+ * bare `<slot>` and each toast carried a `role="status"` created along with its
+ * text, so cc-alert kept a persistent region and hid the toast. Since 6.0 the
+ * container owns persistent polite and assertive regions and writes each
+ * slotted toast into one, and a toast inside it drops its own live role
+ * (`pawn002/candor#266`).
  *
- * That is why cc-alert keeps its own persistent region and marks the toast
- * `aria-hidden`. Upstream as `pawn002/candor#266`. When the container grows a
- * region of its own this fails, and the workaround in alert.ts can go.
+ * It announces a toast when the element is *inserted*, not when its text
+ * changes, which is why cc-alert keys the toast to render a fresh one per
+ * message.
  */
 describe('candor-toast-container', () => {
-  it('is registered, though the package does not export its type', () => {
-    // Present in the bundle and upgrades fine, but absent from index.d.ts —
-    // hence the plain markup in alert.ts rather than a typed handle.
+  it('is registered', () => {
     expect(customElements.get('candor-toast-container')).toBeDefined();
   });
 
-  it('owns no live region for slotted toasts to announce through', async () => {
+  it('owns a persistent polite live region for slotted toasts', async () => {
     const container = await mount('candor-toast-container');
 
-    expect(container.shadowRoot!.querySelector('[role="status"], [aria-live]')).toBeNull();
+    const polite = container.shadowRoot!.querySelector('[aria-live="polite"]');
+    expect(polite).not.toBeNull();
+    expect(polite!.getAttribute('aria-relevant')).toBe('additions');
     expect(container.shadowRoot!.querySelector('slot')).not.toBeNull();
   });
 
-  it('leaves each toast carrying its own role=status', async () => {
+  it('announces a toast when it is inserted, and the toast drops its own role', async () => {
+    const container = await mount('candor-toast-container');
+    const toast = document.createElement('candor-toast') as HTMLElement & {
+      updateComplete: Promise<unknown>;
+    };
+    toast.setAttribute('message', 'Saved.');
+    toast.setAttribute('variant', 'success');
+    container.appendChild(toast);
+    await toast.updateComplete;
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    const polite = container.shadowRoot!.querySelector('[aria-live="polite"]')!;
+    expect(polite.textContent).toContain('Saved.');
+    expect(toast.shadowRoot!.querySelector('[role="status"]')).toBeNull();
+  });
+
+  it('leaves a toast outside a container carrying its own role=status', async () => {
     const toast = await mount('candor-toast', { message: 'Saved.', variant: 'success' });
 
     const region = toast.shadowRoot!.querySelector('[role="status"]');
@@ -337,35 +348,34 @@ describe('candor-radio', () => {
   });
 
   /**
-   * Why `_applyRovingTabIndex` exists in app.ts.
-   *
    * A radio group is a single tab stop with arrows moving between options —
-   * native behaviour, and the ARIA APG pattern. candor-radio implements the
-   * arrow half but leaves every inner input tabbable, so an N-option group
-   * costs N tab stops. The app reaches into the shadow root to set `-1` on the
-   * unselected options.
-   *
-   * When this starts failing because Candor manages tabindex itself, delete
-   * `_applyRovingTabIndex` and its call in `updated()`. Upstream: candor#262.
+   * native behaviour, and the ARIA APG pattern. Through Candor 5.x every inner
+   * input stayed tabbable, and app.ts patched it from outside. Since 6.0
+   * candor-radio manages the tab stop itself (`pawn002/candor#262`). Pinned in
+   * the app's own structure — a fieldset with one wrapper per option — since
+   * that is the shape that has to keep working.
    */
-  it('leaves every option tabbable, so a group costs N tab stops', async () => {
-    const group = document.createElement('div');
+  it('makes a group one tab stop, at the checked option', async () => {
+    const fieldset = document.createElement('fieldset');
     for (const value of ['okca', 'apca', 'bpca']) {
+      const wrapper = document.createElement('div');
       const radio = document.createElement('candor-radio');
       radio.setAttribute('name', 'contrastType');
       radio.setAttribute('value', value);
-      if (value === 'okca') radio.setAttribute('checked', '');
-      group.appendChild(radio);
+      if (value === 'apca') radio.setAttribute('checked', '');
+      wrapper.appendChild(radio);
+      fieldset.appendChild(wrapper);
     }
-    document.body.appendChild(group);
+    document.body.appendChild(fieldset);
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    const tabIndexes = Array.from(group.querySelectorAll('candor-radio')).map(
+    const tabIndexes = Array.from(fieldset.querySelectorAll('candor-radio')).map(
       (radio) => radio.shadowRoot!.querySelector('input')!.tabIndex,
     );
-    expect(tabIndexes).toEqual([0, 0, 0]);
+    expect(tabIndexes).toEqual([-1, 0, -1]);
+    expect(fieldset.getAttribute('role')).toBe('radiogroup');
 
-    group.remove();
+    fieldset.remove();
   });
 
   it('emits change with the radio value as detail', async () => {
@@ -390,21 +400,14 @@ describe('candor-accordion-item', () => {
   });
 
   /**
-   * Why `.note-button`, `.checkbox-section` and `.radio-section` carry
-   * `--focus-ring-clearance` in app.scss.
-   *
-   * The content box is `overflow: hidden` with no `:host([open])` escape, so it
-   * clips while open, not just mid-transition. A focus ring paints outside the
-   * border box, so a slotted control flush against that edge loses the whole
-   * ring on that side — 4px of a 4px ring, measured on eight controls.
-   *
-   * Upstream as `pawn002/candor#261`. When this fails because the rule gained an
-   * open state, drop the clearance from app.scss.
+   * Through Candor 5.x the content box was `overflow: hidden` even while open,
+   * so a focus ring on a control flush against its edge was cut off entirely
+   * and app.scss padded eight controls away from it. Since 6.0 the item does
+   * not clip its content (`pawn002/candor#261`), and that padding is gone — so
+   * a regression here would clip those rings again.
    */
-  it('clips slotted focus rings — its content box stays hidden when open (#261)', () => {
-    const styles = styleSheetOf('candor-accordion-item');
-    expect(styles).toMatch(/\.accordion-item__content\s*\{[^}]*overflow:\s*hidden/);
-    expect(styles).not.toMatch(/:host\(\[open\]\)[^{]*\{[^}]*overflow:\s*visible/);
+  it('does not clip its content, so slotted focus rings show in full', () => {
+    expect(styleSheetOf('candor-accordion-item')).not.toMatch(/overflow:\s*(hidden|clip|auto)/);
   });
 });
 

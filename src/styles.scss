@@ -11,15 +11,47 @@ cc-table {
   display: block;
 }
 
-/* Icon-only buttons. There is no `size="icon"` upstream, so the square padding
-   is reproduced from the host via candor-button's documented theming hooks —
-   its internals are behind a shadow root and cannot be reached with a
-   descendant selector. `min-height: 0` lets the icon drive the size, matching
-   what the local element did. */
+/* Icons — Phosphor glyphs from `src/app/icons.ts`, each classed by weight. */
+.icon {
+  display: block;
+  flex-shrink: 0;
+  fill: currentColor;
+}
+
+/* Icon-only buttons, per Candor's rule ("Icon weight semantics"): every one is
+   32px square. A fill glyph is drawn at 1.75rem, because its detail is cut out
+   of the solid shape and the "i" in the info disc is ~1.3px wide at 1.25rem; a
+   bold glyph has no cut-out to rescue and stays at 1.25rem, or its strokes
+   would outweigh the fills beside it. The padding makes up the rest of 2rem.
+
+   Colour goes on the button, not the glyph: on a ghost button that is
+   `--candor-button-ghost-color`, subtle so a row of solid shapes does not
+   outweigh the checkboxes and labels beside it — and candor-button darkens it
+   to `--color-text-default` on hover, where subtle would fall below 3.0. A
+   tertiary button keeps its own text colour; the glyph follows it.
+
+   There is no `size="icon"` upstream, so all of this goes through
+   candor-button's documented hooks; its internals are behind a shadow root. */
 candor-button.button--icon {
-  --candor-button-padding-x: var(--spacing-xs);
-  --candor-button-padding-y: var(--spacing-xs);
   --candor-button-min-height: 0;
+  --candor-button-ghost-color: var(--color-text-subtle);
+  --candor-button-padding-x: calc((2rem - 1.25rem) / 2);
+  --candor-button-padding-y: calc((2rem - 1.25rem) / 2);
+
+  > .icon--bold {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  > .icon--fill {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+}
+
+candor-button.button--icon:has(> .icon--fill) {
+  --candor-button-padding-x: calc((2rem - 1.75rem) / 2);
+  --candor-button-padding-y: calc((2rem - 1.75rem) / 2);
 }
 
 /* App layout tokens (no Candor equivalent) */
