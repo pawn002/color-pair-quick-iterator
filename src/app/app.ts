@@ -5,7 +5,14 @@ import type { ContrastType } from './services/color-metrics.service';
 import type { TableColorCell } from './services/color-util.service';
 import type { ResetObject } from './_components/color-slider/color-slider';
 import type { AlertMessageObj } from './_components/alert/alert';
-
+import {
+  ARROW_COUNTER_CLOCKWISE,
+  ARROWS_DOWN_UP,
+  DICE_FIVE,
+  DROP_HALF,
+  INFO,
+  PERSON_ARMS_SPREAD,
+} from './icons';
 
 import './_components/alert/alert';
 import './_components/color-contrast/color-contrast';
@@ -258,29 +265,6 @@ export class CcApp extends LitElement {
     }
   }
 
-  private readonly _INFO_SVG = html`
-    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
-    </svg>
-  `;
-
-  /**
-   * Phosphor `PersonArmsSpread` (fill), inlined from `@phosphor-icons/core`.
-   *
-   * Candor stipulates Phosphor, and its own components inline the path data the
-   * same way — the font-class route does not cross a shadow boundary (candor#171).
-   * Inlining is the permanent pattern, not a stopgap: the `ph*` constants in the
-   * package's `icons.d.ts` are Candor's own chrome and are deliberately not
-   * exported, so there is nothing to import here (candor#260).
-   */
-  private readonly _ACCESSIBILITY_SVG = html`
-    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-      <path
-        d="M100,36a28,28,0,1,1,28,28A28,28,0,0,1,100,36ZM227.6,92.57A15.7,15.7,0,0,0,212,80H44a16,16,0,0,0-6.7,30.53l.06,0,53.89,23.73-21.92,83.3a16,16,0,0,0,7.9,20.91A15.83,15.83,0,0,0,84,240a16,16,0,0,0,14.44-9.06L128,180l29.58,51a16,16,0,0,0,29.07-13.35l-21.92-83.3,54-23.76A15.7,15.7,0,0,0,227.6,92.57Z"
-      />
-    </svg>
-  `;
-
   override render() {
     return html`
       <a class="sr-only" href="#main-content">Skip to main content</a>
@@ -315,7 +299,7 @@ export class CcApp extends LitElement {
                   class="note-button"
                   @click=${() => (this.activeNoteModal = 'accessibility')}
                 >
-                  ${this._ACCESSIBILITY_SVG} Screen reader and low vision workflows
+                  ${PERSON_ARMS_SPREAD} Screen reader and low vision workflows
                 </candor-button>
               </candor-accordion-item>
 
@@ -423,52 +407,25 @@ export class CcApp extends LitElement {
                   ?disabled=${!this.fgColor || !this.bgColor}
                   @click=${this._swapColors}
                 >
-                  <svg class="swap-colors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-                    <g>
-                      <path d="M6.29,8.71a1,1,0,0,1,0-1.42l4-4a1,1,0,1,1,1.42,1.42L9.41,7H19a7,7,0,0,1,7,7,1,1,0,0,1-2,0,5,5,0,0,0-5-5H9.41l2.3,2.29a1,1,0,0,1,0,1.42,1,1,0,0,1-1.42,0ZM21.71,19.29a1,1,0,0,0-1.42,1.42L22.59,23H13a5,5,0,0,1-5-5,1,1,0,0,0-2,0,7,7,0,0,0,7,7h9.59l-2.3,2.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0l4-4a1,1,0,0,0,0-1.42Z" />
-                    </g>
-                  </svg>
+                  ${ARROWS_DOWN_UP}
                 </candor-button>
               </candor-tooltip>
 
               <candor-tooltip text="Match chromas">
                 <candor-button variant="tertiary" class="button--icon" aria-label="Harmonize Color Pair To Same Chroma" @click=${this._matchChromas}>
-                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" xml:space="preserve">
-                    <path d="M43,39c1.66,0,3,1.34,3,3s-1.34,3-3,3H33c-1.66,0-3-1.34-3-3s1.34-3,3-3H43z" />
-                    <path d="M20,17v3h-3c-1.66,0-3,1.34-3,3s1.34,3,3,3h3v3c0,1.66,1.34,3,3,3s3-1.34,3-3v-3h3c1.66,0,3-1.34,3-3s-1.34-3-3-3h-3v-3  c0-1.66-1.34-3-3-3S20,15.34,20,17z M56,12v40c0,2.21-1.79,4-4,4H12c-2.21,0-4-1.79-4-4V12c0-2.21,1.79-4,4-4h40  C54.21,8,56,9.79,56,12z M50,50V14L14,50H50z" />
-                  </svg>
+                  ${DROP_HALF}
                 </candor-button>
               </candor-tooltip>
 
               <candor-tooltip text="Reset sliders">
                 <candor-button variant="tertiary" class="button--icon" aria-label="Reset Color Sliders" @click=${this._resetSliders}>
-                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M12,3A8.92277,8.92277,0,0,0,4.5,7.05823V5H3v5H8V8.5H5.38165A7.4775,7.4775,0,1,1,4.5,12H3a9,9,0,1,0,9-9Z" />
-                  </svg>
+                  ${ARROW_COUNTER_CLOCKWISE}
                 </candor-button>
               </candor-tooltip>
 
               <candor-tooltip text="New random pair">
                 <candor-button variant="tertiary" class="button--icon" aria-label="Create Random Color Pair" @click=${() => this._setRandomColorPair()}>
-                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 333 333" fill-rule="evenodd" clip-rule="evenodd">
-                    <g>
-                      <rect fill="none" stroke="currentColor" stroke-width="14" x="24" y="167" width="138" height="138" rx="26" ry="26" />
-                      <g>
-                        <g>
-                          <circle cx="118" cy="199" r="12" />
-                          <circle cx="118" cy="236" r="12" />
-                          <circle cx="118" cy="272" r="12" />
-                        </g>
-                        <g>
-                          <circle cx="67" cy="199" r="12" />
-                          <circle cx="67" cy="236" r="12" />
-                          <circle cx="67" cy="272" r="12" />
-                        </g>
-                      </g>
-                      <rect fill="none" stroke="currentColor" stroke-width="14" transform="matrix(0.707107 -0.707107 0.707107 0.707107 125.466 115.35)" width="138" height="138" rx="26" ry="26" />
-                      <circle transform="matrix(0.876112 -0.876112 0.876112 0.876112 222.904 115.349)" r="10" />
-                    </g>
-                  </svg>
+                  ${DICE_FIVE}
                 </candor-button>
               </candor-tooltip>
             </div>
@@ -525,7 +482,7 @@ export class CcApp extends LitElement {
                     ></candor-checkbox>
                     <candor-tooltip text="About Constant chroma" position="left">
                       <candor-button variant="ghost" class="button--icon" aria-label="About Constant chroma" @click=${() => (this.activeNoteModal = 'constantChroma')}>
-                        ${this._INFO_SVG}
+                        ${INFO}
                       </candor-button>
                     </candor-tooltip>
                   </div>
@@ -539,7 +496,7 @@ export class CcApp extends LitElement {
                     ></candor-checkbox>
                     <candor-tooltip text="About Show Gradient" position="left">
                       <candor-button variant="ghost" class="button--icon" aria-label="About Show Gradient" @click=${() => (this.activeNoteModal = 'showGradient')}>
-                        ${this._INFO_SVG}
+                        ${INFO}
                       </candor-button>
                     </candor-tooltip>
                   </div>

@@ -101,10 +101,10 @@ contains the modal's overscroll and focuses its body on open when the body scrol
 touch reach the page regardless, so the lock stays by choice. Also compensates for the
 scrollbar the lock removes, or the page jumps sideways as the modal opens.
 
-**Icon constants** — `_INFO_SVG` and `_ACCESSIBILITY_SVG` are inlined `<path>` data.
-Candor stipulates Phosphor but exports no icon set (`pawn002/candor#260`), so new glyphs
-are pasted in beside these, sourced from `@phosphor-icons/core` at the `fill` weight with
-Phosphor's `viewBox="0 0 256 256"`.
+**Icons** — every glyph comes from `src/app/icons.ts`: Phosphor path data, one export per
+glyph, each `<svg>` classed `icon` plus its weight (`icon--fill` or `icon--bold`).
+Candor uses Phosphor but exports no icon set (`pawn002/candor#260`). See
+[contributing.md](./contributing.md#icons) for how weight is chosen and sized.
 
 ---
 

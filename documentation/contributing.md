@@ -345,15 +345,36 @@ Candor's four-voice system; the rules live in `styles.scss`.
 
 ### Icons
 
-**Phosphor, inlined as raw `<path>` data.** Candor stipulates Phosphor but ships no icon
-set — the `ph*` constants in its `icons.d.ts` are its own component chrome and are not
-exported, so there is nothing to import (`pawn002/candor#260`).
+**Phosphor, inlined as raw `<path>` data, all in `src/app/icons.ts`.** Candor uses
+Phosphor but ships no icon set — its bundled glyphs are component chrome and are not
+exported (`pawn002/candor#260`).
 
-Source new glyphs from `@phosphor-icons/core` and paste the path into an `html` template
-next to `_INFO_SVG` in `app.ts`. Prefer the `fill` weight to match what is already
-there, and keep the `viewBox="0 0 256 256"` Phosphor uses. Do not add the package as a
-dependency for one glyph, and do not hand-draw one — an off-system icon renders fine and
-never announces itself.
+To add one, copy the path from `@phosphor-icons/core`
+(`assets/<weight>/<name>-<weight>.svg`, `viewBox="0 0 256 256"`) into a new export in
+`icons.ts`. Do not add the package as a dependency, and do not hand-draw a glyph — an
+off-system icon renders fine and never announces itself. `icons.spec.ts` fails on any
+`<svg>` outside `icons.ts`.
+
+**Choose the weight by role, not by look** — Candor's "Icon weight semantics". A filled
+shape means you can act on it:
+
+| Weight | Class | Use for |
+|---|---|---|
+| fill | `icon--fill` | Actions whose glyph has an enclosed shape: info, copy, dice, drop |
+| bold | `icon--bold` | Actions drawn only in strokes (arrows, ✕, +, ✓), and icons that inform: status, carets, direction |
+| regular | `icon--regular` | Beside text whose words carry the meaning |
+
+To tell fill from bold for an action, look at Phosphor's fill version: if it is a real
+filled shape, use fill; if it is still strokes (arrows) or a box with the glyph cut out
+(✕, +), use bold.
+
+**Sizes come from the class.** `styles.scss` draws icon-only buttons
+(`candor-button.button--icon`) 32px square: a fill glyph at 1.75rem with 2px padding, so
+its cut-out detail stays legible, and a bold glyph at 1.25rem, so its strokes do not
+outweigh the fills beside it. Colour goes on the button: ghost buttons set
+`--candor-button-ghost-color` to `--color-text-subtle`, darkening on hover; a tertiary
+button's glyph follows its own text colour. An icon inside a labelled button follows the
+button's text size.
 
 ### Tooltip placement
 

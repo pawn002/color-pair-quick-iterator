@@ -248,7 +248,7 @@ Candor 6.0 closed every upstream issue this app had open. What remains:
 |---|---|---|
 | Page scroll lock while a modal is open (`_setPageScrollLock`) | 6.0 contains the modal's overscroll and focuses its body when it scrolls, but a short note still starts on the close button, and wheel/touch reach the page. Kept by choice | `candor#265` (closed) |
 | Tooltips on edge controls point inward | Through 5.x the card clipped a centred bubble. 6.0 renders it in the top layer; the directions now only keep bubbles off the viewport edge | `candor#259` (closed) |
-| Icons inlined as raw `<path>` data | Candor stipulates Phosphor but exports no icon set | `candor#260` (closed; still no export) |
+| Icons inlined as raw `<path>` data, all in `src/app/icons.ts` | Candor uses Phosphor but exports no icon set, by design | `candor#260` (closed; no export, documented) |
 
 Removed in the 6.0 upgrade: the roving-tabindex patch on the contrast-type radios
 (`candor#262`), `cc-alert`'s own live region and `aria-hidden` toast (`candor#266`), the

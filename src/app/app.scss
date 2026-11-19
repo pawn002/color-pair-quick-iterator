@@ -142,12 +142,13 @@
      and only `font-weight` separates a control from prose. The icon carries the
      affordance instead — and it matches the other ghost buttons, which are all
      icons opening the same kind of note modal. */
-  .note-button svg {
-    width: 1.4em;
-    height: auto;
+  /* An icon inside a labelled button follows the button's text size and
+     colour (Candor, "Icon weight semantics"); only icon-only buttons get the
+     larger sizes in styles.scss. */
+  .note-button .icon {
+    width: 1em;
+    height: 1em;
     margin-inline-end: var(--spacing-2xs);
-    fill: currentColor;
-    flex-shrink: 0;
   }
 
   /* candor-button sets `white-space: nowrap`, so this label cannot shrink and
@@ -179,17 +180,6 @@
       justify-content: center;
       gap: var(--spacing-xs);
     }
-
-    svg {
-      display: inline-block;
-      width: 22px;
-      height: auto;
-      fill: currentColor;
-
-      &.swap-colors {
-        transform: rotateZ(90deg);
-      }
-    }
   }
 
   .options {
@@ -206,13 +196,6 @@
 
         candor-checkbox {
           flex: 1;
-        }
-
-        svg {
-          display: block;
-          width: 18px;
-          height: 18px;
-          fill: currentColor;
         }
       }
     }

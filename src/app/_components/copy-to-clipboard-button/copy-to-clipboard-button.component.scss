@@ -15,18 +15,19 @@ cc-copy-to-clipboard-button .comp-container {
     min-width: var(--min-hit-dimension-aaa);
     min-height: var(--min-hit-dimension-aaa);
 
-    &:hover {
+    /* Icon-only, so the glyph follows Candor's icon-only rule (styles.scss):
+       a fill glyph at 1.75rem in `--color-text-subtle`, darkening to
+       `--color-text-default` on hover. Set on the button, not the glyph. */
+    color: var(--color-text-subtle);
+
+    &:hover:not(:disabled) {
       box-shadow: var(--shadow-sm);
+      color: var(--color-text-default);
     }
 
-    .svg-container {
-      width: 22px;
-      height: auto;
-
-      svg {
-        fill: var(--color-text-default);
-        display: block;
-      }
+    .icon {
+      width: 1.75rem;
+      height: 1.75rem;
     }
   }
 }
