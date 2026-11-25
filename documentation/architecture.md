@@ -514,7 +514,7 @@ evidence that the site updated.
 ### Development
 
 - `vite` (^6.4.6) — build and dev server
-- `vitest` (^4.1.12) with `jsdom` — tests
+- `vitest` (^5.1.1) with `jsdom` — tests
 - `typescript` (~5.7.3) — strict mode
 - `sass` — SCSS compilation
 - Prettier — configured in `package.json`, no separate config file

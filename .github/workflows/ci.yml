@@ -16,10 +16,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
-      # Node 18 is out of support and Vite 6 does not target it; okca's matrix
-      # still carries it, candor's does not. Following candor here.
+      # Node 20 reached end of life in April 2026, and vitest 5 needs 22.12+.
+      # 22 is the floor (`engines` in package.json); 24 is the current LTS.
       matrix:
-        node-version: [20, 22]
+        node-version: [22, 24]
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5

@@ -403,7 +403,7 @@ specs. `cc-color-picker`, `cc-copy-to-clipboard-button`, `cc-palette-table` and
 
 `.github/workflows/ci.yml` runs on every push and PR to `main`:
 
-- **`test` job**, on Node 20 and 22: `npm ci`, `npm run build`, `npm test`
+- **`test` job**, on Node 22 and 24: `npm ci`, `npm run build`, `npm test`
 - **`typecheck` job**, on Node 22: `npm ci`, `npm run typecheck`
 
 Type-checking is a separate job because it is not per-Node-version — the compiler's

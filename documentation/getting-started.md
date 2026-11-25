@@ -6,7 +6,7 @@ This guide gets the Color Pair Quick Iterator (CPQI) development environment run
 
 ### Required
 
-- **Node.js** — version 20 or 22 (CI tests both; Vite 6 does not target Node 18)
+- **Node.js** — 22.12 or later (CI tests 22 and 24). vitest 5 does not run on Node 20, which reached end of life in April 2026
   - https://nodejs.org/ — verify with `node --version`
 - **npm** — ships with Node — verify with `npm --version`
 - **Git** — https://git-scm.com/ — verify with `git --version`
