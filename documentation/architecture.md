@@ -269,7 +269,7 @@ removed during the migration:
 
 Typography follows Candor's four-voice system, with the rules in `styles.scss`. See
 [Contributing](./contributing.md#typography) for the reasoning; the short version is that
-Roboto Flex (`--font-family-base`) is the document voice, Atkinson Hyperlegible
+Roboto Flex (`--font-family-base`) is the document voice, Atkinson Hyperlegible Next
 (`--font-family-accessible`) is reserved for `cc-alert`, mono is for numeric columns, and
 headings use the `--font-size-h1..h6` tokens shifted one level down.
 
@@ -505,8 +505,9 @@ evidence that the site updated.
 - `d3` (^7.9.0) — scale utilities for contrast-to-size mapping
 
 **Fonts**
-- `@fontsource-variable/roboto-flex`, `@fontsource-variable/roboto-mono`,
-  `@fontsource-variable/source-code-pro`, `@fontsource/atkinson-hyperlegible`
+- None directly. `src/main.ts` imports `@candor-design/tokens/candor-fonts.css`, which
+  loads Roboto Flex, Noto Sans and Serif, and Atkinson Hyperlegible Next and Mono from
+  the tokens package's own Fontsource dependencies
 
 **Utility**
 - `lodash-es` (^4.18.1)

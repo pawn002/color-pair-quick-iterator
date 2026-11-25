@@ -39,7 +39,7 @@ Requires Node 22.12 or later (CI tests 22 and 24). Tests run in Node under jsdom
 
 ## Tests
 
-238 tests across 9 files, on vitest. See the [Testing Documentation](./documentation/testing.md).
+281 tests across 13 files, on vitest. See the [Testing Documentation](./documentation/testing.md).
 
 Run all three gates before pushing — CI runs the same ones:
 
@@ -67,8 +67,8 @@ For AI-assisted development, see [CLAUDE.md](./CLAUDE.md) for project-specific g
 - **Lit 3.2** - Web components; every locally-authored element renders into the light DOM
 - **Vite 6** - Build tooling and development server; also carries the vitest config
 - **vitest 5.1** + **jsdom** - Tests, in Node, with no browser
-- **@candor-design/web-components 6.0.0** - Design-system primitives (shadow DOM)
-- **@candor-design/tokens 6.0.0** - Design tokens as CSS custom properties
+- **@candor-design/web-components 7.0.0** - Design-system primitives (shadow DOM)
+- **@candor-design/tokens 7.0.0** - Design tokens as CSS custom properties
 - **TypeScript 5.7** - Strict type checking
 - **colorjs.io 0.5.2** - Color space conversions in OKLCH
 - **@pawn002/okca** - OKCA contrast algorithm (primary)
@@ -186,4 +186,5 @@ See [LICENSE](./LICENSE) for full details.
 - **2026-08**: Rewrote `documentation/` for the current stack. The guides had described Angular 20, Karma, and `ng serve` across two framework migrations
 - **2026-11**: Upgraded `@pawn002/okca` to 3.0.0. Scores move, the API does not: both polarities now share one 20.9 cap (black on white 20 → 20.9, `#767676` on white 3.7 → 3.9), light text on dark backgrounds needs a little more contrast (`#cccccc` on `#333333` 7.1 → 5.7), and the chroma penalty is hue-weighted (hot pink on `#1a1a1a` 3.6 → 4.1, still a fail). FP = 0 against WCAG still holds; AA and AAA thresholds are unchanged
 - **2026-11**: Upgraded Candor (`@candor-design/tokens` and `@candor-design/web-components`) 5.0.1 → 6.0.0, which closed every upstream issue the app was working around. The score header and quick-actions row are cards again (the card clips with `overflow: clip`, which keeps the sticky header working, and tooltips render in the top layer); the radio group is one tab stop without the app's patch; toasts announce through `candor-toast-container`'s own live region; and accordion content no longer clips focus rings. The Options note follows 6.0's plain callout panel
+- **2026-11**: Upgraded Candor 6.0.0 → 7.0.0. Fonts now load through Candor's `candor-fonts.css`, which brings Atkinson Hyperlegible Next and Atkinson Hyperlegible Mono (numeric columns are a little wider), Roboto Flex's optical-size axis for headings, and Noto Sans for captions. Six token references moved to 7.0's property-first names ahead of 8.0 removing the old ones; dark-mode colours follow Candor's new values
 - **2026-11**: Every icon is now a Phosphor glyph, in one module (`src/app/icons.ts`) and weighted by Candor's rule: fill for actions with an enclosed shape, bold for stroke-only ones such as arrows. Icon-only buttons are 32px with fill glyphs at 1.75rem and bold at 1.25rem. Before this only one of the app's eight icons was Phosphor

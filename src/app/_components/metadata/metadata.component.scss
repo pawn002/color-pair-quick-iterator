@@ -21,14 +21,14 @@ cc-metadata .comp-container {
      "fail", so hue is a scanning aid rather than the meaning (WCAG 1.4.1).
      Both outcomes previously rendered in --color-text-default, which made the
      table unscannable in an app whose whole subject is legibility.
-     The `-text` variants are the ones tuned for text on a light surface;
-     --color-status-success itself is the UI-component fill. */
+     Candor 7 names colour tokens for what they paint: `--color-text-*` for
+     text, `--color-icon-*` for the status glyph. */
   .outcome--pass {
-    color: var(--color-status-success-text);
+    color: var(--color-text-success);
   }
 
   .outcome--fail {
-    color: var(--color-status-error-text);
+    color: var(--color-text-error);
   }
 
   td.label--with-info {

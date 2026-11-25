@@ -73,7 +73,7 @@ cc-color-slider .comp-container {
     }
 
     &:focus-visible::-webkit-slider-thumb {
-      outline: var(--focus-ring-width) solid var(--color-focus);
+      outline: var(--focus-ring-width) solid var(--color-ring-focus);
       outline-offset: var(--focus-ring-offset);
     }
   }
@@ -88,7 +88,7 @@ cc-color-slider .comp-container {
     /* TODO: what do custom input text need to be? <p>? */
     div {
       font-family: var(--font-family-mono);
-      font-size: var(--font-size-base);
+      font-size: var(--font-size-md);
       font-weight: 400;
     }
   }
