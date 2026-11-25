@@ -108,7 +108,7 @@ separately — CI does.
 
 - **Lit 3.2** — web components; every locally-authored element renders into the light DOM
 - **Vite 6** — build tooling and dev server; also carries the vitest config
-- **vitest 3.2** with **jsdom** — tests, in Node, with no browser
+- **vitest 4.1** with **jsdom** — tests, in Node, with no browser
 - **TypeScript 5.7** — strict mode
 - **@candor-design/web-components 6.0.0** — design-system primitives (shadow DOM)
 - **@candor-design/tokens 6.0.0** — design tokens as CSS custom properties

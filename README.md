@@ -66,7 +66,7 @@ For AI-assisted development, see [CLAUDE.md](./CLAUDE.md) for project-specific g
 
 - **Lit 3.2** - Web components; every locally-authored element renders into the light DOM
 - **Vite 6** - Build tooling and development server; also carries the vitest config
-- **vitest 3.2** + **jsdom** - Tests, in Node, with no browser
+- **vitest 4.1** + **jsdom** - Tests, in Node, with no browser
 - **@candor-design/web-components 6.0.0** - Design-system primitives (shadow DOM)
 - **@candor-design/tokens 6.0.0** - Design tokens as CSS custom properties
 - **TypeScript 5.7** - Strict type checking
