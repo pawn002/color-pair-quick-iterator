@@ -87,13 +87,13 @@ html {
    added for the radio group needed an explicit rule for exactly this reason.
  *
  * Roboto Flex is Candor's execution voice — "navigation, UI scaffolding,
- * data-dense components", which is this whole app. Atkinson Hyperlegible is
+ * data-dense components", which is this whole app. Atkinson Hyperlegible Next is
  * applied deliberately below, to instructional text only. */
 body {
   margin: 0;
   background-color: var(--color-bg-surface);
   font-family: var(--font-family-base);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-md);
   color: var(--color-text-default);
 }
 
@@ -176,7 +176,7 @@ h4 {
 
 th {
   font-family: var(--font-family-display);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-md);
   font-style: normal;
 }
 
@@ -195,7 +195,7 @@ th {
  * and explanatory prose are comprehension text, which the docs put in Roboto
  * Flex. See `cc-alert` below for what stayed. */
 td {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-md);
   color: var(--color-text-default);
   font-style: normal;
   font-weight: var(--font-weight-regular);
@@ -205,7 +205,7 @@ td {
 
 p,
 li {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-md);
   color: var(--color-text-default);
   font-style: normal;
   font-weight: var(--font-weight-regular);
@@ -217,10 +217,10 @@ li {
   }
 
   a {
-    color: var(--color-link);
+    color: var(--color-text-link);
 
     &:visited {
-      color: var(--color-link-visited);
+      color: var(--color-text-link-visited);
     }
   }
 }

@@ -70,7 +70,7 @@ Specs are co-located with what they test:
 - **Components**: `src/app/_components/<name>/<name>.spec.ts` — note `<name>.ts`, not
   `<name>.component.ts`. Those were the Angular versions and have been removed.
 - **Repo-wide guards**: `src/app/candor-package.spec.ts`,
-  `src/app/_components/styles-scoping.spec.ts`
+  `src/app/candor-tokens.spec.ts`, `src/app/_components/styles-scoping.spec.ts`
 
 ---
 
@@ -352,8 +352,9 @@ these specs exist to catch.
 
 ## The guard specs
 
-Two specs test the repo's rules rather than its behaviour. Both encode a failure that
-already happened once, and both are cheap to keep passing.
+Three specs test the repo's rules rather than its behaviour. Each encodes a failure that
+already happened once, or one a known upgrade would cause, and all are cheap to keep
+passing.
 
 ### `src/app/candor-package.spec.ts` (26 tests)
 
@@ -372,6 +373,16 @@ forever. Among them:
 
 **When you add a pin, comment what breaks if it fails.** A pin whose purpose is not
 written down gets deleted by whoever sees it fail.
+
+### `src/app/candor-tokens.spec.ts` (4 tests)
+
+A `var(--…)` that does not resolve fails silently. This spec reads every `.scss` and `.ts`
+file under `src/` and checks that each token the app reads but does not declare itself
+exists in the installed `@candor-design/tokens`, and that none is a name Candor 7.0
+deprecated (it prints the replacement). The deprecated list is copied from Candor's
+CHANGELOG, since the package marks nothing as deprecated in a machine-readable form. When
+Candor 8.0 removes the aliases, the last test fails to say the list has done its job, and
+the existence check takes over.
 
 ### `src/app/_components/styles-scoping.spec.ts` (10 tests)
 

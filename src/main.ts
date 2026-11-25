@@ -8,12 +8,12 @@ import '@candor-design/tokens/candor-tokens.css';
 // element still named `candor-*` here resolves to the upstream definition.
 import '@candor-design/web-components';
 
-import '@fontsource/atkinson-hyperlegible/400.css';
-import '@fontsource/atkinson-hyperlegible/400-italic.css';
-import '@fontsource/atkinson-hyperlegible/700.css';
-import '@fontsource/atkinson-hyperlegible/700-italic.css';
-import '@fontsource-variable/roboto-flex';
-import '@fontsource-variable/roboto-mono';
+// Candor's own font loader: Roboto Flex with its optical-size axis, Atkinson
+// Hyperlegible Next and Mono, and Noto Sans for `candor-text` captions. The
+// faces are dependencies of the tokens package, so a Candor upgrade that swaps a
+// typeface swaps it here too — importing Fontsource directly is how 7.0 would
+// have left `--font-family-accessible` and `--font-family-mono` on fallbacks.
+import '@candor-design/tokens/candor-fonts.css';
 import './styles.scss';
 
 import './app/app';

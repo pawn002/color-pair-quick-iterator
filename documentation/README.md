@@ -110,8 +110,8 @@ separately — CI does.
 - **Vite 6** — build tooling and dev server; also carries the vitest config
 - **vitest 5.1** with **jsdom** — tests, in Node, with no browser
 - **TypeScript 5.7** — strict mode
-- **@candor-design/web-components 6.0.0** — design-system primitives (shadow DOM)
-- **@candor-design/tokens 6.0.0** — design tokens as CSS custom properties
+- **@candor-design/web-components 7.0.0** — design-system primitives (shadow DOM)
+- **@candor-design/tokens 7.0.0** — design tokens as CSS custom properties
 - **colorjs.io 0.5.2** — color space conversions and gamut mapping in OKLCH
 - **@pawn002/okca 3.0.0** — OKCA, the primary contrast algorithm
 - **apca-w3 0.1.9** — APCA

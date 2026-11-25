@@ -328,7 +328,7 @@ Candor's four-voice system; the rules live in `styles.scss`.
   it, anything not matched by a rule falls to the UA serif — which is how a bare `div`
   once rendered Times New Roman. It is the *comprehension* voice and covers almost
   everything here: prose, headings, metric names, scores
-- **`--font-family-accessible`** (Atkinson Hyperlegible) is the *instructional* voice —
+- **`--font-family-accessible`** (Atkinson Hyperlegible Next) is the *instructional* voice —
   "does the user need to read this precisely to know what to do next?" In this app that
   is `cc-alert` alone. Every other Atkinson run on the page comes from inside a
   `candor-*` shadow root, where upstream applies the same rule to form labels
