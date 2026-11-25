@@ -23,7 +23,7 @@ Delta E are also available for comparison.
 
 Setup for a new developer:
 
-- Prerequisites — Node 20 or 22, no browser needed for tests
+- Prerequisites — Node 22.12+, no browser needed for tests
 - Installation and verification
 - Running the Vite dev server on port 5173
 - First steps: reading a component, reading a service
@@ -108,7 +108,7 @@ separately — CI does.
 
 - **Lit 3.2** — web components; every locally-authored element renders into the light DOM
 - **Vite 6** — build tooling and dev server; also carries the vitest config
-- **vitest 3.2** with **jsdom** — tests, in Node, with no browser
+- **vitest 5.1** with **jsdom** — tests, in Node, with no browser
 - **TypeScript 5.7** — strict mode
 - **@candor-design/web-components 6.0.0** — design-system primitives (shadow DOM)
 - **@candor-design/tokens 6.0.0** — design tokens as CSS custom properties

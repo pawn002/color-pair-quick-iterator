@@ -35,7 +35,7 @@ npm run build
 
 Visit `http://localhost:5173` after starting the development server.
 
-Requires Node 20 or 22. Tests run in Node under jsdom — no browser needed.
+Requires Node 22.12 or later (CI tests 22 and 24). Tests run in Node under jsdom — no browser needed.
 
 ## Tests
 
@@ -66,7 +66,7 @@ For AI-assisted development, see [CLAUDE.md](./CLAUDE.md) for project-specific g
 
 - **Lit 3.2** - Web components; every locally-authored element renders into the light DOM
 - **Vite 6** - Build tooling and development server; also carries the vitest config
-- **vitest 3.2** + **jsdom** - Tests, in Node, with no browser
+- **vitest 5.1** + **jsdom** - Tests, in Node, with no browser
 - **@candor-design/web-components 6.0.0** - Design-system primitives (shadow DOM)
 - **@candor-design/tokens 6.0.0** - Design tokens as CSS custom properties
 - **TypeScript 5.7** - Strict type checking

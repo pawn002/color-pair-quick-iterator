@@ -509,12 +509,12 @@ evidence that the site updated.
   `@fontsource-variable/source-code-pro`, `@fontsource/atkinson-hyperlegible`
 
 **Utility**
-- `lodash-es` (^4.17.21)
+- `lodash-es` (^4.18.1)
 
 ### Development
 
-- `vite` (^6.3.5) — build and dev server
-- `vitest` (^3.2.2) with `jsdom` — tests
+- `vite` (^6.4.6) — build and dev server
+- `vitest` (^5.1.1) with `jsdom` — tests
 - `typescript` (~5.7.3) — strict mode
 - `sass` — SCSS compilation
 - Prettier — configured in `package.json`, no separate config file
